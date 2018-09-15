@@ -82,7 +82,7 @@ deploy:
   repo: 
     github: git@github.com:maywzh/maywzh.github.io.git
     mserver: git@mubuntu:/srv/repo/hexoblog.git
-    coding: git@git.coding.net:maywzh/hexosource.git
+    coding: git@git.coding.net:maywzh/maywzh.git
   branch: master
 
 #Search Engi

@@ -481,7 +481,7 @@ pangu: false
 
 # Disqus
 disqus:
-  enable: true
+  enable: false
   shortname: maywzh
   count: true
   lazyload: false

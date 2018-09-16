@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 圆都
+title: 邪欢
 subtitle: 编程 创作 思考 杂记
 description:
-keywords: 方法论
+keywords: Blog
 author: maywzh
 language: 
 timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: http://maywzh.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -103,3 +103,29 @@ admin:
 metadata:
   #author_id: defaultAuthorId
   #language:
+
+
+# Specify the date when the site was setup
+since: 2015
+
+# Creative Commons 4.0 International License.
+# http://creativecommons.org/
+# Available: by | by-nc | by-nc-nd | by-nc-sa | by-nd | by-sa | zero
+# creative_commons: by-nc-sa
+
+# Google Webmaster tools verification setting
+# See: https://www.google.com/webmasters/
+# google_site_verification: VvyjvVXcJQa0QklHipu6pwm2PJGnnchIqX7s5JbbT_0
+
+
+# Google Analytics
+# Google分析ID
+# google_analytics:
+
+
+# 百度分析ID
+# baidu_analytics: 
+
+
+# Disqus
+# disqus_shortname: 

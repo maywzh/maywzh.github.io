@@ -481,8 +481,8 @@ pangu: false
 
 # Disqus
 disqus:
-  enable: false
-  shortname:
+  enable: true
+  shortname: maywzh
   count: true
   lazyload: false
 
@@ -959,3 +959,8 @@ css: css
 js: js
 images: images
 
+#sitemap
+sitemap:
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml

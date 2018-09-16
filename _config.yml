@@ -85,10 +85,17 @@ deploy:
     coding: git@git.coding.net:maywzh/maywzh.git
   branch: master
 
-#Search Engi
+#Search Engine
 #Local Search: http://theme-next.iissnan.com/third-party-services.html#search-system
 search:
   path: search.xml
   field: post
   format: html
   limit: 10000
+
+
+#Admin
+admin:
+  username: maywzh
+  password_hash: $2a$10$7PZl9jgdjWcdvaxHAOnaHOYU7AtVL7mp6yvEMzKJTZeUSqWtfezfO
+  secret: maywzhsudo

@@ -671,7 +671,7 @@ busuanzi_count:
 
 
 # Enable baidu push so that the blog will push the url to baidu automatically which is very helpful for SEO
-baidu_push: true
+#baidu_push: true
 
 # Google Calendar
 # Share your recent schedule to others via calendar page
@@ -732,7 +732,7 @@ bookmark:
 # External URL with BASE64 encrypt & decrypt.
 # Usage: {% exturl text url "title" %}
 # Alias: {% extlink text url "title" %}
-exturl: false
+exturl: true
 
 # Note tag (bs-callout).
 note:
@@ -960,7 +960,7 @@ js: js
 images: images
 
 #sitemap
-sitemap:
-  path: sitemap.xml
-baidusitemap:
-  path: baidusitemap.xml
+#sitemap:
+  #path: sitemap.xml
+#baidusitemap:
+  #path: baidusitemap.xml

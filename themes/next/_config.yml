@@ -45,12 +45,12 @@ cache:
 # For example, you put your favicons into `hexo-site/source/images` directory.
 # Then need to rename & redefine they on any other names, otherwise icons from Next will rewrite your custom icons in Hexo.
 favicon:
-  small: /images/favicon-16x16-next.png
-  medium: /images/favicon-32x32-next.png
+  small: /bitbug_favicon_16x16.ico
+  medium: /bitbug_favicon_32x32.ico
   apple_touch_icon: /images/apple-touch-icon-next.png
   safari_pinned_tab: /images/logo.svg
-  #android_manifest: /images/manifest.json
-  #ms_browserconfig: /images/browserconfig.xml
+  android_manifest: /images/manifest.json
+  ms_browserconfig: /images/browserconfig.xml
 
 # Set rss to false to disable feed link.
 # Leave rss as empty to use site's feed link, and install hexo-generator-feed: `npm install hexo-generator-feed --save`.
@@ -863,11 +863,12 @@ canvas_ribbon:
 # Please use the https protocol of CDN files when you enable https on your site.
 vendors:
   bookmark: https://cdn.jsdelivr.net/gh/theme-next/theme-next-bookmark@latest/bookmark.min.js
+  reading_progress: https://cdn.jsdelivr.net/gh/theme-next/theme-next-reading-progress@1.1/reading_progress.min.js 
   # Internal path prefix. Please do not edit it.
   _internal: lib
 
   # Internal version: 2.1.3
-  jquery:
+  jquery: 
 
   # Internal version: 2.1.5
   # See: http://fancyapps.com/fancybox/
@@ -958,3 +959,14 @@ images: images
   #path: sitemap.xml
 #baidusitemap:
   #path: baidusitemap.xml
+#https://github.com/hexojs/hexo-generator-feed
+#hexo feed generator
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+  hub:
+  content:
+  content_limit: 140
+  content_limit_delim: ' '
+  order_by: -date

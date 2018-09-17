@@ -1,5 +1,5 @@
 ---
-title: 404 Not Found: 哟吼，找不到资源咯
+title: 404 Not Found： 哟吼，找不到资源咯
 date: 2015-09-17 14:27:11
 permalink: /404
 comments: false

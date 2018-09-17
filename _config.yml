@@ -13,7 +13,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://maywzh.github.io
+url: https://maywzh.com
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -100,6 +100,7 @@ admin:
   username: maywzh
   password_hash: $2a$10$7PZl9jgdjWcdvaxHAOnaHOYU7AtVL7mp6yvEMzKJTZeUSqWtfezfO
   secret: maywzhsudo
+  deployCommand: hexo d
 
 metadata:
   #author_id: defaultAuthorId
@@ -121,7 +122,7 @@ since: 2015
 
 # Google Analytics
 # Google分析ID
-google_analytics: UA-119246999-2
+google_analytics: UA-119246999-1
 
 
 # 百度分析ID

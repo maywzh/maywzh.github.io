@@ -1,10 +1,8 @@
 title: 版本号的那些事
 tags:
-  - 工作规范
-  - 开发
+  - 代码规范
 categories:
-  - 软件开发
-  - 工作流
+  - 代码规范
 author: maywzh
 date: 2016-07-18 01:36:00
 ---

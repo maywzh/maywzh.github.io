@@ -1,8 +1,8 @@
+---
 title: 《Google工作整理术》读书笔记
 tags:
   - 方法论
   - 效率
-  - 工作方法
 categories:
   - 读书笔记
 comments: false

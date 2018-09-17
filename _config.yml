@@ -100,7 +100,7 @@ admin:
   username: maywzh
   password_hash: $2a$10$7PZl9jgdjWcdvaxHAOnaHOYU7AtVL7mp6yvEMzKJTZeUSqWtfezfO
   secret: maywzhsudo
-  deployCommand: hexo d
+  deployCommand: node_modules/.bin/hexo
 
 metadata:
   #author_id: defaultAuthorId

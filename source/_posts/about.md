@@ -1,9 +1,10 @@
----
 layout: pagte
 title: about
-date: 2016-09-14 03:02:03
-tags: 
+tags: []
 nothome: true
+categories: []
+author: maywzh
+date: 2015-09-14 03:02:00
 ---
 # 关于我
 16年毕业于某东部985大学。

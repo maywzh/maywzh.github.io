@@ -1,3 +1,4 @@
+---
 title: 《Google工作整理术》读书笔记
 tags:
   - 方法论
@@ -6,6 +7,7 @@ categories:
   - ''
 date: 2017-07-14 00:00:00
 updated: 2017-07-14 00:00:05
+comments: false
 ---
 
 # Google工作整理术 读书笔记

@@ -8,8 +8,8 @@ subtitle: 编程 创作 思考 杂记
 description:
 #keywords: Blog
 author: maywzh
-language: 
-timezone:
+language: zh-CN 
+timezone: 
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'

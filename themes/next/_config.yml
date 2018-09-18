@@ -389,8 +389,8 @@ font:
   enable: false
 
   # Uri of fonts host. E.g. //fonts.googleapis.com (Default).
-  host:
-
+  host: #https://fonts.loli.net
+  
   # Font options:
   # `external: true` will load this font family from `host` above.
   # `family: Times New Roman`. Without any quotes.
@@ -399,14 +399,14 @@ font:
   # Global font settings used for all elements in <body>.
   global:
     external: true
-    family: Lato
+    family: Chevin
     size:
 
   # Font settings for Headlines (H1, H2, H3, H4, H5, H6).
   # Fallback to `global` font settings.
   headings:
     external: true
-    family:
+    family: Chevin
     size:
 
   # Font settings for posts.
@@ -425,7 +425,7 @@ font:
   # Font settings for <code> and code blocks.
   codes:
     external: true
-    family:
+    family: 
     size:
 
 
@@ -500,8 +500,8 @@ changyan:
 # more info please open https://valine.js.org
 valine:
   enable: false # When enable is set to be true, leancloud_visitors is recommended to be closed for the re-initialization problem within different leancloud adk version.
-  appid:  # your leancloud application appid
-  appkey:  # your leancloud application appkey
+  appid:  0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz # your leancloud application appid
+  appkey:  UrBohelQ00fEUxu5npX46rtL # your leancloud application appkey
   notify: false # mail notifier , https://github.com/xCss/Valine/wiki
   verify: false # Verification code
   placeholder: Just go go # comment box placeholder

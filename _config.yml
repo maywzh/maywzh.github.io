@@ -84,6 +84,7 @@ deploy:
     mserver: git@mubuntu:/srv/repo/hexoblog.git
     coding: git@git.coding.net:maywzh/maywzh.git
     gitee: git@gitee.com:maywzh/maywzh.git
+    bandwagon: git@45.78.6.112:/home/git/hexo.git
   branch: master
 
 #Search Engine

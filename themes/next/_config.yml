@@ -60,7 +60,7 @@ rss:
 footer:
   # Specify the date when the site was setup.
   # If not defined, current year will be used.
-  #since: 2015
+  since: 2015
 
   # Icon between year and copyright info.
   icon:
@@ -68,7 +68,7 @@ footer:
     # `heart` is recommended with animation in red (#ff0000).
     name: user
     # If you want to animate the icon, set it to true.
-    animated: false
+    animated: true
     # Change the color of icon, using Hex Code.
     color: "#808080"
 
@@ -158,6 +158,8 @@ social:
   GitHub: https://github.com/maywzh || github
   LinkedIn: http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/ || linkedin
   Weibo: http://weibo.com/JupiterMay || weibo
+  StackOverflow: https://stackoverflow.com/users/6616616/maywzh || stack-overflow
+  500px: https://500px.com/maywzh || 500px
   E-Mail: mailto:maywzh@gmail.com || envelope
   #Douban: https://www.douban.com/people/CrisMay/ || douban
   #Google: https://plus.google.com/yourname || google

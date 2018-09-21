@@ -399,21 +399,21 @@ font:
   # Global font settings used for all elements in <body>.
   global:
     external: true
-    family: Chevin
+    family: Merriweather
     size:
 
   # Font settings for Headlines (H1, H2, H3, H4, H5, H6).
   # Fallback to `global` font settings.
   headings:
     external: true
-    family: Chevin
+    family: 
     size:
 
   # Font settings for posts.
   # Fallback to `global` font settings.
   posts:
     external: true
-    family:
+    family: 
 
   # Font settings for Logo.
   # Fallback to `global` font settings.
@@ -425,7 +425,7 @@ font:
   # Font settings for <code> and code blocks.
   codes:
     external: true
-    family: 
+    family: Share Tech Mono
     size:
 
 
@@ -673,7 +673,7 @@ busuanzi_count:
 
 
 # Enable baidu push so that the blog will push the url to baidu automatically which is very helpful for SEO
-#baidu_push: true
+baidu_push: true
 
 # Google Calendar
 # Share your recent schedule to others via calendar page
@@ -939,11 +939,11 @@ vendors:
 
   # Internal version: 3.3.0
   # https://github.com/ethantw/Han
-  Han:
+  Han: true
 
   # Internal version: 3.3.0
   # https://github.com/vinta/pangu.js
-  pangu:
+  pangu: true
 
   # needMoreShare2
   # https://github.com/revir/need-more-share2

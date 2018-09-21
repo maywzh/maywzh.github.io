@@ -473,7 +473,7 @@ han: false
 # Pangu Support
 # Dependencies: https://github.com/theme-next/theme-next-pangu
 # For more information: https://github.com/vinta/pangu.js
-pangu: false
+pangu: true
 
 # Swiftype Search API Key
 #swiftype_key:
@@ -939,11 +939,11 @@ vendors:
 
   # Internal version: 3.3.0
   # https://github.com/ethantw/Han
-  Han: true
+  Han: //cdnjs.cloudflare.com/ajax/libs/Han/3.3.0/han.min.css
 
   # Internal version: 3.3.0
   # https://github.com/vinta/pangu.js
-  pangu: true
+  pangu: https://cdnjs.cloudflare.com/ajax/libs/pangu/3.3.0/pangu.min.js
 
   # needMoreShare2
   # https://github.com/revir/need-more-share2

@@ -1,5 +1,4 @@
 ---
-title: about
 date: 2015-08-12 10:14:04
 updated: 2018-09-01 19:01:04
 comments: false
@@ -15,7 +14,7 @@ comments: false
 
 # 联系我
 
-GitHub: maywzh
+GitHub: [maywzh](https://github.com/maywzh)
+Weibo: [@邪葉見](http://weibo.com/JupiterMay)
+简书: [@邪欢葉](https://www.jianshu.com/u/63fe4a9b2965)
 Email: maywzh@gmail.com
-微博: @邪葉見
-豆瓣：@邪见

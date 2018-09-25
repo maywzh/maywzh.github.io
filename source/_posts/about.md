@@ -1,5 +1,5 @@
 ---
-layout: pagte
+layout: #pagte
 title: about
 tags: []
 nothome: true

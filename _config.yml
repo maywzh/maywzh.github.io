@@ -15,8 +15,8 @@ timezone:
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://maywzh.com
 root: /
-permalink: :year/:month/:day/:title/
-permalink_defaults:
+permalink: :title/
+permalink_defaults: 
 
 # Directory
 source_dir: source
@@ -116,8 +116,8 @@ since: 2015
 # Available: by | by-nc | by-nc-nd | by-nc-sa | by-nd | by-sa | zero
 # creative_commons: by-nc-sa
 
-# Google Webmaster tools verification setting
-# See: https://www.google.com/webmasters/
-# google_site_verification: VvyjvVXcJQa0QklHipu6pwm2PJGnnchIqX7s5JbbT_0
+#Google Webmaster tools verification setting
+#See: https://www.google.com/webmasters/
+google_site_verification: VvyjvVXcJQa0QklHipu6pwm2PJGnnchIqX7s5JbbT_0
 
 

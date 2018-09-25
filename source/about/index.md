@@ -15,6 +15,6 @@ comments: false
 # 联系我
 
 GitHub: [maywzh](https://github.com/maywzh)
-Weibo: [@邪葉見](http://weibo.com/JupiterMay)
+Weibo: [@邪欢一](http://weibo.com/JupiterMay)
 简书: [@邪欢葉](https://www.jianshu.com/u/63fe4a9b2965)
 Email: maywzh@gmail.com

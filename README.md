@@ -1,2 +1,1 @@
-##This is source of hexo blog deployed on github
-### Let's get started
+# A hexo blog founded in 2017, which I started writing since 2015

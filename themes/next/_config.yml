@@ -300,7 +300,7 @@ symbols_count_time:
 codeblock:
   # Manual define the border radius in codeblock
   # Leave it empty for the default 1
-  border_radius:
+  border_radius: 2
   # Add copy button on codeblock
   copy_button:
     enable: false

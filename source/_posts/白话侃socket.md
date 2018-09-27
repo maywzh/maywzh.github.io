@@ -18,6 +18,8 @@ updated: 2015-11-27 03:28:18
 
 简单来说，**socket 是对底层网络通信的一层抽象，让程序员可以像文件那样操作网络上发送和接收的数据。**
 
+<!--more-->
+
 > veryone knows what a files is... It's that "photo", "document", or "music" that you use. Programs are made of files, in fact, the whole Linux operating system is just a collection of files... But, now for the weird part. Not only is that digital photo that you uploaded to your computer a file, but your monitor is a file too! You see, in Linux, everything is a file! WOW!!! How can that be? Let's try to explain it.
 >
 > 在linux和Unix系统中，一起都是文件。

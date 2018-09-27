@@ -10,6 +10,8 @@ date: 2015-11-27 03:28:18
 updated: 2015-11-27 03:28:18
 ---
 
+
+
 我们经常在网络编程接触socket这个概念，简而言之，socket就是网络套接字，提供一个网络通信的接口给通信的进程，但这样讲了等于没讲，今天就来好好研究研究。
 
 ## 啥是socket
@@ -46,11 +48,11 @@ ip 地址是网络层用来路由和通信的标识符，端口（port） 是传
 
 socket类型在创建时指定，常用的有三种
 
-- SOCK_STREAM：面向连接的稳定通信，底层是 TCP 协议。
+- `SOCK_STREAM`：面向连接的稳定通信，底层是 TCP 协议。
 
-- SOCK_DGRAM：无连接的通信，底层是 UDP 协议，需要上层的协议来保证可靠性。
+- `SOCK_DGRAM`：无连接的通信，底层是 UDP 协议，需要上层的协议来保证可靠性。
 
-- SOCK_RAW：更加灵活的数据控制，可制定IP头部，类似于自定义协议。
+- `SOCK_RAW`：更加灵活的数据控制，可指定IP头部。
 
 
 
@@ -121,7 +123,7 @@ struct in_addr
 //可以用 INADDR_ANY 变量表示接受来自任何地址的连接，使用之前需要把地址变量初始化为全0
 ```
 
-服务器端的 s_addr 是本机地址，`sockaddr` 是通用的 socket 地址结构，`sockaddr_in` 是网络 socket 的结构，参数有一个类型转换的过程。
+服务器端的 `s_addr` 是本机地址，`sockaddr` 是通用的 socket 地址结构，`sockaddr_in` 是网络 socket 的结构，参数有一个类型转换的过程。
 
 
 
@@ -158,7 +160,7 @@ new_socket = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c);
 
 每当接收到客户端的连接请求时，服务端调用`accept` 函数接受该连接，把客户端的 socket 地址信息保存到 `client` 变量里，新建一个 socket，返回其描述符，然后数据的读写就能通过新 socket 进行。 新 socket 的地址和服务器监听 socket 是一样的，如果不关心客户端地址信息的话，可以把第二个和第三个参数都设置为空指针 `NULL`。
 
-有了 `client` 变量，就能得到客户端的 ip 和 port ：
+有了 `client` 变量，就能得到客户端的 `ip` 和 `port` ：
 
 ```
 char *client_ip = inet_ntoa(client.sin_addr);
@@ -180,7 +182,7 @@ read(socket_des, buffer, sizeof(buffer));
 
 `read`和 `write` 返回的是实际读写的数据，这个数据最大是 buffer 的大小。如果传输的数据大于 buffer 的话，需要在程序里显式地去读取，否则会出错。
 
-你可能会想，我一直读到返回的数据小于 sizeof(buff) 不就行了。嗯，这是一个解决方案，不过要判断返回值不是 0，因为返回值是 0 表示连接已经中断（需要调用 close 来关闭 socket），而不是没有数据发送过来。
+你可能会想，我一直读到返回的数据小于 `sizeof(buff)` 不就行了。嗯，这是一个解决方案，不过要判断返回值不是 0，因为返回值是 0 表示连接已经中断（需要调用 `close` 来关闭 socket），而不是没有数据发送过来。
 
 ### 其他常用函数
 
@@ -222,7 +224,7 @@ read(socket_des, buffer, sizeof(buffer));
 
    这个可以把从键盘输入的端口号转换成可用的整数。
 
-5. getpeername：获取连在某个 socket 另一端的客户地址(ip 和 port)
+5. `getpeername`：获取连在某个 socket 另一端的客户地址(ip 和 port)
 
    ```
    int getpeername(int sockfd, struct sockaddr *addr, socklen_t *addrlen);

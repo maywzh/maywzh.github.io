@@ -230,9 +230,9 @@ read(socket_des, buffer, sizeof(buffer));
 
    返回的信息保存在 addr 结构体里。
 
-## 简单的 echo server
+## Demo演示
 
-有了上面的知识，我们就来写一个简单的 echo server。这个 server 的功能非常简单，它默认监听在本机的 54321 端口，接受 client 端连接，然后把客户端发送的数据加上时间戳发送回去。
+本demo实现一个EchoServer，监听54321端口，接受客户端的信息并加上时间戳发送回去。
 
 ```c
 #include <sys/socket.h>
@@ -325,13 +325,10 @@ int main(int argc, char *argv[])
 }
 ```
 
-
-
 用 telnet 测试的结果如下：
 
-![img](http://i3.tietuku.com/2bffcd42526f9631.png)
+![image-20180927202444367](https://ws1.sinaimg.cn/large/006tNc79gy1fvodb0jzaij31bs0vgdj4.jpg)
 
-这个程序没有很好的错误检查，而且每次只能和一个客户端进行通信，后面接进来的客户端必须要等到前面的客户端主动结束之后才能开始。以后会讲到怎么处理多连接的问题，这个例子只是 socket 基础知识的 demo。
 
 ## 参考资料
 

@@ -18,10 +18,10 @@ gulp.task("minify-html", function() {
     .pipe(htmlclean())
     .pipe(
       htmlmin({
-        removeComments: true,
-        minifyJS: true,
-        minifyCSS: true,
-        minifyURLs: true
+        removecomments: true,
+        minifyjs: true,
+        minifycss: true,
+        minifyurls: true
       })
     )
     .pipe(gulp.dest("./public"));
@@ -39,18 +39,16 @@ gulp.task("minify-images", function() {
     .src("./public/demo/**/*.*")
     .pipe(
       imagemin({
-        optimizationLevel: 5, //类型：Number  默认：3  取值范围：0-7（优化等级）
-        progressive: true, //类型：Boolean 默认：false 无损压缩jpg图片
-        interlaced: false, //类型：Boolean 默认：false 隔行扫描gif进行渲染
-        multipass: false //类型：Boolean 默认：false 多次优化svg直到完全优化
+        optimizationlevel: 5, //类型：number  默认：3  取值范围：0-7（优化等级）
+        progressive: true, //类型：boolean 默认：false 无损压缩jpg图片
+        interlaced: false, //类型：boolean 默认：false 隔行扫描gif进行渲染
+        multipass: false //类型：boolean 默认：false 多次优化svg直到完全优化
       })
     )
     .pipe(gulp.dest("./public/uploads"));
 });
 // 默认任务
-gulp.task("default", [
-  "minify-html",
-  "minify-css",
-  "minify-js",
-  "minify-images"
-]);
+gulp.task(
+  "default",
+  gulp.series("minify-html", "minify-css", "minify-js", "minify-images") //gulp4 需要这种方式
+);

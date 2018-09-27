@@ -5,7 +5,7 @@ tags:
   - JavaScript
 categories:
   - 编程语言
-date: 2018-09-28 01:46:00
+date: 2017-02-11 01:46:00
 ---
 ## JavaScript 继承
 

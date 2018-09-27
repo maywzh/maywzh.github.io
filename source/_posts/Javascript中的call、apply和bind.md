@@ -1,15 +1,15 @@
 ---
-title: Javascript中的call、apply和bind
+title: JavaScript中的call、apply和bind
 author: maywzh
 tags:
-  - Javascript
+  - JavaScript
 categories:
   - 编程语言
 date: 2016-10-17 18:35:00
 ---
 ## apply & call
  
-> 在 javascript 中，call 和 apply 都是为了改变某个函数运行时的上下文（context）而存在的 
+> 在 JavaScript 中，call 和 apply 都是为了改变某个函数运行时的上下文（context）而存在的 
 
 **在js中，一切都是对象**，包括函数。函数存在「定义时上下文」和「运行时上下文」以及「上下文是可以改变的」这样的概念。
 
@@ -17,7 +17,7 @@ date: 2016-10-17 18:35:00
 
 例：
 
-```javascript
+```JavaScript
 function people() {}
  
 people.prototype = {
@@ -33,7 +33,7 @@ a.say();    //My name is ming
 
 此时我们有一个对象`b={name:"su"}`，不想重新定义say方法， 那么可以通过call或者apply方法。
 
-```javascript
+```JavaScript
 b={
 	name:"su"
 }
@@ -47,7 +47,7 @@ a.say.apply(b); //My name is su
 
 对于 apply、call 二者而言，作用完全一样，只是接受参数的方式不太一样。
 
-```javascript
+```JavaScript
 var func = function(arg1, arg2) {
      
 };
@@ -61,7 +61,7 @@ func.apply(this, [arg1, arg2])
 
 - **数组追加**
 
-  ```javascript
+  ```JavaScript
   var array1 = [12 , "foo" , {name "Joe"} , -2458]; 
   var array2 = ["Doe" , 555 , 100]; 
   Array.prototype.push.apply(array1, array2); 
@@ -71,7 +71,7 @@ func.apply(this, [arg1, arg2])
 
 - **获取数组最大最小值**
 
-  ```javascript
+  ```JavaScript
   var  numbers = [5, 458 , 120 , -215 ]; 
   var maxInNumbers = Math.max.apply(Math, numbers),   //458
       maxInNumbers = Math.max.call(Math,5, 458 , 120 , -215); //458
@@ -81,7 +81,7 @@ func.apply(this, [arg1, arg2])
 
 - **验证是否是数组**
 
-  ```javascript
+  ```JavaScript
   functionisArray(obj){ 
       return Object.prototype.toString.call(obj) === '[object Array]' ;
   }
@@ -90,11 +90,11 @@ func.apply(this, [arg1, arg2])
 
 - **类（伪）数组使用数组方法**
 
-  ```javascript
+  ```JavaScript
   var domNodes = Array.prototype.slice.call(document.getElementsByTagName("*"));
   ```
 
-  Javascript中存在一种名为伪数组的对象结构。比较特别的是 `arguments` 对象，还有像调用 `getElementsByTagName` , `document.childNodes` 之类的，它们返回NodeList对象都属于伪数组。不能应用 Array下的 `push` , `pop` 等方法。
+  JavaScript中存在一种名为伪数组的对象结构。比较特别的是 `arguments` 对象，还有像调用 `getElementsByTagName` , `document.childNodes` 之类的，它们返回NodeList对象都属于伪数组。不能应用 Array下的 `push` , `pop` 等方法。
 
   但是我们能通过 `Array.prototype.slice.call `转换为真正的数组的带有 length 属性的对象，这样 domNodes 就可以应用 Array 下的所有方法了。
 
@@ -104,7 +104,7 @@ func.apply(this, [arg1, arg2])
 
   由于传入参数不确定，所以普通的方法对于多个参数是失效的。
 
-  ```javascript
+  ```JavaScript
   function log(msg)　{
     console.log(msg);
   }
@@ -114,7 +114,7 @@ func.apply(this, [arg1, arg2])
 
   此时`arguments`就派上用场了，可以把`arguments`传入`apply`方法中。
 
-  ```javascript
+  ```JavaScript
   function log(){
     console.log.apply(console, arguments);
   };
@@ -130,7 +130,7 @@ func.apply(this, [arg1, arg2])
 
 > bind()方法会创建一个新函数，称为绑定函数，当调用这个绑定函数时，绑定函数会以创建它时传入 bind()方法的第一个参数作为 this，传入 bind() 方法的第二个以及以后的参数加上绑定函数运行时本身的参数按照顺序作为原函数的参数来调用原函数。
 
-```javascript
+```JavaScript
 var foo = {
     bar : 1,
     eventBind: function(){
@@ -143,9 +143,9 @@ var foo = {
 }
 ```
 
-由于 Javascript 特有的机制，上下文环境在 `eventBind:function(){ }` 过渡到 `$('.someClass').on('click',function(event) { })` 发生了改变，上述使用变量保存 `this` 这些方式都是有用的，也没有什么问题。当然使用 `bind()` 可以更加优雅的解决这个问题：
+由于 JavaScript 特有的机制，上下文环境在 `eventBind:function(){ }` 过渡到 `$('.someClass').on('click',function(event) { })` 发生了改变，上述使用变量保存 `this` 这些方式都是有用的，也没有什么问题。当然使用 `bind()` 可以更加优雅的解决这个问题：
 
-```javascript
+```JavaScript
 var foo = {
     bar : 1,
     eventBind: function(){
@@ -159,7 +159,7 @@ var foo = {
 
 在上述代码里，`bind()` 创建了一个函数，**当这个click事件绑定在被调用的时候，它的 this 关键词会被设置成被传入的值**（这里指调用`bind()`时传入的参数）。因此，这里我们传入想要的上下文 this(其实就是 foo )，到 `bind()` 函数中。然后，当回调函数被执行的时候， this 便指向 foo 对象。再来一个简单的栗子：
 
-```javascript
+```JavaScript
 var bar = function(){
 	console.log(this.x);
 }
@@ -177,7 +177,7 @@ func(); // 3
 
 如果bind多次会如何？
 
-```javascript
+```JavaScript
 var bar = function(){
     console.log(this.x);
 }
@@ -201,7 +201,7 @@ func(); // 3
 
 ## apply、call、bind比较
 
-```javascript
+```JavaScript
 var obj = {
     x: 81,
 };

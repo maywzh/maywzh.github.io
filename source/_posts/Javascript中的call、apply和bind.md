@@ -2,7 +2,7 @@
 title: JavaScript中的call、apply和bind
 author: maywzh
 tags:
-  - JavaScript
+  - JavaScript Language
 categories:
   - 编程语言
 date: 2016-10-17 18:35:00

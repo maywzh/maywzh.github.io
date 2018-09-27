@@ -2,7 +2,6 @@
 title: 聊聊socket
 tags:
   - 网络编程
-  - C/C++
 categories:
   - 计算机网络
 author: maywzh

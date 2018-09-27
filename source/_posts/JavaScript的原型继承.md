@@ -20,6 +20,8 @@ public class B extends A {} //子类B继承了父类A
 
 在JavaScript的世界中则并非如此。JS通过原型链的方式来实现继承，是基于对象的继承。下例中b对象继承了a对象的所有属性和方法。
 
+<!--more-->
+
 ```JavaScript
 function People(sex) {
     this.sex = sex;

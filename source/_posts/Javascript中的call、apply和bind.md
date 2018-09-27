@@ -11,7 +11,7 @@ date: 2016-10-17 18:35:00
  
 > 在 JavaScript 中，call 和 apply 都是为了改变某个函数运行时的上下文（context）而存在的 
 
-**在js中，一切都是对象**，包括函数。函数存在「定义时上下文」和「运行时上下文」以及「上下文是可以改变的」这样的概念。
+**在JavaScript中，一切都是对象**，包括函数。函数存在「定义时上下文」和「运行时上下文」以及「上下文是可以改变的」这样的概念。
 
 <!--more-->
 
@@ -31,7 +31,7 @@ var a = new people;
 a.say();    //My name is ming
 ```
 
-此时我们有一个对象`b={name:"su"}`，不想重新定义say方法， 那么可以通过call或者apply方法。
+此时我们有一个对象`b={name:"su"}`，不想重新定义`say`方法， 那么可以通过`call`或者`apply`方法。
 
 ```JavaScript
 b={
@@ -41,11 +41,11 @@ a.say.call(b); //My name is su
 a.say.apply(b); //My name is su
 ```
 
-可以看出call和apply都是为了**动态改变this**而出现的。当一个object没有某个方法，可以借助call或apply用其他对象的方法来操作。
+可以看出`call`和`apply`都是为了动态改变`this`而出现的。当一个`object`没有某个方法，可以借助call或apply用其他对象的方法来操作。
 
 ### apply和call的区别
 
-对于 apply、call 二者而言，作用完全一样，只是接受参数的方式不太一样。
+对于 `apply`、`call` 二者而言，作用完全一样，只是接受参数的方式不太一样。
 
 ```JavaScript
 var func = function(arg1, arg2) {
@@ -55,9 +55,9 @@ func.call(this, arg1, arg2);
 func.apply(this, [arg1, arg2])
 ```
 
-**call** 需要把参数按顺序传递进去，而 **apply** 则是把参数放在数组里。　
+`call` 需要把参数按顺序传递进去，而 `apply` 则是把参数放在数组里。　
 
-明确知道参数数量时用 call 。而不确定的时候用 apply，然后把参数 push 进数组传递进去。当参数数量不确定时，函数内部也可以通过 arguments 这个伪数组来遍历所有的参数。
+明确知道参数数量时用 `call` 。而不确定的时候用 `apply`，然后把参数 `push` 进数组传递进去。当参数数量不确定时，函数内部也可以通过 `arguments` 这个伪数组来遍历所有的参数。
 
 - **数组追加**
 
@@ -77,7 +77,7 @@ func.apply(this, [arg1, arg2])
       maxInNumbers = Math.max.call(Math,5, 458 , 120 , -215); //458
   ```
 
-  number 本身没有 max 方法，但是 Math 有，我们就可以借助 call 或者 apply 使用其方法。
+  `number` 本身没有 `max` 方法，但是 `Math` 有，我们就可以借助 `call` 或者 `apply` 使用其方法。
 
 - **验证是否是数组**
 
@@ -94,9 +94,9 @@ func.apply(this, [arg1, arg2])
   var domNodes = Array.prototype.slice.call(document.getElementsByTagName("*"));
   ```
 
-  JavaScript中存在一种名为伪数组的对象结构。比较特别的是 `arguments` 对象，还有像调用 `getElementsByTagName` , `document.childNodes` 之类的，它们返回NodeList对象都属于伪数组。不能应用 Array下的 `push` , `pop` 等方法。
+  JavaScript中存在一种名为伪数组的对象结构。比较特别的是 `arguments` 对象，还有像调用 `getElementsByTagName` , `document.childNodes` 之类的，它们返回NodeList对象都属于伪数组。不能应用 `Array`下的 `push` , `pop` 等方法。
 
-  但是我们能通过 `Array.prototype.slice.call `转换为真正的数组的带有 length 属性的对象，这样 domNodes 就可以应用 Array 下的所有方法了。
+  但是我们能通过 `Array.prototype.slice.call `转换为真正的数组的带有 `length` 属性的对象，这样 domNodes 就可以应用 `Array` 下的所有方法了。
 
 ### 实例
 
@@ -157,7 +157,7 @@ var foo = {
 }
 ```
 
-在上述代码里，`bind()` 创建了一个函数，**当这个click事件绑定在被调用的时候，它的 this 关键词会被设置成被传入的值**（这里指调用`bind()`时传入的参数）。因此，这里我们传入想要的上下文 this(其实就是 foo )，到 `bind()` 函数中。然后，当回调函数被执行的时候， this 便指向 foo 对象。再来一个简单的栗子：
+在上述代码里，`bind()` 创建了一个函数，当这个`click`事件绑定在被调用的时候，它的 `this` 关键词会被设置成被传入的值（这里指调用`bind()`时传入的参数）。因此，这里我们传入想要的上下文 `this`(其实就是 foo )，到 `bind()` 函数中。然后，当回调函数被执行的时候， `this` 便指向 `foo` 对象。再来一个简单的栗子：
 
 ```JavaScript
 var bar = function(){
@@ -171,11 +171,11 @@ var func = bar.bind(foo);
 func(); // 3
 ```
 
-这里我们创建了一个新的函数 func，当使用 bind() 创建一个绑定函数之后，它被执行的时候，它的 this 会被设置成 foo ， 而不是像我们调用 bar() 时的全局作用域。
+这里我们创建了一个新的函数 `func`，当使用 `bind()` 创建一个绑定函数之后，它被执行的时候，它的 `this` 会被设置成 `foo` ， 而不是像我们调用 `bar()` 时的全局作用域。
 
 
 
-如果bind多次会如何？
+如果`bind`多次会如何？
 
 ```JavaScript
 var bar = function(){
@@ -197,7 +197,7 @@ var func = bar.bind(foo).bind(sed).bind(fiv);
 func(); // 3
 ```
 
-仍旧输出3。原因在于bind()相当使用函数在内部包了一个call/apply，往后 bind() 相当于再包住第一次 bind() ,故第二次以后的 bind 是无法生效的。
+仍旧输出3。原因在于bind()相当使用函数在内部包了一个`call/apply`，往后 `bind()` 相当于再包住第一次 `bind()` ,故第二次以后的 `bind` 是无法生效的。
 
 ## apply、call、bind比较
 
@@ -217,4 +217,4 @@ console.log(foo.getX.call(obj));    //81
 console.log(foo.getX.apply(obj));   //81
 ```
 
-三个都可以改变上下文环境，但bind并非立刻执行(需要调用)，而call和apply都是立即执行。
+三个都可以改变上下文环境，但`bind`并非立刻执行(需要调用)，而`call`和`apply`都是立即执行。

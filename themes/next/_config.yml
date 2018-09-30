@@ -160,16 +160,18 @@ social:
   Weibo: http://weibo.com/JupiterMay || weibo
   StackOverflow: https://stackoverflow.com/users/6616616/maywzh || stack-overflow
   500px: https://500px.com/maywzh || 500px
+  Instagram: https://instagram.com/maywzh || instagram
   E-Mail: mailto:maywzh@gmail.com || envelope
+  #Gitlab : https://gitlab.com/maywzh || gitlab
   #Douban: https://www.douban.com/people/CrisMay/ || douban
-  #Google: https://plus.google.com/yourname || google
-  #Twitter: https://twitter.com/yourname || twitter
-  #FB Page: https://www.facebook.com/yourname || facebook
-  #VK Group: https://vk.com/yourname || vk
-  #StackOverflow: https://stackoverflow.com/yourname || stack-overflow
-  #YouTube: https://youtube.com/yourname || youtube
-  #Instagram: https://instagram.com/yourname || instagram
   #Skype: skype:yourname?call|chat || skype
+  #Google: https://plus.google.com/yourname || google
+  #Twitter: https://twitter.com/maywzh|| twitter
+  #Facebook: https://www.facebook.com/kaisermay || facebook
+  #VK Group: https://vk.com/yourname || vk
+  #StackOverflow: https://stackoverflow.com/users/6616616/maywzh || stack-overflow
+  #YouTube: https://www.youtube.com/channel/UCprqPV3-B8AwSVDYg2Pbe5g || youtube
+  
 
 social_icons:
   enable: true
@@ -322,7 +324,7 @@ codeblock:
 # Related popular posts
 # Dependencies: https://github.com/tea3/hexo-related-popular-posts
 related_posts:
-  enable: false
+  enable: true
   title: # custom header, leave empty to use the default one
   display_in_home: false
   params:
@@ -411,7 +413,7 @@ font:
 
   # Font settings for posts.
   # Fallback to `global` font settings.
-  posts:
+  posts: 
     external: false
     family: 
 
@@ -425,8 +427,8 @@ font:
   # Font settings for <code> and code blocks.
   codes:
     external: true
-    family: Share Tech Mono
-    size:
+    family: Fira Mono
+    size: 16
 
 
 # ---------------------------------------------------------------

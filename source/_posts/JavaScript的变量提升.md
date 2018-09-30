@@ -2,12 +2,12 @@
 title: JavaScript的变量提升
 author: maywzh
 tags:
-  - JavaScript Language
+  - JavaScript 
 categories:
   - 编程语言
 date: 2017-02-28 03:35:00
 ---
-JavaScript里面有一些与严谨编程语言不同的地方，对于已经熟悉C/C++这些语言的程序员，JS有许多“坑爹”之处，但简单也是JS的特点，关注JS的特性，避免思维定势，可以帮助我们写出健壮的程序。
+JavaScript的设计不同于传统编程语言，它自成一派，有很多的奇妙特性。
 
 今天就来聊聊变量提升。
 

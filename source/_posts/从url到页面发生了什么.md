@@ -3,7 +3,6 @@ title: 从url到页面发生了什么
 date: 2018-06-14 17:46:51
 tags:
   - dns
-  - 负载均衡
   - Web架构
 categories: 前端
 ---

@@ -166,57 +166,6 @@ HTTPS与HTTP协议不同之处在于，建立TCP连接之后，HTTPS协议还需
 
 获取了目的IP，建立了TCP连接之后，客户端构建HTTP请求报文，通过TCP协议发送到服务器指定端口(HTTP协议80/8080, HTTPS协议443)。
 
-HTTP请求报文是由三部分组成: **请求行**, **请求报头**和**请求正文**。
-
-下面是对google.com发出的请求报文。
-
-```http
-GET / HTTP/1.2
-accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
-accept-encoding: gzip, deflate, br
-accept-language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6
-cache-control: no-cache
-cookie: OTZ=4569705_24_24__24_; _ga=GA1.1.1839148291.1537105919; HSID=AOuQZEx7qIgKNr4Gg; SSID=sdsdfgGFWWA...
-dnt: 1
-pragma: no-cache
-upgrade-insecure-requests: 1
-user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36
-```
-
-
-
-![http请求报文](https://ws2.sinaimg.cn/large/006tNc79gy1fvrvownevsj30bv0470su.jpg)
-
-### 请求行
-
-请求行标示请求方法、请求资源相对地址和HTTP协议版本
-
-常见的请求方法有有: GET, POST, PUT, DELETE, OPTIONS, HEAD。
-
-### 请求报头
-
-包含请求的附加信息和客户端的标识信息。
-
-常见的头部字段：
-
-- Accept: 客户端接受什么类型的响应，包含一个或多个[MIME类型](<http://en.wikipedia.org/wiki/MIME_type> )的值
-- Accept-Charset 设置接受的字符编码
-- Cookie 客户端的Cookie
-- Accept-Encoding 设置接受的编码格式
-- Accept-Language 设置接受的语言
-- Content-Type 设置请求体的MIME类型（适用POST和PUT请求）
-- Authorization 设置HTTP身份验证的凭证
-- User-Agent 用户代理的字符串值
-- Cache-Control 设置请求响应链上所有的缓存机制必须遵守的指令
-- Pragma 设置特殊实现字段，可能会对请求响应链有多种影响
-- DNT 请求web应用禁用用户追踪
-
-### 请求正文
-
-当使用POST, PUT等方法时，需要客户端向服务器传递参数。这些数据就储存在请求正文中。在请求报头中有一些与请求正文相关的信息，例如: 现在的Web应用通常采用Rest架构，请求的数据格式一般为json。这时就需要设置Content-Type: application/json。
-
-
-
 
 
 ## 服务端接受HTTP请求
@@ -241,62 +190,10 @@ MVC框架首先根据`HTTPRequest`对象的参数、内容，先根据路由配�
 
 Web服务器根据`HTTPResponse`对象来产生HTTP响应报文，通过TCP连接回送该报文。然后根据HTTP中的Keep-Alive字段的值确定是否要在响应发送完成后关闭TCP连接。
 
-HTTP响应报文的格式如下
-
-![1724103-HTTP响应](https://ws2.sinaimg.cn/large/006tNc79gy1fvrysltb0oj30fx08eaaj.jpg)
-
-### HTTP响应头部
-
-常用字段
-
-- Accept-Ranges 表明服务器是否支持指定范围请求及哪种类型的分段请求
-- Age 从原始服务器到代理缓存形成的估算时间（以秒计，非负）
-- Cache-Control 告诉所有的缓存机制是否可以缓存及哪种类型
-- Content-Encoding  web服务器支持的返回内容压缩编码类型。
-- Content-Language  响应体的语言
-- Content-Length  响应体的长度
-- Content-Location 请求资源可替代的备用的另一地址
-- Content-Type  返回内容的MIME类型
-- Date 原始服务器消息发出的时间
-- Last-Modified  请求资源的最后修改时间
-- Pragma 包括实现特定的指令，它可应用到响应链上的任何接收方
-- Set-Cookie  设置Http Cookie
-- Expires 响应过期的日期和时间
-
-### HTTP响应状态码
-
-根据处理结果，会产生不同的HTTP响应状态，这些状态用状态码来表示。
-
-按照分类，响应大概分为以下几大类
-
-| 状态码 | 响应类别                         | 原因短语                         |
-| ------ | -------------------------------- | -------------------------------- |
-| 1XX    | 信息性状态码（Informational）    | 服务器正在处理请求               |
-| 2XX    | 成功状态码（Success）            | 请求已正常处理完毕               |
-| 3XX    | 重定向状态码（Redirection）      | 需要进行额外操作以完成请求       |
-| 4XX    | 客户端错误状态码（Client Error） | 客户端原因导致服务器无法处理请求 |
-| 5XX    | 服务器错误状态码（Server Error） | 服务器原因导致处理请求出错       |
-
-常用的状态码有200，204，207，301，302，303，304，307，400，401，403，404，500，503这些
-
-- 200 OK 表示请求被服务器正常处理
-- 204 No Content 表示请求已成功处理，但是没有内容返回
-- 206 Partial Content 表示服务器已经完成了部分GET请求
-- 301 Moved Permanently 永久重定向，表示请求的资源已经永久的搬到了其他位置
-- 302 Found 临时重定向，表示请求的资源临时搬到了其他位置
-- 303 See Other 表示请求资源存在另一个URI，应使用GET定向获取请求资源
-- 304 Not Modified 表示客户端发送附带条件的请求（GET方法请求报文中的IF…）时，条件不满足
-- 307 Temporary Redirect 临时重定向，和302有着相同含义
-- 400 Bad Request 表示请求报文存在语法错误或参数错误，服务器不理解
-- 401 Unauthorized 表示发送的请求需要有HTTP认证信息或者是认证失败了
-- 403 Forbidden 表示对请求资源的访问被服务器拒绝了
-- 404 Not Found 表示服务器找不到请求的资源
-- 500 Internal Server Error 表示服务器执行请求的时候出错了
-- 503 Service Unavailable 表示服务器超负载或正停机维护，无法处理请求
 
 ## 客户端接受HTTP响应报文
 
-浏览器从HTTP响应报文中提取出html、css、js文件，然后浏览器对这些资源进行渲染，把渲染出来的网页绘制在屏幕上。
+浏览器从HTTP响应报文中的数据段提取出html、css、js文件，然后浏览器对这些资源进行渲染，把渲染出来的网页绘制在屏幕上。
 
 浏览器从上而下解析HTML文件，如果解析过程中遇到外部资源，如图像、JS、CSS文件等，则会重复以上HTTP通信过程。这个对外部资源的请求是异步的，所以不会影响资源解析。当解析到JS文件时，HTML文档则会挂起渲染过程，等待JS文件加载完毕和执行完毕。因此JS会阻塞后续资源的下载。JS代码执行前必须保证所有的CSS文件加载完毕。
 

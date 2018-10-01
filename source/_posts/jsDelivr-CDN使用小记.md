@@ -3,7 +3,6 @@ title: jsDelivr CDN使用小记
 date: 2018-01-13 02:46:27
 tags:
   - CDN
-  - 博客
 categories: 前端
 ---
 

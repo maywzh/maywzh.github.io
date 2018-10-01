@@ -1,12 +1,12 @@
 ---
-title: 聊聊socket
+title: 探秘socket
 tags:
   - 网络编程
+  - TCP/IP
 categories:
   - 计算机网络
 author: maywzh
-date: 2015-11-27 03:28:18
-updated: 2015-11-27 03:28:18
+date: 2015-12-21 03:28:18
 ---
 
 

@@ -1,5 +1,5 @@
 ---
-title: 创先WakaTime
+title: WakaTime折腾日记
 author: maywzh
 tags:
   - 生产力工具

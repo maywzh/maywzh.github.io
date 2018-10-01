@@ -49,6 +49,8 @@ URL(Uniform Resource Locator, 统一资源定位符)，互联网设计为一个�
 
 - 端口号(port)代表服务器的一个服务进程，这个进程监听这个端口上的TCP或UDP数据报。一台主机往往提供多个服务，例如既提供Web服务也提供FTP服务，那么端口就可以告诉web服务器所在主机把请求交给哪一个服务。各个协议都有默认（缺省）的端口。常见的如下：
 
+
+
   | 协议类型 | 默认端口 |
   | -------- | -------- |
   | http     | 80       |
@@ -57,6 +59,7 @@ URL(Uniform Resource Locator, 统一资源定位符)，互联网设计为一个�
   | telnet   | 23       |
 
 - 路径(route)代表一个服务下的资源的路径，例如`https://myblog.com/blog/2017/index.html`中的/`blog/2017`代表2017年的所有博客，返回的资源取决于后端服务器的实现。
+
 - 文件名(filename)代表某个特定的资源，例如`https://myblog.com/blog/2017/index.html`的`index.html`代表这个特定的页面。
 
 ## IP地址

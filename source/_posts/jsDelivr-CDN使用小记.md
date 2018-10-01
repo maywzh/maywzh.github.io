@@ -1,5 +1,4 @@
 ---
-
 title: jsDelivr CDN使用小记
 date: 2018-01-13 02:46:27
 tags:
@@ -16,11 +15,13 @@ categories: 前端
 
 难道要在客户端去跑这个脚本？ =͟͟͞͞(꒪⌓꒪*) 算了算了还是搜一个靠谱的CDN吧。
 
-在StackOverflow搜索了一下发现有人推荐[jsDelivr](https://www.jsdelivr.com/)作为CDN。看了下它的文档，我发现它就是我梦想的CDN。
+在StackOverflow搜索了一下发现有人推荐[jsDelivr](https://www.jsdelivr.com/)作为CDN。
 
+试验了一下，发现效果相当给力。推荐一下～
 
+<!--more-->
 
-## jsDelivr - What is it
+## What is jsDelivr 
 
 > jsDelivr - Open Source CDN free fast and reliable
 
@@ -32,7 +33,17 @@ categories: 前端
 
 ![img](https://www.jsdelivr.com/img/network/infographics.png?v=d4a4024db2475bb20dc7a8166d98130a51606502)
 
-jsDelivr通过多个CDN服务商对全球用户提供高性能的内容分发服务，其中对中国线路做了特别优化。整个大陆地区有超过600个边缘节点。默认使用[cedexis](https://www.cedexis.com/)提供的智能负载均衡服务来进行CDN选择，如果cedexis挂掉，则默认选择StackPath CDN或CloudFlare CDN。如果请求内容未命中jsDelivr的缓存，则去上游的Amazon S3对象存储服务查找资源，Amazon S3服务也会同步最终来自于npm和Github的源文件。如果Amazon S3服务down掉，jsDelivr则吧请求直接转发给存储源文件的npm和github。
+jsDelivr通过多个CDN服务商对全球用户提供高性能的内容分发服务，其中对中国线路做了特别优化。整个大陆地区有超过600个边缘节点。默认使用[cedexis](https://www.cedexis.com/)提供的智能负载均衡服务来进行CDN选择，如果cedexis挂掉，则默认选择StackPath CDN或CloudFlare CDN。如果请求内容未命中jsDelivr的缓存，则去上游的Amazon S3对象存储服务查找资源，Amazon S3服务也会同步最终来自于npm和Github的源文件。如果Amazon S3服务down掉，jsDelivr则把请求直接转发给存储源文件的npm和github。
+
+总之，jsDelivr有众多的边缘服务节点，对中国大陆服务友好，并有宕机备份解决方案，保证了CDN的可达性和性能。
+
+## Performance test
+
+我们利用[17ce](http://www.17ce.com/site)这个测速工具来测量jsDelivr的性能。
+
+![image-测速](https://ws4.sinaimg.cn/large/006tNc79gy1fvs9h6ejrej30ql0dsgnq.jpg)
+
+速度还是相当给力的。
 
 ## How to use
 
@@ -40,7 +51,7 @@ jsDelivr提供了三种CDN服务方式：npm，github和wordpress。我们着重
 
 github方式
 
-```
+```html
 // load any GitHub release or commit
 // note: we recommend using npm for projects that support it
 https://cdn.jsdelivr.net/gh/user/repo@version/file
@@ -66,14 +77,16 @@ https://cdn.jsdelivr.net/gh/jquery/jquery/
 
 
 
-例如我们想要pangu的版本号为3.3.0的pangu.min.js插件的CDN地址，那么我们去[pangu的github页面](https://github.com/vinta/pangu.js)，
+例如我们想要`pangu`的版本号为3.3.0的`pangu.min.js`插件的CDN地址，那么我们去[pangu的github页面](https://github.com/vinta/pangu.js)，
 
-从commits历史或releases中查找3.3.0版本，查看文件并搜索pang.min.js的相对路径
+从commits历史或releases中查找3.3.0版本，查看文件并搜索`pangu.min.js`的相对路径
 
 ![image-20181001050350578](https://ws3.sinaimg.cn/large/006tNc79gy1fvs9620zrwj31kw0emdi3.jpg)
 
 其路径是`dist/browser/pangu.min.js`，根据作者名称和repo 名分别是`vinta/pangu.js`。所以引用路径是
 
-` https://cdn.jsdelivr.net/gh/vinta/pangu.js@3.3.0/dist/browser/pangu.min.js`
+` https://cdn.jsdelivr.net/gh/vinta/pangu.js@3.3.0/dist/browser/pangu.min.js`，我们也可以对这个地址测速。
 
-把它放在我们项目的配置文件中即可。
+![image-20181001051646602](https://ws4.sinaimg.cn/large/006tNc79gy1fvs9jgp1lkj30ma0djwgc.jpg)
+
+awesome！把它放在我们项目的配置文件中即可。

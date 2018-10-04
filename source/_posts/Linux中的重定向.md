@@ -1,9 +1,9 @@
 ---
 title: Linux中的重定向
-date: 2018-10-04 17:25:01
+date: 2016-06-04 17:25:01
 tags:
   - Linux
-categories: 操作系统 
+categories: 操作系统
 ---
 
 ## 从一个命令说起

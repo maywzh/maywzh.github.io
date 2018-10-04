@@ -16,7 +16,7 @@ categories: 操作系统
 $ cmd >/dev/null 2>&1 #cmd代表一个可以输出结果的命令
 ```
 
-
+<!--more-->
 
 
 ## 重定向

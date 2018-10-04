@@ -120,9 +120,18 @@ std::cin >> readstr; #把标准输入重定向到readstr。
 
 &可以将两个输出绑定在一起，这条命令的作用就是把标准错误和标准输出绑定在一起用一个文件描述符，即输出到一个地方。
 
+另一种写法
+
+```bash
+cmd &> output.txt
+cmd >& output.txt  #两个表达式等价
+```
+
+
+
 通过这两者的组合，我们把标准输出和标准错误绑定在一起抛弃掉了，即实现了不输出任何信息。
 
-### 顺序问题
+### >/dev/null 2>&1 VS 2>&1 >/dev/null
 
 ```bash
 >/dev/null 2>&1 
@@ -131,6 +140,41 @@ std::cin >> readstr; #把标准输入重定向到readstr。
 
 这两者是否有区别？
 
-答案是有的。linux在执行shell命令之前，就会确定好所有的输入输出位置，并且从左到右依次执行重定向的命令。第二条的命令会把错误输出绑定到依旧是默认输出设备的屏幕上，
+答案是有的。linux在执行shell命令之前，就会确定好所有的输入输出位置，并且从左到右依次执行重定向的命令。第二条的命令会把错误输出绑定到依旧是默认输出设备的屏幕上。而标准输出被丢弃。
 
- 
+
+
+### >/dev/null 2>&1 VS >/dev/null 2>/dev/null 
+
+```bash
+/dev/null 2>&1
+/dev/null 2>/dev/null
+```
+
+这两者看似相同，实际却不同。
+
+```bash
+# ls a.txt b.txt >out 2>out
+# cat out
+a.txt
+txt: No such file or directory #应该是 b.txt: No such file or directory， 出现了字符缺失
+```
+
+为什么会丢失字符，就是因为这种写法会导致标准输出和错误输出抢占重定向到out的管道，导致冲突、覆盖等问题。而且会导致输出效率较低。
+
+
+
+### 关于nohup
+
+我们经常使用`nohup command &`命令形式来启动一些后台程序，比如node服务：
+
+```bash
+$ nohup node server.js &
+```
+
+为了不让一些执行信息输出到前台（控制台），我们还会加上刚才提到的`>/dev/null 2>&1`命令来丢弃所有的输出：
+
+```bash
+$ nohup node server.js >/dev/null 2>&1 &
+```
+

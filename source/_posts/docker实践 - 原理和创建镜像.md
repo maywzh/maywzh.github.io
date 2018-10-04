@@ -1,5 +1,5 @@
 ---
-	title: docker原理与实战
+title: docker实践 - 原理和创建镜像
 date: 2017-06-13 21:04:40
 tags:
   - docker
@@ -195,9 +195,9 @@ Docker 容器是image的一个运行时实例。image被执行并被加载到内
 
 一个容器在Linux上**原生**运行，并于其他容器共享主机的内核。容器运行轻量级的独立的进程，占据资源相当少。而虚拟机则运行在一个客户操作系统(Guest OS)上，它通过虚拟机控制器技术来虚拟访问访问主机的资源，相对其他的进程，虚拟机要占据较多的机器资源。
 
-| ![Container stack example](https://www.docker.com/sites/default/files/Container%402x.png) | ![Virtual machine stack example](https://www.docker.com/sites/default/files/VM%402x.png) |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-|                                                              |                                                              |
+![img](https://ws2.sinaimg.cn/large/006tNbRwgy1fvw8wpeku3j30xa0qljs3.jpg)
+
+![img](https://ws4.sinaimg.cn/large/006tNbRwgy1fvw8wqr1vjj30xa0qlq5z.jpg)
 
 ## Docker启动服务
 
@@ -213,13 +213,13 @@ $ sudo systemctl start docker
 
 
 
-## 实战 - 以编写一个python app为例
+## 实战 - 构建一个app并创建docker镜像。
 
 如果我们想要开发一个python app，第一步就是安装一个python的runtime到开发机上，而这个配置必须完美契合app的配置要求，生产环境也必须这样。
 
-使用Docker，就可以把所需Python runtime打包为一个image，无需安装。然后在app的代码中include这个image即可。我们就算把app的环境打包好了。
+使用Docker，就可以把所需Python runtime打包为一个镜像(image)，无需安装。然后在app的代码包含这个image即可。我们就算把app的环境打包好了。
 
-### 步骤1: 通过`Dockerfile`来定义`container`
+### 步骤1: 通过`Dockerfile`来定义容器(`container`)
 
 `Dockerfile`定义了`container`内的行为。在`container`环境中，所有对环境资源的访问，例如网络接口和磁盘驱动，都被虚拟化了，并与`container`外的操作系统隔离。因此需要定义到容器外的端口，并确定想要“拷贝”到这个环境的文件。做完这个以后，就可以确保在`Dockerfile`中运行的app在任何外部环境都能完全相同地运行。
 
@@ -392,4 +392,79 @@ $ docker login
 #### 为image添加标签
 
 一个仓库中的image的格式是`username/repository:tag`。这个Tag是可选的，但一般推荐添加上，因为仓库可以用tag来设定Docker image版本号。
+
+```bash
+$ docker tag image user/repository:tag
+```
+
+例如
+
+```bash
+$ docker tag helloworld maywzh/maywzhrepo:part2
+```
+
+通过`docker image ls`来查看新的添加了标签的image:
+
+```bash
+$ docker image ls
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+friendlyhello       latest              cfb6345425ed        2 days ago          132MB
+koa-demo            0.0.1               628b71e7fc7d        2 weeks ago         675MB
+hello-world         latest              4ab4c602aa5e        3 weeks ago         1.84kB
+python              2.7-slim            c9cde4658340        4 weeks ago         120MB
+node                8.4                 386940f92d24        13 months ago       673MB
+```
+
+#### 发布image
+
+可以把标签过的image发布到仓库中：
+
+```bash
+$ docker push username/repository:tag
+```
+
+一旦完成，那么上传的东西就可以被可以被公开访问了，也可以上[Docker Hub](https://hub.docker.com/)来查看image上传的image。
+
+#### 从远端仓库拉取image
+
+经过之前的步骤，我们可以通过`docker run` 在任何机器上来运行我们的app
+
+```bash
+$ docker run -p 4000:80 username/repository:tag
+```
+
+如果image在本机不可用，就会把它拉回到本地:
+
+```bash
+$ docker run -p 4000:40 
+```
+
+
+
+## 总结
+
+Docker提供了一种虚拟化容器的方式来打包app以及它的运行环境，该容器(container)通过镜像(image)创建，而镜像通过编写`dockerfile`的方式来定义。我们也可以把为docker镜像添加标签，并推送到docker远程仓库中。这样就可以通过远程仓库直接运行镜像。
+
+
+
+## 附录 所用的所有命令
+
+```bash
+docker build -t friendlyhello .  # 用dockerfile来构建镜像
+docker run -p 4000:80 friendlyhello  # 运行friendlyhello 把容器端口80导航到到运行机端口4000
+docker run -d -p 4000:80 friendlyhello         # 后台运行模式
+docker container ls                                # 列出所有的容器
+docker container ls -a             # 列出所有的容器包括为未运行的
+docker container stop <hash>           # 优雅的方式关闭容器
+docker container kill <hash>         # 强制杀掉容器进程
+docker container rm <hash>        # 删除容器
+docker container rm $(docker container ls -a -q)         # 删除所有容器
+docker image ls -a                             # 列出所有的镜像
+docker image rm <image id>            # 删除特定镜像
+docker image rm $(docker image ls -a -q)   # 删除所有镜像
+docker login             # 登陆到docker CLI session
+docker tag <image> username/repository:tag  # 为镜像添加标签来上传到公有库
+docker push username/repository:tag            # 上传镜像到公有库
+docker run username/repository:tag                   # 从仓库运行镜像
+```
 

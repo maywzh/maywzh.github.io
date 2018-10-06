@@ -2,14 +2,14 @@
 title: Linux中的lsof
 categories: Linux
 comments: false
-date: 2017-05-26 17:26:52
+date: 2017-05-16 17:26:52
 tags:
   - CLI
   - 进程管理
   - Linux
 ---
 
-## List open files - lsof
+## lsof - list open files
 
 lsof（list open files）是一个查看当前系统文件的工具。在linux环境下，任何事物都以文件的形式存在，通过文件不仅仅可以访问常规数据，还可以访问网络连接和硬件。如传输控制协议 (TCP) 和用户数据报协议 (UDP) 套接字等，系统在后台都为该应用程序分配了一个文件描述符，该文件描述符提供了大量关于这个应用程序本身的信息。
 
@@ -77,53 +77,53 @@ init          1      root  mem       REG              253,0   145720    5521406 
 
 - FD：文件描述符，应用程序通过文件描述符识别该文件。如cwd、txt等:
 
-  ```
-  （1）cwd：表示current work dirctory，即：应用程序的当前工作目录，这是该应用程序启动的目录，除非它本身对这个目录进行更改
-  （2）txt ：该类型的文件是程序代码，如应用程序二进制文件本身或共享库，如上列表中显示的 /sbin/init 程序
-  （3）lnn：library references (AIX);
-  （4）er：FD information error (see NAME column);
-  （5）jld：jail directory (FreeBSD);
-  （6）ltx：shared library text (code and data);
-  （7）mxx ：hex memory-mapped type number xx.
-  （8）m86：DOS Merge mapped file;
-  （9）mem：memory-mapped file;
-  （10）mmap：memory-mapped device;
-  （11）pd：parent directory;
-  （12）rtd：root directory;
-  （13）tr：kernel trace file (OpenBSD);
-  （14）v86  VP/ix mapped file;
-  （15）0：表示标准输入
-  （16）1：表示标准输出
-  （17）2：表示标准错误
-  一般在标准输出、标准错误、标准输入后还跟着文件状态模式：r、w、u等
-  （1）u：表示该文件被打开并处于读取/写入模式
-  （2）r：表示该文件被打开并处于只读模式
-  （3）w：表示该文件被打开并处于写入模式
-  （4）空格：表示该文件的状态模式为unknow，且没有锁定
-  （5）-：表示该文件的状态模式为unknow，且被锁定
-  同时在文件状态模式后面，还跟着相关的锁
-  （1）N：for a Solaris NFS lock of unknown type;
-  （2）r：for read lock on part of the file;
-  （3）R：for a read lock on the entire file;
-  （4）w：for a write lock on part of the file;（文件的部分写锁）
-  （5）W：for a write lock on the entire file;（整个文件的写锁）
-  （6）u：for a read and write lock of any length;
-  （7）U：for a lock of unknown type;
-  （8）x：for an SCO OpenServer Xenix lock on part      of the file;
-  （9）X：for an SCO OpenServer Xenix lock on the      entire file;
-  （10）space：if there is no lock.
-  ```
+```md
+（1）cwd：表示current work dirctory，即：应用程序的当前工作目录，这是该应用程序启动的目录，除非它本身对这个目录进行更改
+（2）txt ：该类型的文件是程序代码，如应用程序二进制文件本身或共享库，如上列表中显示的 `/sbin/init` 程序
+（3）lnn：library references (AIX);
+（4）er：FD information error (see NAME column);
+（5）jld：jail directory (FreeBSD);
+（6）ltx：shared library text (code and data);
+（7）mxx ：hex memory-mapped type number xx.
+（8）m86：DOS Merge mapped file;
+（9）mem：memory-mapped file;
+（10）mmap：memory-mapped device;
+（11）pd：parent directory;
+（12）rtd：root directory;
+（13）tr：kernel trace file (OpenBSD);
+（14）v86  VP/ix mapped file;
+（15）0：表示标准输入
+（16）1：表示标准输出
+（17）2：表示标准错误
+一般在标准输出、标准错误、标准输入后还跟着文件状态模式：r、w、u等
+（1）u：表示该文件被打开并处于读取/写入模式
+（2）r：表示该文件被打开并处于只读模式
+（3）w：表示该文件被打开并处于写入模式
+（4）空格：表示该文件的状态模式为unknow，且没有锁定
+（5）-：表示该文件的状态模式为unknow，且被锁定
+同时在文件状态模式后面，还跟着相关的锁
+（1）N：for a Solaris NFS lock of unknown type;
+（2）r：for read lock on part of the file;
+（3）R：for a read lock on the entire file;
+（4）w：for a write lock on part of the file;（文件的部分写锁）
+（5）W：for a write lock on the entire file;（整个文件的写锁）
+（6）u：for a read and write lock of any length;
+（7）U：for a lock of unknown type;
+（8）x：for an SCO OpenServer Xenix lock on part of the file;
+（9）X：for an SCO OpenServer Xenix lock on the entire file;
+（10）space：if there is no lock.
+```
 
 - TYPE：文件类型，如DIR、REG等，常见的文件类型:
 
-- ```
-  （1）DIR：表示目录
-  （2）CHR：表示字符类型
-  （3）BLK：块设备类型
-  （4）UNIX： UNIX 域套接字
-  （5）FIFO：先进先出 (FIFO) 队列
-  （6）IPv4：网际协议 (IP) 套接字
-  ```
+```md
+（1）DIR：表示目录
+（2）CHR：表示字符类型
+（3）BLK：块设备类型
+（4）UNIX： UNIX 域套接字
+（5）FIFO：先进先出 (FIFO) 队列
+（6）IPv4：网际协议 (IP) 套接字
+```
 
 - DEVICE：指定磁盘的名称
 

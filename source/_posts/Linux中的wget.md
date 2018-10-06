@@ -2,12 +2,13 @@
 title: Linux中的wget
 categories: Linux
 comments: false
-date: 2017-08-06 16:55:51
+date: 2017-05-26 16:55:51
 tags:
   - CLI
   - 科学上网
   - 爬虫
 ---
+
 ## wget - web get
 
 Linux系统中的wget是一个下载文件的工具，它用在命令行下，是最常用的CLI工具之一。wget非常稳定，支持断点续传，支持HTTP，HTTPS和FTP协议，可以使用HTTP代理。

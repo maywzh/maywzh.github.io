@@ -1,5 +1,5 @@
 ---
-title: 实践Linux程序构建
+title: 实践Linux编程之壹 - 构建
 categories: Linux
 comments: false
 date: 2017-07-06 19:14:29
@@ -7,8 +7,6 @@ tags:
   - Linux编程
   - c-c++
 ---
-
-## 程序构建
 
 一般源代码提供的程序安装需要通过配置、编译、安装三个步骤；
 
@@ -22,13 +20,13 @@ tags:
 
 查询可用的配置选项:
 
-```
+```bash
 ./configure --help
 ```
 
 配置路径:
 
-```
+```bash
 ./configure --prefix=/usr/local/snmp
 ```
 
@@ -38,7 +36,7 @@ tags:
 
 编译使用make编译:
 
-```
+```bash
 make -f myMakefile
 ```
 
@@ -60,15 +58,15 @@ makefile Makefile
 - @？所有新于目标文件的前提名
 - @*目标文件的基名称
 
+要系统学习makefile可以参考 [跟我一起学makefile](http://scc.qibebt.cas.cn/docs/linux/base/%B8%FA%CE%D2%D2%BB%C6%F0%D0%B4Makefile-%B3%C2%F0%A9.pdf)
 
 
-系统学习makefile的书写规则，请参考 [跟我一起学makefile](http://scc.qibebt.cas.cn/docs/linux/base/%B8%FA%CE%D2%D2%BB%C6%F0%D0%B4Makefile-%B3%C2%F0%A9.pdf)
-
-#### 
 
 #### CMake工具
 
 CMake是一个跨平台的安装（编译）工具，可以用简单的语句来描述所有平台的安装(编译过程)。他能够输出各种各样的makefile或者project文件。使用CMake，能够使程序员从复杂的编译连接过程中解脱出来。它使用一个名为 CMakeLists.txt 的文件来描述构建过程,可以生成标准的构建文件,如 Unix/Linux 的 Makefile 或Windows Visual C++ 的 projects/workspaces 。
+
+ 
 
 #### 编译依赖的库
 
@@ -91,7 +89,7 @@ make -f myMakefile LDFLAGS='-L/var/xxx/lib -L/opt/mysql/lib'
 #### g++编译
 
 ```bash
-$g++ -o unixApp unixApp.o a.o b.o
+$ g++ -o unixApp unixApp.o a.o b.o
 ```
 
 选项说明：
@@ -104,14 +102,14 @@ $g++ -o unixApp unixApp.o a.o b.o
 
 在g++的编译选项中，添加 -E选项，然后去掉-o选项 ，重定向到一个文件中即可:
 
-```
+```bash
 g++ -g -E unixApp.cpp  -I/opt/app/source > midfile
 ```
 
 查询应用程序需要链接的库:
 
-```
-$ldd myprogrammer
+```bash
+$ ldd myprogrammer
     libstdc++.so.6 => /usr/lib64/libstdc++.so.6 (0x00000039a7e00000)
     libm.so.6 => /lib64/libm.so.6 (0x0000003996400000)
     libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00000039a5600000)
@@ -125,10 +123,10 @@ $ldd myprogrammer
 
 ### 安装
 
-安装做的工作就简单多了，就是将生成的可执行文件拷贝到配置时设置的初始路径下:
+安装就是将生成的可执行文件拷贝到配置时设置的初始路径下:
 
-```
-$make install
+```bash
+$ make install
 ```
 
 其实 **install** 就是makefile中的一个规则，打开makefile文件后可以查看程序安装的所做的工作；

@@ -30,7 +30,7 @@ tags:
 ./configure --prefix=/usr/local/snmp
 ```
 
-–prefix是配置使用的最常用选项，设置程序安装的路径；
+`–prefix`是配置使用的最常用选项，设置程序安装的路径；
 
 ### 编译
 
@@ -40,7 +40,7 @@ tags:
 make -f myMakefile
 ```
 
-通过-f选项显示指定需要编译的makefile；如果待使用makefile文件在当前路径，且文件名为以下几个，则不用显示指定：
+通过`-f`选项显示指定需要编译的makefile；如果待使用makefile文件在当前路径，且文件名为以下几个，则不用显示指定：
 
 makefile Makefile
 
@@ -51,12 +51,12 @@ makefile Makefile
 
 #### makefile中的全局自变量
 
-- $@目标文件名
-- @^所有前提名，除副本
-- @＋所有前提名，含副本
-- @＜一个前提名
-- @？所有新于目标文件的前提名
-- @*目标文件的基名称
+- `$@`目标文件名
+- `@^`所有前提名，除副本
+- `@＋`所有前提名，含副本
+- `@＜`一个前提名
+- `@？`所有新于目标文件的前提名
+- `@*`目标文件的基名称
 
 要系统学习makefile可以参考 [跟我一起学makefile](http://scc.qibebt.cas.cn/docs/linux/base/%B8%FA%CE%D2%D2%BB%C6%F0%D0%B4Makefile-%B3%C2%F0%A9.pdf)
 
@@ -72,7 +72,7 @@ CMake是一个跨平台的安装（编译）工具，可以用简单的语句来
 
 makefile编译过程中所依赖的非标准库和头文件路径需要显示指明:
 
-```
+```reStructuredText
 CPPFLAGS -I标记非标准头文件存放路径
 LDFLAGS  -L标记非标准库存放路径
 ```
@@ -94,13 +94,13 @@ $ g++ -o unixApp unixApp.o a.o b.o
 
 选项说明：
 
-- -o:指明生成的目标文件
-- -g：添加调试信息
-- -E: 查看中间文件
+- `-o`:指明生成的目标文件
+- `-g`：添加调试信息
+- `-E`: 查看中间文件
 
 应用：查询宏展开的中间文件：
 
-在g++的编译选项中，添加 -E选项，然后去掉-o选项 ，重定向到一个文件中即可:
+在g++的编译选项中，添加 `-E`选项，然后去掉`-o`选项 ，重定向到一个文件中即可:
 
 ```bash
 g++ -g -E unixApp.cpp  -I/opt/app/source > midfile

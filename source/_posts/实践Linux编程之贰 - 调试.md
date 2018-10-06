@@ -2,7 +2,7 @@
 title: 实践Linux编程之贰 - 调试
 categories: Linux
 comments: false
-date: 2018-10-06 19:14:46
+date: 2017-07-20 19:14:46
 tags:
   - Linux编程
   - c-c++
@@ -72,7 +72,7 @@ strace常用来跟踪进程执行时的系统调用和所接收的信号。在Li
 $ strace -o output.txt -T -tt -e trace=all -p 28979
 ```
 
-跟踪28979进程的所有系统调用（-e trace=all），并统计系统调用的花费时间，以及开始时间（以可视化的时分秒格式显示），最后将记录结果存在output.txt文件里面。
+跟踪28979进程的所有系统调用（`-e trace=all`），并统计系统调用的花费时间，以及开始时间（以可视化的时分秒格式显示），最后将记录结果存在`output.txt`文件里面。
 
 查看进程正在做什么(实时输出进程执行系统调用的情况):
 

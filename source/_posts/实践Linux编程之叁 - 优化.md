@@ -2,7 +2,7 @@
 title: 实践Linux编程之叁 - 优化
 categories: Linux
 comments: false
-date: 2017-10-06 19:15:01
+date: 2017-08-21 19:15:01
 tags:
   - Linux编程
   - c-c++
@@ -34,15 +34,17 @@ $top
 
 - 进入交互模式后:
 
-  输入M，进程列表按内存使用大小降序排序，便于我们观察最大内存使用者使用有问题（检测内存泄漏问题）;输入P，进程列表按CPU使用大小降序排序，便于我们观察最耗CPU资源的使用者是否有问题；
+  输入`M`，进程列表按内存使用大小降序排序，便于我们观察最大内存使用者使用有问题（检测内存泄漏问题）;输入`P`，进程列表按CPU使用大小降序排序，便于我们观察最耗CPU资源的使用者是否有问题；
 
-- top第三行显示当前系统的，其中有两个值很关键:
+- `top`第三行显示当前系统的，其中有两个值很关键:
 
-  %id：空闲CPU时间百分比，如果这个值过低，表明系统CPU存在瓶颈；%wa：等待I/O的CPU时间百分比，如果这个值过高，表明IO存在瓶颈；
+  `%id`：空闲CPU时间百分比，如果这个值过低，表明系统CPU存在瓶颈；
+
+  `%wa`：等待I/O的CPU时间百分比，如果这个值过高，表明IO存在瓶颈；
 
 ## 分析内存瓶颈
 
-查看内存是否存在瓶颈，使用top指令看比较麻烦，而free命令更为直观:
+查看内存是否存在瓶颈，使用`top`指令看比较麻烦，而`free`命令更为直观:
 
 ```bash
 $ free
@@ -58,20 +60,20 @@ KiB Mem:    501820 total,   452548 used,    49272 free,     5144 buffers
 KiB Swap:        0 total,        0 used,        0 free.   136988 cached Mem
 ```
 
-top工具显示了free工具的第一行所有信息，但真实可用的内存，还需要自己计算才知道; 系统实际可用的内存为free工具输出第二行的free+buffer+cached；也就是第三行的free值191580；关于free命令各个值的详情解读，请参考这篇文章 [free 查询可用内存](https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/free.html#free) ;
+`top`工具显示了`free`工具的第一行所有信息，但真实可用的内存，还需要自己计算才知道; 系统实际可用的内存为`free`工具输出第二行的`free+buffer+cached`；也就是第三行的`free`值191580；关于`free`命令各个值的详情解读，请参考这篇文章 [free 查询可用内存](https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/free.html#free) ;
 
 如果是因为缺少内存，系统响应变慢很明显，因为这使得系统不停的做换入换出的工作;
 
-进一步的监视内存使用情况，可使用vmstat工具，实时动态监视操作系统的内存和虚拟内存的动态变化。 参考： [vmstat 监视内存使用情况](https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/vmstat.html#vmstat) ;
+进一步的监视内存使用情况，可使用`vmstat`工具，实时动态监视操作系统的内存和虚拟内存的动态变化。 参考： [vmstat 监视内存使用情况](https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/vmstat.html#vmstat) ;
 
 ## 分析IO瓶颈
 
-如果IO存在性能瓶颈，top工具中的%wa会偏高；
+如果IO存在性能瓶颈，`top`工具中的`%wa`会偏高；
 
-进一步分析使用iostat工具:
+进一步分析使用`iostat`工具:
 
-```
-/root$iostat -d -x -k 1 1
+```bash
+$ iostat -d -x -k 1 1
 Linux 2.6.32-279.el6.x86_64 (colin)   07/16/2014      _x86_64_        (4 CPU)
 
 Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await  svctm  %util
@@ -81,25 +83,25 @@ dm-1              0.00     0.00    0.02    5.82     0.46    23.26     8.13     0
 dm-2              0.00     0.00    0.00    0.01     0.00     0.02     8.00     0.00    5.41   3.28   0.00
 ```
 
-- 如果%iowait的值过高，表示硬盘存在I/O瓶颈。
-- 如果 %util 接近 100%，说明产生的I/O请求太多，I/O系统已经满负荷，该磁盘可能存在瓶颈。
-- 如果 svctm 比较接近 await，说明 I/O 几乎没有等待时间；
-- 如果 await 远大于 svctm，说明I/O 队列太长，io响应太慢，则需要进行必要优化。
-- 如果avgqu-sz比较大，也表示有大量io在等待。
+- 如果`%iowait`的值过高，表示硬盘存在I/O瓶颈。
+- 如果 `%util` 接近 100%，说明产生的I/O请求太多，I/O系统已经满负荷，该磁盘可能存在瓶颈。
+- 如果 `svctm` 比较接近 `await`，说明 I/O 几乎没有等待时间；
+- 如果 `await` 远大于 `svctm`，说明I/O 队列太长，io响应太慢，则需要进行必要优化。
+- 如果`avgqu-sz`比较大，也表示有大量io在等待。
 
 更多参数说明请参考 [iostat 监视I/O子系统](https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/iostat.html#iostat) ;
 
 ## 分析进程调用
 
-通过top等工具发现系统性能问题是由某个进程导致的之后，接下来我们就需要分析这个进程；继续 查询问题在哪；
+通过`top`等工具发现系统性能问题是由某个进程导致的之后，接下来我们就需要分析这个进程；继续 查询问题在哪；
 
-这里我们有两个好用的工具： pstack和pstrace
+这里我们有两个好用的工具： `pstack`和`pstrace`
 
 pstack用来跟踪进程栈，这个命令在排查进程问题时非常有用，比如我们发现一个服务一直处于work状态（如假死状态，好似死循环），使用这个命令就能轻松定位问题所在；可以在一段时间内，多执行几次pstack，若发现代码栈总是停在同一个位置，那个位置就需要重点关注，很可能就是出问题的地方；
 
 示例：查看bash程序进程栈:
 
-```
+```bash
 /opt/app/tdev1$ps -fe| grep bash
 tdev1   7013  7012  0 19:42 pts/1    00:00:00 -bash
 tdev1  11402 11401  0 20:31 pts/2    00:00:00 -bash
@@ -120,7 +122,7 @@ tdev1  11474 11402  0 20:32 pts/2    00:00:00 grep bash
 #12 0x000000000041b2aa in main ()
 ```
 
-而strace用来跟踪进程中的系统调用；这个工具能够动态的跟踪进程执行时的系统调用和所接收的信号。是一个非常有效的检测、指导和调试工具。系统管理员可以通过该命令容易地解决程序问题。
+而`strace`用来跟踪进程中的系统调用；这个工具能够动态的跟踪进程执行时的系统调用和所接收的信号。是一个非常有效的检测、指导和调试工具。系统管理员可以通过该命令容易地解决程序问题。
 
 参考： [strace 跟踪进程中的系统调用](https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/strace.html#strace) ;
 
@@ -133,11 +135,11 @@ tdev1  11474 11402  0 20:32 pts/2    00:00:00 grep bash
 
 ### [gprof使用步骤](https://linuxtools-rst.readthedocs.io/zh_CN/latest/advance/03_optimization.html#id16)
 
-1. 用gcc、g++、xlC编译程序时，使用-pg参数，如：g++ -pg -o test.exe test.cpp编译器会自动在目标代码中插入用于性能测试的代码片断，这些代码在程序运行时采集并记录函数的调用关系和调用次数，并记录函数自身执行时间和被调用函数的执行时间。
-2. 执行编译后的可执行程序，如：./test.exe。该步骤运行程序的时间会稍慢于正常编译的可执行程序的运行时间。程序运行结束后，会在程序所在路径下生成一个缺省文件名为gmon.out的文件，这个文件就是记录程序运行的性能、调用关系、调用次数等信息的数据文件。
-3. 使用gprof命令来分析记录程序运行信息的gmon.out文件，如：gprof test.exe gmon.out则可以在显示器上看到函数调用相关的统计、分析信息。上述信息也可以采用gprof test.exe gmon.out> gprofresult.txt重定向到文本文件以便于后续分析。
+1. 用gcc、g++、xlC编译程序时，使用`-pg`参数，如：`g++ -pg -o test.exe test.cpp`编译器会自动在目标代码中插入用于性能测试的代码片断，这些代码在程序运行时采集并记录函数的调用关系和调用次数，并记录函数自身执行时间和被调用函数的执行时间。
+2. 执行编译后的可执行程序，如：`./test.exe`。该步骤运行程序的时间会稍慢于正常编译的可执行程序的运行时间。程序运行结束后，会在程序所在路径下生成一个缺省文件名为`gmon.out`的文件，这个文件就是记录程序运行的性能、调用关系、调用次数等信息的数据文件。
+3. 使用`gprof`命令来分析记录程序运行信息的gmon.out文件，如：`gprof test.exe gmon.out`则可以在显示器上看到函数调用相关的统计、分析信息。上述信息也可以采用`gprof test.exe gmon.out> gprofresult.txt`重定向到文本文件以便于后续分析。
 
-关于gprof的使用案例，请参考 [[f1\]](https://linuxtools-rst.readthedocs.io/zh_CN/latest/advance/03_optimization.html#f1) ;
+关于`gprof`的使用案例，请参考 [[f1\]](https://linuxtools-rst.readthedocs.io/zh_CN/latest/advance/03_optimization.html#f1) ;
 
 ## 其它工具
 

@@ -3,7 +3,7 @@ title: 理解Linux中的文件种类和扩展名
 date: 2016-03-14 14:37:38
 tags:
   - Linux
-categories: 操作系统 
+categories: Linux
 ---
 
 

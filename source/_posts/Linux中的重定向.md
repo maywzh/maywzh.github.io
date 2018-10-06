@@ -3,7 +3,8 @@ title: Linux中的重定向
 date: 2016-06-04 17:25:01
 tags:
   - Linux
-categories: 操作系统
+  - CLI
+categories: Linux
 ---
 
 

@@ -3,14 +3,13 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 邪欢
-subtitle: 生欢喜心。
-description: 艺术工作者。
+title: BLog.M
+subtitle: Programer. Writer. Producer.
+description: Artist.
 #keywords: 
 author: maywzh
-language: zh-CN 
+language: en
 timezone: 
-
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://maywzh.com
@@ -24,7 +23,7 @@ public_dir: public
 tag_dir: tags
 archive_dir: archives
 category_dir: categories
-code_dir: uploads/code
+code_dr: uploads/code
 i18n_dir: :lang
 skip_render:
 
@@ -81,10 +80,10 @@ deploy:
 - type: git
   repo: 
     github: git@github.com:maywzh/maywzh.github.io.git
-    mserver: git@mubuntu:/home/git/repo/hexoblog.git
+    mubuntu: git@mubuntu:/home/git/repo/hexoblog.git
     coding: git@git.coding.net:maywzh/maywzh.git
     gitee: git@gitee.com:maywzh/maywzh.git
-    #bandwagon: ssh://git@45.78.6.112:27749/home/git/hexo.git 
+    bandwagon: ssh://git@45.78.6.112:27749/home/git/repo/hexo.git 
   branch: master
 
 #Search Engine

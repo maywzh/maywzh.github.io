@@ -119,7 +119,7 @@ index_with_subtitle: false
 menu:
   home: / || home
   tags: /tags/ || tags
-  categories: /categories/ || th
+  #categories: /categories/ || th
   archives: /archives/ || archive
   about: /about/ || user
   #schedule: /schedule/ || calendar
@@ -129,7 +129,7 @@ menu:
 # Enable/Disable menu icons / item badges.
 menu_settings:
   icons: true
-  badges: true
+  badges: 
 
 # ---------------------------------------------------------------
 # Scheme Settings

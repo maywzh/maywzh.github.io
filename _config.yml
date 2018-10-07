@@ -81,7 +81,7 @@ deploy:
 - type: git
   repo: 
     github: git@github.com:maywzh/maywzh.github.io.git
-    mserver: git@maywzh.me:/home/git/repo/hexoblog.git
+    mserver: git@mubuntu:/home/git/repo/hexoblog.git
     #coding: git@git.coding.net:maywzh/maywzh.git
     #gitee: git@gitee.com:maywzh/maywzh.git
     #bandwagon: ssh://git@45.78.6.112:27749/home/git/hexo.git 

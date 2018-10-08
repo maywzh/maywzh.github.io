@@ -257,7 +257,7 @@ sidebar:
   scrollpercent: true
 
   # Enable sidebar on narrow view (only for Muse | Mist).
-  onmobile: false
+  onmobile: true
 
 
 # ---------------------------------------------------------------
@@ -364,8 +364,8 @@ android_chrome_color: "#222"
 #   enabled: [true/false] - Replace with specific image
 #   image: url-of-image   - Images's url
 custom_logo:
-  enabled: false
-  image:
+  enabled: true
+  image: 
 
 # Code Highlight theme
 # Available values: normal | night | night eighties | night blue | night bright
@@ -415,16 +415,16 @@ font:
   # Font settings for posts.
   # Fallback to `global` font settings.
   posts: 
-    external: false
-    family: PT Mono, Hiragino Sans GB
+    external: true
+    family: Times New Roman, PT Mono, Hiragino Sans GB
     size:
 
   # Font settings for Logo.
   # Fallback to `global` font settings.
   logo:
-    external: false
-    family:
-    size:
+    external: true
+    family: Merriweather
+    size: 24
 
   # Font settings for <code> and code blocks.
   codes:

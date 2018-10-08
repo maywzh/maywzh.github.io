@@ -1,6 +1,7 @@
 ---
 date: 2015-08-12 10:14:04
 updated: 2018-09-01 19:01:04
+types: about
 comments: false
 ---
 

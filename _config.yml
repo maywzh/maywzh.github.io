@@ -12,7 +12,7 @@ language:
 timezone: 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://maywzh.com
+url: https://blog.maywzh.com
 root: /
 permalink: :title/
 permalink_defaults: 
@@ -23,7 +23,8 @@ public_dir: public
 tag_dir: tags
 archive_dir: archives
 category_dir: categories
-code_dr: uploads/code
+about_dir: about
+code_dir: uploads/code
 i18n_dir: :lang
 skip_render:
 

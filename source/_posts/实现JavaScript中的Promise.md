@@ -353,7 +353,7 @@ function resolvePromise(promise2, x, resolve, reject) {
 
 > If retrieving the property x.then results in a thrown exception e, reject promise with e as the reason.
 
-```
+```javascript
 function resolvePromise(promise2, x, resolve, reject) {
     //代码略...
     if (x !== null && (typeof x === 'object' || typeof x === 'function')) {
@@ -377,7 +377,7 @@ function resolvePromise(promise2, x, resolve, reject) {
 
 > If then is a function, call it with x as this
 
-```
+```javascript
 //其他代码略...
 if (x !== null && (typeof x === 'object' || typeof x === 'function')) {
     //可能是个对象或是函数
@@ -405,7 +405,7 @@ if (x !== null && (typeof x === 'object' || typeof x === 'function')) {
 
 这样链式写法就基本完成了。但是还有一种极端的情况，如果Promise对象转为成功态或是失败时传入的还是一个Promise对象，此时应该继续执行，直到最后的Promise执行完。
 
-```
+```javascript
 p.then(data => {
     return new Promise((resolve,reject)=>{
         //resolve传入的还是Promise
@@ -424,7 +424,7 @@ p.then(data => {
 
 很简单，把调用resolve改写成递归执行resolvePromise方法即可，这样直到解析Promise成一个普通值才会终止，即完成此规范：
 
-```
+```javascript
 //其他代码略...
 if (x !== null && (typeof x === 'object' || typeof x === 'function')) {
     //可能是个对象或是函数
@@ -464,7 +464,7 @@ if (x !== null && (typeof x === 'object' || typeof x === 'function')) {
 
 ES6的原生Promise对象已经实现了这一点，但是我们自己的代码是同步执行，不相信可以试一下，那么如何将同步代码变成异步执行呢？可以使用setTimeout函数来模拟一下：
 
-```
+```javascript
 setTimeout(()=>{
     //此处的代码会异步执行
 },0);
@@ -472,7 +472,7 @@ setTimeout(()=>{
 
 利用此技巧，将代码then执行处的所有地方使用setTimeout变为异步即可，举个栗子：
 
-```
+```javascript
 setTimeout(() => {
     try {
         let x = onFulfilled(value);

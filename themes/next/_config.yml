@@ -47,7 +47,7 @@ cache:
 favicon:
   small: bitbug_favicon_64s.ico
   medium: bitbug_favicon_128s.ico
-  apple_touch_icon: /images/apple-touch-icon-next.png
+  apple_touch_icon: /uploads/mslogo.png
   safari_pinned_tab: /images/logo.svg
   android_manifest: /images/manifest.json
   ms_browserconfig: /images/browserconfig.xml
@@ -202,7 +202,7 @@ avatar:
   # in theme directory(source/images): /images/avatar.gif
   # in site  directory(source/uploads): /uploads/avatar.gif
   # You can also use other linking images.
-  url: https://s1.ax1x.com/2018/09/19/ieOPot.jpg
+  url: /uploads/myavatar.jpg
   # If true, the avatar would be dispalyed in circle.
   rounded: true
   # The value of opacity should be choose from 0 to 1 to set the opacity of the avatar.

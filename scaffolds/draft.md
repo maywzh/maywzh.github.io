@@ -1,7 +1,7 @@
 ---
 title: {{ title }}
-categories: un
+date: {{ date }}
 tags:
-  - un
-date: 2017-01-23
+categories: uncategorized
+comments: false
 ---

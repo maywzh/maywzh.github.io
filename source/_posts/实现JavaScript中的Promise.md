@@ -2,9 +2,9 @@
 title: 实现JavaScript中的Promise
 categories: 编程语言
 comments: false
-date: 2018-10-09 12:35:04
+date: 2017-07-26 12:35:04
 tags:
-  - JavaSctipt 
+  - JavaScript 
   - Promise
 ---
 

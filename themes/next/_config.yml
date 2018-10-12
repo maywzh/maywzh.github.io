@@ -392,7 +392,7 @@ font:
   enable: true
 
   # Uri of fonts host. E.g. //fonts.googleapis.com (Default).
-  host: #https://fonts.loli.net
+  host: #https://fonts.loli.neti http://fonts.font.im/css
   
   # Font options:
   # `external: true` will load this font family from `host` above.
@@ -401,14 +401,14 @@ font:
 
   # Global font settings used for all elements in <body>.
   global:
-    external: true
-    family:
-    size:
+    external: false
+    family: 
+    size: 
 
   # Font settings for Headlines (H1, H2, H3, H4, H5, H6).
   # Fallback to `global` font settings.
   headings:
-    external: false
+    external: true
     family: Merriweather
     size: 
 
@@ -416,15 +416,15 @@ font:
   # Fallback to `global` font settings.
   posts: 
     external: true
-    family: Times New Roman, PT Mono, Hiragino Sans GB
-    size:
+    family: PT San
+    size: 16
 
   # Font settings for Logo.
   # Fallback to `global` font settings.
   logo:
     external: true
-    family: Merriweather
-    size: 24
+    family: Nova Script
+    size: 26
 
   # Font settings for <code> and code blocks.
   codes:

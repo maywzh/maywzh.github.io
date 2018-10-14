@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: BLog.M
+title: Note.M
 subtitle: Programer. Writer. Producer.
 description: Artist.
 #keywords: 
@@ -12,7 +12,7 @@ language: en
 timezone: 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://blog.maywzh.com
+url: https://note.maywzh.com
 root: /
 permalink: :title/
 permalink_defaults: 
@@ -73,18 +73,18 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://exo.io/themes/
-theme: element
+theme: zzoman
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
 - type: git
   repo: 
-    github: git@github.com:maywzh/maywzh.github.io.git
-    mubuntu: git@mubuntu:/home/git/repo/hexoblog.git
-    coding: git@git.coding.net:maywzh/maywzh.git
-    gitee: git@gitee.com:maywzh/maywzh.git
-    bandwagon: ssh://git@45.78.6.112:27749/home/git/repo/hexo.git 
+    #github: git@github.com:maywzh/maywzh.github.io.git
+    #mubuntu: git@mubuntu:/home/git/repo/hexoblog.git
+    #coding: git@git.coding.net:maywzh/maywzh.git
+    #gitee: git@gitee.com:maywzh/maywzh.git
+    #bandwagon: ssh://git@45.78.6.112:27749/home/git/repo/hexo.git 
   branch: master
 
 #Search Engine
@@ -119,5 +119,16 @@ since: 2015
 #Google Webmaster tools verification setting
 #See: https://www.google.com/webmasters/
 google_site_verification: VvyjvVXcJQa0QklHipu6pwm2PJGnnchIqX7s5JbbT_0
+
+# Extensions
+## Plugins: http://hexo.io/plugins/
+#RSS订阅
+plugin:
+- hexo-generator-feed
+#Feed Atom
+feed:
+type: atom
+path: atom.xml
+limit: 20
 
 

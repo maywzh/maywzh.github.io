@@ -1,0 +1,55 @@
+<% if (page.title) { %>
+  <article>
+    <%- partial('partials/article-header', {showDate: false}) %>
+    <div><%- page.content %></div>
+  </article>
+<% } %>
+
+<section>
+  <ul>
+    <% page.posts.forEach(post => { %>
+      <li>
+        <article>
+          <%- partial('partials/article-header', {
+            page: {
+              cover: post.cover,
+              title: post.title,
+              tags: post.tags,
+              permalink: post.permalink,
+              date: post.date
+            },
+            showDate: true
+          }) %>
+          <% if (theme.show_excerpts && post.excerpt) { %>
+          <div>
+            <%- post.excerpt %>
+            <% if (post.more) { %>
+              <a href="<%= url_for(post.path) %>"><%= theme.read_more %></a>
+            <% } %>
+          </div>
+          <% } %>
+        </article>
+      </li>
+    <% }) %>
+  </ul>
+</section>
+<footer>
+  <nav>
+    <ul>
+      <li>
+        <a <% if (page.prev) { %>
+          href="<%= url_for(page.prev_link) %>"
+        <% } %>>
+          prev
+        </a>
+      </li>
+      <li>
+        <a <% if (page.next) { %>
+          href="<%= url_for(page.next_link) %>"
+        <% } %>>
+          next
+        </a>
+      </li>
+    </ul>
+  </nav>
+</footer>

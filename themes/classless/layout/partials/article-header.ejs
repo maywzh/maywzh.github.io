@@ -1,0 +1,18 @@
+<header>
+  <% if (page.cover) { %>
+    <a href="<%= page.permalink %>"><img src="<%= page.cover %>"></a>
+  <% } %>
+  <h1><a href="<%= page.permalink %>"><%= page.title %></a></h1>
+  <aside>
+    <% if (showDate) { %>
+    <time datetime="<%= page.date.format('YYY-MM-DD') %>">
+      <%= page.date.format(theme.date_format) %>
+    </time>
+    <% } %>
+    <ul>
+    <% (page.tags || []).forEach(tag => { %>
+      <li><a href="<%= url_for(tag.path) %>"><%= tag.name %></a></li>
+    <% }) %>
+    </ul>
+  </aside>
+</header>

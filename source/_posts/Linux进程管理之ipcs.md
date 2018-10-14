@@ -47,20 +47,20 @@ $ipcs -s #查看系统使用的IPC信号量资源
 1. 首先通过计算器将其转为十六进制:
 
    ```bash
-   $printf %x 51036
+   $ printf %x 51036
    c75c
    ```
 
 2. 如果知道是被共享内存占用:
 
-   ```
-   $ipcs -m | grep c75c
+   ```bash
+   $ ipcs -m | grep c75c
    0x0000c75c 40403197   tdea3    666        536870912  2
    ```
 
 3. 如果不确定，则直接查找:
 
-   ```
+   ``` bash
    $ipcs | grep c75c
    0x0000c75c 40403197   tdea3    666        536870912  2
    0x0000c75c 5079070    tdea3    666        4
@@ -68,8 +68,8 @@ $ipcs -s #查看系统使用的IPC信号量资源
 
 ## 系统IPC参数查询
 
-```
-$ipcs -l
+``` bash
+$ ipcs -l
 ------ Messages Limits --------
 max queues system wide = 32000
 max size of message (bytes) = 8192
@@ -95,8 +95,8 @@ semaphore max value = 32767
 
 以linux系统为例，在root用户下修改/etc/sysctl.conf 文件，保存后使用sysctl -p生效:
 
-```
-$cat /etc/sysctl.conf
+```bash 
+$ cat /etc/sysctl.conf
 # 一个消息的最大长度
 kernel.msgmax = 524288
 
@@ -121,8 +121,8 @@ kernel.sem = 250 32000 32 128
 
 显示输入不带标志的 ipcs：的输出:
 
-```
-$ipcs
+```bash
+$ ipcs
 IPC status from /dev/mem as of Mon Aug 14 15:03:46 1989
 T    ID         KEY        MODE       OWNER     GROUP
 Message Queues:
@@ -149,18 +149,18 @@ s 1310722    0x000133d0 --ra-------   7003      30720
 
 ipcrm用法:
 
-```
-ipcrm -M shmkey  移除用shmkey创建的共享内存段
-ipcrm -m shmid    移除用shmid标识的共享内存段
-ipcrm -Q msgkey  移除用msqkey创建的消息队列
-ipcrm -q msqid  移除用msqid标识的消息队列
-ipcrm -S semkey  移除用semkey创建的信号
-ipcrm -s semid  移除用semid标识的信号
+```bash 
+ipcrm -M shmkey  #移除用shmkey创建的共享内存段
+ipcrm -m shmid    #移除用shmid标识的共享内存段
+ipcrm -Q msgkey  #移除用msqkey创建的消息队列
+ipcrm -q msqid  #移除用msqid标识的消息队列
+ipcrm -S semkey  #移除用semkey创建的信号
+ipcrm -s semid  #移除用semid标识的信号
 ```
 
 清除当前用户创建的所有的IPC资源:
 
-```
+```bash
 ipcs -q | awk '{ print "ipcrm -q "$2}' | sh > /dev/null 2>&1;
 ipcs -m | awk '{ print "ipcrm -m "$2}' | sh > /dev/null 2>&1;
 ipcs -s | awk '{ print "ipcrm -s "$2}' | sh > /dev/null 2>&1;
@@ -172,8 +172,8 @@ ipcs -s | awk '{ print "ipcrm -s "$2}' | sh > /dev/null 2>&1;
 
 1. 查询队列Queue:
 
-   ```
-   $ipcs -q
+   ```bash
+   $ ipcs -q
    
    ------ Message Queues --------
    key        msqid      owner      perms      used-bytes   messages
@@ -184,7 +184,7 @@ ipcs -s | awk '{ print "ipcrm -s "$2}' | sh > /dev/null 2>&1;
 
 2. 找出第6列大于0的服务:
 
-   ```
+   ```bash
    $ ipcs -q |grep user1 |awk '{if($5>0) print $0}'
    0x00000000 1071579324 user1       644        1954530      4826
    0x00000000 1071644862 user1       644        1961820      4844

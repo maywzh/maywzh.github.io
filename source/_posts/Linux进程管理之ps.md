@@ -82,8 +82,8 @@ ps工具标识进程的5种状态码:
 
 ### 实例1：显示所有进程信息
 
-```
-[root@localhost test6]# ps -A
+```bash
+$ ps -A
 PID TTY          TIME CMD
 1 ?        00:00:00 init
 2 ?        00:00:01 migration/0
@@ -103,8 +103,8 @@ PID TTY          TIME CMD
 
 ### 实例2：显示指定用户信息
 
-```
-[root@localhost test6]# ps -u root
+```bash
+$ ps -u root
 PID TTY          TIME CMD
 1 ?        00:00:00 init
 2 ?        00:00:01 migration/0
@@ -123,8 +123,8 @@ PID TTY          TIME CMD
 
 ### 实例3：显示所有进程信息，连同命令行
 
-```
-[root@localhost test6]# ps -ef
+```bash
+$ ps -ef
 UID        PID  PPID  C STIME TTY          TIME CMD
 root         1     0  0 Nov02 ?        00:00:00 init [3]
 root         2     1  0 Nov02 ?        00:00:01 [migration/0]
@@ -142,8 +142,8 @@ root        56    49  0 Nov02 ?        00:00:00 [kacpid]
 
 ### 实例4： ps 与grep 组合使用，查找特定进程
 
-```
-[root@localhost test6]# ps -ef|grep ssh
+```bash
+$ ps -ef|grep ssh
 root      2720     1  0 Nov02 ?        00:00:00 /usr/sbin/sshd
 root     17394  2720  0 14:58 ?        00:00:00 sshd: root@pts/0
 root     17465 17398  0 15:57 pts/0    00:00:00 grep ssh
@@ -151,8 +151,8 @@ root     17465 17398  0 15:57 pts/0    00:00:00 grep ssh
 
 ### 实例5：将与这次登入的 PID 与相关信息列示出来
 
-```
-[root@localhost test6]# ps -l
+```bash
+$ ps -l
 F S   UID   PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
 4 S     0 17398 17394  0  75   0 - 16543 wait   pts/0    00:00:00 bash
 4 R     0 17469 17398  0  77   0 - 15877 -      pts/0    00:00:00 ps
@@ -160,8 +160,8 @@ F S   UID   PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
 
 ### 实例6：列出目前所有的正在内存中的程序
 
-```
-[root@localhost test6]# ps aux
+```bash
+$ ps aux
 USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
 root         1  0.0  0.0  10368   676 ?        Ss   Nov02   0:00 init [3]
 root         2  0.0  0.0      0     0 ?        S<   Nov02   0:01 [migration/0]

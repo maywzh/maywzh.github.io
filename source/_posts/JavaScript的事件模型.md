@@ -1,6 +1,6 @@
 ---
 title: JavaScript的事件模型
-date: 2017-04-13 01:25:33
+date: 2017-10-24 01:25:33
 tags:
   - JavaScript 
   - 编程范式

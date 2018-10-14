@@ -1,7 +1,7 @@
 ---
 title: Linux进程管理之ipcs
 categories: Linux
-date: 2017-06-06 18:45:56
+date: 2016-10-16 18:45:56
 tags:
   - CLI
   - 进程管理

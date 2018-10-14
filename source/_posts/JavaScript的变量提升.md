@@ -5,7 +5,7 @@ tags:
   - JavaScript 
 categories:
   - 编程语言
-date: 2017-02-28 03:35:00
+date: 2016-11-28 03:35:00
 ---
 JavaScript的设计不同于传统编程语言，它自成一派，有很多的奇妙特性。
 

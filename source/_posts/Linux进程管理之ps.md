@@ -2,7 +2,7 @@
 title: Linux进程管理之ps
 categories: Linux
 comments: false
-date: 2017-06-04 19:00:56
+date: 2016-10-14 19:00:56
 tags:
   - CLI
   - 进程管理

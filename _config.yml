@@ -81,11 +81,11 @@ deploy:
 - type: git
   repo: 
     #github: git@github.com:maywzh/maywzh.github.io.git
-    #mubuntu: git@mubuntu:/home/git/repo/hexoblog.git
+    mubuntu: git@mubuntu:/home/git/repo/hexonote.git
     #coding: git@git.coding.net:maywzh/maywzh.git
     #gitee: git@gitee.com:maywzh/maywzh.git
-    #bandwagon: ssh://git@45.78.6.112:27749/home/git/repo/hexo.git 
-  branch: master
+    bandwagon: ssh://git@45.78.6.112:27749/home/git/repo/hexonote.git 
+  branch: mster
 
 #Search Engine
 #Local Search: http://theme-next.iissnan.com/third-party-services.html#search-system

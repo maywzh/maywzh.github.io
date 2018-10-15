@@ -5,7 +5,7 @@ home: false  # True : Set home as latest post, False : Set home as an index
 menu:
   Archives: /archives
 rss: /atom.xml
-background: https://ws3.sinaimg.cn/large/006tNbRwgy1fw34o3l19fj31kw0zkdgg.jpg # Header Background Image
+background: https://raw.githubusercontent.com/maywzh/imagebed/master/img/alexandre-nishimura-427272-unsplash%20copy.jpg # Header Background Image
 
 # Library
 fancybox: true

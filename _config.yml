@@ -73,7 +73,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://exo.io/themes/
-theme: element
+theme: zzoman
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -124,7 +124,7 @@ google_site_verification: VvyjvVXcJQa0QklHipu6pwm2PJGnnchIqX7s5JbbT_0
 ## Plugins: http://hexo.io/plugins/
 #RSS订阅
 plugin:
-- hexo-generator-feed
+  - hexo-generator-feed
 #Feed Atom
 feed:
 type: atom

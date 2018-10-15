@@ -1,6 +1,6 @@
 theme: creative-portfolio
 commit_sha: 4666d30db6b91ba589900432414d239355d808a2
-theme_url:
+theme_url: https://github.com/fiatjaf/classless/tree/master/themes/creative-portfolio
 nav:
   - label: Home
     url: /

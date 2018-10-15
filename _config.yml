@@ -12,7 +12,7 @@ language: en
 timezone: 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://note.maywzh.com
+url: localhost #https://note.maywzh.com
 root: /
 permalink: :title/
 permalink_defaults: 
@@ -73,7 +73,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://exo.io/themes/
-theme: classless
+theme: element
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

@@ -1,16 +1,16 @@
 // https://github.com/chriskempson/tomorrow-theme
-highlight-background = #f7f7f7
+highlight-background = #2d2d2d
 highlight-current-line = #e3e3e3
-highlight-selection = #d6d6d6
-highlight-foreground = #4d4d4c
+highlight-selection = #262a30
+highlight-foreground = #ccc
 highlight-comment = #8e908c
-highlight-red = #c82829
-highlight-orange = #f5871f
+highlight-red = #f2777a
+highlight-orange = #f99157
 highlight-yellow = #eab700
-highlight-green = #718c00
-highlight-aqua = #3e999f
-highlight-blue = #4271ae
-highlight-purple = #8959a8
+highlight-green = #9c9
+highlight-aqua = #6cc
+highlight-blue = #69c
+highlight-purple = #c9c
 
 $code-block
   background highlight-background
@@ -22,18 +22,27 @@ $code-block
   overflow auto
   color highlight-foreground
   line-height line-height
+  font-size 0.875em
+  
 
 $line-numbers
-  color #666
-  font-size 0.85em
+  //background #1b1b1b
+  color #999
+  font-size 0.875em
 
 .article-content
   pre, code
-    font-family font-mono
+    //font-family font-mono
+    font-family menlo, monaco, monospace
     font-size font-size-smaller
+    font-weight bold
   code
-    background rgba(0,0,0,.08)
-    padding 0 0.3em
+    background #2d2d2d
+    margin: 0.250em
+    color #ccc
+    border-radius 0.1875em
+    padding 0.125em 0.3em
+    line-height 1.6
   pre
     @extend $code-block
     code
@@ -46,6 +55,7 @@ $line-numbers
       border none
       margin 0
       padding 0
+      overflow auto
     table
       margin 0
       width auto
@@ -108,8 +118,9 @@ $line-numbers
 
 pre
   .comment
+    color highlight-comment  
   .title
-    color highlight-comment
+    color highlight-aqua
   .variable
   .attribute
   .tag

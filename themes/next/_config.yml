@@ -365,7 +365,7 @@ android_chrome_color: "#222"
 #   image: url-of-image   - Images's url
 custom_logo:
   enabled: false
-  image: /uploads/mslogo.png
+  image: #/uploads/mslogo.png
 
 # Code Highlight theme
 # Available values: normal | night | night eighties | night blue | night bright

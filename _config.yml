@@ -73,7 +73,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://exo.io/themes/
-theme: icer
+theme: zzoman
 
 # Deployment
 ## Docs: https://heo.io/docs/deployment.html

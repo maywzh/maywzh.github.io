@@ -12,7 +12,7 @@ language: en
 timezone: 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: localhost #https://note.maywzh.com
+url: https://note.maywzh.com
 root: /
 permalink: :title/
 permalink_defaults: 

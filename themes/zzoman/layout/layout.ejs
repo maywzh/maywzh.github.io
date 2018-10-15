@@ -49,7 +49,10 @@
             </ul>
         </nav>
         <div class="site-search" id="search">
-            <%- search_form() %>
+            <!--<%- search_form() %>-->
+            <form action="" method="get" accept-charset="UTF-8" class="search-form">
+                <input type="text" name="q" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="https://note.maywzh.com">
+            </form>
         </div>
         <% if ( theme.background ) {%>
             <div class="site-header-background" style="background-image:url(<%= theme.background %>)"></div>

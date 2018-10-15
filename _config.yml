@@ -73,10 +73,10 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://exo.io/themes/
-theme: phantom
+theme: icer
 
 # Deployment
-## Docs: https://hexo.io/docs/deployment.html
+## Docs: https://heo.io/docs/deployment.html
 deploy:
 - type: git
   repo: 

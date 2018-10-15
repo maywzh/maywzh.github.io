@@ -23,6 +23,3 @@ ga_id : UA-119246999-1
 # Local search
 local_search:
   enable: true
-
-search:
-  use: local

@@ -1,10 +1,10 @@
 ---
-title: 复习tcp拥塞控制
+title: 了解tcp拥塞控制
 categories: 计算机网络
 comments: false
 date: 2017-03-16 01:56:58
 tags:
-  - TCP
+  - TCP/IP
 ---
 
 ## 什么是拥塞

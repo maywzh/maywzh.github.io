@@ -4,7 +4,7 @@ categories: Lab
 comments: false
 date: 2017-10-16 01:58:29
 tags:
-  - TCP
+  - TCP/IP
   - mysql
 ---
 
@@ -28,7 +28,7 @@ tags:
 
 检测系统中是否已经安装了`tcpdump`的方法非常简单，就是直接执行：
 
-```
+```bash
 $ tcpdump
 # 如果没有安装
 tcpdump: no suitable device found
@@ -42,31 +42,31 @@ tcpdump: no suitable device found
 
 笔者本次下载的是最新的版本，直接在命令行里使用wget下载即可：
 
-```
+```bash
 # 下载tcpdump文件
-wget www.tcpdump.org/release/tcpdump-4.9.2.tar.gz
+$ wget www.tcpdump.org/release/tcpdump-4.9.2.tar.gz
 
 # 下载pcap文件
-wget www.tcpdump.org/release/libpcap-1.9.0.tar.gz
+$ wget www.tcpdump.org/release/libpcap-1.9.0.tar.gz
 
 # 安装libpcap，make install的时候可能需要root权限
-tar -zxvf libpcap-1.9.0.tar.gz
-cd libpcap-1.9.0.tar.gz
-./configure
-make
-make install
+$ tar -zxvf libpcap-1.9.0.tar.gz
+$ cd libpcap-1.9.0.tar.gz
+$ ./configure
+$ make
+$ make install
 
 # 安装tcpdump的过程
-tar -zxvf tcpdump-4.9.2
-cd tcpdump-4.9.2
-./configure
-make
-make install
+$ tar -zxvf tcpdump-4.9.2
+$ cd tcpdump-4.9.2
+$ ./configure
+$ make
+$ make install
 ```
 
 安装完成后跟上面一样输入`tcpdump`判断是否成功安装了：
 
-```
+```bash
 $ tcpdump
 ```
 
@@ -74,7 +74,7 @@ $ tcpdump
 
 `tcpdump`是个命令行方式的网络嗅探器，如果不使用任何参数，会持续捕获所有的网络请求内容，无法有效分析，可以针对自己的需求使用合适的参数。
 
-```
+```bash
 # 查看所有的参数内容
 $ tcpdump --help
 tcpdump version 4.9.2
@@ -132,13 +132,13 @@ Usage: tcpdump [-aAbdDefhHIJKlLnNOpqStuUvxX#] [ -B size ] [ -c count ]
 
 举几个常用的例子：
 
-```
+```bash
 # 只捕获指定IP的数据包
-tcpdump host 10.10.13.15
+$ tcpdump host 10.10.13.15
 # 捕获两个IP的数据包
-tcpdump host 1010.13.15 and \(10.10.13.47\)
+$ tcpdump host 1010.13.15 and \(10.10.13.47\)
 # 捕获指定端口和协议的数据包
-tcpdump tcp port 21 and host 10.10.13.15
+$ tcpdump tcp port 21 and host 10.10.13.15
 ```
 
 ## 实例测试
@@ -153,7 +153,7 @@ tcpdump tcp port 21 and host 10.10.13.15
 
 报文：
 
-```
+```bash
 # 三次握手，其中S代表Syn，.代表Ack，S.代表Syn, Ack
 2018-08-19 22:52:42.768100 IP 10.119.124.24.45298 > 10.92.143.15.3306: Flags [S], seq 864854527, win 14600, options [mss 1460,sackOK,TS val 2246810963 ecr 0,nop,wscale 8], length 0
 2018-08-19 22:52:42.810055 IP 10.92.143.15.3306 > 10.119.124.24.45298: Flags [S.], seq 4288771247, ack 864854528, win 14480, options [mss 1460,sackOK,TS val 2062159250 ecr 2246810963,nop,wscale 8], length 0

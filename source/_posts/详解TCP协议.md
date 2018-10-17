@@ -237,6 +237,10 @@ TCP 连接的建立采用客户服务器方式，主动发起连接建立的一�
 
 最初的时候，两端都处于 **CLOSED** 的状态，然后服务器打开了 TCP 服务，进入 **LISTEN** 状态，监听特定端口，等待客户端的 TCP 请求。
 
+我们可以利用wireshark来抓取一个简单的TCP三次握手的包。
+
+![image-20181017200744192](https://ws2.sinaimg.cn/large/006tNbRwgy1fwbh7fiknuj31kw02eju9.jpg)
+
 **第一次握手**： 客户端主动打开连接，发送 TCP 报文，进行第一次握手，然后进入 **SYN_SEND** 状态，等待服务器发回确认报文。
 这时首部的同步位 `SYN = 1`，同时初始化一个序号 `Sequence Number = J`。
 TCP 规定，SYN 报文段不能携带数据，但会消耗一个序号。

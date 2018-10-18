@@ -4,7 +4,7 @@ categories: Linux
 comments: false
 date: 2017-07-20 19:14:46
 tags:
-  - Linux编程
+  - Linux
   - c-c++
 ---
 

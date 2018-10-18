@@ -5,7 +5,7 @@ comments: false
 date: 2016-08-26 20:30:36
 tags:
   - CLI
-  - Linux编程
+  - Linux
   - DevOps
 ---
 

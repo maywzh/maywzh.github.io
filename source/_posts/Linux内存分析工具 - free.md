@@ -4,7 +4,7 @@ categories: Linux
 comments: false
 date: 2017-07-10 21:04:01
 tags:
-  - Linux编程
+  - Linux
   - DevOps
 ---
 

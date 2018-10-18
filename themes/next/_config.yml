@@ -364,8 +364,8 @@ android_chrome_color: "#222"
 #   enabled: [true/false] - Replace with specific image
 #   image: url-of-image   - Images's url
 custom_logo:
-  enabled: true
-  image: 
+  enabled: false
+  image: #/uploads/mslogo.png
 
 # Code Highlight theme
 # Available values: normal | night | night eighties | night blue | night bright
@@ -423,8 +423,8 @@ font:
   # Fallback to `global` font settings.
   logo:
     external: true
-    family: Nova Script
-    size: 26
+    family: Merriweather
+    size: 22
 
   # Font settings for <code> and code blocks.
   codes:

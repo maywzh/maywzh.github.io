@@ -38,11 +38,18 @@ render_drafts: false
 post_asset_folder: false
 relative_link: false
 future: true
+
+# Code Syntax
 highlight:
-  enable: true
+  enable: false
   line_number: true
   auto_detect: true
   tab_replace: true
+prism_plugin:
+  mode: 'preprocess'    # realtime/preprocess
+  theme: 'default'
+  line_number: false    # default false
+  custom_css: 'path/to/your/custom.css'     # optional
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
@@ -73,7 +80,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://exo.io/themes/
-theme: mics
+theme: miccall
 
 # Deployment
 ## Docs: https://heo.io/docs/deployment.html

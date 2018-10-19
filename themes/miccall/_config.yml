@@ -104,7 +104,7 @@ busuanzi:
     enable: true
     all_site_uv: true
     post_pv: true
-    busuanzi_pure_mini_js: "https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"
+    busuanzi_pure_mini_js: "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
 
 
 # Mathjax 支持库 

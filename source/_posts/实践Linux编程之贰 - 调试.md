@@ -6,6 +6,8 @@ date: 2017-07-20 19:14:46
 tags:
   - Linux
   - c-c++
+
+thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwe4x5fuhuj312w12w76x.jpg
 ---
 
 现代的IDE已经提供了相当丰富的调试功能，但有的时候在服务器环境中，我们还是要利用Linux的工具来对运行的进程来进行调试和分析。

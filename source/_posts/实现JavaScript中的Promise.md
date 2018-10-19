@@ -1,6 +1,6 @@
 ---
 title: 实现JavaScript中的Promise
-categories: 编程语言
+categories: Programing Language
 comments: false
 date: 2017-07-26 12:35:04
 tags:

@@ -1,6 +1,6 @@
 ---
 title: 理解c语言中的指针
-categories: 编程语言
+categories: Programing Language
 comments: false
 date: 2015-10-16 21:28:11
 tags:

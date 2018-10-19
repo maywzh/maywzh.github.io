@@ -1,6 +1,6 @@
 ---
 title: JavaScript词法分析
-categories: 编程语言
+categories: Programing Language
 tags:
   - JavaScript 
 date: 2017-01-23 08:00:00

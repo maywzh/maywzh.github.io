@@ -4,6 +4,7 @@ date: 2016-03-14 14:37:38
 tags:
   - Linux
 categories: Linux
+thumbnail: 
 ---
 
 

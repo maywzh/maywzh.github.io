@@ -6,6 +6,8 @@ date: 2017-01-17 20:45:50
 tags:
   - 编译
   - Linux
+
+thumbnail: https://ws1.sinaimg.cn/large/006tNbRwgy1fwe4b4kbd2j30rs0ij7a1.jpg
 ---
 
 Linux上的静态库，其实是目标文件的归档文件。

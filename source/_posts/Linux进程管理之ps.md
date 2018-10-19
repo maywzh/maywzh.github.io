@@ -7,6 +7,8 @@ tags:
   - CLI
   - 进程管理
   - Linux
+
+thumbnail: https://ws1.sinaimg.cn/large/006tNbRwgy1fwe4k973xsj30n70dv0ts.jpg
 ---
 
 ## ps - 进程查看器

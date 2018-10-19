@@ -1,6 +1,6 @@
 ---
 title: JavaScript中的async
-categories: 编程语言
+categories: Programing Language
 comments: false
 date: 2017-02-19 12:08:49
 tags:

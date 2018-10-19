@@ -6,6 +6,8 @@ tags:
   - CLI
   - 进程管理
   - Linux
+
+thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwe4jq6l8zj30ko0g3n0i.jpg
 ---
 
 ## ipcs - 查询进程间通信状态

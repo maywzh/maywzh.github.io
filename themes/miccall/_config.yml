@@ -4,8 +4,8 @@
 
 # Head info
 head:
-    favicon: "/img/logo_miccall.png"
-    keywords: miccall
+    favicon: "/uploads/bitbug_favicon_64s.ico"
+    keywords: maywzh
     backgroundpic : "img/bg.jpg"
 
 Intro:
@@ -40,8 +40,8 @@ Nav:
         #   link：“路径”
 
 MainFirst:
-    name: Miccall Metro
-    description: Technical  Artist  of  Games   
+    name: Wayne May
+    description: Developer & Artist
     pic_url: /images/me.jpg
     goto_ulr: ""
 

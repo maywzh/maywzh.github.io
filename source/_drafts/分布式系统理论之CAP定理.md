@@ -1,6 +1,6 @@
 ---
 title: 分布式系统理论之CAP定理
-categories: 架构
+categories: Web Development
 date: 2017-07-20 16:12:25
 tags: 
   - 理论

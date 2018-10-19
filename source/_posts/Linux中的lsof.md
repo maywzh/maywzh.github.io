@@ -7,6 +7,7 @@ tags:
   - CLI
   - 进程管理
   - Linux
+thumbnail: https://ws1.sinaimg.cn/large/006tNbRwgy1fwe4d60w75j30zk0k03zg.jpg
 ---
 
 ## lsof - list open files

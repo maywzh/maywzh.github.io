@@ -3,9 +3,9 @@ title: git笔记之rm
 author: maywzh
 tags:
   - git
-categories:
-  - 编程工具
+categories: Programing Tools
 date: 2016-08-15 00:44:00
+thumbnail: https://ws4.sinaimg.cn/large/006tNbRwgy1fwe43fmphnj30m109y0tl.jpg
 ---
 ## 一个.gitignore的常见问题
 

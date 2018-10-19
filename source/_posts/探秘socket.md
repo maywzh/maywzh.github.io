@@ -3,10 +3,10 @@ title: 探秘socket
 tags:
   - 网络编程
   - TCP/IP
-categories:
-  - 计算机网络
+categories: 网络
 author: maywzh
 date: 2015-12-21 03:28:18
+thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwe62yzvimj30rs0m2tj5.jpg
 ---
 
 

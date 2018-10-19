@@ -4,6 +4,7 @@ date: 2016-04-09 11:41:59
 tags:
   - Linux
 categories: Linux
+thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwe4p7k6f7j30hq0bntdc.jpg
 ---
 
 最近一直在处理服务器上的issue，中间遇到最多的的就是`Permission denied`问题，这就是权限问题。今天就来整理一下Linux文件权限系统的知识，从根本上填掉这个坑。

@@ -1,9 +1,10 @@
 ---
 title: 分布式系统理论之CAP定理
-categories: 分布式系统
+categories: Web Development
 date: 2017-07-20 16:12:25
 tags: 
   - 理论
+thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwe3cgrrvoj30l60cwabe.jpg
 ---
 
 什么是CAP定理

@@ -1,10 +1,11 @@
 ---
-title: webpack入门
+title: 静态文件打包器 - Webpack入门
 date: 2016-12-15 16:39:15
 tags:
   - webpack
-categories:
-  - 前端
+  - 工具
+  - 构建
+categories: Web Development
 ---
 
 **2018updated：目前webpack已经到了4.0版本，本文基于1.x版本，有些方法已经过时，具体操作方法本文已不再适用，请参照官方文档**

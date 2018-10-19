@@ -5,6 +5,7 @@ tags:
   - Linux
   - CLI
 categories: Linux
+thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwe4gwdfdgj30zk0k0765.jpg
 ---
 
 

@@ -3,7 +3,9 @@ title: 探秘http响应报文结构
 date: 2015-11-16 15:52:39
 tags:
   - http
-categories: 计算机网络
+categories: 网络
+
+thumbnail: https://ws1.sinaimg.cn/large/006tNbRwgy1fwe5hshem2j30wc0k0gri.jpg
 ---
 
 HTTP响应报文通过通信双方建立的TCP连接传送，传送完成后根据HTTP协议中的Connection字段确定是否要继续保持TCP连接。HTTP 响应报文由状态行、响应头部 和 响应包体 3 个部分组成，如下图所示：

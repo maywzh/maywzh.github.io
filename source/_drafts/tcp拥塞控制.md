@@ -1,6 +1,6 @@
 ---
 title: 了解tcp拥塞控制
-categories: 计算机网络
+categories: 网络
 comments: false
 date: 2017-03-16 01:56:58
 tags:

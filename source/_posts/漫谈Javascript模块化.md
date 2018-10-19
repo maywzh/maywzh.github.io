@@ -1,10 +1,11 @@
 ---
 title: 漫谈Javascript模块化
-categories: 编程语言
+categories: Programing Language
 comments: false
 date: 2017-01-27 01:58:18
 tags:
   - JavaScript 
+thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwe39d6qiaj31kw0zuwh0.jpg
 ---
 
 js代码2009年HTML5兴起后，前端代码的行数已经呈现井喷式发展，随着代码量的增加，模块的缺失的缺点日益凸显，Javascript社区做了很多探索。如今JavaScript模块化编程的概念已经普及开来，一提起模块化，大家想到的可能是AMD，CMD，requirejs或seajs。其实还有很多其他的概念。本文将会陈述下JavaScript模块的前世今生。

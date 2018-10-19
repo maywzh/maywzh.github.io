@@ -3,7 +3,8 @@ title: jsDelivr CDN使用小记
 date: 2018-01-13 02:46:27
 tags:
   - CDN
-categories: 前端
+categories: Web Development
+thumbnail: https://ws4.sinaimg.cn/large/006tNbRwgy1fwe55hn85qj315g0iswmz.jpg
 ---
 
 今天树莓派上的服务检测脚本忽然告警了，博客出现了大量资源down掉的情况，赶紧上线查看，页面都刷不出来，原来是`cdn.bootcss.com`这个CDN down掉了，我的`jquery`,`fontawesome`等JS库还有一些CSS库都引用这个CDN导致页面崩坏。坑爹呢  (；￣Д￣）

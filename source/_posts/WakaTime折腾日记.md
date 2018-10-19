@@ -1,12 +1,12 @@
 ---
-title: WakaTime折腾日记
+title: WakaTime - 时间记录工具
 author: maywzh
 tags:
   - 生产力工具
   - 时间记录
-categories:
-  - 工具
+categories: Programing Tools
 date: 2018-09-28 21:06:00
+thumbnail: https://raw.githubusercontent.com/maywzh/imagebed/master/img/track-time.jpg # 略缩图
 ---
 
 提高自制力的一个有效的方式就是自我量化，其中一个重要的维度即是时间记录，通过对我们的工作、生活各个方面进行数据记录和分析，可以帮助我们优化自己的时间管理策略，提高生产力。

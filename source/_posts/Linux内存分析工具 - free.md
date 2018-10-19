@@ -2,10 +2,12 @@
 title: Linux内存分析工具 - free
 categories: Linux
 comments: false
-date: 2017-07-10 21:04:01
+date: 2015-08-21 21:04:01
 tags:
   - Linux
   - DevOps
+
+thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwe53447x2j31hc0u0gpf.jpg
 ---
 
 free工具用来查看系统可用内存

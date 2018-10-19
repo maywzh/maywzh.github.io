@@ -7,6 +7,7 @@ tags:
   - CLI
   - 科学上网
   - 爬虫
+thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwe4eld70vj308d04nmwz.jpg
 ---
 
 ## wget - web get

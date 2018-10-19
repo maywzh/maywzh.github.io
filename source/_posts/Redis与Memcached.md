@@ -4,9 +4,9 @@ author: maywzh
 tags:
   - 缓存
   - 数据库
-categories:
-  - 数据库
+categories: Web Development
 date: 2017-05-04 23:46:00
+thumbnail: https://raw.githubusercontent.com/maywzh/imagebed/master/img/redis-2.jpg
 ---
 ## 引
 

@@ -7,7 +7,7 @@ tags:
   - 机器学习
   - 算法
 
-thumbnail: https://raw.githubusercontent.com/maywzh/imagebed/master/img/96862141.jpg
+thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwe8elxcatj31ad0t93zn.jpg
 ---
 
 K-means算法采用距离作为相似性的评价指标，即认为两个对象的距离越近，其相似度就越大，是很典型的基于距离的聚类算法。该算法认为簇是由距离靠近的对象组成的，因此把得到紧凑且独立的簇作为最终目标。

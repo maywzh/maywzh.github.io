@@ -6,6 +6,7 @@ date: 2017-08-21 19:15:01
 tags:
   - Linux
   - c-c++
+thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwe2ubijm4j30k00c40uv.jpg
 ---
 
 根据木桶效应，一个程序瓶颈决定它的性能，所以性能优化的核心是找出系统的瓶颈点。

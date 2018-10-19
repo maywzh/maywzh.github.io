@@ -6,6 +6,7 @@ date: 2017-04-01 21:07:39
 tags:
   - 算法
   - 排序
+thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwe33d915yj30lq0bz75m.jpg
 ---
 
 ### 成堆 `Heapify`

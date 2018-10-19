@@ -3,8 +3,7 @@ title: 探秘socket
 tags:
   - 网络编程
   - TCP/IP
-categories:
-  - 计算机网络
+categories: 网络
 author: maywzh
 date: 2015-12-21 03:28:18
 ---

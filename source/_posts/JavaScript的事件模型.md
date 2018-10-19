@@ -6,6 +6,7 @@ tags:
   - 编程范式
   - 前端
 categories: 编程语言
+thumbnail: https://ws1.sinaimg.cn/large/006tNbRwgy1fwe3ecz0tmj31hc0u076b.jpg
 ---
 
 ## 监听函数

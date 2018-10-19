@@ -1,6 +1,6 @@
 ---
 title: 详解TCP协议
-categories: 计算机网络
+categories: 网络
 comments: false
 date: 2016-01-16 17:57:10
 tags:

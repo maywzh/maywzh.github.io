@@ -3,6 +3,7 @@ title: About
 date: 2018-01-14 00:00:05
 type: "about"
 comments: false
+thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwe3jedssfj31kw0zkabv.jpg
 ---
 
 # 关于我

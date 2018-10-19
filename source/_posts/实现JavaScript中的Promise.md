@@ -6,6 +6,7 @@ date: 2017-07-26 12:35:04
 tags:
   - JavaScript 
   - Promise
+thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwe3ao4il2j310e0oa75t.jpg
 ---
 
 Promise类似于一个容器，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果。Promise 是一个对象，从它可以获取异步操作的消息。Promise 提供统一的 API，各种异步操作都可以用同样的方法进行处理。

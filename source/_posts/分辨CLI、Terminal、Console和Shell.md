@@ -4,7 +4,8 @@ date: 2016-09-25 19:41:53
 tags:
   - 计算机史
   - 操作系统
-categories: 计算机科学
+categories: 计算机基础
+thumbnail: https://ws4.sinaimg.cn/large/006tNbRwgy1fwe2ykzm04j31kw1kwjux.jpg
 ---
 
 CLI 命令行界面、Terminal 终端 、Console 控制台和 Shell，是几个比较容易混淆的概念。

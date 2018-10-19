@@ -2,8 +2,7 @@
 title: 《Google工作整理术》读书笔记
 tags:
   - 方法论
-categories:
-  - 读书笔记
+categories: 读书笔记
 comments: false
 author: maywzh
 date: 2016-01-14 00:00:00

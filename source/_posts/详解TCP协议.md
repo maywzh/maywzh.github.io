@@ -824,17 +824,31 @@ int main(int argc, char **argv)
 首先创建 `makefile` 文件
 
 ```makefile
-all:server client
-server:socket_server.o
-    g++ -g -o socket_server socket_server.o
-client:socket_client.o
-    g++ -g -o socket_client socket_client.o
-socket_server.o:socket_server.cpp
-    g++ -g -c socket_server.cpp
-socket_client.o:socket_client.cpp
-    g++ -g -c socket_client.cpp
+SRCDIR=./src
+BINDIR=./bin
+TMPDIR=./tmp
+# VPATH=$(SRCDIR):$(TMPDIR)
+SRC=$(wildcard $(SRCDIR)/*.cpp)
+BIN=$(patsubst $(SRCDIR)/%.cpp, $(BINDIR)/%, $(SRC))
+TMP=$(patsubst $(SRCDIR)/%.cpp, $(TMPDIR)/%.o, $(SRC))
+
+# SHARE=--share
+# CFLAG= -Wall -I../inc
+# LFLAG=-L../lib -ldynamic_test -lstatic_test
+CC=gcc
+CPP=g++
+AR=ar -cr
+
+CO=$(CPP)
+#用静态模式来做
+.PHONY:clean all
+all: $(BIN)
+$(BIN): $(BINDIR)/% : $(TMPDIR)/%.o
+	$(CO) $< -o $@
+$(TMP): $(TMPDIR)/%.o : $(SRCDIR)/%.cpp
+	$(CO) -c  $< -o $@
 clean:all
-    rm all
+	rm $(BIN) $(TMP)
 ```
 
 然后使用命令:

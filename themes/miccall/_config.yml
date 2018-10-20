@@ -16,7 +16,7 @@ Intro:
 
 Nav:
     Home_name: Home
-    is_use_categories : true 
+    is_use_categories : false 
     categories_name: Category
     is_use_archives : false
     archives_name: Archive

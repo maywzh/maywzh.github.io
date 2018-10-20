@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Note.M
+title: Blog.M
 subtitle: Programer. Writer. Producer.
 description: Artist.
 #keywords: 
@@ -12,7 +12,7 @@ language: en
 timezone: 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://note.maywzh.com
+url: https://blog.maywzh.com
 root: /
 permalink: :title/
 permalink_defaults: 
@@ -71,7 +71,6 @@ tag_map:
 ## http://momentjs.com/docs/#/displaying/format/
 date_format: YYYY.MM.DD
 time_format: HH:mm:ss
-
 # Pagination
 ## Set per_page to 0 to disable pagination
 per_page: 6
@@ -80,7 +79,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://exo.io/themes/
-theme: micraw
+theme: miccall
 
 # Deployment
 ## Docs: https://heo.io/docs/deployment.html

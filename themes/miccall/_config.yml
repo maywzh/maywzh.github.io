@@ -42,7 +42,7 @@ Nav:
 MainFirst:
     name: Wayne May
     description: Developer & Artist
-    pic_url: /images/me.jpg
+    pic_url: /img/me.jpg
     goto_ulr: ""
 
 Gallery :
@@ -59,7 +59,7 @@ Gallery :
 prism: okaidia
 
 # Custom Fonts
-fonts: FZLTCXHJW, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "FZLTCXHJW", Arial, sans-serif
+fonts: "Sarasa Term SC", "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "FZLTCXHJW", Arial, sans-serif
 
 # Comment Systems
 # Available value of "use":

@@ -111,4 +111,4 @@ busuanzi:
 mathjax:
   enable: true
   per_page: false
-  cdn: https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/latest.js
+  cdn: //cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML

@@ -86,9 +86,12 @@ button,
 input,
 select,
 textarea {
-  font: 300 1.13em/1.9 PingFang SC, Lantinghei SC, Sarasa Term SC,
-    Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei,
-    sans-serif;
+  font-family: PingFang SC, Lantinghei SC, Sarasa Term SC, Microsoft Yahei,
+    Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
+  font-size: 16px;
+  line-height: 2;
+  text-align: justify;
+  font-weight: 300;
 }
 
 button::-moz-focus-inner,

@@ -42,7 +42,7 @@ Nav:
 MainFirst:
     name: Wayne May
     description: Developer & Artist
-    pic_url: /img/me.jpg
+    pic_url: https://ws2.sinaimg.cn/large/006tNbRwgy1fwet2xrnkfj30ku0ku75a.jpg
     goto_ulr: ""
 
 Gallery :
@@ -111,4 +111,4 @@ busuanzi:
 mathjax:
   enable: true
   per_page: false
-  cdn: //cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML
+  cdn: https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/latest.js

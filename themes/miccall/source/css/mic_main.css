@@ -2337,7 +2337,7 @@ header {
 #me .pic:before {
   content: "";
   position: absolute;
-  background: url("/img/me.jpg");
+  background: url("https://ws2.sinaimg.cn/large/006tNbRwgy1fwet2xrnkfj30ku0ku75a.jpg");
   width: 100%;
   z-index: 1;
 }

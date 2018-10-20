@@ -4,7 +4,7 @@
 
 # Head info
 head:
-    favicon: "/uploads/bitbug_favicon_64s.ico"
+    favicon: "/bitbug_favicon_64s.ico"
     keywords: maywzh
     backgroundpic : "img/bg.jpg"
 

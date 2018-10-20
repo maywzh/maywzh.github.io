@@ -4542,12 +4542,26 @@ header {
   padding-left: 5%;
   color: #eeeeee;
 }
-
+.typo {
+  font-family: PingFang SC, Sarasa Term SC, Microsoft Yahei, Hiragino Sans GB,
+    Arial, Helvetica, sans-serif;
+}
 /* post-contant */
 .typo a {
   border-bottom: 0;
   color: red;
 }
+
+.typo p {
+  /* font-family: PingFang SC, Lantinghei SC, Sarasa Term SC, Microsoft Yahei,
+	Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif; */
+  /* font-family: Georgia, serif; */
+  font-size: 16px;
+  line-height: 2;
+  text-align: justify;
+  font-weight: normal;
+}
+
 @media screen and (max-width: 480px) {
   .post-content {
     padding: -10rem;

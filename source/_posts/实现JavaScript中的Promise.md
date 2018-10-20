@@ -319,7 +319,7 @@ let promise2 = p.then(data => {
 
 运行结果：
 
-```
+```bash
 TypeError: Chaining cycle detected for promise #<Promise>
 ```
 

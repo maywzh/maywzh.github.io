@@ -545,9 +545,8 @@ socket 是系统提供的接口，而操作系统大多数都是用 C/C++ 开发
 
 ##### 函数原型
 
-```C++
+```cpp
 #include <sys/socket.h>
-
 int socket(int domain, int type, int protocol);
 ```
 
@@ -565,7 +564,7 @@ int socket(int domain, int type, int protocol);
 
 ##### 函数原型
 
-```c++
+```cpp
 #include <sys/socket.h>
 
 int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
@@ -589,7 +588,7 @@ int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 
 ##### 函数原型
 
-```C++
+```cpp
 #include <sys/socket.h>
 int listen(int sockfd, int backlog);
 ```
@@ -606,7 +605,7 @@ int listen(int sockfd, int backlog);
 
 ##### 函数原型
 
-```C++
+```cpp
 #include <sys/socket.h>
 int connect(int clientfd, const struct sockaddr *addr, socklen_t addrlen);
 ```
@@ -625,7 +624,7 @@ int connect(int clientfd, const struct sockaddr *addr, socklen_t addrlen);
 
 ##### 函数原型
 
-```C++
+```cpp
 #indclude <sys/socket.h>
 int accept(int listenfd, struct sockaddr *addr, int *addrlen);
 ```
@@ -644,7 +643,7 @@ int accept(int listenfd, struct sockaddr *addr, int *addrlen);
 
 ##### 函数原型
 
-```C++
+```cpp
 #include <sys/socket.h>
 #include <unistd.h>
 int close(int fd);
@@ -666,7 +665,7 @@ int close(int fd);
 
 最常用的是 read()/write() 他们的原型是：
 
-```C++
+```cpp
 ssize_t read(int fd, void *buf, size_t count);
 ssize_t write(int fd, const void *buf, size_t count);
 ```
@@ -677,7 +676,7 @@ ssize_t write(int fd, const void *buf, size_t count);
 
 #### 服务端
 
-```C++
+```cpp
 // socket_server.cpp
 
 #include <stdio.h>
@@ -750,7 +749,7 @@ int main(int argc, char **argv)
 
 #### 客户端
 
-```C++
+```cpp
 // socket_client.cpp
 
 #include <stdio.h>

@@ -5,7 +5,7 @@ comments: false
 date: 2017-07-16 19:14:29
 tags:
   - Linux
-  - c-c++
+  - c/c++
 
 thumbnail: https://ws1.sinaimg.cn/large/006tNbRwgy1fwe4zeiae9j31040o6n05.jpg
 ---

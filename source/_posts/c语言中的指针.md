@@ -4,7 +4,7 @@ categories: Programing Language
 comments: false
 date: 2015-10-16 21:28:11
 tags:
-  - c-c++
+  - c/c++
 ---
 
 在考虑指针的问题之前，首先我们来回顾一下如何定义一个变量。

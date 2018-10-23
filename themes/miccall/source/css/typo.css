@@ -247,9 +247,10 @@ pre,
 code,
 pre tt {
   font-family: "PT Mono", Courier, "Courier New", monospace;
+  font-size: 14px;
   background: #2d2d2d;
   margin: 0 3px;
-  padding: 1.5px 5px;
+  padding: 1px 5px;
   border-style: solid;
   border-color: #e1e1e1;
   border-width: 0;
@@ -264,6 +265,10 @@ pre {
   padding: 1em 1.5em;
   display: block;
   -webkit-overflow-scrolling: touch;
+}
+
+pre[class*="language-"] {
+  padding: 0em;
 }
 
 /* 一致化 horizontal rule */

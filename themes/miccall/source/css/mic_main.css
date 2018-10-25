@@ -1,3 +1,4 @@
+@import url("https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@4.6.3/css/font-awesome.min.css");
 @import url("https://fonts.css.network/css?family=Merriweather:300,700,300italic,700italic");
 @font-face {
   font-family: FZLT; /*这里是说明调用来的字体名字*/
@@ -1367,21 +1368,21 @@ header {
 
 #nav {
   color: #fff;
-  display: -moz-flex;
-  display: -webkit-flex;
-  display: -ms-flex;
-  -moz-transition: -moz-transform 1s ease, opacity 1s ease;
-  -webkit-transition: -webkit-transform 1s ease, opacity 1s ease;
-  -ms-transition: -ms-transform 1s ease, opacity 1s ease;
-  transition: transform 1s ease, opacity 1s ease;
-  background: rgba(255, 255, 255, 0.175);
-  height: 4rem;
-  line-height: 4rem;
-  margin: -4rem auto 0 auto;
-  padding: 0 2rem 0 0;
-  position: relative;
-  max-width: 72rem;
-  z-index: 5;
+		display: -moz-flex;
+		display: -webkit-flex;
+		display: -ms-flex;
+		-moz-transition: -moz-transform 1s ease, opacity 1s ease;
+		-webkit-transition: -webkit-transform 1s ease, opacity 1s ease;
+		-ms-transition: -ms-transform 1s ease, opacity 1s ease;
+		transition: transform 1s ease, opacity 1s ease;
+		background: rgba(255, 255, 255, 0.175);
+		height: 4rem;
+		line-height: 4rem;
+		margin: -4rem auto 0 auto;
+		padding: 0 2rem 0 0;
+		position: relative;
+		max-width: 72rem;
+		z-index: 5;
 }
 
 #nav ul.divided li {
@@ -4513,7 +4514,7 @@ header {
   position: relative;
   width: 100%;
   height: 300px;
-  _height: expression(this.height > 400 ? "400px": this.height);
+  /* height: expression(this.height > 400 ? "400px": this.height); */
 }
 .page_title h1 {
   position: absolute;

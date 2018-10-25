@@ -10,8 +10,7 @@ head:
 
 Intro:
     name: MAYWZH
-    slogan: "A mind needs books like a sword needs a whetstone 
-<br/> --------- Tyrion Lannister"
+    slogan: "A mind needs books like a sword needs a whetstone     -Tyrion Lannister"
     HeadButton: MAYWZH
 
 Nav:
@@ -25,8 +24,6 @@ Nav:
     # for more icons, please see http://fontawesome.io/icons/#brand
     icon:
         github: https://github.com/maywzh
-        500px: http://500px.com
-        
     pages:
         Resume: 
             link: "/about/"

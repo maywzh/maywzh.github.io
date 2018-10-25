@@ -56,7 +56,7 @@ Gallery :
 prism: okaidia
 
 # Custom Fonts
-fonts: FZLTCXHJW, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "FZLTCXHJW", Arial, sans-serif
+fonts:  "PingFang SC"
 
 # Comment Systems
 # Available value of "use":

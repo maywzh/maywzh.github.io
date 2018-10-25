@@ -6,7 +6,7 @@
 head:
     favicon: "/bitbug_favicon_64s.ico"
     keywords: maywzh
-    backgroundpic : "https://ws2.sinaimg.cn/large/006tNbRwgy1fwerw3hoyxj31kw0zkjtp.jpg"
+    backgroundpic : "https://cdn.jsdelivr.net/gh/maywzh/respo@0.0.1-y28m10d25t1625/img/cube-5120x2880-render-cgi-dark-hd-10959.jpg"
 
 Intro:
     name: MAYWZH

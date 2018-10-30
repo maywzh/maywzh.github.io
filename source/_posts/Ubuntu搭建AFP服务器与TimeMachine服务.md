@@ -266,7 +266,7 @@ $ vim /usr/local/etc/afp.conf
 
 想深入了解配置请参考[官方文档](http://netatalk.sourceforge.net/3.1/htmldocs/afp.conf.5.html)。
 
-```
+```config
 [Global]  
 mimic model = AirPort               #指定在macOS的Finder显示的图标  
 log level = default:warn  
@@ -359,5 +359,6 @@ $ netstat -tulpn
 ![image-20181030180607533](https://ws2.sinaimg.cn/large/006tNbRwgy1fwqeqw5kmuj310y0oawkv.jpg)
 
 ## 参考
-[1] [Install Netatalk 3.1.11 on Ubuntu 18.04 Bionic](http://netatalk.sourceforge.net/wiki/index.php/Install_Netatalk_3.1.11_on_Ubuntu_18.04_Bionic)
-[2] [Avahi](https://www.avahi.org)
+
+1. [Install Netatalk 3.1.11 on Ubuntu 18.04 Bionic](http://netatalk.sourceforge.net/wiki/index.php/Install_Netatalk_3.1.11_on_Ubuntu_18.04_Bionic)
+2. [Zero-configuration networking](https://en.wikipedia.org/wiki/Zero-configuration_networking)

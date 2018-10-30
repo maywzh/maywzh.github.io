@@ -357,3 +357,7 @@ $ netstat -tulpn
 至此， netatalk部署完成。
 
 ![image-20181030180607533](https://ws2.sinaimg.cn/large/006tNbRwgy1fwqeqw5kmuj310y0oawkv.jpg)
+
+## 参考
+[1] [Install Netatalk 3.1.11 on Ubuntu 18.04 Bionic](http://netatalk.sourceforge.net/wiki/index.php/Install_Netatalk_3.1.11_on_Ubuntu_18.04_Bionic)
+[2] [Avahi](https://www.avahi.org)

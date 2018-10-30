@@ -5,6 +5,8 @@ comments: false
 date: 2018-03-30 14:42:35
 tags:
   - 生产力工具
+
+thumbnail: https://ws4.sinaimg.cn/large/006tNbRwgy1fwqeva1dshj30g4046t8t.jpg
 ---
 
 一直是使用samba服务作为NAS，移动硬盘插在mac上作为TimeMachine备份盘，但这样还是太笨拙了。

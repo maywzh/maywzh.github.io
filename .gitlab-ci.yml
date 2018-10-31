@@ -1,2 +1,5 @@
 before_script:
   - echo "test gitlab ci"
+
+job1:
+  script: "echo 'job 1'"

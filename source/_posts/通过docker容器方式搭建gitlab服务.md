@@ -1,10 +1,10 @@
 ---
 title: 通过docker容器方式搭建gitlab服务
-categories: 服务部署
+categories: Linux
 comments: false
 date: 2018-04-31 16:56:07
 tags:
-  - 服务部署
+  - 服务搭建
   - docker
 Thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwrqu8k15bj318g0m6gmg.jpg
 ---

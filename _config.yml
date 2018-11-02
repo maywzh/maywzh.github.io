@@ -90,7 +90,7 @@ deploy:
     testgogs: ssh://git@testgogs.maywzh.com:10022/maywzh/hexoblog.git
     #coding: git@git.dev.tencent.com:maywzh/maywzh.coding.me.git 
     gitee: git@gitee.com:maywzh/maywzh.git
-    bandwagon: ssh://git@45.78.6.112:27749/home/git/repo/hexo.git 
+    bandwagon: ssh://git@45.78.6.112:27749/maywzh/hexoblog.git
   branch: mster
 
 #Search Engine

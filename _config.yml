@@ -84,7 +84,7 @@ theme: miccall
 deploy:
 - type: git
   repo: 
-    github: git@github.com:maywzh/maywzh.github.io.git
+    #github: git@github.com:maywzh/maywzh.github.io.git
     #mubuntu: git@mubuntu:/home/git/repo/hexoblog.git
     #gitlab: ssh://git@test.gitlab.maywzh.com:2222/maywzh/hexoblog.git
     testgogs: ssh://git@testgogs.maywzh.com:10022/maywzh/hexoblog.git

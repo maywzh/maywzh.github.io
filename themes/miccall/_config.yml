@@ -6,7 +6,7 @@
 head:
     favicon: "/bitbug_favicon_64s.ico"
     keywords: maywzh
-    backgroundpic : "https://cdn.jsdelivr.net/gh/maywzh/respo@0.0.1-y28m10d25t1625/img/cube-5120x2880-render-cgi-dark-hd-10959.jpg"
+    backgroundpic : "https://ws4.sinaimg.cn/large/006tNbRwgy1fwtyqr8wuhj31kw0zkwfd.jpg"
 
 Intro:
     name: MAYWZH
@@ -15,7 +15,7 @@ Intro:
 
 Nav:
     Home_name: Home
-    is_use_categories : false 
+    is_use_categories : false  
     categories_name: Category
     is_use_archives : false
     archives_name: Archive
@@ -38,7 +38,7 @@ Nav:
 
 MainFirst:
     name: Wayne May
-    description: Developer & Artist
+    description: Web Developer 
     pic_url: https://ws2.sinaimg.cn/large/006tNbRwgy1fwet2xrnkfj30ku0ku75a.jpg
     goto_ulr: ""
 
@@ -85,7 +85,7 @@ comment:
 # Available value:
 #     swiftype | google | local
 search:
-    use: google
+    use: swiftype
     swiftype_key: Just another fine responsive  
     
 
@@ -98,7 +98,7 @@ leancloud:
 
 # Busuanzi 不蒜子 Views
 busuanzi:
-    enable: true
+    enable: false
     all_site_uv: true
     post_pv: true
     busuanzi_pure_mini_js: "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"

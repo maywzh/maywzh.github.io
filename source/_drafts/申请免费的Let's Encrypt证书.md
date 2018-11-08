@@ -1,5 +1,5 @@
 ---
-title: 申请Let's Encrypt来实现网站HTTPS化
+title: 申请Let's Encrypt证书来实现网站HTTPS化
 categories: DevOps
 comments: false
 date: 2018-11-02 17:51:52
@@ -12,7 +12,6 @@ tags:
 
 <!--more-->
 
-2018 年 3 月 14 日，Let’s Encrypt 对外宣布 ACME v2 已正式支持通配符证书。这就意外味着用户可以在 Let’s Encrypt 上免费申请支持通配符的 SSL 证书。
 
 ### 什么是 Let’s Encrypt
 

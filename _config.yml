@@ -89,8 +89,8 @@ deploy:
     #gitlab: ssh://git@test.gitlab.maywzh.com:2222/maywzh/hexoblog.git
     testgogs: ssh://git@testgogs.maywzh.com:10022/maywzh/hexoblog.git
     #coding: git@git.dev.tencent.com:maywzh/maywzh.coding.me.git 
+    gitea: ssh://git@git.maywzh.com:27749/maywzh/blog.maywzh.com.git
     #gitee: git@gitee.com:maywzh/maywzh.git
-    bandwagon: ssh://git@45.78.6.112:27749/maywzh/hexoblog.git
   branch: mster
 
 #Search Engine

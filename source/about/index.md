@@ -9,10 +9,9 @@ thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwe3jedssfj31kw0zkabv.jpg
 # 关于我
 
 2016 年毕业于东南大学。
-2016.7 - 2017.7 程序员
-2017.7 - 2018.9 自由职业者，独立摄影师/独立开发者/美股投资
-强迫症、爱好干净、整理癖。
-擅长编程，摄影，数据分析。
+2016.7 - 2017.7 开发工程师
+2017.7 - 2019.7 自由职业者，独立开发者/美股投资/矿工/摄影师/音乐制作
+2019.7 至今      University of Wollonggong Computer Science Master 就读
 
 # 联系我
 

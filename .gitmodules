@@ -4,3 +4,6 @@
 [submodule "themes/next/source/lib/bookmark"]
 	path = themes/next/source/lib/bookmark
 	url = https://github.com/theme-next/theme-next-bookmark.git
+[submodule "themes/next2"]
+	path = themes/next2
+	url = https://github.com/iissnan/hexo-theme-next

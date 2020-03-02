@@ -9,7 +9,7 @@ description: Artist.
 #keywords: 
 author: maywzh
 language: en
-timezone: 
+timezone: Asia/Shanghai
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://io.maywzh.com
@@ -78,7 +78,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://exo.io/themes/
-theme: next
+theme: next2
 # Deployment
 ## Docs: https://heo.io/docs/deployment.html
 deploy:

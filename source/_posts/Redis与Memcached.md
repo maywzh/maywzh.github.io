@@ -1,10 +1,10 @@
 ---
-title: Redis与Memcached
+title: 如何比较Redis与Memcached
 author: maywzh
 tags:
   - 缓存
-  - 数据库
-categories: Web Development
+  - Web
+categories: 数据库
 date: 2017-05-04 23:46:00
 thumbnail: https://i.loli.net/2019/08/31/ySvCoeqI1bhZNp6.jpg
 ---

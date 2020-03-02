@@ -4,8 +4,8 @@
 
 # Site
 title: Cult Minds
-subtitle: Developer. Musician. Analyst.
-description: Artist.
+subtitle: I'm a Pro, as in Procrastinator.
+description: Secret Base
 #keywords: 
 author: maywzh
 language: en
@@ -41,7 +41,7 @@ future: true
 
 # Code Syntax
 highlight:
-  enable: false
+  enable: true
   line_number: true
   auto_detect: true
   tab_replace: true

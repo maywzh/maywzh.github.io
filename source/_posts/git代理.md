@@ -2,8 +2,9 @@
 title: GitHub 使用代理
 categories: 工具
 comments: false
-date: 2018-12-25 08:10:44
-tags: tips
+date: 2015-12-25 08:10:44
+tags: 
+  - git
 ---
 
 1. https访问

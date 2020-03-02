@@ -1,11 +1,10 @@
 ---
 title: K均值聚类与python实现
-categories: 机器学习
+categories: AI
 comments: false
 date: 2017-09-01 20:51:11
 tags:
   - 机器学习
-  - 算法
 
 thumbnail: https://i.loli.net/2019/08/31/NtJ4jCfpxQnzF5Y.jpg
 ---

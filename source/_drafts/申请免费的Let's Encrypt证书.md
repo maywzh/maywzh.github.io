@@ -4,8 +4,7 @@ categories: DevOps
 comments: false
 date: 2018-11-02 17:51:52
 tags:
-  - https
-  - linux
+  - Linux
 ---
 
 

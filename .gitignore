@@ -8,3 +8,4 @@ public/
 .vscode
 *.swp
 Blog.code-workspace
+package.json.bak

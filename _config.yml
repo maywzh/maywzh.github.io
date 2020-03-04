@@ -5,14 +5,14 @@
 # Site
 title: Cult Minds
 subtitle: I'm a Pro, as in Procrastinator.
-description: Secret Base
+description: Namasday.
 #keywords: 
 author: maywzh
 language: en
 timezone: Asia/Shanghai
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://io.maywzh.com
+url: https://io.maywzh.com 
 root: /
 permalink: :title/
 permalink_defaults: 
@@ -42,7 +42,7 @@ future: true
 # Code Syntax
 highlight:
   enable: true
-  line_number: true
+  line_number: false
   auto_detect: true
   tab_replace: true
 prism_plugin:
@@ -90,7 +90,7 @@ deploy:
     #coding: git@git.dev.tencent.com:maywzh/maywzh.coding.me.git 
     #gitea: ssh://git@gitrepo.maywzh.com:1122/maywzh/blog.maywzh.com.git
     #gitee: git@gitee.com:maywzh/maywzh.git
-  branch: mster
+  branch: master
 
 #Search Engine
 #Local Search: http://theme-next.iissnan.com/third-party-services.html#search-system

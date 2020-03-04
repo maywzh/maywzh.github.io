@@ -2,14 +2,14 @@
 title: JavaScript中的call、apply和bind
 author: maywzh
 tags:
-  - JavaScript 
+  - JavaScript
 categories:
   - 编程语言
 date: 2016-10-17 18:35:00
 ---
 ## apply & call
  
-> 在 JavaScript 中，call 和 apply 都是为了改变某个函数运行时的上下文（context）而存在的 
+> 在 JavaScript中，call 和 apply 都是为了改变某个函数运行时的上下文（context）而存在的 
 
 **在JavaScript中，一切都是对象**，包括函数。函数存在「定义时上下文」和「运行时上下文」以及「上下文是可以改变的」这样的概念。
 
@@ -143,7 +143,7 @@ var foo = {
 }
 ```
 
-由于 JavaScript 特有的机制，上下文环境在 `eventBind:function(){ }` 过渡到 `$('.someClass').on('click',function(event) { })` 发生了改变，上述使用变量保存 `this` 这些方式都是有用的，也没有什么问题。当然使用 `bind()` 可以更加优雅的解决这个问题：
+由于 JavaScript特有的机制，上下文环境在 `eventBind:function(){ }` 过渡到 `$('.someClass').on('click',function(event) { })` 发生了改变，上述使用变量保存 `this` 这些方式都是有用的，也没有什么问题。当然使用 `bind()` 可以更加优雅的解决这个问题：
 
 ```JavaScript
 var foo = {

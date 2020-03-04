@@ -2,7 +2,7 @@
 title: JavaScript中的this
 author: maywzh
 tags:
-  - JavaScript 
+  - JavaScript
 categories:
   - 编程语言
 date: 2016-10-30 13:36:00

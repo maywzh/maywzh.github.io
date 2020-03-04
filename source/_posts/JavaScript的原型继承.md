@@ -2,12 +2,12 @@
 title: JavaScript的原型继承
 author: maywzh
 tags:
-  - JavaScript 
+  - JavaScript
 categories:
   - 编程语言
 date: 2017-07-12 01:46:00
 ---
-## JavaScript 继承
+## JavaScript继承
 
 一般的面向对象的语言对继承的处理方式都是class-based，即基于类的继承。一般是说子类继承了父类，继承的主体是类。而类的对象之间的继承体现于类的继承中。
 

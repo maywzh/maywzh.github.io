@@ -4,8 +4,7 @@ categories: 编程语言
 comments: false
 date: 2017-07-17 12:08:49
 tags:
-  - JavaScirpt 
-
+  - JavaScirpt
 ---
 
 异步编程一直是JavaScript中的麻烦事，但在浏览器环境中，对异步的支持是必须的。JavaScript一直都有异步的解决方案。最早是回调函数，但由于连环回调会带来严重的嵌套问题，所以后来换做扁平化的Promise解决方案。

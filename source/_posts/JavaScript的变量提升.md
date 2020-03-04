@@ -2,7 +2,7 @@
 title: JavaScript的变量提升
 author: maywzh
 tags:
-  - JavaScript 
+  - JavaScript
 categories:
   - 编程语言
 date: 2017-07-20 03:35:00

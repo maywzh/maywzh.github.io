@@ -1,5 +1,5 @@
 ---
-title: 漫谈Javascript模块化
+title: 聊聊Javascript的模块化
 categories: 编程
 comments: false
 date: 2017-01-27 01:58:18

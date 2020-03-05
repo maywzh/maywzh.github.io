@@ -1,6 +1,6 @@
 ---
 title: 理解JavaScript异步编程
-categories: 编程语言
+categories: 编程
 comments: false
 date: 2017-01-04 01:53:51
 tags:

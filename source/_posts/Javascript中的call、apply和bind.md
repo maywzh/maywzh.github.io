@@ -3,7 +3,7 @@ title: JavaScript中的call、apply和bind
 author: maywzh
 tags:
   - JavaScript
-categories: 编程语言
+categories: 编程
 date: 2016-10-17 18:35:00
 ---
 ## apply & call

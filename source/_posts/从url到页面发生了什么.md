@@ -10,7 +10,7 @@ categories: 计算机网络
 
 我们在浏览器地址栏中输入google.com这个地址，然后浏览器经过短暂加载后给我们呈现了Google的搜索页面。
 
-![image-google](https://ws3.sinaimg.cn/large/006tNc79gy1fvrpt45bfsj30hi08774m.jpg)
+
 
 这中间的步骤有哪些呢？
 
@@ -70,7 +70,7 @@ URL(Uniform Resource Locator, 统一资源定位符)，互联网设计为一个�
 
    浏览器检查缓存是否有未过期的该域名解析过的IP地址，如果有，那么解析过程成功结束。
 
-![image-浏览器dns缓存](https://ws1.sinaimg.cn/large/006tNc79gy1fvrtgzyqoej30lx05x0u4.jpg)
+
 
 <center>▲ chrome的浏览器缓存示例</center>
 
@@ -88,7 +88,7 @@ URL(Uniform Resource Locator, 统一资源定位符)，互联网设计为一个�
 
 
 
-   ![image-本地网络设置](https://ws3.sinaimg.cn/large/006tNc79gy1fvrtc3x58pj310w0uytb3.jpg)
+   
 
    如果是局域网内的主机，这个本地DNS服务器一般是局域网的网关。网关会把DNS解析请求转发给ISP DNS服务器。
 
@@ -96,7 +96,7 @@ URL(Uniform Resource Locator, 统一资源定位符)，互联网设计为一个�
 
    经历了如上步骤都找不到DNS服务器的话，那么就会直接访问互联网的DNS服务器进行递归查询。
 
-   ![5308475-递归查询](https://ws2.sinaimg.cn/large/006tNc79gy1fvrts63y0rg30x00ld0tt.gif)
+   
 
    假设解析`www.google.com`这个域名，本地dns服务器把dns解析请求转发给互联网的根域名服务器，如果根域名服务器不存在该域名记录，则根据顶级域com向com顶级域dns服务器发送dns请求，如果还没有则根据二级域google.com服务器查询，知道最终得到该域名的IP地址，并把它缓存到本地。
 
@@ -169,7 +169,7 @@ Web Server从HTTP请求中获取参数后，如果是静态资源，则读取该
 
 例如目前主流的后端Web框架是MVC模式。
 
-![image-20180930224832000](https://ws2.sinaimg.cn/large/006tNc79gy1fvrybhq9yij31cg0ygtdh.jpg)
+
 
 MVC框架首先根据`HTTPRequest`对象的参数、内容，先根据路由配置去选择对应的Controller，Controller根据参数进行业务处理，中间可能会进行读写数据库等操作，然后渲染一个数据模型Model，数据模型用来渲染模版页，这里的工作由模版引擎来完成，最终生成HTTP响应。
 

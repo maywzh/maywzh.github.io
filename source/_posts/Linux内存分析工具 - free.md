@@ -5,7 +5,7 @@ tags:
   - Linux命令
 comments: false
 date: 2015-08-21 21:04:01
-thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwe53447x2j31hc0u0gpf.jpg
+
 ---
 
 free工具用来查看系统可用内存

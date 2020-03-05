@@ -199,9 +199,9 @@ Docker 容器是image的一个运行时实例。image被执行并被加载到内
 
 一个容器在Linux上**原生**运行，并于其他容器共享主机的内核。容器运行轻量级的独立的进程，占据资源相当少。而虚拟机则运行在一个客户操作系统(Guest OS)上，它通过虚拟机控制器技术来虚拟访问访问主机的资源，相对其他的进程，虚拟机要占据较多的机器资源。
 
-![img](https://ws2.sinaimg.cn/large/006tNbRwgy1fvw8wpeku3j30xa0qljs3.jpg)
 
-![img](https://ws4.sinaimg.cn/large/006tNbRwgy1fvw8wqr1vjj30xa0qlq5z.jpg)
+
+
 
 ## Docker启动服务
 
@@ -350,7 +350,7 @@ docker run -p 4000:80 friendlyhello
 
 显示信息访问`http://0.0.0.0:80`。但实际上，这条信息来自于容器内部，容器内部的app并不知道它正运行于容器内部，所以它在实体机上显示虚拟环境的地址`http://0.0.0.0:80`，实际上我们已经把容器的80端口映射到了物理机的4000端口，所以真实地址是`http://localhost:4000`
 
-![image-20181002000019160](https://ws4.sinaimg.cn/large/006tNc79gy1fvt60i0qk7j30b002wdfx.jpg)
+
 
 点击 `CTRL+C`退出进程。
 

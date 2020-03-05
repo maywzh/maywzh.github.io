@@ -56,11 +56,11 @@ Memcached的内存模式是Slab Allocation。它有以下几个特点：
 
 数据访问流程，用户在slab_class找到合适尺寸的slab，再通过某种方式找到chunk，保证数据进入一个合适大小的chunk中存储，防止内存浪费。
 
-![Memcached内存模型](https://ws2.sinaimg.cn/large/006tNc79gy1fvqticqylhj31ai17u41p.jpg)
+
 
 相对于Memecached，Redis的内存管理要相对简单。
 
-![Redis内存模型](https://ws2.sinaimg.cn/large/006tNc79gy1fvqtkzb7dyj309p02njrg.jpg)
+
 
 
 

@@ -5,7 +5,7 @@ comments: false
 date: 2015-06-21 16:55:51
 tags:
   - Linux命令
-thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwe4eld70vj308d04nmwz.jpg
+
 ---
 
 ## wget - web get

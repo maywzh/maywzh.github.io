@@ -5,7 +5,7 @@ comments: false
 date: 2015-07-16 19:14:29
 tags:
   - Linux编程
-thumbnail: https://ws1.sinaimg.cn/large/006tNbRwgy1fwe4zeiae9j31040o6n05.jpg
+
 ---
 
 一般源代码提供的程序安装需要通过配置、编译、安装三个步骤；

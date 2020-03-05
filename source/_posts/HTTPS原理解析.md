@@ -32,7 +32,7 @@ HTTP协议是明文传输，它简单易于理解，但同时也带来了安全�
 
 HTTPS的通信过程可以由下图简单表示。
 
-![https](https://ws4.sinaimg.cn/large/006tNbRwgy1fwuxh403paj30we1rt76n.jpg)
+
 
 ### 步骤详解
 

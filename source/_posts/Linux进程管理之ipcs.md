@@ -5,7 +5,7 @@ date: 2015-10-16 18:45:56
 tags:
   - Linux命令
 
-thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwe4jq6l8zj30ko0g3n0i.jpg
+
 ---
 
 ## ipcs - 查询进程间通信状态

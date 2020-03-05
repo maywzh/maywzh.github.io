@@ -5,7 +5,7 @@ tags:
   - JavaScript
   - 异步编程
 categories: 编程
-thumbnail: https://ws1.sinaimg.cn/large/006tNbRwgy1fwe3ecz0tmj31hc0u076b.jpg
+
 ---
 
 ## 监听函数

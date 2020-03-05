@@ -6,12 +6,12 @@ tags:
   - Web
 categories: 计算机网络
 
-thumbnail: https://ws1.sinaimg.cn/large/006tNbRwgy1fwe5hshem2j30wc0k0gri.jpg
+
 ---
 
 HTTP响应报文通过通信双方建立的TCP连接传送，传送完成后根据HTTP协议中的Connection字段确定是否要继续保持TCP连接。HTTP 响应报文由状态行、响应头部 和 响应包体 3 个部分组成，如下图所示：
 
-![img](https://ws2.sinaimg.cn/large/006tNc79gy1fvss2s3gy3j30gg06fgm6.jpg)
+
 
 
 
@@ -21,7 +21,7 @@ HTTP响应报文通过通信双方建立的TCP连接传送，传送完成后根�
 
 以访问www.baidu.com为例，我们可以<kbd>⌥</kbd> +<kbd>⌘</kbd> +<kbd>j</kbd>打开Chrome Dev Tools来看一个实例。
 
-![image-20181001161037299](https://ws3.sinaimg.cn/large/006tNc79gy1fvssfvb0n7j30gj05xgmi.jpg)、
+、
 
 
 

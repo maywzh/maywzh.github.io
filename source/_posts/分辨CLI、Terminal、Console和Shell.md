@@ -4,7 +4,7 @@ date: 2015-09-25 19:41:53
 tags:
   - Linux命令
 categories: Linux
-thumbnail: https://ws4.sinaimg.cn/large/006tNbRwgy1fwe2ykzm04j31kw1kwjux.jpg
+
 ---
 
 CLI 命令行界面、Terminal 终端 、Console 控制台和 Shell，是几个比较容易混淆的概念。
@@ -28,11 +28,11 @@ CLI 命令行界面、Terminal 终端 、Console 控制台和 Shell，是几个�
 
 命令行界面相对于我们日常使用的图形用户界面(GUI)而言，是一种操作效率极高的操作系统管理和控制方式。
 
-![img](https://ws1.sinaimg.cn/large/006tNbRwgy1fvlv5nqqouj30sg0lc13p.jpg)
+
 
 ▲ _命令行界面_
 
-![Screen Shot 2018-09-25 at 6.22.25 PM](https://ws3.sinaimg.cn/large/006tNbRwgy1fvlyss3e4ij31kw0w0hdt.jpg)
+
 
 ▲*图形界面*
 
@@ -50,7 +50,7 @@ Unix 的创始人 Ken Thompson 和 Dennis Ritchie 想让 Unix 成为一个多用
 
 当时有一种电传打字机，其原本用途是在电报线路上首发电报，它有可以作为输入设备的键盘，也有作为输出设备的纸袋打印机，价格也比较低廉。于是完美满足了这一需求。
 
-![âteletypeâçå¾çæç´¢ç"æ](https://ws2.sinaimg.cn/large/006tNbRwgy1fvlz3a5vymj30sg0lcjyz.jpg)
+
 
 ▲*电传打字机*
 
@@ -60,7 +60,7 @@ Unix 的创始人 Ken Thompson 和 Dennis Ritchie 想让 Unix 成为一个多用
 
 控制台是一种特殊的终端，普通的终端都是以外设的形式连接到计算机，而控制台是计算机自带的的控制面板。
 
-![image-20180925185459612](https://ws1.sinaimg.cn/large/006tNbRwgy1fvlzgz7sv2j30m80godxj.jpg)
+
 
 ▲*左边是控制台 右边是终端*
 
@@ -76,7 +76,7 @@ Unix 的创始人 Ken Thompson 和 Dennis Ritchie 想让 Unix 成为一个多用
 
 其工作流如下
 
-![终端工作流](https://ws1.sinaimg.cn/large/006tNbRwgy1fvm00u5y4wj306409c74i.jpg)
+
 
 实际上起到一个命令行程序和 GUI 的中介作用。
 
@@ -94,7 +94,7 @@ Unix 的创始人 Ken Thompson 和 Dennis Ritchie 想让 Unix 成为一个多用
 
 有的时候我们会发现系统进程中有一些名字叫 tty\*的进程，对应于我们的终端程序。
 
-![Screen Shot 2018-09-25 at 7.19.56 PM](https://ws1.sinaimg.cn/large/006tNbRwgy1fvm07xns4tj31am0b877j.jpg)
+
 
 这些 tty 是什么呢，实际上，tty 就是电传打字机 (Teletype / Teletypewriter) 的英文缩写，它表示终端的统称。
 
@@ -106,7 +106,7 @@ Unix 的创始人 Ken Thompson 和 Dennis Ritchie 想让 Unix 成为一个多用
 
 处于稳定性和安全方面的考虑，我们往往不建议用户直接对操作系统进行操作，而是通过应用程序调用操作系统的 API 进行操作。但生产生活中还是需要直接操作操作系统的，这个时候就需要一个专门的程序，接受用户输入的命令，然后帮我们与内核沟通，最后让内核完成我们的任务。它就是 Shell。它与操作系统的构架如下图。
 
-![image-20180925193156475](https://ws4.sinaimg.cn/large/006tNbRwgy1fvm0je6xrlj30gb0bjjsb.jpg)
+
 
 Shell 分为命令行 Shell 和图形 Shell，前者提供一个命令行界面(CLI)，后者则提供一个图形界面(GUI)。
 

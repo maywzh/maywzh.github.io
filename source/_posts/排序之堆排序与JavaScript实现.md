@@ -6,7 +6,7 @@ date: 2016-04-01 21:07:39
 tags:
   - JavaScript
   - 算法
-thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwe33d915yj30lq0bz75m.jpg
+
 ---
 
 ### 成堆 `Heapify`

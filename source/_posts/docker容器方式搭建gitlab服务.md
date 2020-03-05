@@ -5,7 +5,7 @@ comments: false
 date: 2017-02-17 16:56:07
 tags:
   - Docker
-Thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwrqu8k15bj318g0m6gmg.jpg
+
 ---
 
 一直使用git来做项目版本控制，但每次新建项目都要去服务器上操作，比较麻烦，所以选用开源的gitlab就相当合适了。
@@ -290,4 +290,4 @@ $ systemctl restart nginx.service
 
 这样就部署完成了～
 
-![Screen Shot 2018-10-31 at 9.36.37 PM](https://ws2.sinaimg.cn/large/006tNbRwgy1fwrqhz0jt1j31gp0adwfs.jpg)
+

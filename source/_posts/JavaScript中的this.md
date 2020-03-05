@@ -37,13 +37,13 @@ let obj = { foo:1 };
 
 我们把一个对象`{ foo:1 }`赋值给对象`obj`。这个过程实际上是JavaScript引擎在内存中生成一个`{ foo:1 }`然后再把这个对象的内存地址赋值给`obj`。
 
-![分配内存5](https://ws1.sinaimg.cn/large/006tNc79gy1fvqbhkag2gj30ws0h0dgu.jpg)
+
 
 这其实就跟C语言中的指针概念相似，先分配一块内存，初始化后，把内存的地址赋给一个指针。`obj`起的就是一个指针的作用，它保存一个地址，JavaScript引擎读取它时是直接从`obj`中取内存地址，然后再去改地址取原始对象。
 
 原始对象以字典结构存储。对象的每一个属性也都对应一个属性描述对象。`value`保存的是属性的值。
 
-![对象属性](https://ws1.sinaimg.cn/large/006tNc79gy1fvqbs40q14j30za0gm0tp.jpg)
+
 
 ## 函数的内存结构
 
@@ -55,11 +55,11 @@ var obj = { bar: function () {} };
 
 这个时候函数其实就是属性的值，函数在计算机中实际上就是一段代码段，它占据着一段内存。此时属性的值并不是直接保存这段代码段，而是保存它对应的内存地址，属性是指向这个函数的指针。
 
-![内存结构](https://ws2.sinaimg.cn/large/006tNc79gy1fvqc1p3edtj312u0gmmyr.jpg)
+
 
 那么运行`bar=obj.bar`会发生什么呢？只是把`bar`这个变量也指向了`obj.bar`指向的函数所占据的内存的地址。
 
-![全局bar指向同一个地址](https://ws1.sinaimg.cn/large/006tNc79gy1fvqcapxkxrj31380pcwh1.jpg)
+
 
 所以我们知道了，函数只是一个内存中存储的代码段（执行逻辑），它可以在不同的上下文(运行环境)中执行。
 

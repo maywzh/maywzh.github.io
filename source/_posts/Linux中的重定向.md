@@ -4,7 +4,7 @@ date: 2015-01-04 17:25:01
 categories: Linux
 tags:
   - Linux命令
-thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwe4gwdfdgj30zk0k0765.jpg
+
 ---
 
 

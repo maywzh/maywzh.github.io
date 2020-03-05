@@ -6,7 +6,7 @@ date: 2015-10-14 19:00:56
 tags:
   - Linux命令
 
-thumbnail: https://ws1.sinaimg.cn/large/006tNbRwgy1fwe4k973xsj30n70dv0ts.jpg
+
 ---
 
 ## ps - 进程查看器

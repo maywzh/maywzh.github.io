@@ -4,7 +4,7 @@ categories: 计算机网络
 date: 2017-09-20 16:12:25
 tags: 
   - 分布式计算
-thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwe3cgrrvoj30l60cwabe.jpg
+
 ---
 
 什么是CAP定理

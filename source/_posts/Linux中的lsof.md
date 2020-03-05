@@ -5,7 +5,7 @@ comments: false
 date: 2015-12-16 17:26:52
 tags:
   - Linux命令
-thumbnail: https://ws1.sinaimg.cn/large/006tNbRwgy1fwe4d60w75j30zk0k03zg.jpg
+
 ---
 
 ## lsof - list open files

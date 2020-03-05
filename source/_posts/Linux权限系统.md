@@ -20,11 +20,11 @@ thumbnail: https://i.loli.net/2019/08/31/fQJeDlcYZIBFLor.jpg
 $ ls -al
 ```
 
-![image-20181004114428707](https://ws1.sinaimg.cn/large/006tNbRwgy1fvw1lts6cuj30lc046aay.jpg)
+
 
 可以看到，每个文件的最前面都有一个文件类型和权限描述。后面分别是文件链接数，文件拥有者，文件用户组，文件最后修改日期和名称。`.` 代表当前目录 `..` 代表上一级目录。
 
-![æä"¶å±æ§çç¤ºæå¾](https://ws3.sinaimg.cn/large/006tNbRwgy1fvw1wnexv2g30gc053dfs.gif)
+
 
 ### 第一栏： 文件类型和权限
 

@@ -38,7 +38,7 @@ Header.Payload.Signature
 
 它是一个很长的字符串，中间用点（`.`）分隔成三个部分。JWT 内部无换行。
 
-![img](https://ws1.sinaimg.cn/large/006tNbRwgy1fw4idjsq2rj30m805tgll.jpg)
+
 
 
 

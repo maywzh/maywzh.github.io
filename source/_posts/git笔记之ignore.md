@@ -4,7 +4,7 @@ categories: 工具
 date: 2015-08-29 13:34:15
 tags: 
   - git
-thumbnail: https://ws4.sinaimg.cn/large/006tNbRwgy1fwe43fmphnj30m109y0tl.jpg
+
 ---
 
 在push到远程仓库中，往往要忽略中间文件和开发环境配置文件等文件的提交，这时就要设置相应的忽略规则，来自动忽略这些文件。

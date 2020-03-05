@@ -5,7 +5,7 @@ comments: false
 date: 2016-01-16 17:57:10
 tags:
   - TCP/IP
-thumbnail: https://ws4.sinaimg.cn/large/006tNbRwgy1fwe67q2fx4j30zk0k00u7.jpg
+
 ---
 
 TCP协议作为TCP/IP协议栈中最重要的一个协议之一，是因特网的基础。
@@ -81,13 +81,13 @@ TCP 是面向字节流的，但传送的数据单元却是报文段。
 
 TCP 报文 (Segment)，包括首部和数据部分。
 
-![报文结构.png](https://ws1.sinaimg.cn/large/006tNbRwgy1fwa7waj3qej30fg03y3yb.jpg)
+
 
 而 TCP 的全部功能都体现在它首部中各字段的作用，只有弄清 TCP 首部各字段的作用才能掌握 TCP 的工作原理。
 TCP 报文段首部的前20个字节是固定的，后面有 4N 字节是根据需要而增加的。
 下图是把 TCP 报文中的首部放大来看。
 
-![报文首部结构.png](https://ws3.sinaimg.cn/large/006tNbRwgy1fwa8lcs0zhj30k00c8mxy.jpg)
+
 
 TCP 的首部包括以下内容：
 
@@ -213,7 +213,7 @@ TCP 规定，在连接建立后所有传送的报文段都必须把 ACK 设置�
 
 TCP 的整个交流过程可以总结为：先建立连接，然后传输数据，最后释放链接。
 
-![image-20181016182318822](https://ws1.sinaimg.cn/large/006tNbRwgy1fwa8l7kfmzj30jg0olgnl.jpg)
+
 
 ## TCP连接和关闭
 
@@ -240,7 +240,7 @@ TCP 连接的建立采用客户服务器方式，主动发起连接建立的一�
 
 我们可以利用wireshark来抓取一个简单的TCP三次握手的包。
 
-![image-20181017200744192](https://ws2.sinaimg.cn/large/006tNbRwgy1fwbh7fiknuj31kw02eju9.jpg)
+
 
 **第一次握手**： 客户端主动打开连接，发送 TCP 报文，进行第一次握手，然后进入 **SYN_SEND** 状态，等待服务器发回确认报文。
 这时首部的同步位 `SYN = 1`，同时初始化一个序号 `Sequence Number = J`。
@@ -309,7 +309,7 @@ TCP 有一个特别的概念叫做**半关闭**，这个概念是说，TCP 的�
 
 ### TCP 状态流转图
 
-![image-20181016180531855](https://ws3.sinaimg.cn/large/006tNbRwgy1fwa81y6ja1j30n20kpjti.jpg)
+
 
 ### 各种状态表示的意思
 
@@ -437,7 +437,7 @@ TCP 头里有一个字段叫 Window，叫 Advertised-Window，这个字段是接
 
 下图是发送窗口的示意图：
 
-![tcps-send-wwindows.png](https://ws3.sinaimg.cn/large/006tNbRwgy1fwa8kmgamij30ic07i750.jpg)
+
 
 对于发送窗口，在缓存内的数据有四种状态：
 
@@ -449,7 +449,7 @@ TCP 头里有一个字段叫 Window，叫 Advertised-Window，这个字段是接
 如果下一刻，收到了接收方对于 32-36 字节序的数据包的 ACK 确认，那么发送方的窗口就会发生「滑动」。
 并且发送下一个 46-51 字节序的数据包。
 
-![tcps-send-wslide.png](https://ws3.sinaimg.cn/large/006tNbRwgy1fwa8krlh36j30ic05uwev.jpg)
+
 
 滑动窗口的概念，描述了 TCP 的数据是怎么发送，以及怎么接收的。
 TCP 的滑动窗口是动态的，我们可以想象成小学常见的一个数学题，一个水池，体积 V，每小时进水量 V1, 出水量 V2。
@@ -462,7 +462,7 @@ TCP 的滑动窗口是动态的，我们可以想象成小学常见的一个数�
 
 下图是接收窗口的示意图（找不到图，唯有自己画了）：
 
-![tcps-receive-wwindows.png](https://ws1.sinaimg.cn/large/006tNbRwgy1fwa8kz7yvfj30p908w74s.jpg)
+
 
 相对于发送窗口，接受窗口在缓存内的数据只有三种状态：
 
@@ -472,14 +472,14 @@ TCP 的滑动窗口是动态的，我们可以想象成小学常见的一个数�
 
 下一刻接收到来自发送端的 32-36 数据包，然后回送 ACK 确认报，并且移动接收窗口。
 
-![tcps-receive-wslide.png](https://ws4.sinaimg.cn/large/006tNbRwgy1fwa8l0y062j30pa08wt98.jpg)
+
 
 另外接收端相对于发送端还有不同的一点，只有前面所有的段都确认的情况下才会移动左边界，
 在前面还有字节未接收但收到后面字节的情况下，窗口不会移动，并不对后续字节确认，以此确保对端会对这些数据重传。
 假如 32-36 字节不是一个报文段的，而是每个字节一个报文段的话，那么就会分成了 5 个报文段。
 在实际的网络环境中，不能确保是按序收到的，其中会有一些早达到，一些迟到达。
 
-![tcps-receive-disorder.png](https://ws3.sinaimg.cn/large/006tNbRwgy1fwa8l2w4uej30p909574u.jpg)
+
 
 如图中的 34、35 字节序，先收到了，接收窗口也不会移动。
 因为有可能 32、33 字节序会出现丢包或者超时，这时就需要发送端重发报文段了。
@@ -914,7 +914,7 @@ UDP 全称 User Datagram Protocol, 与 TCP 同是在网络模型中的传输层�
 UDP 数据报分为数据字段和首部字段。
 首部字段只有 8 个字节，由四个字段组成，每个字段的长度是 2 个字节。
 
-![image-20181016181748162](https://ws4.sinaimg.cn/large/006tNbRwgy1fwa8epzd1mj30gs07bdfy.jpg)
+
 
 **首部各字段意义**：
 
@@ -931,7 +931,7 @@ UDP 数据报首部中检验和的计算方法比较特殊。
 在计算检验和时，要在数据报之前增加 12 个字节的伪首部，用来计算校验和。
 伪首部并不是数据报真正的首部，是为了计算校验和而临时添加在数据报前面的，在真正传输的时候并不会把伪首部一并发送。
 
-![image-20181016181724746](https://ws4.sinaimg.cn/large/006tNbRwgy1fwa8e9zbnaj30md0amzkt.jpg)
+
 
 **伪首部个字段意义**：
 
@@ -974,7 +974,7 @@ UDP 数据报首部中检验和的计算方法比较特殊。
 
 假设一个 UDP 数据报：
 
-![image-20181016181606178](https://ws4.sinaimg.cn/large/006tNbRwgy1fwa8d5cw4wj30d10bn3yt.jpg)
+
 
 各字段以二进制表示：
 

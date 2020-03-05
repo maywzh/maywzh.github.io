@@ -73,7 +73,7 @@ $sar -f /var/log/sysstat/sa28 \| head sar -r -f
 /var/log/sysstat/sa28
 ```
 
-![../_images/sar1.png](https://ws3.sinaimg.cn/large/006tNbRwgy1fvysb419tcj30hs03wgn9.jpg)
+
 
 
 
@@ -81,7 +81,7 @@ $sar -f /var/log/sysstat/sa28 \| head sar -r -f
 
 `sar -u` : 显示的cpu使用率等信息
 
-![../_images/sar2.png](https://ws2.sinaimg.cn/large/006tNbRwgy1fvysb51itlj30hs03a3zo.jpg)
+
 
 可以看到这台机器使用了虚拟化技术，有相应的时间消耗； 各列的指标分别是:
 
@@ -109,7 +109,7 @@ $sar -f /var/log/sysstat/sa28 \| head sar -r -f
 - `ldavg-1`：最后1分钟的系统平均负载 ldavg-5：过去5分钟的系统平均负载
 - `ldavg-15`：过去15分钟的系统平均负载
 
-![../_images/sar3.png](https://ws3.sinaimg.cn/large/006tNbRwgy1fvys9i1ne7j30hs045myy.jpg)
+
 
 
 
@@ -117,7 +117,7 @@ $sar -f /var/log/sysstat/sa28 \| head sar -r -f
 
 `sar -r`： 可查看物理内存使用状况；
 
-![../_images/sar4.png](https://ws3.sinaimg.cn/large/006tNbRwgy1fvys9jc3anj30hs045myy.jpg)
+
 
 - `kbmemfree`：这个值和free命令中的free值基本一致,所以它不包括buffer和cache的空间.
 - `kbmemused`：这个值和free命令中的used值基本一致,所以它包括buffer和cache的空间.
@@ -134,7 +134,7 @@ $sar -f /var/log/sysstat/sa28 \| head sar -r -f
 
 页面发生交换时，服务器的吞吐量会大幅下降；服务器状况不良时，如果怀疑因为内存不足而导致了页面交换的发生，可以使用这个命令来确认是否发生了大量的交换；
 
-![../_images/sar5.png](https://ws4.sinaimg.cn/large/006tNbRwgy1fvys9jsiymj30hs03rdgr.jpg)
+
 
 - `pswpin/s`：每秒系统换入的交换页面（swap page）数量
 - `pswpout/s`：每秒系统换出的交换页面（swap page）数量

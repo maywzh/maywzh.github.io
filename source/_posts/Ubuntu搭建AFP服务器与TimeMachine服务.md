@@ -6,7 +6,7 @@ date: 2016-03-30 14:42:35
 tags:
   - Linux
 
-thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwrr10gevij30lp0cxdgs.jpg
+
 ---
 
 一直是使用samba服务作为NAS，移动硬盘插在mac上作为TimeMachine备份盘，但这样还是太笨拙了。
@@ -356,7 +356,7 @@ $ netstat -tulpn
 
 至此， netatalk部署完成。
 
-![image-20181030180607533](https://ws2.sinaimg.cn/large/006tNbRwgy1fwqeqw5kmuj310y0oawkv.jpg)
+
 
 ## 参考
 

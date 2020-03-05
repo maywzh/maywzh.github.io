@@ -5,7 +5,7 @@ categories: 工具
 tags:
   - git
 date: 2015-08-15 00:44:00
-thumbnail: https://ws4.sinaimg.cn/large/006tNbRwgy1fwe43fmphnj30m109y0tl.jpg
+
 ---
 ## 一个.gitignore的常见问题
 
@@ -15,7 +15,7 @@ thumbnail: https://ws4.sinaimg.cn/large/006tNbRwgy1fwe43fmphnj30m109y0tl.jpg
 
 <!--more-->
 
-![项目结构](https://ws1.sinaimg.cn/large/006tNc79gy1fvqv939viuj30h00gejst.jpg)
+
 
 Google之，原来这是因为，该文件已经存在于远程目录。难道泼出去的水还能收回来吗。
 
@@ -29,7 +29,7 @@ Google之，原来这是因为，该文件已经存在于远程目录。难道�
 git rm --help
 ```
 
-![git rm命令](https://ws4.sinaimg.cn/large/006tNc79gy1fvqviy92m0j31f60zswlx.jpg)
+
 
 它的作用时把相应文件从当前的版本移除出工作树。
 
@@ -61,7 +61,7 @@ STOP！ git早为你们这些强迫症准备好了这个神器`-n` 选项，它�
 git rm -r -n --cached  .vscode
 ```
 
-![rm -n](https://ws1.sinaimg.cn/large/006tNc79gy1fvqw26n6e5j30bo01qmx8.jpg)
+
 
 ok，这就是要移除的文件，删除`-n`命令，再执行一次吧
 

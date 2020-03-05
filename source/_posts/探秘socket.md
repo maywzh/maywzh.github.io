@@ -30,7 +30,7 @@ A与B打电话，A、B正对应于需要通信的两个进程。A想要和B通�
 
 假设现在你要编程网络程序，进行服务器端和客户端的通信（数据交换）。对于服务端的通信进程SPrs和客户端的通信进程CPrs来说，他们的核心功能其实就是发送、接受数据。而中间的数据缓冲、监听端口、控制IO、封装解析TCP/IP协议等工作是非常标准化而繁琐的。那么按照模块分层设计原则，这些底层的功能就应该用接口来实现。socket正是这样一个接口，它将网络连接封装为一个socket模块，对于想要通信的双方而言，只要调用socket，就好像他们在直接通话一样。
 
-socket，它现在已经是操作系统的一部分，在 linux 中是标准的系统调用，只要调用它提供的一组接口（下面会详解常用函数的使用），就能轻松地建立连接，读写数据，关闭连接，让网络操作就像文件操作一样简单。![img](https://ws1.sinaimg.cn/large/006tNc79gy1fvnj0f8s0yj30hq0dnjtj.jpg)
+socket，它现在已经是操作系统的一部分，在 linux 中是标准的系统调用，只要调用它提供的一组接口（下面会详解常用函数的使用），就能轻松地建立连接，读写数据，关闭连接，让网络操作就像文件操作一样简单。
 
 ## 通信地址
 
@@ -58,7 +58,7 @@ socket类型在创建时指定，常用的有三种
 
 一个典型的tcp socket连接如下图
 
-![tcpsocket](https://ws1.sinaimg.cn/large/006tNc79gy1fvnjmg8lvpj30et0c3wgr.jpg)
+
 
 ### 创建socket
 
@@ -327,7 +327,7 @@ int main(int argc, char *argv[])
 
 用 telnet 测试的结果如下：
 
-![image-20180927202444367](https://ws1.sinaimg.cn/large/006tNc79gy1fvodb0jzaij31bs0vgdj4.jpg)
+
 
 
 ## 参考资料

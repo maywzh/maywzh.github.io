@@ -5,12 +5,12 @@ tags:
   - HTTP/HTTPS
   - Web
 categories: 计算机网络
-thumbnail: https://ws1.sinaimg.cn/large/006tNbRwgy1fwe5hshem2j30wc0k0gri.jpg
+
 ---
 
 HTTP请求报文由客户端发出，在发送报文之前要先与服务器建立TCP连接，如果使用HTTPS协议还需要建立TLS/SSL加密隧道连接，HTTP请求报文是由三部分组成: **请求行**, **请求报头**和**请求正文**。
 
-![http请求报文](https://ws2.sinaimg.cn/large/006tNc79gy1fvrvownevsj30bv0470su.jpg)
+
 
 <!--more-->
 

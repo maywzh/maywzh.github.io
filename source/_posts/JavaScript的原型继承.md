@@ -3,8 +3,7 @@ title: JavaScript的原型继承
 author: maywzh
 tags:
   - JavaScript
-categories:
-  - 编程语言
+categories: 编程语言
 date: 2017-07-12 01:46:00
 ---
 ## JavaScript继承

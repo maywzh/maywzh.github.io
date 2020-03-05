@@ -3,8 +3,7 @@ title: JavaScript的变量提升
 author: maywzh
 tags:
   - JavaScript
-categories:
-  - 编程语言
+categories: 编程语言
 date: 2017-07-20 03:35:00
 ---
 JavaScript的设计不同于传统编程语言，它自成一派，有很多的奇妙特性。

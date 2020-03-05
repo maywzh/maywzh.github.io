@@ -3,8 +3,7 @@ title: JavaScript中的this
 author: maywzh
 tags:
   - JavaScript
-categories:
-  - 编程语言
+categories: 编程语言
 date: 2016-10-30 13:36:00
 ---
 我们由一段代码开始本文的主题。

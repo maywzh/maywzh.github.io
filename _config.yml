@@ -87,7 +87,7 @@ deploy:
     github: git@github.com:maywzh/maywzh.github.io.git
     #mubuntu: git@mubuntu:/home/git/repo/hexoblog.git
     #gitlab: ssh://git@test.gitlab.maywzh.com:2222/maywzh/hexoblog.git
-    #coding: git@git.dev.tencent.com:maywzh/maywzh.coding.me.git 
+    coding: git@e.coding.net:farmull/maywzh.com/tech.maywzh.com.git
     #gitea: ssh://git@gitrepo.maywzh.com:1122/maywzh/blog.maywzh.com.git
     #gitee: git@gitee.com:maywzh/maywzh.git
   branch: master

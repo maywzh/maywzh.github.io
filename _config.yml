@@ -84,7 +84,7 @@ theme: next
 deploy:
 - type: git
   repo: 
-    github: git@github.com:maywzh/maywzh.github.io.git
+    #github: git@github.com:maywzh/maywzh.github.io.git
     #mubuntu: git@mubuntu:/home/git/repo/hexoblog.git
     #gitlab: ssh://git@test.gitlab.maywzh.com:2222/maywzh/hexoblog.git
     coding: git@e.coding.net:farmull/maywzh.com/tech.maywzh.com.git

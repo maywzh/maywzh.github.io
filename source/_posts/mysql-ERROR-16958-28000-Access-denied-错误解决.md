@@ -1,8 +1,8 @@
 ---
-title: Mysql ERROR 16958(28000) Access denied 错误解决
+title: Mysql访问拒绝解决
 categories: 数据库
 comments: false
-date: 2016-11-01 18:12:43
+date: 2015-11-01 18:12:43
 tags:
   - mysql
   - bugfix
@@ -82,7 +82,7 @@ mysql> SELECT User, Host, plugin FROM mysql.user;
 
 ## 解决方案
 
-有两种解决方案，但都需要登陆进mysql，所以需要重启mysql开启`--skip-grqant-tables`参数，来跳过权限表的加载
+有两种解决方案，但都需要登陆进mysql，所以需要重启mysql开启`--skip-grant-tables`参数，来跳过权限表的加载
 
 ```bash
 $ systemctl stop mysql.service

@@ -5,7 +5,7 @@ tags:
   - macOS命令
 categories: macOS
 date: 2016-01-05 14:29:00
-
+thumbnail: https://i.loli.net/2020/08/23/N3Wc7K5F981yMSt.jpg
 ---
 基于Unix的OSX提供了强大的CLI系统，相对于linux，OSX给我们提供了一些额外的实用命令行命令。把这段时间试过的有趣的macOS CLI命令总结在这里。
 

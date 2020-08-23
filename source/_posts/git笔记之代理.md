@@ -5,6 +5,7 @@ comments: false
 date: 2015-12-25 08:10:44
 tags: 
   - git
+thumbnail: https://i.loli.net/2020/08/23/OY9GyMIB1S5uk7f.png
 ---
 
 1. https访问

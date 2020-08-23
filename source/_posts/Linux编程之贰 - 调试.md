@@ -5,7 +5,7 @@ comments: false
 date: 2015-07-20 19:14:46
 tags:
   - Linux编程
-
+thumbnail: https://i.loli.net/2020/08/23/DaNnkXpQMLl9YUG.png
 ---
 
 现代的IDE已经提供了相当丰富的调试功能，但有的时候在服务器环境中，我们还是要利用Linux的工具来对运行的进程来进行调试和分析。

@@ -5,6 +5,7 @@ comments: false
 date: 2017-05-16 01:56:58
 tags:
   - TCP/IP
+thumbnail: https://i.loli.net/2020/08/23/W7CoeE1TXQVxKaw.jpg
 ---
 
 ## 什么是拥塞

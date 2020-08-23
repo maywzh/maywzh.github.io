@@ -5,7 +5,7 @@ tags:
   - TCP/IP
 author: maywzh
 date: 2015-12-21 03:28:18
-thumbnail: https://ws2.sinaimg.cn/large/006tNbRwgy1fwe62yzvimj30rs0m2tj5.jpg
+thumbnail: https://i.loli.net/2020/08/23/iwyWKROgfjVtPJs.png
 ---
 
 

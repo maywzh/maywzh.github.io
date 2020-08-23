@@ -5,6 +5,7 @@ comments: false
 date: 2015-10-22 13:26:39
 tags:
   - Linux命令
+thumbnail: https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png
 ---
 env是环境Environment的缩写，正如它的名字一样，它用于**显示系统中已存在的环境变量**，以及**在定义的环境中执行指令**，一般位于`/usr/bin/env`。
 

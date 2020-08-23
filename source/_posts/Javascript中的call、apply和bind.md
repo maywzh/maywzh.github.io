@@ -5,6 +5,7 @@ tags:
   - JavaScript
 categories: 编程
 date: 2016-10-17 18:35:00
+thumbnail: https://i.loli.net/2020/08/23/q9yfYPsHnSvlOQo.jpg
 ---
 ## apply & call
  

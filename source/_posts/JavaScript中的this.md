@@ -5,6 +5,7 @@ tags:
   - JavaScript
 categories: 编程
 date: 2016-10-30 13:36:00
+thumbnail: https://i.loli.net/2020/08/23/D2xwPBzyR7hqcUQ.jpg
 ---
 我们由一段代码开始本文的主题。
 

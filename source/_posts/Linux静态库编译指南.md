@@ -6,7 +6,7 @@ date: 2015-01-17 20:45:50
 tags:
   - Linux编程
   - 编译
-
+thumbnail: https://i.loli.net/2020/08/23/WHZJu3MPeTFagwK.png
 ---
 
 Linux上的静态库，其实是目标文件的归档文件。

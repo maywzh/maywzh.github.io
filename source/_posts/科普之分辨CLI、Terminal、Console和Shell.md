@@ -4,7 +4,7 @@ date: 2015-09-25 19:41:53
 tags:
   - Linux命令
 categories: Linux
-
+thumbnail: https://i.loli.net/2020/08/23/PnZkHxGlfM8Ajpw.png
 ---
 
 CLI 命令行界面、Terminal 终端 、Console 控制台和 Shell，是几个比较容易混淆的概念。

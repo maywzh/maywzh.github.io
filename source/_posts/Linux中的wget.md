@@ -5,7 +5,7 @@ comments: false
 date: 2015-06-21 16:55:51
 tags:
   - Linux命令
-
+thumbnail: https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png
 ---
 
 ## wget - web get

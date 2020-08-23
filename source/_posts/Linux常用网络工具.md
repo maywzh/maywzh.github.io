@@ -5,6 +5,7 @@ comments: false
 date: 2015-05-12 19:10:02
 tags:
   - Linux命令
+thumbnail: https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png
 ---
 
 ## 网络工具

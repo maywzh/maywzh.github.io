@@ -5,7 +5,7 @@ comments: false
 date: 2015-10-16 21:28:11
 tags:
   - c/c++
-thumbnail: https://i.loli.net/2019/08/31/pJbPD5tBzWimIjL.png
+thumbnail: https://i.loli.net/2020/08/23/BxKw7Ck12O8zpjJ.jpg
 ---
 
 在考虑指针的问题之前，首先我们来回顾一下如何定义一个变量。

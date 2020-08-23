@@ -4,7 +4,7 @@ date: 2015-02-11 12:16:14
 tags: 
   - mysql
 categories: 数据库
-
+thumbnail: https://i.loli.net/2020/08/23/wxLC67v2AtQGcjm.gif
 ---
 
 总结一下常用的简单MySQL命令。

@@ -4,7 +4,7 @@ date: 2015-01-04 17:25:01
 categories: Linux
 tags:
   - Linux命令
-
+thumbnail: https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png
 ---
 
 

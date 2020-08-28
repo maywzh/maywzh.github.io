@@ -1,6 +1,6 @@
 ---
 title: Linux中的wget
-categories: Linux
+categories: DevOps
 comments: false
 date: 2015-06-21 16:55:51
 tags:

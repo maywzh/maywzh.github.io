@@ -1,6 +1,6 @@
 ---
 title: Linux动态库编译指南
-categories: Linux
+categories: DevOps
 comments: false
 date: 2015-06-18 20:07:31
 tags:

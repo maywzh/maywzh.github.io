@@ -1,6 +1,6 @@
 ---
 title: 实践Linux编程之贰 - 调试
-categories: Linux
+categories: DevOps
 comments: false
 date: 2015-07-20 19:14:46
 tags:

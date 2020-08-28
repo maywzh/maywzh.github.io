@@ -3,7 +3,7 @@ title: macOS的实用命令
 author: maywzh
 tags:
   - macOS命令
-categories: macOS
+categories: 工具
 date: 2016-01-05 14:29:00
 thumbnail: https://i.loli.net/2020/08/23/N3Wc7K5F981yMSt.jpg
 ---

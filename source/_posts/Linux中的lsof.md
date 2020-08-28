@@ -1,6 +1,6 @@
 ---
 title: Linux中的lsof
-categories: Linux
+categories: DevOps
 comments: false
 date: 2015-12-16 17:26:52
 tags:

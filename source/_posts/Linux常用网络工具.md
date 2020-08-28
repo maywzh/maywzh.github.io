@@ -1,6 +1,6 @@
 ---
 title: Linux常用网络工具
-categories: Linux 
+categories: DevOps 
 comments: false
 date: 2015-05-12 19:10:02
 tags:

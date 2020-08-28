@@ -1,6 +1,6 @@
 ---
 title: 实践Linux编程之叁 - 优化
-categories: Linux
+categories: DevOps
 comments: false
 date: 2015-08-01 19:15:01
 tags:

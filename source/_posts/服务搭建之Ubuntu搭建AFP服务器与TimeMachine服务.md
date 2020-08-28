@@ -1,6 +1,6 @@
 ---
 title: 如何在Ubuntu上搭建TimeCapsule服务
-categories: Linux
+categories: DevOps
 comments: false
 date: 2016-03-30 14:42:35
 tags:

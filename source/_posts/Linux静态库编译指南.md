@@ -1,6 +1,6 @@
 ---
 title: Linux静态库编译指南
-categories: Linux
+categories: DevOps
 comments: false
 date: 2015-01-17 20:45:50
 tags:

@@ -1,6 +1,6 @@
 ---
 title: 实践Linux编程之壹 - 构建
-categories: Linux
+categories: DevOps
 comments: false
 date: 2015-07-16 19:14:29
 tags:

@@ -1,6 +1,6 @@
 ---
 title: Linux进程管理之ps
-categories: Linux
+categories: DevOps
 comments: false
 date: 2015-10-14 19:00:56
 tags:

@@ -1,6 +1,6 @@
 ---
 title: K均值聚类与python实现
-categories: AI
+categories: 机器学习
 comments: false
 date: 2017-09-01 20:51:11
 tags:

@@ -1,6 +1,6 @@
 ---
 title: Linux进程管理之ipcs
-categories: Linux
+categories: DevOps
 date: 2015-10-16 18:45:56
 tags:
   - Linux命令

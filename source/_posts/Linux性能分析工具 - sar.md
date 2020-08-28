@@ -1,6 +1,6 @@
 ---
 title: Linux性能分析工具 - sar
-categories: Linux
+categories: DevOps
 comments: false
 date: 2015-08-26 20:30:36
 tags:

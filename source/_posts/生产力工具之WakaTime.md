@@ -3,9 +3,9 @@ title: WakaTime - 时间记录工具
 author: maywzh
 tags:
   - 时间管理
-categories: 工具
+categories: 编程
 date: 2017-09-28 21:06:00
-thumbnail: https://i.loli.net/2020/08/23/ySP1snGhbH3JuF7.jpg
+thumbnail: https://i.loli.net/2020/08/26/CKVlxaFgNEfQwLr.png
 ---
 
 提高自制力的一个有效的方式就是自我量化，其中一个重要的维度即是时间记录，通过对我们的工作、生活各个方面进行数据记录和分析，可以帮助我们优化自己的时间管理策略，提高生产力。

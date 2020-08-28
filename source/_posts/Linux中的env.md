@@ -1,6 +1,6 @@
 ---
 title: Linux中的env是什么
-categories: Linux
+categories: DevOps
 comments: false
 date: 2015-10-22 13:26:39
 tags:

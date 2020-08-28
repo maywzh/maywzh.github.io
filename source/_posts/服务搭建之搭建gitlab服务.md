@@ -1,6 +1,6 @@
 ---
 title: 通过docker容器方式搭建gitlab服务
-categories: Linux
+categories: DevOps
 comments: false
 date: 2017-02-17 16:56:07
 tags:

@@ -1,6 +1,6 @@
 ---
 title: Linux GNU-gcc简明教程
-categories: Linux
+categories: DevOps
 comments: false
 date: 2015-10-18 01:51:25
 tags:

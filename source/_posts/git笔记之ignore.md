@@ -1,6 +1,6 @@
 ---
 title: git笔记之ignore
-categories: 工具 
+categories: 工具
 date: 2015-08-29 13:34:15
 tags: 
   - git

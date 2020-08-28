@@ -4,7 +4,7 @@ categories: DevOps
 comments: false
 date: 2015-01-17 20:45:50
 tags:
-  - Linux编程
+  - Linux
   - 编译
 thumbnail: https://i.loli.net/2020/08/23/WHZJu3MPeTFagwK.png
 ---

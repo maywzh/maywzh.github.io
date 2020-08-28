@@ -4,7 +4,7 @@ categories: 编程
 comments: false
 date: 2017-01-04 01:53:51
 tags:
-  - 异步编程
+  - 异步
   - JavaScript
 thumbnail: https://i.loli.net/2020/08/23/teEURbBawNzWTq4.jpg
 ---

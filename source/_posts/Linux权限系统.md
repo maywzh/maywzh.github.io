@@ -2,7 +2,7 @@
 title: 如何理解Linux权限系统
 date: 2015-04-09 11:41:59
 tags:
-  - Linux系统
+  - Linux
 categories: DevOps
 thumbnail: https://i.loli.net/2020/08/23/SwyGODBgvRrI67x.png
 ---

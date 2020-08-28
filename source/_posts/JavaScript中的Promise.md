@@ -5,7 +5,7 @@ comments: false
 date: 2017-07-26 12:35:04
 tags:
   - JavaScript
-  - 异步编程
+  - 异步
 thumbnail: https://i.loli.net/2020/08/23/rODmiQtKSy25wvn.jpg
 ---
 

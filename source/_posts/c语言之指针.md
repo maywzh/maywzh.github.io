@@ -4,7 +4,7 @@ categories: 编程
 comments: false
 date: 2015-10-16 21:28:11
 tags:
-  - c/c++
+  - C/C++
 thumbnail: https://i.loli.net/2020/08/23/BxKw7Ck12O8zpjJ.jpg
 ---
 

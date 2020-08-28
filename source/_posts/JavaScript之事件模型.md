@@ -3,7 +3,7 @@ title: JavaScript的事件模型
 date: 2016-12-03 01:25:33
 tags:
   - JavaScript
-  - 异步编程
+  - 异步
 categories: 编程
 thumbnail: https://i.loli.net/2020/08/23/IEMQdD9Rl16SyCf.jpg
 ---

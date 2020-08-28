@@ -1,6 +1,6 @@
 ---
 title: Linux五种IO模型详解
-categories: 编程
+categories: 操作系统
 comments: false
 date: 2018-02-28 21:40:10
 tags:

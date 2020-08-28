@@ -4,8 +4,8 @@ categories: DevOps
 comments: false
 date: 2017-11-02 17:51:52
 tags:
-  - https
-  - linux
+  - HTTP/HTTPS
+  - Linux
 thumbnail: https://i.loli.net/2020/08/28/AVEwqnomz7lsyke.jpg
 ---
 

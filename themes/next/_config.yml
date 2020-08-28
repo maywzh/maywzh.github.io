@@ -65,10 +65,10 @@ footer:
     color: "#808080"
 
   # If not defined, `author` from Hexo `_config.yml` will be used.
-  copyright: maywzh, All Rights Reserved.
+  copyright: maywzh, all rights reserved.
 
   # Powered by Hexo & NexT
-  powered: true
+  powered: false
 
   # Beian ICP and gongan information for Chinese users. See: http://www.beian.miit.gov.cn, http://www.beian.gov.cn
   beian:

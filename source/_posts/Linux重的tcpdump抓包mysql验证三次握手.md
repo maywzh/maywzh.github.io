@@ -6,7 +6,7 @@ date: 2016-01-16 01:58:29
 tags:
   - TCP/IP
   - mysql
-  - Linux命令
+  - Linux
 thumbnail: https://i.loli.net/2020/08/23/6NJkSv1aUTLPp4Q.png
 ---
 

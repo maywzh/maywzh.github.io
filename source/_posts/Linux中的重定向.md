@@ -3,7 +3,8 @@ title: Linux中的重定向
 date: 2015-01-04 17:25:01
 categories: DevOps
 tags:
-  - Linux命令
+  - Linux
+  - Terminal
 thumbnail: https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png
 ---
 

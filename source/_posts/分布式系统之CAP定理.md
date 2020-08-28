@@ -3,7 +3,7 @@ title: 分布式系统理论之CAP定理
 categories: 分布式
 date: 2017-09-20 16:12:25
 tags: 
-  - 分布式系统
+  - 分布式
 thumbnail: https://changleamazing-1253815386.cos.ap-guangzhou.myqcloud.com/blog/2020-05-13-195638.jpg
 ---
 

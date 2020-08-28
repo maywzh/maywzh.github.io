@@ -3,7 +3,7 @@ title: 用jsDelivr来改善网站响应速度
 date: 2016-01-13 02:46:27
 tags:
   - CDN
-  - Web 开发
+  - Web
 categories: DevOps
 
 ---

@@ -4,7 +4,7 @@ categories: DevOps
 comments: false
 date: 2015-10-14 19:00:56
 tags:
-  - Linux命令
+  - Linux
 thumbnail: https://i.loli.net/2020/08/23/vFzuXG6ESdpcTAq.jpg
 ---
 

@@ -2,7 +2,7 @@
 title: 如何分辨CLI、Terminal、Console和Shell
 date: 2015-09-25 19:41:53
 tags:
-  - Linux命令
+  - Linux
 categories: DevOps
 thumbnail: https://i.loli.net/2020/08/23/PnZkHxGlfM8Ajpw.png
 ---

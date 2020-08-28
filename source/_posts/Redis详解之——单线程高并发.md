@@ -46,13 +46,31 @@ redis 内部使用文件事件处理器 file event handler，这个文件事件�
 
 Redis是单线程的，所以所有的操作都是线性执行的，由于读写操作等待用户输入或输出都是阻塞的，所以I/O操作在一般情况下往往不能直接返回，这会导致某一文件的IO阻塞导致整个进程无法对其他客户提供服务，而IO多路复用就是为了解决这个问题。
 
+#### 回顾IO多路复用
 
+多路复用的特点是通过一种机制一个进程能同时等待IO文件描述符，内核监视这些文件描述符（套接字描述符），其中的任意一个进入读就绪状态，`select`， `poll`，`epoll`函数就可以返回。对于监视的方式，又可以分为 select， poll， epoll三种方式。
+
+![20164149_LD8E](https://i.loli.net/2020/08/28/T1hwz5douryFOXb.png)
 
 #### Reactor设计模式
 
-Redis服务采用Reactor的方式来实现文件事件处理器（每个网络连接对应一个文件描述符）
 
-![java2-1557020024](https://i.loli.net/2020/08/28/h2lHS6dbuw4TQCV.jpg)
+
+reactor设计模式，是一种**基于事件驱动**的设计模式。Reactor框架是ACE各个框架中最基础的一个框架，其他框架都或多或少地用到了Reactor框架。在事件驱动的应用中，将一个或多个客户的服务请求分离（demultiplex）和调度（dispatch）给应用程序。在事件驱动的应用中，同步地、有序地处理同时接收的多个服务请求。reactor模式与外观模式有点像。不过，观察者模式与单个事件源关联，而反应器模式则与多个事件源关联 。当一个主体发生改变时，所有依属体都得到通知。
+
+![aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTYxMTAzMTAxMzAyMzMx](https://i.loli.net/2020/08/28/piHkn5ALthX34BR.png)
+
+> Handles ：表示操作系统管理的资源，我们可以理解为fd。
+>
+> Synchronous Event Demultiplexer ：同步事件分离器，阻塞等待Handles中的事件发生。
+>
+> Initiation Dispatcher ：初始分派器，作用为添加Event handler（事件处理器）、删除Event handler以及分派事件给Event handler。也就是说，Synchronous Event Demultiplexer负责等待新事件发生，事件发生时通知Initiation Dispatcher，然后Initiation Dispatcher调用event handler处理事件。
+>
+> Event Handler ：事件处理器的接口
+>
+> Concrete Event Handler ：事件处理器的实际实现，而且绑定了一个Handle。因为在实际情况中，我们往往不止一种事件处理器，因此这里将事件处理器接口和实现分开，与C++、Java这些高级语言中的多态类似。
+
+
 
 文件事件处理器使用I/O多路复用模块同时监听多个FD，当accept、read、write和close文件事件产生时，文件事件处理器就会回调FD绑定的事件处理器。
 

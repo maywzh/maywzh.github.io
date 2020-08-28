@@ -2,7 +2,8 @@
 title: Linux内存分析工具 - free
 categories: DevOps
 tags:
-  - Linux命令
+  - Linux
+  - Terminal
 comments: false
 date: 2015-08-21 21:04:01
 thumbnail: https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png

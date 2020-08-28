@@ -1,12 +1,10 @@
 ---
-title: About
-date: 2019-07-09 00:00:05
-type: "about"
+title: About Me
+date: 2020-08-28 14:24:25
 comments: false
-thumbnail: https://i.loli.net/2019/08/31/XfnU7ReFYjGugNJ.jpg
 ---
 
-# About me
+## Experience
 
 工程师、开发者、开过摄影工作室、做过游戏、玩过乐器和编曲。
 喜欢旧物和手工制品。
@@ -17,7 +15,7 @@ thumbnail: https://i.loli.net/2019/08/31/XfnU7ReFYjGugNJ.jpg
 2017.7 - 2019.7 Freelancer，独立开发者/美股投资/矿工/摄影师/音乐制作
 2019.7 至今 CCNU/UOW CS专业硕士在读
 
-# Contact me
+## Contact me
 
 Me: [maywzh.com](https://maywzh.com)
 GitHub: [maywzh](https://github.com/maywzh)

@@ -1,6 +1,6 @@
 /* global NexT, CONFIG */
 
-HTMLElement.prototype.wrap = function(wrapper) {
+HTMLElement.prototype.wrap = function (wrapper) {
   this.parentNode.insertBefore(wrapper, this);
   this.parentNode.removeChild(this);
   wrapper.appendChild(this);
@@ -11,7 +11,7 @@ NexT.utils = {
   /**
    * Wrap images with fancybox.
    */
-  wrapImageWithFancyBox: function() {
+  wrapImageWithFancyBox: function () {
     document.querySelectorAll('.post-body :not(a) > img, .post-body > img').forEach(element => {
       var $image = $(element);
       var imageLink = $image.attr('data-src') || $image.attr('src');
@@ -34,7 +34,7 @@ NexT.utils = {
 
     $.fancybox.defaults.hash = false;
     $('.fancybox').fancybox({
-      loop   : true,
+      loop: true,
       helpers: {
         overlay: {
           locked: false
@@ -43,7 +43,7 @@ NexT.utils = {
     });
   },
 
-  registerExtURL: function() {
+  registerExtURL: function () {
     document.querySelectorAll('span.exturl').forEach(element => {
       let link = document.createElement('a');
       // https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
@@ -61,7 +61,7 @@ NexT.utils = {
   /**
    * One-click copy code support.
    */
-  registerCopyCode: function() {
+  registerCopyCode: function () {
     document.querySelectorAll('figure.highlight').forEach(element => {
       const box = document.createElement('div');
       element.wrap(box);
@@ -103,7 +103,7 @@ NexT.utils = {
     });
   },
 
-  wrapTableWithBox: function() {
+  wrapTableWithBox: function () {
     document.querySelectorAll('table').forEach(element => {
       const box = document.createElement('div');
       box.className = 'table-container';
@@ -111,7 +111,7 @@ NexT.utils = {
     });
   },
 
-  registerVideoIframe: function() {
+  registerVideoIframe: function () {
     document.querySelectorAll('iframe').forEach(element => {
       const supported = [
         'www.youtube.com',
@@ -133,7 +133,7 @@ NexT.utils = {
     });
   },
 
-  registerScrollPercent: function() {
+  registerScrollPercent: function () {
     var THRESHOLD = 50;
     var backToTop = document.querySelector('.back-to-top');
     var readingProgressBar = document.querySelector('.reading-progress-bar');
@@ -156,9 +156,9 @@ NexT.utils = {
 
     backToTop && backToTop.addEventListener('click', () => {
       window.anime({
-        targets  : document.scrollingElement,
-        duration : 500,
-        easing   : 'linear',
+        targets: document.scrollingElement,
+        duration: 500,
+        easing: 'linear',
         scrollTop: 0
       });
     });
@@ -167,7 +167,7 @@ NexT.utils = {
   /**
    * Tabs tag listener (without twitter bootstrap).
    */
-  registerTabsTag: function() {
+  registerTabsTag: function () {
     // Binding `nav-tabs` & `tab-content` by real time permalink changing.
     document.querySelectorAll('.tabs ul.nav-tabs .tab').forEach(element => {
       element.addEventListener('click', event => {
@@ -196,7 +196,7 @@ NexT.utils = {
     window.dispatchEvent(new Event('tabs:register'));
   },
 
-  registerCanIUseTag: function() {
+  registerCanIUseTag: function () {
     // Get responsive height passed from iframe.
     window.addEventListener('message', ({ data }) => {
       if ((typeof data === 'string') && data.includes('ciu_embed')) {
@@ -207,7 +207,7 @@ NexT.utils = {
     }, false);
   },
 
-  registerActiveMenuItem: function() {
+  registerActiveMenuItem: function () {
     document.querySelectorAll('.menu-item').forEach(element => {
       var target = element.querySelector('a[href]');
       if (!target) return;
@@ -217,7 +217,7 @@ NexT.utils = {
     });
   },
 
-  registerLangSelect: function() {
+  registerLangSelect: function () {
     let sel = document.querySelector('.lang-select');
     if (!sel) return;
     sel.value = CONFIG.page.lang;
@@ -229,7 +229,7 @@ NexT.utils = {
     });
   },
 
-  registerSidebarTOC: function() {
+  registerSidebarTOC: function () {
     const navItems = document.querySelectorAll('.post-toc li');
     const sections = [...navItems].map(element => {
       var link = element.querySelector('a.nav-link');
@@ -239,9 +239,9 @@ NexT.utils = {
         var target = document.getElementById(event.currentTarget.getAttribute('href').replace('#', ''));
         var offset = target.getBoundingClientRect().top + window.scrollY;
         window.anime({
-          targets  : document.scrollingElement,
-          duration : 500,
-          easing   : 'linear',
+          targets: document.scrollingElement,
+          duration: 500,
+          easing: 'linear',
           scrollTop: offset + 10
         });
       });
@@ -263,9 +263,9 @@ NexT.utils = {
       }
       // Scrolling to center active TOC element if TOC content is taller then viewport.
       window.anime({
-        targets  : tocElement,
-        duration : 200,
-        easing   : 'linear',
+        targets: tocElement,
+        duration: 200,
+        easing: 'linear',
         scrollTop: tocElement.scrollTop - (tocElement.offsetHeight / 2) + target.getBoundingClientRect().top - tocElement.getBoundingClientRect().top
       });
     }
@@ -300,7 +300,7 @@ NexT.utils = {
         activateNavByIndex(navItems[index]);
       }, {
         rootMargin: marginTop + 'px 0px -100% 0px',
-        threshold : 0
+        threshold: 0
       });
       sections.forEach(element => {
         element && intersectionObserver.observe(element);
@@ -309,25 +309,25 @@ NexT.utils = {
     createIntersectionObserver(document.documentElement.scrollHeight);
   },
 
-  hasMobileUA: function() {
+  hasMobileUA: function () {
     let ua = navigator.userAgent;
     let pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
     return pa.test(ua);
   },
 
-  isTablet: function() {
+  isTablet: function () {
     return window.screen.width < 992 && window.screen.width > 767 && this.hasMobileUA();
   },
 
-  isMobile: function() {
+  isMobile: function () {
     return window.screen.width < 767 && this.hasMobileUA();
   },
 
-  isDesktop: function() {
+  isDesktop: function () {
     return !this.isTablet() && !this.isMobile();
   },
 
-  supportsPDFs: function() {
+  supportsPDFs: function () {
     let ua = navigator.userAgent;
     let isFirefoxWithPDFJS = ua.includes('irefox') && parseInt(ua.split('rv:')[1].split('.')[0], 10) > 18;
     let supportsPdfMimeType = typeof navigator.mimeTypes['application/pdf'] !== 'undefined';
@@ -339,7 +339,7 @@ NexT.utils = {
    * Init Sidebar & TOC inner dimensions on all pages and for all schemes.
    * Need for Sidebar/TOC inner scrolling if content taller then viewport.
    */
-  initSidebarDimension: function() {
+  initSidebarDimension: function () {
     var sidebarNav = document.querySelector('.sidebar-nav');
     var sidebarNavHeight = sidebarNav.style.display !== 'none' ? sidebarNav.offsetHeight : 0;
     var sidebarOffset = CONFIG.sidebar.offset || 12;
@@ -353,7 +353,7 @@ NexT.utils = {
     document.querySelector('.post-toc-wrap').style.maxHeight = sidebarWrapperHeight;
   },
 
-  updateSidebarPosition: function() {
+  updateSidebarPosition: function () {
     var sidebarNav = document.querySelector('.sidebar-nav');
     var hasTOC = document.querySelector('.post-toc');
     if (hasTOC) {
@@ -378,12 +378,12 @@ NexT.utils = {
     }
   },
 
-  getScript: function(url, callback, condition) {
+  getScript: function (url, callback, condition) {
     if (condition) {
       callback();
     } else {
       var script = document.createElement('script');
-      script.onload = script.onreadystatechange = function(_, isAbort) {
+      script.onload = script.onreadystatechange = function (_, isAbort) {
         if (isAbort || !script.readyState || /loaded|complete/.test(script.readyState)) {
           script.onload = script.onreadystatechange = null;
           script = undefined;
@@ -395,7 +395,7 @@ NexT.utils = {
     }
   },
 
-  loadComments: function(element, callback) {
+  loadComments: function (element, callback) {
     if (!CONFIG.comments.lazyload || !element) {
       callback();
       return;

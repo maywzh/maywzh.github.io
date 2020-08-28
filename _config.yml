@@ -4,8 +4,8 @@
 
 # Site
 title: Cult Minds
-subtitle: I'm a Pro, as in Procrastinator.
-description: Namasday
+subtitle: Namasday.
+description: Namasday.
 keywords: Tech Blogs
 author: maywzh
 language: en
@@ -99,7 +99,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next2
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment

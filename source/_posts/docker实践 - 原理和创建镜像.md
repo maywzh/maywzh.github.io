@@ -4,7 +4,7 @@ date: 2017-02-13 21:04:40
 categories: DevOps
 tags:
   - Docker
-thumbnail: https://raw.githubusercontent.com/maywzh/imagebed/master/img/docker.png
+thumbnail: https://i.loli.net/2020/08/28/QvHcBxAqZNbRsK3.jpg
 ---
 你是否遇到过这种问题，在一个开发环境下面运行完全正常的程序，到了生产环境就会出现种种问题。因为生产环境的种种配置、库与环境变量等依赖项都与开发环境不尽相同，所以部署到生产环境之前，必须提前将生产环境配置好，才能保证服务正常运行。
 

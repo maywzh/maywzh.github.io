@@ -1,7 +1,9 @@
 <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
   {%- if theme.avatar.url %}
-    <img class="site-author-image" itemprop="image" alt="{{ author }}"
-      src="{{ url_for(theme.avatar.url) }}">
+    <a href="/">
+      <img class="site-author-image" itemprop="image" alt="{{ author }}"
+        src="{{ url_for(theme.avatar.url) }}">
+    s</a>
   {%- endif %}
   <p class="site-author-name" itemprop="name">{{ author }}</p>
   <div class="site-description" itemprop="description">{{ description }}</div>
@@ -63,7 +65,7 @@
 {%- if theme.chat.enable and theme.chat.service !== '' %}
   <div class="sidebar-button motion-element">
   {%- if theme.chat.service == 'chatra' and theme.chatra.enable %}
-    <a onclick="Chatra('openChat', true);">
+    <a onclick="Chatra('openChat', true)">
   {%- endif %}
   {%- if theme.chat.service == 'tidio' and theme.tidio.enable %}
     <a onclick="tidioChatApi.open();">

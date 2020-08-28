@@ -1,28 +1,27 @@
 {% extends '_layout.swig' %}
 {% import '_macro/sidebar.swig' as sidebar_template with context %}
 
-{% block title %}
-  {%- set page_title_suffix = ' | ' + title %}
+  {% block title %}
+    {%- set page_title_suffix = ' | ' + title %}
 
-  {%- if page.type === 'categories' and not page.title %}
-    {{- __('title.category') + page_title_suffix }}
-  {%- elif page.type === 'tags' and not page.title %}
-    {{- __('title.tag') + page_title_suffix }}
-  {%- elif page.type === 'schedule' and not page.title %}
-    {{- __('title.schedule') + page_title_suffix }}
-  {%- else %}
-    {{- page.title + page_title_suffix }}
-  {%- endif %}
-{% endblock %}
-
-{% block class %}page posts-expand{% endblock %}
+    {%- if page.type === 'categories' and not page.title %}
+      {{- __('title.category') + page_title_suffix }}
+    {%- elif page.type === 'tags' and not page.title %}
+      {{- __('title.tag') + page_title_suffix }}
+    {%- elif page.type === 'schedule' and not page.title %}
+      {{- __('title.schedule') + page_title_suffix }}
+    {%- else %}
+      {{- page.title + page_title_suffix }}
+    {%- endif %}
+  {% endblock %}
 
 {% block content %}
 
+  <div class="posts-expand">
     {##################}
     {### PAGE BLOCK ###}
     {##################}
-    <div class="post-block" lang="{{ page.lang or config.language }}">
+    <div class="post-block" lang="{{ page.lang or page.language or config.language }}">
       {% include '_partials/page/page-header.swig' %}
       {#################}
       {### PAGE BODY ###}
@@ -69,6 +68,7 @@
     {######################}
     {### END PAGE BLOCK ###}
     {######################}
+  </div>
 
 {% endblock %}
 

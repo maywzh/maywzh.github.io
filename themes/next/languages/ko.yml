@@ -1,5 +1,4 @@
 ---
-name: 한국어
 title:
   archive: 아카이브
   category: 카테고리
@@ -25,6 +24,7 @@ post:
   modified: Updated at
   edit: Edit this post
   in: In
+  more: more
   read_more: 더 읽어보기
   untitled: 제목 없음
   sticky: 고정
@@ -37,6 +37,7 @@ post:
     license_content: "All articles in this blog are licensed under %s unless stating additionally."
 footer:
   powered: "Powered by %s"
+  theme: Theme
   total_views: Total Views
   total_visitors: Total Visitors
 counter:

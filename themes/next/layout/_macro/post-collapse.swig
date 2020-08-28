@@ -7,7 +7,7 @@
   {%- if year !== current_year %}
     {%- set current_year = year %}
     <div class="collection-year">
-      <span class="collection-header">{{ current_year }}</span>
+      <{%- if theme.seo %}h2{% else %}h1{%- endif %} class="collection-header">{{ current_year }}</{%- if theme.seo %}h2{% else %}h1{%- endif %}>
     </div>
   {%- endif %}
 
@@ -22,7 +22,7 @@
         </time>
       </div>
 
-      <div class="post-title">
+      <{%- if theme.seo %}h3{% else %}h2{%- endif %} class="post-title">
         {%- if post.link %}{# Link posts #}
           {%- set postTitleIcon = '<i class="fa fa-external-link"></i>' %}
           {%- set postText = post.title or post.link %}
@@ -32,7 +32,7 @@
             <span itemprop="name">{{ post.title or __('post.untitled') }}</span>
           </a>
         {%- endif %}
-      </div>
+      </{%- if theme.seo %}h3{% else %}h2{%- endif %}>
 
     </header>
   </article>

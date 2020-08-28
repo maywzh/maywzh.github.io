@@ -54,6 +54,7 @@ $use-seo = hexo-config('seo');
   background: var(--content-bg-color);
   border-radius: $border-radius;
   box-shadow: $box-shadow;
+  margin: auto;
   margin-top: $sidebar-offset;
   padding: $content-desktop-padding;
 }
@@ -63,7 +64,7 @@ $use-seo = hexo-config('seo');
 }
 
 // Top main padding from header to posts (default 40px).
-.content {
+.posts-expand {
   padding-top: initial;
 }
 
@@ -149,6 +150,8 @@ $use-seo = hexo-config('seo');
   }
 
   .posts-expand {
+    margin: initial;
+
     // Components inside Posts.
     .post-button {
       margin-top: ($content-tablet-padding * 2);
@@ -190,6 +193,8 @@ $use-seo = hexo-config('seo');
   }
 
   .posts-expand {
+    margin: initial;
+
     // Components inside Posts.
     .post-button {
       margin: $sidebar-offset 0;

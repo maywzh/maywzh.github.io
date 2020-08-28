@@ -8,7 +8,6 @@
   CONFIG.page = {
     sidebar: {{ page.sidebar | json }},
     isHome : {{ is_home() }},
-    isPost : {{ is_post() }},
-    lang   : '{{ page.lang }}'
+    isPost : {{ is_post() }}
   };
 </script>

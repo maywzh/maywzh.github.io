@@ -27,8 +27,8 @@ public_dir: public
 tag_dir: tags
 archive_dir: archives
 category_dir: categories
-about_dir: abou
-code_dir: downloads/code
+about_dir: about
+code_dir: uploads/code
 i18n_dir: :lang
 skip_render:
 
@@ -48,7 +48,7 @@ future: true
 highlight:
   enable: true
   line_number: true
-  auto_detect: false
+  auto_detect: true
   tab_replace: ''
   wrap: true
   hljs: false
@@ -113,6 +113,14 @@ deploy:
     #gitea: ssh://git@gitrepo.maywzh.com:1122/maywzh/blog.maywzh.com.git
     #gitee: git@gitee.com:maywzh/maywzh.git
   branch: master
+
+#Search Engine
+#Local Search: http://theme-next.iissnan.com/third-party-services.html#search-system
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
 
 
 #Admin

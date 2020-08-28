@@ -1,5 +1,4 @@
 ---
-name: Français
 title:
   archive: Archive
   category: Catégorie
@@ -25,6 +24,7 @@ post:
   modified: Mis à jour le
   edit: Éditer cet article
   in: dans
+  more: plus
   read_more: Lire la suite
   untitled: Sans titre
   sticky: Épingler
@@ -37,6 +37,7 @@ post:
     license_content: "Tous les articles de ce blog sont sous licence %s, sauf mention contraire."
 footer:
   powered: "Propulsé par %s"
+  theme: Thème
   total_views: Vues totales
   total_visitors: Total visiteurs
 counter:

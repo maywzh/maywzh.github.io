@@ -1,19 +1,23 @@
 ---
 title: About
-date: 2018-01-14 00:00:05
+date: 2019-07-09 00:00:05
 type: "about"
 comments: false
-thumbnail: https://ws3.sinaimg.cn/large/006tNbRwgy1fwe3jedssfj31kw0zkabv.jpg
+thumbnail: https://i.loli.net/2019/08/31/XfnU7ReFYjGugNJ.jpg
 ---
 
-# 关于我
+# About me
 
-2016 年毕业于东南大学。
-2016.7 - 2017.7 开发工程师
-2017.7 - 2019.7 自由职业者，独立开发者/美股投资/矿工/摄影师/音乐制作
-2019.7 至今      University of Wollonggong Computer Science Master 就读
+工程师、开发者、开过摄影工作室、做过游戏、玩过乐器和编曲。
+喜欢旧物和手工制品。
+考虑养猫然后取名叫狗狗。
 
-# 联系我
+2012.9 - 2016.6 SEU 信息工程专业
+2016.7 - 2017.7 网站开发工程师
+2017.7 - 2019.7 Freelancer，独立开发者/美股投资/矿工/摄影师/音乐制作
+2019.7 至今 CCNU/UOW CS专业硕士在读
+
+# Contact me
 
 Me: [maywzh.com](https://maywzh.com)
 GitHub: [maywzh](https://github.com/maywzh)

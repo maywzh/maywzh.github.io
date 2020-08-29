@@ -1,6 +1,6 @@
 ---
-title: IO多路复用的select、poll、epoll
-categories: uncategorized
+title: 操作系统中的select、poll、epoll机制
+categories: 操作系统
 comments: false
 date: 2018-01-29 00:19:46
 tags:

@@ -1,0 +1,28 @@
+- class_name: 我
+  class_desc: 
+  link_list:
+    - name: Cultoy
+      link: https://blog.maywzh.com/
+      avatar: https://i.loli.net/2020/08/29/UcZpgnIFoAX9isW.jpg
+      descr: 
+    - name: Github
+      link: https://github.com/maywzh
+      avatar: https://i.loli.net/2020/08/29/LOVT98beMpIRQsk.png
+      descr: 
+    - name: LinkedIn
+      link: https://www.linkedin.com/in/mei-wangzhihui-73aaa6193/
+      avatar: https://i.loli.net/2020/08/29/KucCLaF1ep7XmOj.png
+      descr: 
+    
+
+- class_name: 我的频道
+  class_desc: 
+  link_list:
+    - name: Youtube
+      link: https://www.youtube.com/channel/UCprqPV3-B8AwSVDYg2Pbe5g?view_as=subscriber
+      avatar: https://i.loli.net/2020/08/29/MHkO1mfpbE49Lc6.png
+      descr: 
+    - name: Bilibili
+      link: https://space.bilibili.com/22357412/
+      avatar: https://i.loli.net/2020/08/29/6cMhGUkfdY5ZHzx.png
+      descr: 

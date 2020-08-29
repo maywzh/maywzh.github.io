@@ -41,9 +41,15 @@ copy:
 # formal:
 #   icon: link || the description
 social:
-  fab fa-github: https://github.com/maywzh || Github
+  fas fa-blog: https://blog.maywzh.com || Blog
+  #fab fa-github: https://github.com/maywzh || Github
+  fab fa-telegram-plane: https://t.me/unlockedcultoy  || Telegram
+  fab fa-twitter: https://twitter.com/maywzh  || Twitter
+  fab fa-weibo: http://weibo.com/JupiterMay || Weibo
+  fab fa-instagram: https://instagram.com/maywzh || Instagram
+  fab fa-500px: https://500px.com/maywzh || 500px
   fas fa-envelope: mailto:maywzh@gmail.com || Email
-
+  
 # search (搜索)
 # --------------------------------------
 
@@ -607,7 +613,7 @@ aside:
     button:
       icon: fab fa-github
       text: Follow Me
-      link: https://github.com/xxxxxx
+      link: https://github.com/maywzh
   card_announcement:
     enable: true
     content: Namasday.

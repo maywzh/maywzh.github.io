@@ -1,21 +1,37 @@
-- class_name: 我
+- class_name: Me
   class_desc: 
   link_list:
     - name: Cultoy
       link: https://blog.maywzh.com/
-      avatar: https://i.loli.net/2020/08/29/UcZpgnIFoAX9isW.jpg
+      avatar: https://i.loli.net/2020/08/30/tjr6wQ5O1fAuFg8.png
       descr: 
     - name: Github
       link: https://github.com/maywzh
       avatar: https://i.loli.net/2020/08/29/LOVT98beMpIRQsk.png
       descr: 
-    - name: LinkedIn
-      link: https://www.linkedin.com/in/mei-wangzhihui-73aaa6193/
-      avatar: https://i.loli.net/2020/08/29/KucCLaF1ep7XmOj.png
+    - name: Instagram
+      link: https://instagram.com/maywzh
+      avatar: https://i.loli.net/2020/08/30/oCPX53vNVp4KMyq.png
       descr: 
+    - name: 500px
+      link: https://500px.com/maywzh
+      avatar: https://i.loli.net/2020/08/30/d3JK2aWY9B4IjUz.png
+      descr:
+    - name: Weibo
+      link: http://weibo.com/JupiterMay
+      avatar: https://i.loli.net/2020/08/30/rOuLxteoZvf16QF.png
+      descr:
+    - name: Douban
+      link: https://www.douban.com/people/CrisMay/
+      avatar: https://i.loli.net/2020/08/30/IDmQL1XWScuakTg.png
+      descr: 
+    # - name: LinkedIn
+    #   link: https://www.linkedin.com/in/mei-wangzhihui-73aaa6193/
+    #   avatar: https://i.loli.net/2020/08/29/KucCLaF1ep7XmOj.png
+    #   descr: 
     
 
-- class_name: 我的频道
+- class_name: My Channels
   class_desc: 
   link_list:
     - name: Youtube
@@ -24,5 +40,9 @@
       descr: 
     - name: Bilibili
       link: https://space.bilibili.com/22357412/
-      avatar: https://i.loli.net/2020/08/29/6cMhGUkfdY5ZHzx.png
+      avatar: https://i.loli.net/2020/08/30/mhdvZXcJxEeTafw.png
       descr: 
+    - name: Tiktok
+      link: https://www.tiktok.com/@maywzh
+      avatar: https://i.loli.net/2020/08/30/7cmDAGgeOoS8MW1.png
+      descr:    

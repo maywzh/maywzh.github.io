@@ -6,6 +6,7 @@ tags:
   - 异步
 categories: 编程
 thumbnail: https://i.loli.net/2020/08/23/IEMQdD9Rl16SyCf.jpg
+cover: https://i.loli.net/2020/08/23/IEMQdD9Rl16SyCf.jpg
 ---
 
 ## 监听函数

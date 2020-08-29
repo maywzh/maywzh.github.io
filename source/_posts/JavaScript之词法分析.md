@@ -5,6 +5,7 @@ tags:
   - JavaScript
 date: 2017-01-23 08:00:00
 thumbnail: https://i.loli.net/2020/08/23/rqQgfcX3GpVvxaz.jpg
+cover: https://i.loli.net/2020/08/23/rqQgfcX3GpVvxaz.jpg
 ---
 
 JavaScript引擎在代码执行前会进行词法分析，词法分析主要有三个步骤：

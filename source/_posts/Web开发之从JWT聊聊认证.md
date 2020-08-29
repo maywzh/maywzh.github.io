@@ -6,6 +6,7 @@ date: 2017-02-10 19:16:19
 tags:
   - Web
 thumbnail: https://i.loli.net/2020/08/23/GYoPAlF85x23emQ.jpg
+cover: https://i.loli.net/2020/08/23/GYoPAlF85x23emQ.jpg
 ---
 
 **跨域认证**意指把A服务的认证状态可分享给B服务，这样单服务的Session+cookie的解决方案就不合适了。我们可以通过服务端搭建session持久化层来解决这个问题，该层由多个服务共享，这种方式对持久化层的稳定性要求较高。另一种方式是把认证数据保存在客户端。其中一种方式就是**Json Web Tokens**(JWT)。

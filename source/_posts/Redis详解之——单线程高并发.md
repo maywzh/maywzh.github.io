@@ -8,6 +8,7 @@ tags:
   - 多线程
   - 并发
 thumbnail: https://i.loli.net/2020/08/28/txIJVifd9a8mlzY.png
+cover: https://i.loli.net/2020/08/28/txIJVifd9a8mlzY.png
 ---
 
 redis 最基本的一个内部原理和特点，就是 redis 实际上是个单线程工作模型。如今在各大互联网公司已经大面积取代了memcached的应用。它可以承载相当大的QPS。在这里，我们通过对Redis的线程模型和并发模型对它的高性能进行分析。

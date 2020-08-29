@@ -4,7 +4,8 @@ categories: 分布式
 date: 2017-09-20 16:12:25
 tags: 
   - 分布式
-thumbnail: https://changleamazing-1253815386.cos.ap-guangzhou.myqcloud.com/blog/2020-05-13-195638.jpg
+thumbnail: https://i.loli.net/2020/08/29/IjouksNXcJO5Vge.png
+cover: https://i.loli.net/2020/08/29/IjouksNXcJO5Vge.png
 ---
 
 ## 什么是CAP定理

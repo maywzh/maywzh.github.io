@@ -6,6 +6,7 @@ tags:
 categories: 编程
 date: 2017-07-20 03:35:00
 thumbnail: https://i.loli.net/2020/08/23/IBfNdaH3pCxYoFc.png
+cover: https://i.loli.net/2020/08/23/IBfNdaH3pCxYoFc.png
 ---
 JavaScript的设计不同于传统编程语言，它自成一派，有很多的奇妙特性。
 

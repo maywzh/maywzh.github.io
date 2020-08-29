@@ -7,7 +7,7 @@ tags:
   - CPU
   - 组成原理
 thumbnail: https://i.loli.net/2020/08/22/BcVx7dMTu5tUFnK.jpg
-
+cover: https://i.loli.net/2020/08/22/BcVx7dMTu5tUFnK.jpg
 ---
 
 CPU 的全称是 `Central Processing Unit`，即中央处理单元，是计算机的核心部件-计算部件。CPU 的核心是从程序或应用程序获取指令并执行计算。此过程可以分为三个关键阶段：**提取，解码和执行**。CPU从系统的主存中提取指令，然后解码该指令的实际内容，然后再由 CPU 的相关部分执行该指令。

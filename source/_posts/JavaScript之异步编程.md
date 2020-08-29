@@ -7,6 +7,7 @@ tags:
   - 异步
   - JavaScript
 thumbnail: https://i.loli.net/2020/08/23/teEURbBawNzWTq4.jpg
+cover: https://i.loli.net/2020/08/23/teEURbBawNzWTq4.jpg
 ---
 
 ## 一. 单线程

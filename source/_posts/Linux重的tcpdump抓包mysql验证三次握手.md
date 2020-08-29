@@ -8,6 +8,7 @@ tags:
   - mysql
   - Linux
 thumbnail: https://i.loli.net/2020/08/23/6NJkSv1aUTLPp4Q.png
+cover: https://i.loli.net/2020/08/23/6NJkSv1aUTLPp4Q.png
 ---
 
 `TCP`的三次握手、4次挥手是老生常谈的东西，那么具体的包数据传输过程你是否真正的试过呢？我们今天就通过具体的`mysql`建联实践来看看是怎么传递数据包的。

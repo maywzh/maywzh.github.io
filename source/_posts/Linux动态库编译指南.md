@@ -7,6 +7,7 @@ tags:
   - Linux
   - 编译
 thumbnail: https://i.loli.net/2020/08/23/nY4dAxoE2TrsZgR.png
+cover: https://i.loli.net/2020/08/23/nY4dAxoE2TrsZgR.png
 ---
 
 Linux下动态库文件的文件名形如 `libxxx.so`，其中so是 Shared Object 的缩写，即可以共享的目标文件。

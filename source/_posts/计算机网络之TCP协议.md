@@ -6,6 +6,7 @@ date: 2016-01-16 17:57:10
 tags:
   - TCP/IP
 thumbnail: https://i.loli.net/2020/08/23/iwyWKROgfjVtPJs.png
+cover: https://i.loli.net/2020/08/23/iwyWKROgfjVtPJs.png
 ---
 
 TCP协议作为TCP/IP协议栈中最重要的一个协议之一，是因特网的基础。

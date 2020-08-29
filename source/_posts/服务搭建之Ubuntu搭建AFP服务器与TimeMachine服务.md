@@ -6,7 +6,7 @@ date: 2016-03-30 14:42:35
 tags:
   - Linux
 thumbnail: https://i.loli.net/2020/08/23/vFzuXG6ESdpcTAq.jpg
-
+cover: https://i.loli.net/2020/08/23/vFzuXG6ESdpcTAq.jpg
 ---
 
 一直是使用samba服务作为NAS，移动硬盘插在mac上作为TimeMachine备份盘，但这样还是太笨拙了。

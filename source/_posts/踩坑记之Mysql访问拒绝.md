@@ -7,6 +7,7 @@ tags:
   - mysql
   - bugfix
 thumbnail: https://i.loli.net/2020/08/28/FnGNdiQwRotKE3T.jpg
+cover: https://i.loli.net/2020/08/28/FnGNdiQwRotKE3T.jpg
 ---
 
 ## 问题产生

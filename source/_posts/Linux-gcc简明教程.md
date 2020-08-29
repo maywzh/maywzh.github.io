@@ -6,6 +6,7 @@ date: 2015-10-18 01:51:25
 tags:
   - Linux
 thumbnail: https://i.loli.net/2020/08/23/Gexg6rV8BuyiTPv.jpg
+cover: https://i.loli.net/2020/08/23/Gexg6rV8BuyiTPv.jpg
 ---
 
 gcc/g++是GNU工具包中强大的c/c++编译工具，结合make工具，可以做到自动化编译功能。

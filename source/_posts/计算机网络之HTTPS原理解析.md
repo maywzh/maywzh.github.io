@@ -6,6 +6,7 @@ date: 2016-11-03 13:41:36
 tags:
   - HTTP/HTTPS
 thumbnail: https://i.loli.net/2020/08/23/9atUIiAXMWK4dgZ.jpg
+cover: https://i.loli.net/2020/08/23/9atUIiAXMWK4dgZ.jpg
 ---
 
 HTTP协议是明文传输，它简单易于理解，但同时也带来了安全性问题，在复杂的网络环境中，HTTP流量几乎是在裸奔，可以轻易被监听，为了解决这个问题，人们提出了HTTP over SSL即HTTPS，即通过ssl隧道来传输HTTP流量，这样加密了HTTP数据包，实现了传输链路上的安全性。相比于HTTP，HTTPS在TCP层上多了一个SSL/TLS层。

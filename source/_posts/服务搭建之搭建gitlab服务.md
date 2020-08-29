@@ -6,6 +6,7 @@ date: 2017-02-17 16:56:07
 tags:
   - Docker
 thumbnail: https://i.loli.net/2020/08/23/KYfM3RleVNJ2AHz.png
+cover: https://i.loli.net/2020/08/23/KYfM3RleVNJ2AHz.png
 ---
 
 一直使用git来做项目版本控制，但每次新建项目都要去服务器上操作，比较麻烦，所以选用开源的gitlab就相当合适了。

@@ -6,6 +6,7 @@ date: 2015-10-16 21:28:11
 tags:
   - C/C++
 thumbnail: https://i.loli.net/2020/08/23/BxKw7Ck12O8zpjJ.jpg
+cover: https://i.loli.net/2020/08/23/BxKw7Ck12O8zpjJ.jpg
 ---
 
 在考虑指针的问题之前，首先我们来回顾一下如何定义一个变量。

@@ -5,6 +5,7 @@ tags:
   - Linux
 categories: DevOps
 thumbnail: https://i.loli.net/2020/08/23/SwyGODBgvRrI67x.png
+cover: https://i.loli.net/2020/08/23/SwyGODBgvRrI67x.png
 ---
 
 最近一直在处理服务器上的issue，中间遇到最多的的就是`Permission denied`问题，这就是权限问题。今天就来整理一下Linux文件权限系统的知识，从根本上填掉这个坑。

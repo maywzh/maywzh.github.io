@@ -5,6 +5,7 @@ tags:
   - mysql
 categories: 数据库
 thumbnail: https://i.loli.net/2020/08/23/wxLC67v2AtQGcjm.gif
+cover: https://i.loli.net/2020/08/23/wxLC67v2AtQGcjm.gif
 ---
 
 总结一下常用的简单MySQL命令。

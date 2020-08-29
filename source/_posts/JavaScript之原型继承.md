@@ -6,6 +6,7 @@ tags:
 categories: 编程
 date: 2017-07-12 01:46:00
 thumbnail: https://i.loli.net/2020/08/23/dCF178eOG6mQDEy.jpg
+cover: https://i.loli.net/2020/08/23/dCF178eOG6mQDEy.jpg
 ---
 ## JavaScript继承
 

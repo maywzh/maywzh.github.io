@@ -6,6 +6,7 @@ tags:
   - git
 date: 2015-08-15 00:44:00
 thumbnail: https://i.loli.net/2020/08/23/OY9GyMIB1S5uk7f.png
+cover: https://i.loli.net/2020/08/23/OY9GyMIB1S5uk7f.png
 ---
 ## 一个.gitignore的常见问题
 

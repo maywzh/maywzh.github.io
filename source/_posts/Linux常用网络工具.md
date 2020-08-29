@@ -7,6 +7,7 @@ tags:
   - Linux
   - Terminal
 thumbnail: https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png
+cover: https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png
 ---
 
 ## 网络工具

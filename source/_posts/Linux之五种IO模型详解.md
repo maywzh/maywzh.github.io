@@ -8,6 +8,7 @@ tags:
   - Linux
   - 操作系统
 thumbnail: https://i.loli.net/2020/08/28/jogd2NXQ5MuIvKc.png
+cover: https://i.loli.net/2020/08/28/jogd2NXQ5MuIvKc.png
 ---
 
 I/O与计算是计算机系统的最核心的两个功能，而I/O往往占据了相当多的资源和时间，所以如何提高I/O性能，成为了性能优化的极其重要的点。这里我们结合一些其他的Linux系统核心概念来比较基本的五种I/O模型。

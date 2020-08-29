@@ -6,6 +6,7 @@ tags:
 author: maywzh
 date: 2015-12-21 03:28:18
 thumbnail: https://i.loli.net/2020/08/23/iwyWKROgfjVtPJs.png
+cover: https://i.loli.net/2020/08/23/iwyWKROgfjVtPJs.png
 ---
 
 

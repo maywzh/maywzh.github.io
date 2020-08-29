@@ -7,6 +7,7 @@ tags:
   - Linux
   - 编译
 thumbnail: https://i.loli.net/2020/08/23/WHZJu3MPeTFagwK.png
+cover: https://i.loli.net/2020/08/23/WHZJu3MPeTFagwK.png
 ---
 
 Linux上的静态库，其实是目标文件的归档文件。

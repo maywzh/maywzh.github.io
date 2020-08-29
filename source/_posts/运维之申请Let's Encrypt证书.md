@@ -7,6 +7,7 @@ tags:
   - HTTP/HTTPS
   - Linux
 thumbnail: https://i.loli.net/2020/08/28/AVEwqnomz7lsyke.jpg
+cover: https://i.loli.net/2020/08/28/AVEwqnomz7lsyke.jpg
 ---
 
 

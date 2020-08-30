@@ -1,7 +1,8 @@
 ---
 title: About Me
-date: 2020-08-28 14:24:25
+date: 2018-08-28 14:24:25
 comments: false
+thumbnail: https://i.loli.net/2019/08/31/XfnU7ReFYjGugNJ.jpg
 ---
 
 ## Experience

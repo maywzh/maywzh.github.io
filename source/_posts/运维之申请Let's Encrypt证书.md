@@ -1,7 +1,7 @@
 ---
 title: 申请Let's Encrypt证书来实现网站HTTPS化
 categories: DevOps
-comments: false
+comments: false 
 date: 2017-11-02 17:51:52
 tags:
   - HTTP/HTTPS
@@ -265,5 +265,3 @@ server {
 ```bash
 ./certbot-auto renew
 ```
-
-Posted on  [WebDev](https://keelii.com/categories/WebDev)

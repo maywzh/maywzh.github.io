@@ -383,7 +383,7 @@ footer:
     url: https://beian.miit.gov.cn/#/Integrated/recordQuery
     text: 鄂ICP备2020015912号-1
     icon: /img/icp.png
-    gongan: '鄂公网安备 33010802010186号  ' 
+    gongan: 
     gonganurl:
 
 # Analysis

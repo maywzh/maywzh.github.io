@@ -8,23 +8,34 @@
     - name: Github
       link: https://github.com/maywzh
       avatar: https://i.loli.net/2020/08/29/LOVT98beMpIRQsk.png
+    - name: Gitea
+      link: https://gitea.maywzh.com/maywzh
+      avatar: https://i.loli.net/2020/08/31/OZh5GjoVc3Sne2W.png
+    - name: Twitter
+      link: https://twitter.com/maywzh
+      avatar: https://i.loli.net/2020/08/31/p2ou5U3EytzKagS.png
       descr: 
+    - name: Weibo
+      link: http://weibo.com/JupiterMay
+      avatar: https://i.loli.net/2020/08/31/hbU9XucJ2jCrYkI.png
+      descr:
+    - name: Telegram
+      link: https://t.me/unlockedcultoy
+      avatar: https://i.loli.net/2020/08/31/eG8XnbBRdox3mQa.png
+      descr: 
+    
     - name: Instagram
       link: https://instagram.com/maywzh
       avatar: https://i.loli.net/2020/08/30/oCPX53vNVp4KMyq.png
-      descr: 
-    - name: 500px
-      link: https://500px.com/maywzh
-      avatar: https://i.loli.net/2020/08/30/d3JK2aWY9B4IjUz.png
-      descr:
-    - name: Weibo
-      link: http://weibo.com/JupiterMay
-      avatar: https://i.loli.net/2020/08/30/rOuLxteoZvf16QF.png
       descr:
     - name: Douban
       link: https://www.douban.com/people/CrisMay/
       avatar: https://i.loli.net/2020/08/30/IDmQL1XWScuakTg.png
-      descr: 
+      descr:
+    - name: Zhihu
+      link: https://www.zhihu.com/people/merr0r
+      avatar: https://i.loli.net/2020/08/31/WjBqOaIkw6QCTLn.jpg
+      descr:
     # - name: LinkedIn
     #   link: https://www.linkedin.com/in/mei-wangzhihui-73aaa6193/
     #   avatar: https://i.loli.net/2020/08/29/KucCLaF1ep7XmOj.png
@@ -40,9 +51,9 @@
       descr: 
     - name: Bilibili
       link: https://space.bilibili.com/22357412/
-      avatar: https://i.loli.net/2020/08/30/mhdvZXcJxEeTafw.png
+      avatar: https://i.loli.net/2020/08/30/WB8JtdPqTalO9Lb.png
       descr: 
     - name: Tiktok
       link: https://www.tiktok.com/@maywzh
-      avatar: https://i.loli.net/2020/08/30/7cmDAGgeOoS8MW1.png
+      avatar: https://i.loli.net/2020/08/31/V9PeNw2mDlbp5EB.png
       descr:    

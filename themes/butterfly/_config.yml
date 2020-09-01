@@ -596,7 +596,9 @@ subtitle:
   # 如果關閉打字效果，subtitle只會顯示sub的第一行文字
   sub:
     - Talk is cheap, show me the code.
-    - Controlling complexity is the essence of computer programming.
+    - The fastest IO is no IO.
+    - The First Rule of Program Optimization, Don't do it.
+    - The Second Rule of Program Optimization - For experts only. Don't do it yet.
 
 
 # Loading Animation (加載動畫)

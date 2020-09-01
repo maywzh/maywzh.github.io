@@ -20,6 +20,7 @@ thumbnail: https://i.loli.net/2019/08/31/XfnU7ReFYjGugNJ.jpg
 
 Me: [maywzh.com](https://maywzh.com)
 GitHub: [maywzh](https://github.com/maywzh)
+Blog: [Blog](https://blog.maywzh.com)
+Tech: [Tech](https://tech.maywzh.com)
 Weibo: [@邪欢一](http://weibo.com/JupiterMay)
-简书: [@邪欢葉](https://www.jianshu.com/u/63fe4a9b2965)
-Email: maywzh@gmail.com
+Email: [maywzh@gmail.com](mailto://maywzh@gmail.com)

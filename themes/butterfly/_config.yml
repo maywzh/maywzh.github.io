@@ -161,7 +161,7 @@ post_meta:
 
 # wordcount (字數統計)
 wordcount:
-  enable: false
+  enable: true
   post_wordcount: true
   min2read: true
   total_wordcount: true
@@ -484,7 +484,7 @@ tag_ui: # 留空或 index
 # The formal of color: '#49B202'
 # The formal of image: url(http://xxxxxx.com/xxx.jpg)
 # White color will be shown as default
-background:
+background: 
 
 # Show the footer background image (same as top_img)
 footer_bg: true
@@ -558,10 +558,10 @@ beautify:
 # Global font settings
 # Don't modify the following settings unless you know how they work (非必要不要修改)
 font:
-  global-font-size:
-  code-font-size:
-  font-family:
-  code-font-family:
+  global-font-size: 
+  code-font-size: 
+  font-family: 
+  code-font-family: "PT Mono"
 
 # Font settings for the site title and site subtitle
 # 左上角網站名字 主頁居中網站名字

@@ -21,6 +21,8 @@ TCP三次握手是基础中的基础，所有工程师都对此熟悉不过。�
 
 <!--more-->
 
+
+
 [RFC 793 - Transmission Control Protocol](https://tools.ietf.org/html/rfc793) 文档中非常清楚地定义了 TCP 中的连接是什么，我们简单总结一下：用于保证可靠性和流控制机制的信息，包括 Socket、序列号以及窗口大小叫做连接。
 
 

@@ -4,13 +4,14 @@
     - name: Cultoy
       link: https://blog.maywzh.com/
       avatar: https://i.loli.net/2020/08/30/tjr6wQ5O1fAuFg8.png
-      descr: 
+      descr: My blog site
+    - name: Cult Minds
+      link: https://tech.maywzh.com/
+      avatar: https://i.loli.net/2020/09/03/rRyjXKhTzUqlHIo.png
+      descr: tech blog
     - name: Github
       link: https://github.com/maywzh
       avatar: https://i.loli.net/2020/08/29/LOVT98beMpIRQsk.png
-    - name: Gitea
-      link: https://gitea.maywzh.com/maywzh
-      avatar: https://i.loli.net/2020/08/31/OZh5GjoVc3Sne2W.png
     - name: Twitter
       link: https://twitter.com/maywzh
       avatar: https://i.loli.net/2020/08/31/p2ou5U3EytzKagS.png

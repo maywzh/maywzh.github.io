@@ -144,3 +144,109 @@ SourceFile = PackageClause ";" { ImportDecl ";" } { TopLevelDecl ";" } .
 
 由于 Go 语言编译器的中间代码使用了 SSA 的特性，所以在这一阶段我们就能够分析出代码中的无用变量和片段并对代码进行优化。
 
+
+
+Go 语言源代码的 [`src/cmd/compile/internal`](https://github.com/golang/go/tree/master/src/cmd/compile/internal) 目录中包含了很多机器码生成相关的包，不同类型的 CPU 分别使用了不同的包生成机器码，其中包括 amd64、arm、arm64、mips、mips64、ppc64、s390x、x86 和 wasm，其中比较有趣的就是 WebAssembly（Wasm）[7](https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/#fn:7)了。
+
+作为一种在栈虚拟机上使用的二进制指令格式，它的设计的主要目标就是在 Web 浏览器上提供一种具有高可移植性的目标语言。Go 语言的编译器既然能够生成 Wasm 格式的指令，那么就能够运行在常见的主流浏览器中。
+
+```bash
+$ GOARCH=wasm GOOS=js go build -o lib.wasm main.go
+```
+
+我们可以使用上述的命令将 Go 的源代码编译成能够在浏览器上运行 WebAssembly 文件，当然除了这种新兴的二进制指令格式之外，Go 语言经过编译还可以运行在几乎全部的主流机器上，不过对于除了 Linux 和 Darwin 之外的机器上兼容性上可能还是有一些问题，例如：Go Plugin 至今仍然不支持 Windows[8](https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/#fn:8)。
+
+![supported-hardware](https://i.loli.net/2020/09/04/sCoQZ6vRiTbduF7.png)
+
+
+
+### 编译器入口
+
+Go 语言的编译器入口在 [`src/cmd/compile/internal/gc/main.go`](https://github.com/golang/go/blob/master/src/cmd/compile/internal/gc/main.go) 文件中，这个 600 多行的 [`Main`](https://github.com/golang/go/blob/4d5bb9c60905b162da8b767a8a133f6b4edcaa65/src/cmd/compile/internal/gc/main.go#L144-L796) 函数就是 Go 语言编译器的主程序，该函数会先获取命令行传入的参数并更新编译选项和配置，随后就会开始运行 `parseFiles` 函数对输入的所有文件进行词法与语法分析得到文件对应的抽象语法树：
+
+```go
+func Main(archInit func(*Arch)) {
+	...
+
+	lines := parseFiles(flag.Args())
+```
+
+接下来就会分九个阶段对抽象语法树进行更新和编译，就像我们在上面介绍的，整个过程会经历类型检查、SSA 中间代码生成以及机器码生成三个部分：
+
+1. 检查常量、类型和函数的类型；
+2. 处理变量的赋值；
+3. 对函数的主体进行类型检查；
+4. 决定如何捕获变量；
+5. 检查内联函数的类型；
+6. 进行逃逸分析；
+7. 将闭包的主体转换成引用的捕获变量；
+8. 编译顶层函数；
+9. 检查外部依赖的声明；
+
+对整个编译过程有一个顶层的认识之后，我们重新回到词法和语法分析后的具体流程，在这里编译器会对生成语法树中的节点执行类型检查，除了常量、类型和函数这些顶层声明之外，它还会对变量的赋值语句、函数主体等结构进行检查：
+
+```go
+	for i := 0; i < len(xtop); i++ {
+		n := xtop[i]
+		if op := n.Op; op != ODCL && op != OAS && op != OAS2 && (op != ODCLTYPE || !n.Left.Name.Param.Alias) {
+			xtop[i] = typecheck(n, ctxStmt)
+		}
+	}
+
+	for i := 0; i < len(xtop); i++ {
+		n := xtop[i]
+		if op := n.Op; op == ODCL || op == OAS || op == OAS2 || op == ODCLTYPE && n.Left.Name.Param.Alias {
+			xtop[i] = typecheck(n, ctxStmt)
+		}
+	}
+```
+
+类型检查会遍历传入节点的全部子节点，这个过程会对 `make` 等关键字进行展开和重写，在类型检查会改变语法树中的一些节点，不会生成新的变量或者语法树，这个过程的结束也意味着源代码中已经不存在语法错误和类型错误，中间代码和机器码都可以根据抽象语法树正常生成了。
+
+```go
+	initssaconfig()
+
+	peekitabs()
+
+	for i := 0; i < len(xtop); i++ {
+		n := xtop[i]
+		if n.Op == ODCLFUNC {
+			funccompile(n)
+		}
+	}
+
+	compileFunctions()
+
+	for i, n := range externdcl {
+		if n.Op == ONAME {
+			externdcl[i] = typecheck(externdcl[i], ctxExpr)
+		}
+	}
+
+	checkMapKeys()
+}
+```
+
+在主程序运行的最后，会将顶层的函数编译成中间代码并根据目标的 CPU 架构生成机器码，不过在这一阶段也有可能会再次对外部依赖进行类型检查以验证正确性。
+
+
+
+## 参考
+
+1. 抽象语法树 https://en.wikipedia.org/wiki/Abstract_syntax_tree [↩︎](https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/#fnref:1)
+
+2. 静态单赋值 https://en.wikipedia.org/wiki/Static_single_assignment_form [↩︎](https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/#fnref:2)
+
+3. 编译器一般分为前端和后端，其中前端的主要工作是将源代码翻译成编程语言无关的中间表示，而后端主要负责目标代码的优化和生成。 [↩︎](https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/#fnref:3)
+
+4. 指令集架构是计算机的抽象模型，也被称作架构或者计算架架构 https://en.wikipedia.org/wiki/Instruction_set_architecture [↩︎](https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/#fnref:4)
+
+5. `SourceFile` 表示一个 Go 语言源文件，它由 `package` 定义、多个 `import` 语句以及顶层的声明组成 https://golang.org/ref/spec#Source_file_organization [↩︎](https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/#fnref:5)
+
+6. 关于 Go 语言文法的是不是 LALR(1) 的讨论 https://groups.google.com/forum/#!msg/golang-nuts/jVjbH2-emMQ/UdZlSNhd3DwJ
+
+   LALR 的全称是 Look-Ahead LR，大多数的通用编程语言都会使用 LALR 的文法 https://en.wikipedia.org/wiki/LALR_parser [↩︎](https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/#fnref:6)
+
+7. WebAssembly 是基于栈的虚拟机的二进制指令，简称 Wasm https://webassembly.org/ [↩︎](https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/#fnref:7)
+
+8. plugin: add Windows support #19282 https://github.com/golang/go/issues/19282 [↩︎](https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/#fnref:8)

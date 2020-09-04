@@ -391,15 +391,15 @@ footer:
 
 # Baidu Analytics
 # https://tongji.baidu.com/web/welcome/login
-baidu_analytics:
+baidu_analytics: e5597df0e0a089595ae6b3fce53f24e8
 
 # Google Analytics
 # https://analytics.google.com/analytics/web/
-google_analytics:
+google_analytics: UA-119246999-5
 
 # Tencent Analytics ID
 # https://mta.qq.com
-tencent_analytics:
+tencent_analytics: 500728859
 
 # CNZZ Analytics
 # https://www.umeng.com/

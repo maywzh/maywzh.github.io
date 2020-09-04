@@ -427,7 +427,7 @@ google_adsense:
 
 # Google Webmaster tools verification setting
 # See: https://www.google.com/webmasters/
-google_site_verification:
+google_site_verification: true
 
 # Bing Webmaster tools verification setting
 # See: https://www.bing.com/webmaster/

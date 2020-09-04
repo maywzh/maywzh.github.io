@@ -4,8 +4,8 @@ date: {{ date }}
 tags:
 categories: uncategorized
 comments: false
-thumbnail: https://i.loli.net/2020/08/30/dPi5N3M6WpC4xF9.jpg
-cover: https://i.loli.net/2020/08/30/dPi5N3M6WpC4xF9.jpg
+thumbnail: https://i.loli.net/2020/09/04/n1bORv74Mpaj9Ir.png
+cover: https://i.loli.net/2020/09/04/n1bORv74Mpaj9Ir.png
 ---
 
 

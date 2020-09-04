@@ -2,8 +2,8 @@
 title: TCP三次握手与四次挥手详解
 categories: 计算机网络
 comments: false
-thumbnail: 'https://i.loli.net/2020/08/30/dPi5N3M6WpC4xF9.jpg'
-cover: 'https://i.loli.net/2020/08/30/dPi5N3M6WpC4xF9.jpg'
+thumbnail: https://i.loli.net/2020/09/04/7JYus8OL5tZVnzc.jpg
+cover: https://i.loli.net/2020/09/04/7JYus8OL5tZVnzc.jpg
 date: 2017-08-04 16:28:49
 tags:
   - TCP/IP

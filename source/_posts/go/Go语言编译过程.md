@@ -1,5 +1,5 @@
 ---
-title: Go语言编译原理
+title: Go语言编译过程
 categories: 编程
 comments: false
 thumbnail: https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg

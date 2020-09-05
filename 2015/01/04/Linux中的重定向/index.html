@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="maywzh">
+
+
+    <meta name="subtitle" content="Namasday.">
+
+
+    <meta name="description" content="Namasday.">
+
+
+    <meta name="keywords" content="Tech Blogs">
+
+
+<title>Linux中的重定向 | 梅故事壹</title>
+
+
+
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">0x01 MAYSTORY</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Linux中的重定向</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 4, 2015&nbsp;&nbsp;17:25:01</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/DevOps/">DevOps</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="从一个命令说起"><a href="#从一个命令说起" class="headerlink" title="从一个命令说起"></a>从一个命令说起</h2><p>经常能从shell脚本中看到类似这样的命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cmd &gt;/dev/null 2&gt;&amp;1 <span class="comment">#cmd代表一个可以输出结果的命令</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h2><p>在使用shell命令的时候，最常见的是键盘输入命令，终端显示处理结果。有的时候需要将shell命令的执行结果存储到文件中，或者让shell读取某个文件的内容作为输入，那么就需要使用输入输出的重定向功能。</p>
+<p>重定向就是指把程序的输入源或者输出地址修改为我们制定的IO设备或文件。当打开shell命令是，会默认打开3个文件。每个文件都有对应的文件描述符方便我们使用。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>文件描述符</th>
+<th>默认情况</th>
+<th>对应文件句柄位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标准输入（standard input）</td>
+<td>0</td>
+<td>从键盘获得输入</td>
+<td>/proc/slef/fd/0</td>
+</tr>
+<tr>
+<td>标准输出（standard output）</td>
+<td>1</td>
+<td>输出到屏幕（即控制台）</td>
+<td>/proc/slef/fd/1</td>
+</tr>
+<tr>
+<td>错误输出（error output）</td>
+<td>2</td>
+<td>输出到屏幕（即控制台）</td>
+<td>/proc/slef/fd/2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>在这里，根据Linux一切皆文件的思想，把输入输出设备都视为文件。</p>
+<h3 id="输出重定向"><a href="#输出重定向" class="headerlink" title="输出重定向"></a>输出重定向</h3><p>输出重定向基本的一些命令：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>command &gt;filename</td>
+<td>把标准输出重定向到新文件中</td>
+</tr>
+<tr>
+<td>command 1&gt;filename</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>command &gt;&gt;filename</td>
+<td>把标准输出追加到文件中</td>
+</tr>
+<tr>
+<td>command 1&gt;&gt;filename</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>command 2&gt;filename</td>
+<td>把标准错误重定向到新文件中</td>
+</tr>
+<tr>
+<td>command 2&gt;&gt;filename</td>
+<td>把标准错误追加到新文件中</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>我们使用<code>&gt;</code>或者<code>&gt;&gt;</code>对输出进行重定向。符号的左边是标准输出或标准错误，右边是输出目标。<code>&gt;</code> 会覆盖原有的文件,<code>&gt;&gt;</code>则是追加输出。用<code>1</code>和 <code>2</code> 可以显式指定是标准输出还是标准错误。</p>
+<p>例:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ ls . <span class="comment">#当前目录只有1.txt文件</span></span><br><span class="line">hello.txt  <span class="comment">#内容是hello</span></span><br><span class="line">$ cat hello.txt 1&gt; out <span class="comment">#此时out的内容是hello</span></span><br><span class="line">$ cat out</span><br><span class="line">hello</span><br><span class="line">$ cat world.txt &gt; out</span><br><span class="line">cat: world.txt: No such file or directory <span class="comment">#此时由于不存在world.txt，屏幕上出现标准错误输出</span></span><br><span class="line">$ cat world.txt 2&gt; err</span><br><span class="line">$ cat err </span><br><span class="line">cat: world.txt: No such file or directory <span class="comment">#标准错误被重定向到err文件</span></span><br></pre></td></tr></table></figure>
+<h3 id="输入重定向"><a href="#输入重定向" class="headerlink" title="输入重定向"></a>输入重定向</h3><p>输入重定向的基本命令如下：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>command &lt;filename</td>
+<td>以filename文件作为标准输入</td>
+</tr>
+<tr>
+<td>command 0&lt;filename</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>command &lt;&lt;delimiter</td>
+<td>从标准输入中读入，直到遇到delimiter分隔符</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>我们使用<code>&lt;</code>对输入做重定向，符号左边缺省默认为0。</p>
+<p>输入重定向其实就是让文件输入代替键盘敲击。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ cat  <span class="comment"># cat的作用是把输入直接回显到终端里</span></span><br><span class="line">111</span><br><span class="line">111</span><br><span class="line">222</span><br><span class="line">222</span><br><span class="line">$ cat &lt;input <span class="comment">#input 文件内容为 foo bar</span></span><br><span class="line">foo bar</span><br><span class="line">$ cat &gt;output &lt;input <span class="comment"># 重定向输入为input文件，重定向输出为output文件。</span></span><br><span class="line">$ cat output</span><br><span class="line">foo bar </span><br></pre></td></tr></table></figure>
+<h2 id="空设备文件"><a href="#空设备文件" class="headerlink" title="空设备文件"></a>空设备文件</h2><p>/dev/null代表linux的空设备文件，所有往这个文件里面写入的内容都会丢失，俗称“黑洞”。那么执行了<code>&gt;/dev/null</code>之后，标准输出就会不再存在，没有任何地方能够找到输出的内容。</p>
+<p>有的时候我们并不想输出任何信息，想要抛弃标准输出，就用这种方法。</p>
+<h2 id="扩展用法"><a href="#扩展用法" class="headerlink" title="扩展用法"></a>扩展用法</h2><h3 id="重定向绑定"><a href="#重定向绑定" class="headerlink" title="重定向绑定"></a>重定向绑定</h3><p>现在来看看这条命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;/dev/null 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<p>这句话的意思其实就重定向输出到/dev/null，然后把标准错误重定向到标准输出。</p>
+<p>另一种写法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cmd &amp;&gt; output.txt</span><br><span class="line">cmd &gt;&amp; output.txt  <span class="comment">#两个表达式等价</span></span><br></pre></td></tr></table></figure>
+<p>通过这两者的组合，我们把标准输出和标准错误绑定在一起抛弃掉了，即实现了不输出任何信息。</p>
+<h3 id="交换顺序的bug"><a href="#交换顺序的bug" class="headerlink" title="交换顺序的bug"></a>交换顺序的bug</h3><p>能否交换这两者的顺序呢</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;/dev/null 2&gt;&amp;1 </span><br><span class="line">2&gt;&amp;1 &gt;/dev/null</span><br></pre></td></tr></table></figure>
+<p>不可以！第二条的命令会把错误输出绑定到依旧是默认输出设备的屏幕上。而标准输出被丢弃。<br>因为linux在执行shell命令之前，就会确定好所有的输入输出位置，并且从左到右依次执行重定向的命令。</p>
+<h3 id="分开写的bug"><a href="#分开写的bug" class="headerlink" title="分开写的bug"></a>分开写的bug</h3><p>能否把错误和输出并行输出到空设备呢？</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;/dev/null 2&gt;&amp;1</span><br><span class="line">&gt;/dev/null 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+<p>也不可以！</p>
+<p>试验一下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ls a.txt b.txt &gt;out 2&gt;out</span></span><br><span class="line"><span class="comment"># cat out</span></span><br><span class="line">a.txt</span><br><span class="line">txt: No such file or directory <span class="comment">#本来应该是 b.txt: No such file or directory， 出现了字符缺失</span></span><br></pre></td></tr></table></figure>
+<p>这里会丢失字符，为什么？因为这种写法会导致标准输出和错误输出抢占重定向到out的管道，导致冲突、覆盖等问题。而且会导致输出效率较低。</p>
+<h3 id="关于nohup"><a href="#关于nohup" class="headerlink" title="关于nohup"></a>关于nohup</h3><p>我们经常使用<code>nohup command &amp;</code>命令形式来启动一些后台程序，比如node服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ nohup node server.js &amp;</span><br></pre></td></tr></table></figure>
+<p>为了不让一些执行信息输出到前台（控制台），我们还会加上刚才提到的<code>&gt;/dev/null 2&gt;&amp;1</code>命令来丢弃所有的输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ nohup node server.js &gt;/dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>maywzh</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://maywzh.com/2015/01/04/Linux%E4%B8%AD%E7%9A%84%E9%87%8D%E5%AE%9A%E5%90%91/">https://maywzh.com/2015/01/04/Linux%E4%B8%AD%E7%9A%84%E9%87%8D%E5%AE%9A%E5%90%91/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Linux/"># Linux</a>
+                    
+                        <a href="/tags/Terminal/"># Terminal</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2015/01/17/Linux%E9%9D%99%E6%80%81%E5%BA%93%E7%BC%96%E8%AF%91%E6%8C%87%E5%8D%97/">Linux静态库编译指南</a>
+            
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

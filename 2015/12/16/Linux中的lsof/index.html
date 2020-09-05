@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="maywzh">
+
+
+    <meta name="subtitle" content="Namasday.">
+
+
+    <meta name="description" content="Namasday.">
+
+
+    <meta name="keywords" content="Tech Blogs">
+
+
+<title>Linux中的lsof | 梅故事壹</title>
+
+
+
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">0x01 MAYSTORY</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Linux中的lsof</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">December 16, 2015&nbsp;&nbsp;17:26:52</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/DevOps/">DevOps</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="lsof-list-open-files"><a href="#lsof-list-open-files" class="headerlink" title="lsof - list open files"></a>lsof - list open files</h2><p>lsof（list open files）是一个查看当前系统文件的工具。在linux环境下，任何事物都以文件的形式存在，通过文件不仅仅可以访问常规数据，还可以访问网络连接和硬件。如传输控制协议 (TCP) 和用户数据报协议 (UDP) 套接字等，系统在后台都为该应用程序分配了一个文件描述符，该文件描述符提供了大量关于这个应用程序本身的信息。</p>
+<a id="more"></a>
+<h2 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h2><p>lsof打开的文件可以是：</p>
+<ol>
+<li>普通文件</li>
+<li>目录</li>
+<li>网络文件系统的文件</li>
+<li>字符或设备文件</li>
+<li>(函数)共享库</li>
+<li>管道，命名管道</li>
+<li>符号链接</li>
+<li>网络文件（例如：NFS file、网络socket，unix域名socket）</li>
+<li>还有其它类型的文件，等等</li>
+</ol>
+<h2 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h2><ul>
+<li>-a 列出打开文件存在的进程</li>
+<li>-i&lt;条件&gt; 列出符合条件的进程。（4、6、协议、:端口、 @ip ）</li>
+<li>-c&lt;进程名&gt; 列出指定进程所打开的文件</li>
+<li>-p&lt;进程号&gt; 列出指定进程号所打开的文件</li>
+<li>-d&lt;文件号&gt; 列出占用该文件号的进程</li>
+<li>+d&lt;目录&gt; 列出目录下被打开的文件</li>
+<li>+D&lt;目录&gt; 递归列出目录下被打开的文件</li>
+<li>-n&lt;目录&gt; 列出使用NFS的文件</li>
+<li>-g 列出GID号进程详情</li>
+<li>-u 列出UID号进程详情</li>
+<li>-h 显示帮助信息</li>
+<li>-v 显示版本信息</li>
+</ul>
+<h2 id="使用实例"><a href="#使用实例" class="headerlink" title="使用实例"></a>使用实例</h2><h3 id="实例一：无任何参数"><a href="#实例一：无任何参数" class="headerlink" title="实例一：无任何参数"></a>实例一：无任何参数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lsof</span>| more</span><br><span class="line">COMMAND     PID      USER   FD      TYPE             DEVICE SIZE/OFF       NODE NAME</span><br><span class="line">init          1      root  cwd       DIR              253,0     4096          2 /</span><br><span class="line">init          1      root  rtd       DIR              253,0     4096          2 /</span><br><span class="line">init          1      root  txt       REG              253,0   150352    1310795 /sbin/init</span><br><span class="line">init          1      root  mem       REG              253,0    65928    5505054 /lib64/libnss_files-2.12.so</span><br><span class="line">init          1      root  mem       REG              253,0  1918016    5521405 /lib64/libc-2.12.so</span><br><span class="line">init          1      root  mem       REG              253,0    93224    5521440 /lib64/libgcc_s-4.4.6-20120305.so.1</span><br><span class="line">init          1      root  mem       REG              253,0    47064    5521407 /lib64/librt-2.12.so</span><br><span class="line">init          1      root  mem       REG              253,0   145720    5521406 /lib64/libpthread-2.12.so</span><br></pre></td></tr></table></figure>
+<p><code>lsof</code>输出各列信息的意义如下：</p>
+<ul>
+<li><p>COMMAND：进程的名称</p>
+</li>
+<li><p>PID：进程标识符</p>
+</li>
+<li><p>PPID：父进程标识符（需要指定-R参数）</p>
+</li>
+<li><p>USER：进程所有者</p>
+</li>
+<li><p>PGID：进程所属组</p>
+</li>
+<li><p>FD：文件描述符，应用程序通过文件描述符识别该文件。如cwd、txt等:</p>
+</li>
+</ul>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">（1）cwd：表示current work dirctory，即：应用程序的当前工作目录，这是该应用程序启动的目录，除非它本身对这个目录进行更改</span><br><span class="line">（2）txt ：该类型的文件是程序代码，如应用程序二进制文件本身或共享库，如上列表中显示的 <span class="code">`/sbin/init`</span> 程序</span><br><span class="line">（3）lnn：library references (AIX);</span><br><span class="line">（4）er：FD information error (see NAME column);</span><br><span class="line">（5）jld：jail directory (FreeBSD);</span><br><span class="line">（6）ltx：shared library text (code and data);</span><br><span class="line">（7）mxx ：hex memory-mapped type number xx.</span><br><span class="line">（8）m86：DOS Merge mapped file;</span><br><span class="line">（9）mem：memory-mapped file;</span><br><span class="line">（10）mmap：memory-mapped device;</span><br><span class="line">（11）pd：parent directory;</span><br><span class="line">（12）rtd：root directory;</span><br><span class="line">（13）tr：kernel trace file (OpenBSD);</span><br><span class="line">（14）v86  VP/ix mapped file;</span><br><span class="line">（15）0：表示标准输入</span><br><span class="line">（16）1：表示标准输出</span><br><span class="line">（17）2：表示标准错误</span><br><span class="line">一般在标准输出、标准错误、标准输入后还跟着文件状态模式：r、w、u等</span><br><span class="line">（1）u：表示该文件被打开并处于读取/写入模式</span><br><span class="line">（2）r：表示该文件被打开并处于只读模式</span><br><span class="line">（3）w：表示该文件被打开并处于写入模式</span><br><span class="line">（4）空格：表示该文件的状态模式为unknow，且没有锁定</span><br><span class="line">（5）-：表示该文件的状态模式为unknow，且被锁定</span><br><span class="line">同时在文件状态模式后面，还跟着相关的锁</span><br><span class="line">（1）N：for a Solaris NFS lock of unknown type;</span><br><span class="line">（2）r：for read lock on part of the file;</span><br><span class="line">（3）R：for a read lock on the entire file;</span><br><span class="line">（4）w：for a write lock on part of the file;（文件的部分写锁）</span><br><span class="line">（5）W：for a write lock on the entire file;（整个文件的写锁）</span><br><span class="line">（6）u：for a read and write lock of any length;</span><br><span class="line">（7）U：for a lock of unknown type;</span><br><span class="line">（8）x：for an SCO OpenServer Xenix lock on part of the file;</span><br><span class="line">（9）X：for an SCO OpenServer Xenix lock on the entire file;</span><br><span class="line">（10）space：if there is no lock.</span><br></pre></td></tr></table></figure>
+<ul>
+<li>TYPE：文件类型，如DIR、REG等，常见的文件类型:</li>
+</ul>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">（1）DIR：表示目录</span><br><span class="line">（2）CHR：表示字符类型</span><br><span class="line">（3）BLK：块设备类型</span><br><span class="line">（4）UNIX： UNIX 域套接字</span><br><span class="line">（5）FIFO：先进先出 (FIFO) 队列</span><br><span class="line">（6）IPv4：网际协议 (IP) 套接字</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>DEVICE：指定磁盘的名称</p>
+</li>
+<li><p>SIZE：文件的大小</p>
+</li>
+<li><p>NODE：索引节点（文件在磁盘上的标识）</p>
+</li>
+<li><p>NAME：打开文件的确切名称</p>
+</li>
+</ul>
+<h3 id="实例2：查找某个文件相关的进程"><a href="#实例2：查找某个文件相关的进程" class="headerlink" title="实例2：查找某个文件相关的进程"></a>实例2：查找某个文件相关的进程</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lsof</span> /bin/bash</span><br><span class="line">COMMAND     PID USER  FD   TYPE DEVICE SIZE/OFF    NODE NAME</span><br><span class="line">mysqld_sa  2169 root txt    REG  253,0   938736 4587562 /bin/bash</span><br><span class="line">ksmtuned   2334 root txt    REG  253,0   938736 4587562 /bin/bash</span><br><span class="line">bash      20121 root txt    REG  253,0   938736 4587562 /bin/bash</span><br></pre></td></tr></table></figure>
+<h3 id="实例3：列出某个用户打开的文件信息"><a href="#实例3：列出某个用户打开的文件信息" class="headerlink" title="实例3：列出某个用户打开的文件信息"></a>实例3：列出某个用户打开的文件信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">   <span class="variable">$lsof</span> -u username</span><br><span class="line"></span><br><span class="line">-u 选项，u是user的缩写</span><br></pre></td></tr></table></figure>
+<h3 id="实例4：列出某个程序进程所打开的文件信息"><a href="#实例4：列出某个程序进程所打开的文件信息" class="headerlink" title="实例4：列出某个程序进程所打开的文件信息"></a>实例4：列出某个程序进程所打开的文件信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lsof</span> -c mysql</span><br></pre></td></tr></table></figure>
+<p><code>-c</code> 选项将会列出所有以mysql这个进程开头的程序的文件，其实也可以写成 <code>lsof | grep mysql</code></p>
+<h3 id="实例5：列出某个用户以及某个进程所打开的文件信息"><a href="#实例5：列出某个用户以及某个进程所打开的文件信息" class="headerlink" title="实例5：列出某个用户以及某个进程所打开的文件信息"></a>实例5：列出某个用户以及某个进程所打开的文件信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lsof</span>  -u <span class="built_in">test</span> -c mysql</span><br></pre></td></tr></table></figure>
+<h3 id="实例6：通过某个进程号显示该进程打开的文件"><a href="#实例6：通过某个进程号显示该进程打开的文件" class="headerlink" title="实例6：通过某个进程号显示该进程打开的文件"></a>实例6：通过某个进程号显示该进程打开的文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lsof</span> -p 11968</span><br></pre></td></tr></table></figure>
+<h3 id="实例7：列出所有的网络连接"><a href="#实例7：列出所有的网络连接" class="headerlink" title="实例7：列出所有的网络连接"></a>实例7：列出所有的网络连接</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lsof</span> -i</span><br></pre></td></tr></table></figure>
+<h3 id="实例8：列出所有tcp-网络连接信息"><a href="#实例8：列出所有tcp-网络连接信息" class="headerlink" title="实例8：列出所有tcp 网络连接信息"></a>实例8：列出所有tcp 网络连接信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lsof</span> -i tcp</span><br><span class="line"></span><br><span class="line"><span class="variable">$lsof</span> -n -i tcp</span><br><span class="line">COMMAND     PID  USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME</span><br><span class="line">svnserve  11552 weber    3u  IPv4 3799399      0t0  TCP *:svn (LISTEN)</span><br><span class="line">redis-ser 25501 weber    4u  IPv4  113150      0t0  TCP 127.0.0.1:6379 (LISTEN)</span><br></pre></td></tr></table></figure>
+<h3 id="实例9：列出谁在使用某个端口"><a href="#实例9：列出谁在使用某个端口" class="headerlink" title="实例9：列出谁在使用某个端口"></a>实例9：列出谁在使用某个端口</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lsof</span> -i :3306</span><br></pre></td></tr></table></figure>
+<h3 id="实例10：列出某个用户的所有活跃的网络端口"><a href="#实例10：列出某个用户的所有活跃的网络端口" class="headerlink" title="实例10：列出某个用户的所有活跃的网络端口"></a>实例10：列出某个用户的所有活跃的网络端口</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lsof</span> -a -u <span class="built_in">test</span> -i</span><br></pre></td></tr></table></figure>
+<h3 id="实例11：根据文件描述列出对应的文件信息"><a href="#实例11：根据文件描述列出对应的文件信息" class="headerlink" title="实例11：根据文件描述列出对应的文件信息"></a>实例11：根据文件描述列出对应的文件信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lsof</span> -d description(like 2)</span><br></pre></td></tr></table></figure>
+<p>示例:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lsof</span> -d 3 | grep PARSER1</span><br><span class="line">tail      6499 tde    3r   REG    253,3   4514722     417798 /opt/applog/open/<span class="built_in">log</span>/HOSTPARSER1_ERROR_141217.log.001</span><br></pre></td></tr></table></figure>
+<p>说明： 0表示标准输入，1表示标准输出，2表示标准错误，从而可知：所以大多数应用程序所打开的文件的 FD 都是从 3 开始</p>
+<h3 id="实例12：列出被进程号为1234的进程所打开的所有IPV4-network-files"><a href="#实例12：列出被进程号为1234的进程所打开的所有IPV4-network-files" class="headerlink" title="实例12：列出被进程号为1234的进程所打开的所有IPV4 network files"></a>实例12：列出被进程号为1234的进程所打开的所有IPV4 network files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lsof</span> -i 4 -a -p 1234</span><br></pre></td></tr></table></figure>
+<h3 id="实例13：列出目前连接主机nf5260i5-td上端口为：20，21，80相关的所有文件信息，且每隔3秒重复执行"><a href="#实例13：列出目前连接主机nf5260i5-td上端口为：20，21，80相关的所有文件信息，且每隔3秒重复执行" class="headerlink" title="实例13：列出目前连接主机nf5260i5-td上端口为：20，21，80相关的所有文件信息，且每隔3秒重复执行"></a>实例13：列出目前连接主机nf5260i5-td上端口为：20，21，80相关的所有文件信息，且每隔3秒重复执行</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lsof -i @nf5260i5-td:20,21,80 -r 3</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>maywzh</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://maywzh.com/2015/12/16/Linux%E4%B8%AD%E7%9A%84lsof/">https://maywzh.com/2015/12/16/Linux%E4%B8%AD%E7%9A%84lsof/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Linux/"># Linux</a>
+                    
+                        <a href="/tags/Terminal/"># Terminal</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2015/12/21/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E4%B9%8BSocket/">探秘socket</a>
+            
+            
+            <a class="next" rel="next" href="/2015/11/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8B%E6%8E%A2%E7%A7%98http%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87%E7%BB%93%E6%9E%84/">探秘http请求报文结构</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

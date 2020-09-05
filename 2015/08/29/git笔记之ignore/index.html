@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="maywzh">
+
+
+    <meta name="subtitle" content="Namasday.">
+
+
+    <meta name="description" content="Namasday.">
+
+
+    <meta name="keywords" content="Tech Blogs">
+
+
+<title>git笔记之ignore | 梅故事壹</title>
+
+
+
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">0x01 MAYSTORY</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">git笔记之ignore</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 29, 2015&nbsp;&nbsp;13:34:15</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>在push到远程仓库中，往往要忽略中间文件和开发环境配置文件等文件的提交，这时就要设置相应的忽略规则，来自动忽略这些文件。</p>
+<h2 id="原则"><a href="#原则" class="headerlink" title="原则"></a>原则</h2><p><strong>Git忽略文件的原则</strong></p>
+<ul>
+<li>忽略操作系统自动生成的文件，例如macOS中的<code>.DS_Store</code></li>
+<li>忽略编译生成的中间文件、可执行文件等，如果一个文件是通过另一个文件自动生成的，那么就没必要放进版本库，比如Java编译产生的<code>.class</code>文件</li>
+<li>忽略带有敏感信息的配置文件，比如存放口令的配置文件</li>
+</ul>
+<h2 id="方式"><a href="#方式" class="headerlink" title="方式"></a>方式</h2><p><strong>有三种方法可以实现忽略Git中不想提交的文件</strong>：</p>
+<ol>
+<li>在项目中定义.gitignore文件<br>在项目根目录下定义.gitignore 文件，它往往要提交到公有仓库中，为该项目下的所有开发者都预设定义好的忽略规则。.gitingore 文件每一行指定一个忽略规则。如：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">*.log</span><br><span class="line">*.temp</span><br><span class="line">&#x2F;vendor</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>在项目的设置中临时指定排除文件<br>这种方式只是临时指定该项目的行为，需要编辑当前项目下的 <code>.git/info/exclude</code>文件，然后将需要忽略提交的文件写入其中。这种方式指定的忽略文件的根目录是项目根目录。</p>
+</li>
+<li><p>定义全局的 .gitignore 文件<br>除了可以在项目中定义 <code>.gitignore</code> 文件外，还可以设置全局的git <code>.gitignore</code>文件来管理所有由git版本控制项目的行为。这种方式是定义个人开发机的全局环境，不在项目成员中共享。这种方式也需要创建相应的 .gitignore 文件，可以放在任意位置。然后在使用以下命令配置：</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.excludesfile ~/.gitignore</span><br></pre></td></tr></table></figure>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><h3 id="匹配语法"><a href="#匹配语法" class="headerlink" title="匹配语法"></a>匹配语法</h3><ol>
+<li>空格不匹配任意文件，可作为分隔符，可用反斜杠转义</li>
+<li><code>#</code>开头的行代表注释，git忽略，可以使用反斜杠进行转义</li>
+<li><code>.gitignore</code>使用标准的glob模式匹配。<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Glob_(programming">glob模式</a>)往往用于在类UNIX系统中匹配文件路径。</li>
+<li>斜杠<code>/</code>开头表示目录，<code>/</code>结束的模式只匹配文件夹和该文件夹路径下的内容，<code>/</code>开始的模式匹配项目根目录</li>
+<li>星号<code>*</code>通配多个字符，问号<code>?</code>通配单个字符， 使用两个星号<code>**</code>表示匹配任意中间目录</li>
+<li>方括号<code>[]</code>包含单个字符的匹配列表，即匹配任何一个列在方括号中的字符。</li>
+<li>感叹号<code>!</code>表示不忽略(跟踪)匹配到的文件或目录，即要忽略指定模式以外的文件或目录，可以在模式前加上惊叹号<code>（!）</code>取反。<strong>如果文件的父目录已经被前面的规则排除掉了，那么对这个文件用”!”规则是不起作用的</strong>。也就是说”!”开头的模式表示否定，该文件将会再次被包含，如果排除了该文件的父级目录，则使用”!”也不会再次被包含。可以使用反斜杠进行转义。</li>
+<li>.git对于.ignore配置文件是按行从上到下进行规则匹配的，意味着如果前面的规则匹配的范围更大，则后面的规则将不会生效！</li>
+</ol>
+<h3 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h3><p>在 .gitingore 文件中，每一行指定一个忽略规则，Git检查忽略规则的时候有多个来源，它的优先级如下（由高到低）：</p>
+<ol>
+<li>从命令行中读取可用的忽略规则</li>
+<li>当前目录定义的规则</li>
+<li>父级目录定义的规则，依次递推</li>
+<li>$GIT_DIR/info/exclude 文件中定义的规则</li>
+<li>core.excludesfile中定义的全局规则</li>
+</ol>
+<p>例：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">*<span class="string">.a</span>             <span class="comment">#忽略所有目录中所有 .a 结尾的文件</span></span><br><span class="line">/*<span class="string">.b</span>            <span class="comment">#忽略根目录中所有 .b 结尾的文件</span></span><br><span class="line">**/*<span class="string">.c</span>          <span class="comment">#忽略所有目录中子目录中的 .c 结尾的文件</span></span><br><span class="line">!<span class="string">/1.b</span>           <span class="comment">#不忽略根目录下的1.b文件</span></span><br><span class="line">bin/            <span class="comment">#忽略当前路径下的bin文件夹，该文件夹下的所有内容都会被忽略，不忽略 bin 文件</span></span><br><span class="line"><span class="string">/bin</span>            <span class="comment">#表示忽略根目录下的bin文件</span></span><br><span class="line">a/**<span class="string">/b</span>          <span class="comment">#表示忽略a目录下所有目录及其子目录中的b文件，例如a/b， a/c/b ， a/c/d/b</span></span><br></pre></td></tr></table></figure>
+<p>⚠️<br>如果如果在版本库中写<code>.gitignore</code>文件之前就已经提交了要忽略的文件，那么Git仍然会对这些文件进行版本管理。例如已经commit了<code>1.a</code>这个文件到版本库，再写入<code>1.a</code>这条忽略规则到<code>.gitignore</code>文件，那么这条规则就失效了。对<code>1.a</code>文件的修改仍然会被版本控制。这种情况的解决方式可以参看<a href="https://maywzh.com/git笔记之rm/">git rm删除版本控制</a>。<br><a id="more"></a></p>
+<h2 id="查看规则"><a href="#查看规则" class="headerlink" title="查看规则"></a>查看规则</h2><p>我们可以用<code>git check-ignore</code>命令检查忽略规则：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git check-ignore -v ./bin/root-bin.a</span><br><span class="line">.gitignore:2:/bin	./bin/root-bin.a</span><br></pre></td></tr></table></figure>
+<p>可以看到<code>./bin/root-bin.a</code>匹配到了我们的第二行<code>/bin</code>的忽略规则，所以文件被忽略了。</p>
+<h2 id="删除本地缓存"><a href="#删除本地缓存" class="headerlink" title="删除本地缓存"></a>删除本地缓存</h2><p>有的时候已经在.gitignore中标明忽略的文件，但git status中该文件依旧处于tracted状态，这是因为在git忽略目录中，新建的文件会有缓存，如果某文件已经被纳入版本管理，那么再在.gitignore中声明也是无效的，此时需要删除本地缓存，这样不会直接删除文件。如果去掉<code>--cached</code>选项则是直接删除对应文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git rm -r --cached .</span><br><span class="line">$ git add .</span><br><span class="line">$ git commit -m <span class="string">&quot;.gitignore updated&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="远程仓库中删除版本控制"><a href="#远程仓库中删除版本控制" class="headerlink" title="远程仓库中删除版本控制"></a>远程仓库中删除版本控制</h2><p>有的时候想移除远程仓库中的某些文件的版本控制，但依旧在本地保留该文件。这时候不可以直接使用<code>git rm directory</code>，这样会删除本地仓库的文件。可以使用<code>git rm -r –cached directory</code>来删除本地缓存，然后进行commit 和push，这样会发现远程仓库中的不必要文件就被删除了，以后可以直接使用<code>git add -A</code>来添加修改的内容，上传的文件就会受到.gitignore文件的内容约束。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git rm -r --cached 1.a</span><br><span class="line">$ git add -A</span><br><span class="line">$ git commit -m <span class="string">&quot;update .gitignore&quot;</span></span><br><span class="line">$ git push origin</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>maywzh</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://maywzh.com/2015/08/29/git%E7%AC%94%E8%AE%B0%E4%B9%8Bignore/">https://maywzh.com/2015/08/29/git%E7%AC%94%E8%AE%B0%E4%B9%8Bignore/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/git/"># git</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2015/09/16/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%B8%B8%E8%A7%8132%E4%B8%AA%E7%AE%97%E6%B3%95/">计算机科学中最重要的32个算法</a>
+            
+            
+            <a class="next" rel="next" href="/2015/08/26/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%20-%20sar/">Linux性能分析工具 - sar</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

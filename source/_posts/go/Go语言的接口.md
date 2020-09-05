@@ -620,7 +620,7 @@ MOVQ	AX, "".c+56(SP)                    ;; iface(c).data = SP + 56 = AX
 
 这段代码的初始化过程其实和上两节中的过程没有太多的差别，它先初始化了 `Cat` 结构体指针，再将 `Cat` 和 `tab` 打包成了一个 `iface` 类型的结构体，我们直接来看初始化结束后的栈情况：
 
-![stack-after-initialize](https://img.draveness.me/stack-after-initialize.png)
+![stack-after-initialize](https://i.loli.net/2020/09/04/KWUkzZ8r4b2CH3p.png)
 
 **图 4-14 接口类型初始化后的栈**
 

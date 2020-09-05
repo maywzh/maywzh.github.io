@@ -1,42 +1,42 @@
 - class_name: Me
   class_desc: 
   link_list:
-    - name: Cultoy
-      link: https://blog.maywzh.com/
+    - name: Me
+      link: https://maywzh.com/
       avatar: https://i.loli.net/2020/08/30/tjr6wQ5O1fAuFg8.png
-      descr: My blog site
-    - name: Cult Minds
-      link: https://tech.maywzh.com/
+      descr: 0x01 MAYSTORY
+    - name: Blog
+      link: https://blog.maywzh.com/
       avatar: https://i.loli.net/2020/09/03/rRyjXKhTzUqlHIo.png
-      descr: tech blog
+      descr: Cultoy
     - name: Github
       link: https://github.com/maywzh
       avatar: https://i.loli.net/2020/08/29/LOVT98beMpIRQsk.png
+      descr: '@maywzh'
     - name: Twitter
       link: https://twitter.com/maywzh
       avatar: https://i.loli.net/2020/08/31/p2ou5U3EytzKagS.png
-      descr: 
+      descr: '@maywzh'
     - name: Weibo
       link: http://weibo.com/JupiterMay
       avatar: https://i.loli.net/2020/08/31/hbU9XucJ2jCrYkI.png
-      descr:
+      descr: '@邪歡'
     - name: Telegram
       link: https://t.me/unlockedcultoy
       avatar: https://i.loli.net/2020/08/31/eG8XnbBRdox3mQa.png
-      descr: 
-    
+      descr: '@maywzh'
     - name: Instagram
       link: https://instagram.com/maywzh
       avatar: https://i.loli.net/2020/08/30/oCPX53vNVp4KMyq.png
-      descr:
+      descr: '@maywzh'
     - name: Douban
       link: https://www.douban.com/people/CrisMay/
       avatar: https://i.loli.net/2020/08/30/IDmQL1XWScuakTg.png
-      descr:
+      descr: '@crismay'
     - name: Zhihu
       link: https://www.zhihu.com/people/merr0r
       avatar: https://i.loli.net/2020/08/31/WjBqOaIkw6QCTLn.jpg
-      descr:
+      descr: '@邪欢'
     # - name: LinkedIn
     #   link: https://www.linkedin.com/in/mei-wangzhihui-73aaa6193/
     #   avatar: https://i.loli.net/2020/08/29/KucCLaF1ep7XmOj.png
@@ -49,12 +49,12 @@
     - name: Youtube
       link: https://www.youtube.com/channel/UCprqPV3-B8AwSVDYg2Pbe5g?view_as=subscriber
       avatar: https://i.loli.net/2020/08/29/MHkO1mfpbE49Lc6.png
-      descr: 
+      descr: '@XXXXXX'
     - name: Bilibili
       link: https://space.bilibili.com/22357412/
       avatar: https://i.loli.net/2020/08/30/WB8JtdPqTalO9Lb.png
-      descr: 
+      descr: '@邪欢'
     - name: Tiktok
       link: https://www.tiktok.com/@maywzh
       avatar: https://i.loli.net/2020/08/31/V9PeNw2mDlbp5EB.png
-      descr:    
+      descr: '@maywzh'

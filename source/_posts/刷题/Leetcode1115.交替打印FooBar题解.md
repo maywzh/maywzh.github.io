@@ -1,5 +1,5 @@
 ---
-title: Leetcode1115.交替打印FooBar题解
+title: Leetcode1115.交替打印FooBar
 categories: 刷题
 comments: false
 thumbnail: 'https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg'

@@ -2,12 +2,12 @@
 title: 剑指Offer20.表示数值的字符串
 categories: 刷题
 comments: false
-thumbnail: 'https://i.loli.net/2020/08/30/dPi5N3M6WpC4xF9.jpg'
-cover: 'https://i.loli.net/2020/08/30/dPi5N3M6WpC4xF9.jpg'
-date: 2018-01-03 17:42:34
+thumbnail: https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg
+cover: https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg
+date: 2018-01-05 02:11:29
 tags:
-  - 算法
   - 自动状态机
+  - 算法
 ---
 
 一道经典的自动状态机题。

@@ -6,7 +6,8 @@ thumbnail: https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg
 cover: https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg
 date: 2018-01-08 01:18:14
 tags:
-  - DP
+  - 动态规划
+  - 算法
 ---
 
 经典DP问题之一——LIS。

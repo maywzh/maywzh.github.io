@@ -2,7 +2,7 @@
 title: Mysql的常用命令
 date: 2015-02-11 12:16:14
 tags: 
-  - mysql
+  - MySQL
 categories: 数据库
 thumbnail: https://i.loli.net/2020/08/23/wxLC67v2AtQGcjm.gif
 cover: https://i.loli.net/2020/08/23/wxLC67v2AtQGcjm.gif

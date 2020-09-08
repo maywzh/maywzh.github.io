@@ -1,5 +1,5 @@
 ---
-title: [转载]阿里Redis开发规范笔记
+title: (转载)阿里Redis开发规范笔记
 categories: 数据库
 comments: false
 thumbnail: https://i.loli.net/2020/09/03/rmHZdE9TpyWg7DK.jpg

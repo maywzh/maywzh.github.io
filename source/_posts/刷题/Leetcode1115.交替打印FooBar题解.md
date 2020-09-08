@@ -7,7 +7,6 @@ cover: 'https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg'
 date: 2018-01-02 14:28:42
 tags:
   - 多线程
-  - 并发
 ---
 
 借助这题复习一下Java并发类和工具。

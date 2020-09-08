@@ -5,6 +5,7 @@ comments: false
 thumbnail: https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg
 cover: https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg
 date: 2018-01-08 02:11:29
+mathjax: true
 tags:
   - 堆
   - 哈希表

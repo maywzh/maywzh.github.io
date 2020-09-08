@@ -4,9 +4,8 @@ date: 2015-02-11 12:16:14
 tags: 
   - mysql
 categories: 数据库
-thumbnail: https://i.loli.net/2020/08/23/wxLC67v2AtQGcjm.gif
-cover: https://i.loli.net/2020/08/23/wxLC67v2AtQGcjm.gif
----
+thumbnail: https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png 
+cover: https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png
 
 总结一下常用的简单MySQL命令。
 

@@ -27,7 +27,7 @@ tags:
 
 此时系统架构如下：
 
-![img](https://mmbiz.qpic.cn/mmbiz_png/1J6IbIcPCLZO3ZKMzm3Vmc5L6icEx7JtA3QWLj02ROzbS9Nc3Ws5nCNAXS0RoKfvGXzibXwHAcUSPrrQbouSnI9g/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![img](https://i.loli.net/2020/09/08/EPWQcd1ymU6eHAk.png)
 
 但是这样一来会**产生一个问题**：假如某个时刻，redis里面的某个商品库存为1，此时两个请求同时到来，其中一个请求执行到上图的第3步，更新数据库的库存为0，但是第4步还没有执行。
 
@@ -39,17 +39,17 @@ tags:
 
 此时，我们很容易想到解决方案：用锁把2、3、4步锁住，让他们执行完之后，另一个线程才能进来执行第2步。
 
-![img](https://mmbiz.qpic.cn/mmbiz_png/1J6IbIcPCLZO3ZKMzm3Vmc5L6icEx7JtAOxHO6gxicqjzJAcGEVLiaibiafgnibsXbScFI9FewYrk20USwQ7HvaDjyWQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![img](https://i.loli.net/2020/09/08/LIgj5Ols4R9xKcw.png)
 
 按照上面的图，在执行第2步时，使用Java提供的synchronized或者ReentrantLock来锁住，然后在第4步执行完之后才释放锁。这样一来，2、3、4 这3个步骤就被“锁”住了，多个线程之间只能串行化执行。关注公众号互联网架构师，回复关键字2T，获取最新架构视频
 
 但是好景不长，整个系统的并发飙升，一台机器扛不住了。现在要增加一台机器，如下图：
 
-![img](https://mmbiz.qpic.cn/mmbiz_png/1J6IbIcPCLZO3ZKMzm3Vmc5L6icEx7JtA5AxlRwFCcEXicQqThGCeTmdWvybbFoSRJ4XFEWIkCAtEalQmjYWDQWg/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![img](https://i.loli.net/2020/09/08/8OICyhzeSFGkLBj.jpg)
 
 
 
-增加机器之后，系统变成上图所示，我的天！
+增加机器之后，系统变成上图所示。
 
 假设此时两个用户的请求同时到来，但是落在了不同的机器上，那么这两个请求是可以同时执行了，还是会出现**库存超卖**的问题。
 
@@ -69,7 +69,7 @@ tags:
 
 文字描述不太直观，我们来看下图：
 
-![img](data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)
+![img](data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)![640 (1)](https://i.loli.net/2020/09/08/lnpQLjsiq3GvxTJ.png)
 
 通过上面的分析，我们知道了库存超卖场景在分布式部署系统的情况下使用Java原生的锁机制无法保证线程安全，所以我们需要用到分布式锁的方案。
 
@@ -117,7 +117,7 @@ end
 
   这是避免了一种情况：假设A获取了锁，过期时间30s，此时35s之后，锁已经自动释放了，A去释放锁，但是此时可能B获取了锁。A客户端就不能删除B的锁了。
 
-![img](https://mmbiz.qpic.cn/mmbiz_png/1J6IbIcPCLZO3ZKMzm3Vmc5L6icEx7JtAnWRNz8QiaFtMLm1xh2MWF8DkpKln4EQ09FnlVIazjibicHiayKNc5hDn3w/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![img](https://i.loli.net/2020/09/08/izNaYrJTKcltBVI.png)
 
 除了要考虑客户端要怎么实现分布式锁之外，还需要考虑redis的部署问题。
 
@@ -148,7 +148,7 @@ redis有3种部署方式：
 
 但是这样的这种算法还是颇具争议的，可能还会存在不少的问题，无法保证加锁的过程一定正确。
 
-![img](data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)
+![img](https://i.loli.net/2020/09/08/ySZF51vKboscCnU.png)
 
 ### 另一种方式：Redisson
 
@@ -200,7 +200,7 @@ lock.unlock();
 
   (如果机器宕机了，看门狗也就没了。此时就不会延长key的过期时间，到了30s之后就会自动过期了，其他线程可以获取到锁)
 
-![img](data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)
+![img](https://i.loli.net/2020/09/08/VrfIShyRXCWTiEY.png)
 
 这里稍微贴出来其实现代码：
 
@@ -374,7 +374,7 @@ zk的模型是这样的：zk包含一系列的节点，叫做znode，就好像�
 
 整个过程如下：
 
-![img](data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)
+![img](https://i.loli.net/2020/09/08/prahvcI6zWuGoqN.png)
 
 具体的实现思路就是这样，至于代码怎么写，这里比较复杂就不贴出来了。
 
@@ -457,7 +457,7 @@ private boolean internalLockLoop(long startMillis, Long millisToWait, String our
 
 其实curator实现分布式锁的底层原理和上面分析的是差不多的。这里我们用一张图详细描述其原理：
 
-![img](data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)
+![img](https://i.loli.net/2020/09/08/fyikAEdrKow7acD.png)
 
 小结：
 

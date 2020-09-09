@@ -4,7 +4,7 @@ categories: 坑
 comments: false
 date: 2015-11-01 18:12:43
 tags:
-  - mysql
+  - MySQL
   - bugfix
 thumbnail: https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png
 cover: https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png

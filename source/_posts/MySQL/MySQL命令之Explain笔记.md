@@ -7,6 +7,7 @@ cover: 'https://i.loli.net/2020/09/04/n1bORv74Mpaj9Ir.png'
 mathjax: false
 date: 2016-12-09 08:57:25
 tags:
+  - MySQL
 ---
 
 MySQL 提供了一个 EXPLAIN 命令， 它可以对 `SELECT` 语句进行分析， 并输出 `SELECT` 执行的详细信息， 以供开发人员针对性优化。借助一个实例操作，来对Explain用法做一些总结。

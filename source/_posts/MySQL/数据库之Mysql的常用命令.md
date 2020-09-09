@@ -1,11 +1,11 @@
 ---
 title: Mysql的常用命令
-date: 2015-02-11 12:16:14
-tags: 
-  - MySQL
-categories: 数据库
 thumbnail: https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png 
 cover: https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png
+date: 2015-02-11 12:16:14
+categories: 数据库
+tags: 
+  - MySQL
 ---
 总结一下常用的简单MySQL命令。
 

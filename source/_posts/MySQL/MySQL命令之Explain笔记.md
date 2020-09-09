@@ -1,9 +1,9 @@
 ---
 title: MySQL命令之Explain笔记
-categories: uncategorized
+categories: 数据库
 comments: false
-thumbnail: 'https://i.loli.net/2020/09/04/n1bORv74Mpaj9Ir.png'
-cover: 'https://i.loli.net/2020/09/04/n1bORv74Mpaj9Ir.png'
+thumbnail: https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png
+cover: https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png
 mathjax: false
 date: 2016-12-09 08:57:25
 tags:

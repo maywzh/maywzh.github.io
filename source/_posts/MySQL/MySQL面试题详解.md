@@ -7,7 +7,7 @@ cover: https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png
 mathjax: false
 date: 2017-09-09 07:27:23
 tags:
-  - MySQL
+  - mysql
 ---
 
 总结一波MySQL面试题。
@@ -882,7 +882,7 @@ SELECT * FROM A UNION SELECT * FROM B UNION ...
 
 全连接（FULL JOIN）
 
-- MySQL不支持全连接
+- mysql不支持全连接
 - 可以使用LEFT JOIN 和UNION和RIGHT JOIN联合使用
 
 ```
@@ -1301,7 +1301,7 @@ null值会占用更多的字节，且会在程序中造成很多与预期不符�
 ### 优化长难的查询语句
 
 - 一个复杂查询还是多个简单查询
-- MySQL内部每秒能扫描内存中上百万行数据，相比之下，响应数据给客户端就要慢得多
+- mysql内部每秒能扫描内存中上百万行数据，相比之下，响应数据给客户端就要慢得多
 - 使用尽可能小的查询是好的，但是有时将一个大的查询分解为多个小的查询是很有必要的。
 - 切分查询
 - 将一个大的查询分为多个小的相同的查询

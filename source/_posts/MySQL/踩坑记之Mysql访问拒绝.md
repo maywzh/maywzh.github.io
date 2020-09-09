@@ -8,7 +8,7 @@ tags:
   - bugfix
 thumbnail: https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png
 cover: https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png
-
+---
 ## 问题产生
 
 今天用命令行登陆mysql时出现了Error。

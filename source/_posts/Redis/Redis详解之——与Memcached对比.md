@@ -6,8 +6,8 @@ tags:
   - Web
 categories: 数据库
 date: 2017-05-04 23:46:00
-thumbnail: https://i.loli.net/2019/08/31/ySvCoeqI1bhZNp6.jpg
-cover: https://i.loli.net/2019/08/31/ySvCoeqI1bhZNp6.jpg
+thumbnail: https://i.loli.net/2020/09/09/rS9BaJ7xjWc83kC.png
+cover: https://i.loli.net/2020/09/09/rS9BaJ7xjWc83kC.png
 ---
 ## 引
 

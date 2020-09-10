@@ -7,7 +7,8 @@ cover: https://i.loli.net/2020/09/11/dZQSnTFhgxkplMJ.jpg
 mathjax: true
 date: 2019-10-10 01:00:25
 tags:
-  - 密钥交换
+  - 密码学
+  - 数学
 ---
 
 [Deffie-Hellman](https://en.wikipedia.org/wiki/Diffie–Hellman_key_exchange)(简称 DH) 密钥交换是最早的密钥交换算法之一，它使得通信的双方能在非安全的信道中安全的交换密钥，用于加密后续的通信消息。 Whitfield Diffie 和 Martin Hellman 于 1976 提出该算法，之后被应用于安全领域，比如 Https 协议的 TSL([Transport Layer Security](https://en.wikipedia.org/wiki/Transport_Layer_Security)) 和 IPsec 协议的 IKE([Internet Key Exchange](https://en.wikipedia.org/wiki/Internet_Key_Exchange)) 均以 DH 算法作为密钥交换算法。
@@ -30,23 +31,29 @@ $${a^1 (mod\ p), a^2 (mod\ p), ... a^{p-1}(mod\ p)} = {1,2,...,p-1}$$
 - $\forall x != y, a^x (mod\ p) \neq a^y (mod\ p)$
 - $1 \leq b \leq p - 1$，一定存在唯一的 $1 \leq x \leq p-1$，使得 $b = a^x (mod\ p)$
 
+
+
+> ✨ 出于方便，我们在下面的推导中$=$两边默认省略$(mod\ p)$
+
+
+
 第三点在求解上有这么一个特点：已知 x 求 b 非常容易，已知 b 求 x 非常困难，那么这便是一个困难问题，特别当 p 很大时，求解的复杂度非常高，所以它又被称为离散对数问题 ([Discrete logarithm](https://en.wikipedia.org/wiki/Discrete_logarithm))，它是 DH 算法能够安全交换密钥的基础
 
 ### 求模公式
 
 假设 q 为素数，对于正整数 a,x,y，有：
 
-$$(a^x (mod\ p))^y (mod\ p) = a^{xy}(mod\ p)$$
+$$(a^x)^y = a^{xy}$$
 
 证明如下：
 
-> 令$ a^x = mp + n$， 其中 m, n 为自然数，$ 0 \leq n < p$，则有（以下默认省略$(mod\ p)$）
+> 令$ a^x = mp + n$， 其中 m, n 为自然数，$ 0 \leq n < p$，则有
 
-$$\begin{equation} \begin{split} C &= (a^x (mod\ p))^y (mod\ p) \\
-  &= ((mp + n))^y \\
+$$\begin{equation} \begin{split} C &= (a^x)^y \\
+  &= (mp + n)^y \\
   &= n^y \\
   &= (mp +n)^y \\
-  &= a^(xy) \end{split} \end{equation}$$
+  &= a^{xy} \end{split} \end{equation}$$
 
 ## Deffie-Hellman 算法原理
 

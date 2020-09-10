@@ -34,52 +34,34 @@ Go 语言的调度器通过使用与 CPU 数量相等的线程减少线程频繁
 
 - 单线程调度器 `0.x`
 
-   
-
-  
-
   - 只包含 40 多行代码；
-  - 程序中只能存在一个活跃线程，由 G-M 模型组成；
-
+- 程序中只能存在一个活跃线程，由 G-M 模型组成；
+  
 - 多线程调度器 `1.0`
 
-   
-
-  
-
   - 允许运行多线程的程序；
+
   - 全局锁导致竞争严重；
 
-- 任务窃取调度器 ·
-
-   
-
-  1.1
+- 任务窃取调度器 `1.1`
 
   - 引入了处理器 P，构成了目前的 **G-M-P** 模型；
+
   - 在处理器 P 的基础上实现了基于**工作窃取**的调度器；
-  - 在某些情况下，Goroutine 不会让出线程，进而造成饥饿问题；
+- 在某些情况下，Goroutine 不会让出线程，进而造成饥饿问题；
   - 时间过长的垃圾回收（Stop-the-world，STW）会导致程序长时间无法工作；
-
-- 抢占式调度器 ·
-
-   
-
-  1.2
-
-   
-
-  ~ 至今
+  
+- 抢占式调度器 `1.2 ~ 至今`
 
   - 基于协作的抢占式调度器 - 1.2 ~ 1.13
-    - 通过编译器在函数调用时插入**抢占检查**指令，在函数调用时检查当前 Goroutine 是否发起了抢占请求，实现基于协作的抢占式调度；
+  - 通过编译器在函数调用时插入**抢占检查**指令，在函数调用时检查当前 Goroutine 是否发起了抢占请求，实现基于协作的抢占式调度；
     - Goroutine 可能会因为垃圾回收和循环长时间占用资源导致程序暂停；
-  - 基于信号的抢占式调度器 - 1.14 ~ 至今
+- 基于信号的抢占式调度器 - 1.14 ~ 至今
     - 实现**基于信号的真抢占式调度**；
-    - 垃圾回收在扫描栈时会触发抢占调度；
+  - 垃圾回收在扫描栈时会触发抢占调度；
     - 抢占的时间点不够多，还不能覆盖全部的边缘情况；
 
-- 非均匀存储访问调度器 · 提案
+- 非均匀存储访问调度器`提案`
 
   - 对运行时的各种资源进行分区；
   - 实现非常复杂，到今天还没有提上日程；
@@ -341,7 +323,7 @@ STW 和栈扫描是一个可以抢占的安全点（Safe-points），所以 Go �
 
 ![go-numa-scheduler-architecture](https://img.draveness.me/2020-02-02-15805792666185-go-numa-scheduler-architecture.png)
 
-**图 6-28 - Go 语言 NUMA 调度器**
+**Go 语言 NUMA 调度器**
 
 如上图所示，堆栈、全局运行队列和线程池会按照 NUMA 节点进行分区，网络轮询器和计时器会由单独的处理器持有。这种方式虽然能够利用局部性提高调度器的性能，但是本身的实现过于复杂，所以 Go 语言团队还没有着手实现这一提案。
 
@@ -450,7 +432,7 @@ type gobuf struct {
 
 ![goroutine-status](https://img.draveness.me/2020-02-05-15808864354603-goroutine-status.png)
 
-**图 6-30 Goroutine 的状态**
+**Goroutine 的状态**
 
 虽然 Goroutine 在运行时中定义的状态非常多而且复杂，但是我们可以将这些不同的状态聚合成最终的三种：等待中、可运行、运行中，在运行期间我们会在这三种不同的状态来回切换：
 
@@ -460,7 +442,7 @@ type gobuf struct {
 
 ![golang-goroutine-state-transition](https://img.draveness.me/2020-02-05-15808864354615-golang-goroutine-state-transition.png)
 
-**图 6-31 Goroutine 的常见状态迁移**
+**Goroutine 的常见状态迁移**
 
 上图展示了 Goroutine 状态迁移的常见路径，其中包括创建 Goroutine 到 Goroutine 被执行、触发系统调用或者抢占式调度器的状态迁移过程。
 
@@ -472,7 +454,7 @@ Go 语言并发模型中的 M 是操作系统线程。调度器最多可以创�
 
 ![scheduler-m-and-thread](https://img.draveness.me/2020-02-05-15808864354634-scheduler-m-and-thread.png)
 
-**图 6-32 CPU 和活跃线程**
+**CPU 和活跃线程**
 
 在默认情况下，一个四核机器上会创建四个活跃的操作系统线程，每一个线程都对应一个运行时中的 [`runtime.m`](https://github.com/golang/go/blob/753d56d3642eb83848aa39e65982a9fc77e722d7/src/runtime/runtime2.go#L473) 结构体。
 
@@ -492,7 +474,7 @@ type m struct {
 
 ![g0-and-g](https://img.draveness.me/2020-02-05-15808864354644-g0-and-g.png)
 
-**图 6-33 调度 Goroutine 和运行 Goroutine**
+**调度 Goroutine 和运行 Goroutine**
 
 g0 是一个运行时中比较特殊的 Goroutine，它会深度参与运行时的调度过程，包括 Goroutine 的创建、大内存分配和 CGO 函数的执行。在后面的小节中，我们会经常看到 g0 的身影。[`runtime.m`](https://github.com/golang/go/blob/753d56d3642eb83848aa39e65982a9fc77e722d7/src/runtime/runtime2.go#L473) 结构体中还存在着三个处理器字段，它们分别表示正在运行代码的处理器 `p`、暂存的处理器 `nextp` 和执行系统调用之前的使用线程的处理器 `oldp`：
 
@@ -691,7 +673,7 @@ func newproc1(fn *funcval, argp *uint8, narg int32, callergp *g, callerpc uintpt
 
 ![golang-newproc-get-goroutine](https://img.draveness.me/golang-newproc-get-goroutine.png)
 
-**图 6-34 获取 Goroutine 结构体的三种方法**
+**获取 Goroutine 结构体的三种方法**
 
 [`runtime.gfget`](https://github.com/golang/go/blob/64c22b70bf00e15615bb17c29f808b55bc339682/src/runtime/proc.go#L3563) 中包含两部分逻辑，它会根据处理器中 `gFree` 列表中 Goroutine 的数量做出不同的决策：
 
@@ -779,9 +761,9 @@ retry:
 
 处理器本地的运行队列是一个使用数组构成的环形链表，它最多可以存储 256 个待执行任务。
 
-![golang-runnable-queue](https://img.draveness.me/2020-02-05-15808864354654-golang-runnable-queue.png)
+![golang-runnable-queue](https://i.loli.net/2020/09/11/pnUmLD2SxOdeXwM.png)
 
-**图 6-35 全局和本地运行队列**
+**全局和本地运行队列**
 
 简单总结一下，Go 语言中有两个运行队列，其中一个是处理器本地的运行队列，另一个是调度器持有的全局运行队列，只有在本地运行队列没有剩余空间时才会使用全局队列。
 
@@ -920,7 +902,7 @@ TEXT runtime·gogo(SB), NOSPLIT, $8-4
 
 ![golang-gogo-stack](https://img.draveness.me/2020-02-05-15808864354661-golang-gogo-stack.png)
 
-**图 6-36 runtime.gogo 栈内存**
+**runtime.gogo 栈内存**
 
 上图展示了调用 `JMP` 指令后的栈中数据，当 Goroutine 中运行的函数返回时就会跳转到 [`runtime.goexit`](https://github.com/golang/go/blob/a38a917aee626a9b9d5ce2b93964f586bf759ea0/src/runtime/asm_386.s#L1336) 所在位置执行该函数：
 
@@ -956,7 +938,7 @@ func goexit0(gp *g) {
 
 ![golang-scheduler-loop](https://img.draveness.me/2020-02-05-15808864354669-golang-scheduler-loop.png)
 
-**图 6-36 调度循环**
+**调度循环**
 
 Go 语言中的运行时调度循环会从 [`runtime.schedule`](https://github.com/golang/go/blob/64c22b70bf00e15615bb17c29f808b55bc339682/src/runtime/proc.go#L2446) 函数开始，最终又回到 [`runtime.schedule`](https://github.com/golang/go/blob/64c22b70bf00e15615bb17c29f808b55bc339682/src/runtime/proc.go#L2446)；这里介绍的是 Goroutine 正常执行并退出的逻辑，实际情况会复杂得多，多数情况下 Goroutine 的执行的过程中都会经历协作式或者抢占式调度，这时会让出线程的使用权等待调度器的唤醒。
 
@@ -966,7 +948,7 @@ Go 语言中的运行时调度循环会从 [`runtime.schedule`](https://github.c
 
 ![schedule-points](https://img.draveness.me/2020-02-05-15808864354679-schedule-points.png)
 
-**图 6-37 调度时间点**
+**调度时间点**
 
 除了上图中可能触发调度的时间点，运行时还会在线程启动 [`runtime.mstart`](https://github.com/golang/go/blob/64c22b70bf00e15615bb17c29f808b55bc339682/src/runtime/proc.go#L1041) 和 Goroutine 执行结束 [`runtime.goexit0`](https://github.com/golang/go/blob/64c22b70bf00e15615bb17c29f808b55bc339682/src/runtime/proc.go#L2792) 触发调度。我们在这里会重点介绍运行时触发调度的几个路径：
 

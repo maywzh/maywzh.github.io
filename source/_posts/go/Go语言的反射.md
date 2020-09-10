@@ -16,9 +16,7 @@ tags:
 
 [`reflect`](https://golang.org/pkg/reflect/) 实现了运行时的反射能力，能够让程序操作不同类型的对象。反射包中有两对非常重要的函数和类型，[`reflect.TypeOf`](https://github.com/golang/go/blob/52c4488471ed52085a29e173226b3cbd2bf22b20/src/reflect/type.go#L1365-L1368) 能获取类型信息，[`reflect.ValueOf`](https://github.com/golang/go/blob/52c4488471ed52085a29e173226b3cbd2bf22b20/src/reflect/value.go#L2316-L2328) 能获取数据的运行时表示，另外两个类型是 `Type` 和 `Value`，它们与函数是一一对应的关系：
 
-![golang-reflection](https://img.draveness.me/golang-reflection.png)
-
-**图 4-15 反射函数和类型**
+![golang-reflection](https://i.loli.net/2020/09/11/ed6U9csrRv57onb.png)
 
 类型 `Type` 是反射包定义的一个接口，我们可以使用 [`reflect.TypeOf`](https://github.com/golang/go/blob/52c4488471ed52085a29e173226b3cbd2bf22b20/src/reflect/type.go#L1365-L1368) 函数获取任意变量的的类型，`Type` 接口中定义了一些有趣的方法，`MethodByName` 可以获取当前类型对应方法的引用、`Implements` 可以判断当前类型是否实现了某个接口：
 
@@ -66,9 +64,9 @@ func (v Value) Bytes() []byte
 
 上面提到的 [`reflect.TypeOf`](https://github.com/golang/go/blob/52c4488471ed52085a29e173226b3cbd2bf22b20/src/reflect/type.go#L1365-L1368) 和 [`reflect.ValueOf`](https://github.com/golang/go/blob/52c4488471ed52085a29e173226b3cbd2bf22b20/src/reflect/value.go#L2316-L2328) 函数就能完成这里的转换，如果我们认为 Go 语言的类型和反射类型处于两个不同的『世界』，那么这两个函数就是连接这两个世界的桥梁。
 
-![golang-interface-to-reflection](https://img.draveness.me/golang-interface-to-reflection.png)
+![golang-interface-to-reflection](https://i.loli.net/2020/09/11/4itVukPmpZM73dg.png)
 
-**图 4-16 接口到反射对象**
+**接口到反射对象**
 
 我们通过以下例子简单介绍这两个函数的作用，[`reflect.TypeOf`](https://github.com/golang/go/blob/52c4488471ed52085a29e173226b3cbd2bf22b20/src/reflect/type.go#L1365-L1368) 获取了变量 `author` 的类型，[`reflect.ValueOf`](https://github.com/golang/go/blob/52c4488471ed52085a29e173226b3cbd2bf22b20/src/reflect/value.go#L2316-L2328) 获取了变量的值 `draven`。如果我们知道了一个变量的类型和值，那么就意味着知道了这个变量的全部信息。
 
@@ -104,9 +102,9 @@ ValueOf author: draven
 
 反射的第二法则是我们可以从反射对象可以获取 `interface{}` 变量。既然能够将接口类型的变量转换成反射对象，那么一定需要其他方法将反射对象还原成接口类型的变量，[`reflect`](https://golang.org/pkg/reflect/) 中的 [`reflect.Value.Interface`](https://github.com/golang/go/blob/52c4488471ed52085a29e173226b3cbd2bf22b20/src/reflect/value.go#L992-L994) 方法就能完成这项工作：
 
-![golang-reflection-to-interface](https://img.draveness.me/golang-reflection-to-interface.png)
+![golang-reflection-to-interface](https://i.loli.net/2020/09/11/bvghG2u3EILPRrx.png)
 
-**图 4-17 反射对象到接口**
+**反射对象到接口**
 
 不过调用 [`reflect.Value.Interface`](https://github.com/golang/go/blob/52c4488471ed52085a29e173226b3cbd2bf22b20/src/reflect/value.go#L992-L994) 方法只能获得 `interface{}` 类型的变量，如果想要将其还原成最原始的状态还需要经过如下所示的显式类型转换：
 
@@ -124,9 +122,7 @@ v.Interface().(int)
   - 反射对象转换成接口类型；
   - 通过显式类型转换变成原始类型；
 
-![golang-bidirectional-reflection](https://img.draveness.me/golang-bidirectional-reflection.png)
-
-**图 4-18 接口和反射对象的双向转换**
+![golang-bidirectional-reflection](https://i.loli.net/2020/09/11/WUurJpdtQ9fTa7Z.png)**接口和反射对象的双向转换**
 
 当然不是所有的变量都需要类型转换这一过程。如果变量本身就是 `interface{}` 类型，那么它不需要类型转换，因为类型转换这一过程一般都是隐式的，所以我不太需要关心它，只有在我们需要将反射对象转换回基本类型时才需要显式的转换操作。
 
@@ -410,9 +406,9 @@ func implements(T, V *rtype) bool {
 
 如果接口中不包含任何方法，就意味着这是一个空的接口，任意类型都自动实现该接口，这时就会直接返回 `true`。
 
-![golang-type-implements-interface](https://img.draveness.me/golang-type-implements-interface.png)
+![golang-type-implements-interface](https://i.loli.net/2020/09/11/kUQRuvsaTMynx5q.png)
 
-**图 4-19 类型实现接口**
+**类型实现接口**
 
 在其他情况下，由于方法都是按照字母序存储的，[`reflect.implements`](https://github.com/golang/go/blob/4e8d27068df52eb372dc2ba7e929e47850934805/src/reflect/type.go#L1461-L1543) 会维护两个用于遍历接口和类型方法的索引 `i` 和 `j` 判断类型是否实现了接口，因为最多只会进行 `n` 次比较（类型的方法数量），所以整个过程的时间复杂度是 `O(n)`。
 

@@ -1,245 +1,340 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-<meta name="author" content="maywzh">
-
-
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<title>Java线上CPU、磁盘、内存、网络排障指南 | 0x01 MAYSTORY </title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="线上故障主要会包括cpu、磁盘、内存以及网络问题，而大多数故障可能会包含不止一个层面的问题，所以进行排查时候尽量四个方面依次排查一遍。同时例如jstack、jmap等工具也是不囿于一个方面的问题的，基本上出问题就是df、free、top 三连，然后依次jstack、jmap伺候，具体问题具体分析即可。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java线上CPU、磁盘、内存、网络排障指南">
+<meta property="og:url" content="https://io.maywzh.com/2016/11/15/java/Java%E7%BA%BF%E4%B8%8ACPU%E3%80%81%E7%A3%81%E7%9B%98%E3%80%81%E5%86%85%E5%AD%98%E3%80%81%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="线上故障主要会包括cpu、磁盘、内存以及网络问题，而大多数故障可能会包含不止一个层面的问题，所以进行排查时候尽量四个方面依次排查一遍。同时例如jstack、jmap等工具也是不囿于一个方面的问题的，基本上出问题就是df、free、top 三连，然后依次jstack、jmap伺候，具体问题具体分析即可。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/Psh2MYojnEFqHat.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/vYIU4RZnSDibXTE.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/TdrKy4JzmGS38vQ.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/qvukawlV4ASCLYr.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/qvukawlV4ASCLYr.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/21fEDaHF7IczjPT.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/wcovumKWTCUD6aB.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/uiHITf3o8ZXPsSV.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/gnYA7u5U2QZlecH.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/NniI3GxHWQht8lT.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/glP9n6ZNzTwLbei.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/rl5kqySPGWUcQDZ.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/UWp75fjZdX8OiVo.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/HntqNjKrP74eFaJ.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/x8SMawkbylmL5pX.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/kv2SEUOha1IzVdp.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/rxLs2k8YTbnw3QW.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/Ldomz6FipC3g9sx.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/KXl9q3PeC4uZhVW.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/yAe86jb9Th5RGFZ.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/DOCuaFyY6IkJhG1.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/sl7HWJdLcqpmi4E.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/8wQJxAlatNRFTPi.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/7FLWf9OAj8d6sNK.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/fkhKF9vrTgqaz3X.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/3rHv69CoIy4MUn5.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/cvMh2IJLtuXUi6r.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/BIG7MdLE6zwhDF2.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/MzG4jAKBJCl8PbT.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/i4ITEDY6M9hZmtz.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/kNByEcrUovZAXDK.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/10/J8tYfoUl9pSF4A6.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-7634ccbe9502c93040e7e00c75754aad_720w.jpg">
+<meta property="article:published_time" content="2016-11-15T07:53:54.000Z">
+<meta property="article:modified_time" content="2020-09-10T23:41:07.511Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/09/10/Psh2MYojnEFqHat.jpg">
+
+<link rel="canonical" href="https://io.maywzh.com/2016/11/15/java/Java%E7%BA%BF%E4%B8%8ACPU%E3%80%81%E7%A3%81%E7%9B%98%E3%80%81%E5%86%85%E5%AD%98%E3%80%81%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C%E6%8C%87%E5%8D%97/">
 
 
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
-</header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
 </script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
+
+  <title>Java线上CPU、磁盘、内存、网络排障指南 | Cult I.O.</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
+  </div>
 </div>
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
-</script>
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
 
     
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">Java线上CPU、磁盘、内存、网络排障指南</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/11/15/java/Java%E7%BA%BF%E4%B8%8ACPU%E3%80%81%E7%A3%81%E7%9B%98%E3%80%81%E5%86%85%E5%AD%98%E3%80%81%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C%E6%8C%87%E5%8D%97/">
 
-                    
-                        <span class="post-time">
-                        Date: <a href="#">November 15, 2016&nbsp;&nbsp;15:53:54</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/DevOps/">DevOps</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
 
-        <div class="post-content">
-            <p>线上故障主要会包括cpu、磁盘、内存以及网络问题，而大多数故障可能会包含不止一个层面的问题，所以进行排查时候尽量四个方面依次排查一遍。同时例如jstack、jmap等工具也是不囿于一个方面的问题的，基本上出问题就是df、free、top 三连，然后依次jstack、jmap伺候，具体问题具体分析即可。</p>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java线上CPU、磁盘、内存、网络排障指南
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.11.15 15:53:54" itemprop="dateCreated datePublished" datetime="2016-11-15T15:53:54+08:00">2016.11.15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/11/15/java/Java%E7%BA%BF%E4%B8%8ACPU%E3%80%81%E7%A3%81%E7%9B%98%E3%80%81%E5%86%85%E5%AD%98%E3%80%81%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C%E6%8C%87%E5%8D%97/" class="post-meta-item leancloud_visitors" data-flag-title="Java线上CPU、磁盘、内存、网络排障指南" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>线上故障主要会包括cpu、磁盘、内存以及网络问题，而大多数故障可能会包含不止一个层面的问题，所以进行排查时候尽量四个方面依次排查一遍。同时例如jstack、jmap等工具也是不囿于一个方面的问题的，基本上出问题就是df、free、top 三连，然后依次jstack、jmap伺候，具体问题具体分析即可。</p>
 <a id="more"></a>
 <h2 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h2><p>一般来讲我们首先会排查cpu方面的问题。cpu异常往往还是比较好定位的。原因包括业务逻辑问题(死循环)、频繁gc以及上下文切换过多。而最常见的往往是业务逻辑(或者框架逻辑)导致的，可以使用jstack来分析对应的堆栈情况。</p>
 <h3 id="使用jstack分析cpu问题"><a href="#使用jstack分析cpu问题" class="headerlink" title="使用jstack分析cpu问题"></a>使用jstack分析cpu问题</h3><p>我们先用ps命令找到对应进程的pid(如果你有好几个目标进程，可以先用top看一下哪个占用比较高)。</p>
 <p>接着用<code>top -H -p pid</code>来找到cpu使用率比较高的一些线程</p>
-<p><img src="https://i.loli.net/2020/09/10/Psh2MYojnEFqHat.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/Psh2MYojnEFqHat.jpg" alt="img"></p>
 <p>然后将占用最高的pid转换为16进制<code>printf &#39;%x\n&#39; pid</code>得到nid</p>
-<p><img src="https://i.loli.net/2020/09/10/vYIU4RZnSDibXTE.png" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/vYIU4RZnSDibXTE.png" alt="img"></p>
 <p>接着直接在jstack中找到相应的堆栈信息<code>jstack pid |grep &#39;nid&#39; -C5 –color</code></p>
-<p><img src="https://i.loli.net/2020/09/10/TdrKy4JzmGS38vQ.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/TdrKy4JzmGS38vQ.jpg" alt="img"></p>
 <p>可以看到我们已经找到了nid为0x42的堆栈信息，接着只要仔细分析一番即可。</p>
 <p>当然更常见的是我们对整个jstack文件进行分析，通常我们会比较关注WAITING和TIMED_WAITING的部分，BLOCKED就不用说了。我们可以使用命令<code>cat jstack.log | grep &quot;java.lang.Thread.State&quot; | sort -nr | uniq -c</code>来对jstack的状态有一个整体的把握，如果WAITING之类的特别多，那么多半是有问题啦。</p>
-<p><img src="https://i.loli.net/2020/09/10/qvukawlV4ASCLYr.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/qvukawlV4ASCLYr.jpg" alt="img"></p>
 <h3 id="频繁gc"><a href="#频繁gc" class="headerlink" title="频繁gc"></a>频繁gc</h3><p>当然我们还是会使用jstack来分析问题，但有时候我们可以先确定下gc是不是太频繁，使用jstat -gc pid 1000命令来对gc分代变化情况进行观察，1000表示采样间隔(ms)，S0C/S1C、S0U/S1U、EC/EU、OC/OU、MC/MU分别代表两个Survivor区、Eden区、老年代、元数据区的容量和使用量。YGC/YGT、FGC/FGCT、GCT则代表YoungGc、FullGc的耗时和次数以及总耗时。如果看到gc比较频繁，再针对gc方面做进一步分析。</p>
-<p><img src="https://i.loli.net/2020/09/10/qvukawlV4ASCLYr.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/qvukawlV4ASCLYr.jpg" alt="img"></p>
 <h3 id="上下文切换"><a href="#上下文切换" class="headerlink" title="上下文切换"></a>上下文切换</h3><p>针对频繁上下文问题，我们可以使用<code>vmstat</code>命令来进行查看</p>
-<p><img src="https://i.loli.net/2020/09/10/21fEDaHF7IczjPT.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/21fEDaHF7IczjPT.jpg" alt="img"></p>
 <p>cs(context switch)一列则代表了上下文切换的次数。</p>
 <p>如果我们希望对特定的pid进行监控那么可以使用 <code>pidstat -w pid</code>命令，cswch和nvcswch表示自愿及非自愿切换。</p>
-<p><img src="https://i.loli.net/2020/09/10/wcovumKWTCUD6aB.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/wcovumKWTCUD6aB.jpg" alt="img"></p>
 <h2 id="磁盘"><a href="#磁盘" class="headerlink" title="磁盘"></a>磁盘</h2><p>磁盘问题和cpu一样是属于比较基础的。首先是磁盘空间方面，我们直接使用df -hl来查看文件系统状态</p>
-<p><img src="https://i.loli.net/2020/09/10/uiHITf3o8ZXPsSV.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/uiHITf3o8ZXPsSV.jpg" alt="img"></p>
 <p>更多时候，磁盘问题还是性能上的问题。我们可以通过iostatiostat -d -k -x来进行分析</p>
-<p><img src="https://i.loli.net/2020/09/10/gnYA7u5U2QZlecH.png" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/gnYA7u5U2QZlecH.png" alt="img"></p>
 <p>最后一列%util可以看到每块磁盘写入的程度，而<code>rrqpm/s</code>以及<code>wrqm/s</code>分别表示读写速度，一般就能帮助定位到具体哪块磁盘出现问题了。</p>
 <p>另外我们还需要知道是哪个进程在进行读写，一般来说开发自己心里有数，或者用iotop命令来进行定位文件读写的来源。</p>
-<p><img src="https://i.loli.net/2020/09/10/NniI3GxHWQht8lT.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/NniI3GxHWQht8lT.jpg" alt="img"></p>
 <p>不过这边拿到的是tid，我们要转换成pid，可以通过readlink来找到pidreadlink -f /proc/*/task/tid/../..。</p>
-<p><img src="https://i.loli.net/2020/09/10/glP9n6ZNzTwLbei.png" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/glP9n6ZNzTwLbei.png" alt="img"></p>
 <p>找到pid之后就可以看这个进程具体的读写情况cat /proc/pid/io</p>
-<p><img src="https://i.loli.net/2020/09/10/rl5kqySPGWUcQDZ.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/rl5kqySPGWUcQDZ.jpg" alt="img"></p>
 <p>我们还可以通过lsof命令来确定具体的文件读写情况lsof -p pid</p>
-<p><img src="https://i.loli.net/2020/09/10/UWp75fjZdX8OiVo.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/UWp75fjZdX8OiVo.jpg" alt="img"></p>
 <h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><p>内存问题排查起来相对比CPU麻烦一些，场景也比较多。主要包括OOM、GC问题和堆外内存。一般来讲，我们会先用free命令先来检查一发内存的各种情况。</p>
-<p><img src="https://i.loli.net/2020/09/10/HntqNjKrP74eFaJ.png" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/HntqNjKrP74eFaJ.png" alt="img"></p>
 <h3 id="堆内内存"><a href="#堆内内存" class="headerlink" title="堆内内存"></a>堆内内存</h3><p>内存问题大多还都是堆内内存问题。表象上主要分为OOM和StackOverflow。</p>
 <h3 id="OOM"><a href="#OOM" class="headerlink" title="OOM"></a>OOM</h3><p>JMV中的内存不足，OOM大致可以分为以下几种：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.OutOfMemoryError: unable to create new native thread</span><br></pre></td></tr></table></figure>
 <p>这个意思是没有足够的内存空间给线程分配java栈，基本上还是线程池代码写的有问题，比如说忘记shutdown，所以说应该首先从代码层面来寻找问题，使用jstack或者jmap。如果一切都正常，JVM方面可以通过指定Xss来减少单个thread stack的大小。</p>
 <p>另外也可以在系统层面，可以通过修改/<code>etc/security/limits.confnofile</code>和<code>nproc</code>来增大os对线程的限制</p>
-<p><img src="https://i.loli.net/2020/09/10/x8SMawkbylmL5pX.png" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/x8SMawkbylmL5pX.png" alt="img"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.OutOfMemoryError: Java heap space</span><br></pre></td></tr></table></figure>
 <p>这个意思是堆的内存占用已经达到<code>-Xmx</code>设置的最大值，应该是最常见的OOM错误了。解决思路仍然是先应该在代码中找，怀疑存在内存泄漏，通过jstack和jmap去定位问题。如果说一切都正常，才需要通过调整Xmx的值来扩大内存。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.OutOfMemoryError: Meta space</span><br></pre></td></tr></table></figure>
@@ -248,35 +343,35 @@
 <figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Exception</span> <span class="keyword">in</span> thread <span class="string">&quot;main&quot;</span> java.lang.<span class="built_in">StackOverflowError</span></span><br></pre></td></tr></table></figure>
 <p>表示线程栈需要的内存大于Xss值，同样也是先进行排查，参数方面通过Xss来调整，但调整的太大可能又会引起OOM。</p>
 <h3 id="使用JMAP定位代码内存泄漏"><a href="#使用JMAP定位代码内存泄漏" class="headerlink" title="使用JMAP定位代码内存泄漏"></a>使用JMAP定位代码内存泄漏</h3><p>上述关于OOM和StackOverflow的代码排查方面，我们一般使用<code>jmap -dump:format=b,file=filename pid</code>来导出dump文件</p>
-<p><img src="https://i.loli.net/2020/09/10/kv2SEUOha1IzVdp.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/kv2SEUOha1IzVdp.jpg" alt="img"></p>
 <p>通过mat(Eclipse Memory Analysis Tools)导入dump文件进行分析，内存泄漏问题一般我们直接选Leak Suspects即可，mat给出了内存泄漏的建议。另外也可以选择Top Consumers来查看最大对象报告。和线程相关的问题可以选择thread overview进行分析。除此之外就是选择Histogram类概览来自己慢慢分析，大家可以搜搜mat的相关教程。</p>
-<p><img src="https://i.loli.net/2020/09/10/rxLs2k8YTbnw3QW.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/rxLs2k8YTbnw3QW.jpg" alt="img"></p>
 <p>日常开发中，代码产生内存泄漏是比较常见的事，并且比较隐蔽，需要开发者更加关注细节。比如说每次请求都new对象，导致大量重复创建对象；进行文件流操作但未正确关闭；手动不当触发gc；ByteBuffer缓存分配不合理等都会造成代码OOM。</p>
 <p>另一方面，我们可以在启动参数中指定<code>-XX:+HeapDumpOnOutOfMemoryError</code>来保存OOM时的dump文件。</p>
 <p>搜索Java知音，回复“后端面试”，送你一份面试宝典.pdf</p>
 <h3 id="gc问题和线程"><a href="#gc问题和线程" class="headerlink" title="gc问题和线程"></a>gc问题和线程</h3><p>gc问题除了影响cpu也会影响内存，排查思路也是一致的。一般先使用jstat来查看分代变化情况，比如youngGC或者fullGC次数是不是太多呀；EU、OU等指标增长是不是异常呀等。</p>
 <p>线程的话太多而且不被及时gc也会引发oom，大部分就是之前说的unable to create new native thread。除了jstack细细分析dump文件外，我们一般先会看下总体线程，通过<code>pstreee -p pid |wc -l</code>。</p>
-<p><img src="https://i.loli.net/2020/09/10/Ldomz6FipC3g9sx.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/Ldomz6FipC3g9sx.jpg" alt="img"></p>
 <p>或者直接通过查看<code>/proc/pid/task</code>的数量即为线程数量。</p>
-<p><img src="https://i.loli.net/2020/09/10/KXl9q3PeC4uZhVW.png" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/KXl9q3PeC4uZhVW.png" alt="img"></p>
 <h3 id="堆外内存"><a href="#堆外内存" class="headerlink" title="堆外内存"></a>堆外内存</h3><p>如果碰到堆外内存溢出，那可真是太不幸了。首先堆外内存溢出表现就是物理常驻内存增长快，报错的话视使用方式都不确定，如果由于使用Netty导致的，那错误日志里可能会出现OutOfDirectMemoryError错误，如果直接是DirectByteBuffer，那会报<code>OutOfMemoryError: Direct buffer memory</code>。</p>
 <p>堆外内存溢出往往是和NIO的使用相关，一般我们先通过pmap来查看下进程占用的内存情况<code>pmap -x pid | sort -rn -k3 | head -30</code>，这段意思是查看对应pid倒序前30大的内存段。这边可以再一段时间后再跑一次命令看看内存增长情况，或者和正常机器比较可疑的内存段在哪里。</p>
-<p><img src="https://i.loli.net/2020/09/10/yAe86jb9Th5RGFZ.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/yAe86jb9Th5RGFZ.jpg" alt="img"></p>
 <p>我们如果确定有可疑的内存端，需要通过gdb来分析<code>gdb --batch --pid &#123;pid&#125; -ex &quot;dump memory filename.dump</code> {内存起始地址} {内存起始地址+内存块大小}”</p>
-<p><img src="https://i.loli.net/2020/09/10/DOCuaFyY6IkJhG1.png" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/DOCuaFyY6IkJhG1.png" alt="img"></p>
 <p>获取dump文件后可用heaxdump进行查看<code>hexdump -C filename | less</code>，不过大多数看到的都是二进制乱码。</p>
 <p>NMT是Java7U40引入的HotSpot新特性，配合jcmd命令我们就可以看到具体内存组成了。需要在启动参数中加入 <code>-XX:NativeMemoryTracking=summary</code> 或者 <code>-XX:NativeMemoryTracking=detail</code>，会有略微性能损耗。</p>
 <p>一般对于堆外内存缓慢增长直到爆炸的情况来说，可以先设一个基线jcmd pid VM.native_memory baseline。</p>
-<p><img src="https://i.loli.net/2020/09/10/sl7HWJdLcqpmi4E.png" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/sl7HWJdLcqpmi4E.png" alt="img"></p>
 <p>然后等放一段时间后再去看看内存增长的情况，通过jcmd pid VM.native_memory detail.diff(summary.diff)做一下summary或者detail级别的diff。</p>
-<p><img src="https://i.loli.net/2020/09/10/8wQJxAlatNRFTPi.png" alt="img"></p>
-<p><img src="https://i.loli.net/2020/09/10/7FLWf9OAj8d6sNK.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/8wQJxAlatNRFTPi.png" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/7FLWf9OAj8d6sNK.jpg" alt="img"></p>
 <p>可以看到jcmd分析出来的内存十分详细，包括堆内、线程以及gc(所以上述其他内存异常其实都可以用nmt来分析)，这边堆外内存我们重点关注Internal的内存增长，如果增长十分明显的话那就是有问题了。</p>
 <p>detail级别的话还会有具体内存段的增长情况，如下图。</p>
-<p><img src="https://i.loli.net/2020/09/10/fkhKF9vrTgqaz3X.png" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/fkhKF9vrTgqaz3X.png" alt="img"></p>
 <p>此外在系统层面，我们还可以使用strace命令来监控内存分配 strace -f -e “brk,mmap,munmap” -p pid</p>
 <p>这边内存分配信息主要包括了pid和内存地址。</p>
-<p><img src="https://i.loli.net/2020/09/10/3rHv69CoIy4MUn5.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/3rHv69CoIy4MUn5.jpg" alt="img"></p>
 <p>不过其实上面那些操作也很难定位到具体的问题点，关键还是要看错误日志栈，找到可疑的对象，搞清楚它的回收机制，然后去分析对应的对象。比如DirectByteBuffer分配内存的话，是需要full GC或者手动system.gc来进行回收的(所以最好不要使用-XX:+DisableExplicitGC)。</p>
 <p>那么其实我们可以跟踪一下DirectByteBuffer对象的内存情况，通过jmap -histo:live pid手动触发fullGC来看看堆外内存有没有被回收。如果被回收了，那么大概率是堆外内存本身分配的太小了，通过-XX:MaxDirectMemorySize进行调整。如果没有什么变化，那就要使用jmap去分析那些不能被gc的对象，以及和DirectByteBuffer之间的引用关系了。</p>
 <p>搜索Java知音，回复“后端面试”，送你一份面试宝典.pdf</p>
@@ -287,7 +382,7 @@
 <h4 id="youngGC过频繁"><a href="#youngGC过频繁" class="headerlink" title="youngGC过频繁"></a>youngGC过频繁</h4><p>youngGC频繁一般是短周期小对象较多，先考虑是不是Eden区/新生代设置的太小了，看能否通过调整-Xmn、-XX:SurvivorRatio等参数设置来解决问题。如果参数正常，但是young gc频率还是太高，就需要使用Jmap和MAT对dump文件进行进一步排查了。</p>
 <h4 id="youngGC耗时过长"><a href="#youngGC耗时过长" class="headerlink" title="youngGC耗时过长"></a>youngGC耗时过长</h4><p>耗时过长问题就要看GC日志里耗时耗在哪一块了。以G1日志为例，可以关注Root Scanning、Object Copy、Ref Proc等阶段。Ref Proc耗时长，就要注意引用相关的对象。</p>
 <p>Root Scanning耗时长，就要注意线程数、跨代引用。Object Copy则需要关注对象生存周期。而且耗时分析它需要横向比较，就是和其他项目或者正常时间段的耗时比较。比如说图中的Root Scanning和正常时间段比增长较多，那就是起的线程太多了。</p>
-<p><img src="https://i.loli.net/2020/09/10/cvMh2IJLtuXUi6r.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/cvMh2IJLtuXUi6r.jpg" alt="img"></p>
 <h4 id="触发fullGC"><a href="#触发fullGC" class="headerlink" title="触发fullGC"></a>触发fullGC</h4><p>G1中更多的还是mixedGC，但mixedGC可以和youngGC思路一样去排查。触发fullGC了一般都会有问题，G1会退化使用Serial收集器来完成垃圾的清理工作，暂停时长达到秒级别，可以说是半跪了。</p>
 <p>fullGC的原因可能包括以下这些，以及参数调整方面的一些思路：</p>
 <ul>
@@ -312,14 +407,14 @@
 <p>如何设置合理的接口超时是一个问题。如果接口超时设置的过长，那么有可能会过多地占用服务端的tcp连接。而如果接口设置的过短，那么接口超时就会非常频繁。</p>
 <p>服务端接口明明rt降低，但客户端仍然一直超时又是另一个问题。这个问题其实很简单，客户端到服务端的链路包括网络传输、排队以及服务处理等，每一个环节都可能是耗时的原因。</p>
 <h3 id="TCP队列溢出"><a href="#TCP队列溢出" class="headerlink" title="TCP队列溢出"></a>TCP队列溢出</h3><p>tcp队列溢出是个相对底层的错误，它可能会造成超时、rst等更表层的错误。因此错误也更隐蔽，所以我们单独说一说。</p>
-<p><img src="https://i.loli.net/2020/09/10/BIG7MdLE6zwhDF2.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/BIG7MdLE6zwhDF2.jpg" alt="img"></p>
 <p>如上图所示，这里有两个队列：syns queue(半连接队列）、accept queue（全连接队列）。三次握手，在server收到client的syn后，把消息放到syns queue，回复syn+ack给client，server收到client的ack，如果这时accept queue没满，那就从syns queue拿出暂存的信息放入accept queue中，否则按tcp_abort_on_overflow指示的执行。</p>
 <p>tcp_abort_on_overflow 0表示如果三次握手第三步的时候accept queue满了那么server扔掉client发过来的ack。tcp_abort_on_overflow 1则表示第三步的时候如果全连接队列满了，server发送一个rst包给client，表示废掉这个握手过程和这个连接，意味着日志里可能会有很多connection reset / connection reset by peer。</p>
 <p>那么在实际开发中，我们怎么能快速定位到tcp队列溢出呢？</p>
 <p>netstat命令，执行<code>netstat -s | egrep &quot;listen|LISTEN&quot;</code></p>
-<p><img src="https://i.loli.net/2020/09/10/MzG4jAKBJCl8PbT.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/MzG4jAKBJCl8PbT.jpg" alt="img"></p>
 <p>如上图所示，overflowed表示全连接队列溢出的次数，sockets dropped表示半连接队列溢出的次数。</p>
-<h3 id="ss命令，执行ss-lnt"><a href="#ss命令，执行ss-lnt" class="headerlink" title="ss命令，执行ss -lnt"></a>ss命令，执行ss -lnt</h3><p><img src="https://i.loli.net/2020/09/10/i4ITEDY6M9hZmtz.png" alt="img"></p>
+<h3 id="ss命令，执行ss-lnt"><a href="#ss命令，执行ss-lnt" class="headerlink" title="ss命令，执行ss -lnt"></a>ss命令，执行ss -lnt</h3><p><img data-src="https://i.loli.net/2020/09/10/i4ITEDY6M9hZmtz.png" alt="img"></p>
 <p>上面看到Send-Q 表示第三列的listen端口上的全连接队列最大为5，第一列Recv-Q为全连接队列当前使用了多少。</p>
 <p>接着我们看看怎么设置全连接、半连接队列大小吧：</p>
 <p>全连接队列的大小取决于min(backlog, somaxconn)。backlog是在socket创建的时候传入的，somaxconn是一个os级别的系统参数。而半连接队列的大小取决于max(64, /proc/sys/net/ipv4/tcp_max_syn_backlog)。</p>
@@ -336,13 +431,13 @@
 <p>这种大多也和网络环境相关了，网络环境差可能会导致更多的RST报文。</p>
 <p>之前说过RST报文多会导致程序报错，在一个已关闭的连接上读操作会报connection reset，而在一个已关闭的连接上写操作则会报connection reset by peer。通常我们可能还会看到broken pipe错误，这是管道层面的错误，表示对已关闭的管道进行读写，往往是在收到RST，报出connection reset错后继续读写数据报的错，这个在glibc源码注释中也有介绍。</p>
 <p>我们在排查故障时候怎么确定有RST包的存在呢？当然是使用tcpdump命令进行抓包，并使用wireshark进行简单分析了。<code>tcpdump -i en0 tcp -w xxx.cap</code>，en0表示监听的网卡。</p>
-<p><img src="https://i.loli.net/2020/09/10/kNByEcrUovZAXDK.png" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/kNByEcrUovZAXDK.png" alt="img"></p>
 <p>接下来我们通过wireshark打开抓到的包，可能就能看到如下图所示，红色的就表示RST包了。</p>
-<p><img src="https://i.loli.net/2020/09/10/J8tYfoUl9pSF4A6.jpg" alt="img"></p>
+<p><img data-src="https://i.loli.net/2020/09/10/J8tYfoUl9pSF4A6.jpg" alt="img"></p>
 <h3 id="TIME-WAIT和CLOSE-WAIT"><a href="#TIME-WAIT和CLOSE-WAIT" class="headerlink" title="TIME_WAIT和CLOSE_WAIT"></a>TIME_WAIT和CLOSE_WAIT</h3><p>TIME_WAIT和CLOSE_WAIT是啥意思相信大家都知道。</p>
 <p>在线上时，我们可以直接用命令<code>netstat -n | awk &#39;/^tcp/ &#123;++S[$NF]&#125; END &#123;for(a in S) print a, S[a]&#125;&#39;</code>来查看time-wait和close_wait的数量</p>
 <p>用ss命令会更快<code>ss -ant | awk &#39;&#123;++S[$1]&#125; END &#123;for(a in S) print a, S[a]&#125;&#39;</code></p>
-<p><img src="https://pic3.zhimg.com/80/v2-7634ccbe9502c93040e7e00c75754aad_720w.jpg" alt="img"></p>
+<p><img data-src="https://pic3.zhimg.com/80/v2-7634ccbe9502c93040e7e00c75754aad_720w.jpg" alt="img"></p>
 <h3 id="TIME-WAIT"><a href="#TIME-WAIT" class="headerlink" title="TIME_WAIT"></a>TIME_WAIT</h3><p>time_wait的存在一是为了丢失的数据包被后面连接复用，二是为了在2MSL的时间范围内正常关闭连接。它的存在其实会大大减少RST包的出现。</p>
 <p>过多的time_wait在短连接频繁的场景比较容易出现。这种情况可以在服务端做一些内核参数调优:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#表示开启重用。允许将TIME-WAIT sockets重新用于新的TCP连接，默认为0，表示关闭</span></span><br><span class="line">net.ipv4.tcp_tw_reuse = 1</span><br><span class="line"><span class="comment">#表示开启TCP连接中TIME-WAIT sockets的快速回收，默认为0，表示关闭</span></span><br><span class="line">net.ipv4.tcp_tw_recycle = 1</span><br></pre></td></tr></table></figure>
@@ -351,50 +446,364 @@
 <p>想要定位这类问题，最好是通过jstack来分析线程堆栈来排查问题，具体可参考上述章节。这里仅举一个例子。</p>
 <p>开发同学说应用上线后CLOSE_WAIT就一直增多，直到挂掉为止，jstack后找到比较可疑的堆栈是大部分线程都卡在了countdownlatch.await方法，找开发同学了解后得知使用了多线程但是确没有catch异常，修改后发现异常仅仅是最简单的升级sdk后常出现的class not found。</p>
 
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
 
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+          </div>
+
         
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/Java/"># Java</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2016/12/03/javascript/JavaScript%E4%B9%8B%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B/">JavaScript的事件模型</a>
-            
-            
-            <a class="next" rel="next" href="/2016/11/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/">HTTPS原理解析</a>
-            
-        </section>
 
 
-    </article>
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/11/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/" rel="prev" title="HTTPS原理解析">
+      <i class="fa fa-chevron-left"></i> HTTPS原理解析
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/12/03/javascript/JavaScript%E4%B9%8B%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B/" rel="next" title="JavaScript的事件模型">
+      JavaScript的事件模型 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU"><span class="nav-number">1.</span> <span class="nav-text">CPU</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8jstack%E5%88%86%E6%9E%90cpu%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">使用jstack分析cpu问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%91%E7%B9%81gc"><span class="nav-number">1.2.</span> <span class="nav-text">频繁gc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="nav-number">1.3.</span> <span class="nav-text">上下文切换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98"><span class="nav-number">2.</span> <span class="nav-text">磁盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">3.</span> <span class="nav-text">内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E5%86%85%E5%86%85%E5%AD%98"><span class="nav-number">3.1.</span> <span class="nav-text">堆内内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OOM"><span class="nav-number">3.2.</span> <span class="nav-text">OOM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stack-Overflow"><span class="nav-number">3.3.</span> <span class="nav-text">Stack Overflow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8JMAP%E5%AE%9A%E4%BD%8D%E4%BB%A3%E7%A0%81%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="nav-number">3.4.</span> <span class="nav-text">使用JMAP定位代码内存泄漏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gc%E9%97%AE%E9%A2%98%E5%92%8C%E7%BA%BF%E7%A8%8B"><span class="nav-number">3.5.</span> <span class="nav-text">gc问题和线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E5%A4%96%E5%86%85%E5%AD%98"><span class="nav-number">3.6.</span> <span class="nav-text">堆外内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GC%E9%97%AE%E9%A2%98"><span class="nav-number">3.7.</span> <span class="nav-text">GC问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#youngGC%E8%BF%87%E9%A2%91%E7%B9%81"><span class="nav-number">3.7.1.</span> <span class="nav-text">youngGC过频繁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#youngGC%E8%80%97%E6%97%B6%E8%BF%87%E9%95%BF"><span class="nav-number">3.7.2.</span> <span class="nav-text">youngGC耗时过长</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A6%E5%8F%91fullGC"><span class="nav-number">3.7.3.</span> <span class="nav-text">触发fullGC</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C"><span class="nav-number">4.</span> <span class="nav-text">网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E6%97%B6"><span class="nav-number">4.1.</span> <span class="nav-text">超时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP%E9%98%9F%E5%88%97%E6%BA%A2%E5%87%BA"><span class="nav-number">4.2.</span> <span class="nav-text">TCP队列溢出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ss%E5%91%BD%E4%BB%A4%EF%BC%8C%E6%89%A7%E8%A1%8Css-lnt"><span class="nav-number">4.3.</span> <span class="nav-text">ss命令，执行ss -lnt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RST%E5%BC%82%E5%B8%B8"><span class="nav-number">4.4.</span> <span class="nav-text">RST异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3%E4%B8%8D%E5%AD%98%E5%9C%A8"><span class="nav-number">4.5.</span> <span class="nav-text">端口不存在</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E4%BB%A3%E6%9B%BFFIN%E7%BB%88%E6%AD%A2%E8%BF%9E%E6%8E%A5"><span class="nav-number">4.6.</span> <span class="nav-text">主动代替FIN终止连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TIME-WAIT%E5%92%8CCLOSE-WAIT"><span class="nav-number">4.7.</span> <span class="nav-text">TIME_WAIT和CLOSE_WAIT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TIME-WAIT"><span class="nav-number">4.8.</span> <span class="nav-text">TIME_WAIT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CLOSE-WAIT"><span class="nav-number">4.9.</span> <span class="nav-text">CLOSE_WAIT</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">110</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
 </div>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
         
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
     </div>
 </body>
 </html>

@@ -1,285 +1,244 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>Redis详解之——特性与用途 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/28/txIJVifd9a8mlzY.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>Redis 详解之——特性与用途</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p><code>Redis</code> 是一个使用 <code>ANSI C</code> 编写的开源、支持 <strong>网络 </strong>、基于 <strong> 内存 </strong>、<strong> 单线程模型 </strong>、<strong> 可选持久性 </strong> 的 <strong> 键值对存储数据库</strong>。Redis 是一个 K-V 的非关系型数据库（NoSQL），常见的 NoSQL 数据库有：K-V 数据库如 Redis、Memcached，列式数据库如大数据组件 HBase，文档数据库如 mongoDB。Redis 应用广泛，尤其是被作为缓存使用。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Redis详解之——特性与用途</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">March 4, 2018&nbsp;&nbsp;19:13:49</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><code>Redis</code> 是一个使用 <code>ANSI C</code> 编写的开源、支持 <strong>网络</strong>、基于 <strong>内存</strong>、<strong>单线程模型</strong>、<strong>可选持久性</strong> 的 <strong>键值对存储数据库</strong>。Redis是一个K-V的非关系型数据库（NoSQL），常见的NoSQL数据库有：K-V数据库如Redis、Memcached，列式数据库如大数据组件HBase，文档数据库如mongoDB。Redis应用广泛，尤其是被作为缓存使用。</p>
 <a id="more"></a>
-<h2><span id="特性">特性</span></h2><ol>
-<li><strong>速度快 </strong>，最快可达到 <code>10w QPS</code>（基于 <strong> 内存 </strong>，<code>C</code> 语言，<strong> 单线程</strong> 架构）；</li>
-<li>基于 <strong>键值对 </strong> (<code>key/value</code>) 的数据结构服务器。全称 <code>Remote Dictionary Server</code>。包括 <code>string</code>(<strong> 字符串 </strong>)、<code>hash</code>(<strong> 哈希 </strong>)、<code>list</code>(<strong> 列表 </strong>)、<code>set</code>(<strong> 集合 </strong>)、<code>zset</code>(<strong> 有序集合 </strong>)、<code>bitmap</code>(<strong> 位图 </strong>)。同时在 <strong> 字符串 </strong> 的基础上演变出 <strong> 位图 </strong>（<code>BitMaps</code>）和 <code>HyperLogLog</code> 两种数据结构。<code>3.2</code> 版本中加入 <code>GEO</code>（<strong> 地理信息位置</strong>）。</li>
-<li>丰富的功能。例如：<strong>键过期 </strong>（缓存），<strong> 发布订阅 </strong>（消息队列）， <code>Lua</code> 脚本（自己实现 <code>Redis</code> 命令），<strong> 事务 </strong>，<strong> 流水线</strong>（<code>Pipeline</code>，用于减少网络开销）。</li>
+<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><ol>
+<li><strong>速度快</strong>，最快可达到 <code>10w QPS</code>（基于 <strong>内存</strong>，<code>C</code> 语言，<strong>单线程</strong> 架构）；</li>
+<li>基于 <strong>键值对</strong> (<code>key/value</code>) 的数据结构服务器。全称 <code>Remote Dictionary Server</code>。包括 <code>string</code>(<strong>字符串</strong>)、<code>hash</code>(<strong>哈希</strong>)、<code>list</code>(<strong>列表</strong>)、<code>set</code>(<strong>集合</strong>)、<code>zset</code>(<strong>有序集合</strong>)、<code>bitmap</code>(<strong>位图</strong>)。同时在 <strong>字符串</strong> 的基础上演变出 <strong>位图</strong>（<code>BitMaps</code>）和 <code>HyperLogLog</code> 两种数据结构。<code>3.2</code> 版本中加入 <code>GEO</code>（<strong>地理信息位置</strong>）。</li>
+<li>丰富的功能。例如：<strong>键过期</strong>（缓存），<strong>发布订阅</strong>（消息队列）， <code>Lua</code> 脚本（自己实现 <code>Redis</code> 命令），<strong>事务</strong>，<strong>流水线</strong>（<code>Pipeline</code>，用于减少网络开销）。</li>
 <li>简单稳定。无外部库依赖，单线程模型。</li>
 <li>客户端语言多。</li>
-<li><strong>持久化 </strong>（支持两种 <strong> 持久化</strong> 方式 <code>RDB</code> 和 <code>AOF</code>）。</li>
+<li><strong>持久化</strong>（支持两种 <strong>持久化</strong> 方式 <code>RDB</code> 和 <code>AOF</code>）。</li>
 <li><strong>主从复制</strong>（分布式的基础）。</li>
-<li><strong>高可用 </strong>（<code>Redis Sentinel</code>），<strong> 分布式 </strong>（<code>Redis Cluster</code>）和 <strong> 水平扩容</strong>。</li>
+<li><strong>高可用</strong>（<code>Redis Sentinel</code>），<strong>分布式</strong>（<code>Redis Cluster</code>）和 <strong>水平扩容</strong>。</li>
 </ol>
-<h2><span id="应用场景">应用场景 </span></h2><h3><span id="缓存"> 缓存 </span></h3><p> 合理的使用 <strong>缓存 </strong> 能够明显加快访问的速度，同时降低数据源的压力。这也是 <code>Redis</code> 最常用的功能。<code>Redis</code> 提供了 <strong> 键值过期时间 </strong>（<code>EXPIRE key seconds</code>）设置，并且也提供了灵活控制 <strong> 最大内存 </strong> 和 <strong> 内存溢出 </strong> 后的 <strong> 淘汰策略</strong>。</p>
-<h4><span id="缓存穿透">缓存穿透 </span></h4><p> 缓存穿透是指查询一个一定不存在的数据，由于缓存是不命中时被动写的，并且出于容错考虑，如果从存储层查不到数据则不写入缓存，这将导致这个不存在的数据每次请求都要到存储层去查询，失去了缓存的意义。在流量大时，可能 DB 就挂掉了，要是有人利用不存在的 key 频繁攻击我们的应用，这就是漏洞。</p>
-<p>有很多种方法可以有效地解决缓存穿透问题，最常见的则是采用布隆过滤器，将所有可能存在的数据哈希到一个足够大的 bitmap 中，一个一定不存在的数据会被 这个 bitmap 拦截掉，从而避免了对底层存储系统的查询压力。另外也有一个更为简单粗暴的方法（我们采用的就是这种），如果一个查询返回的数据为空（不管是数 据不存在，还是系统故障），我们仍然把这个空结果进行缓存，但它的过期时间会很短，最长不超过五分钟。</p>
-<h4><span id="缓存雪崩">缓存雪崩 </span></h4><p> 缓存雪崩是指在我们设置缓存时采用了相同的过期时间，导致缓存在某一时刻同时失效，请求全部转发到 DB，DB 瞬时压力过重雪崩。</p>
-<p>缓存失效时的雪崩效应对底层系统的冲击非常可怕。大多数系统设计者考虑用加锁或者队列的方式保证缓存的单线 程（进程）写，从而避免失效时大量的并发请求落到底层存储系统上。这里分享一个简单方案就时讲缓存失效时间分散开，比如我们可以在原有的失效时间基础上增加一个随机值，比如 1-5 分钟随机，这样每一个缓存的过期时间的重复率就会降低，就很难引发集体失效的事件。</p>
-<h4><span id="缓存击穿">缓存击穿 </span></h4><p> 对于一些设置了过期时间的 key，如果这些 key 可能会在某些时间点被超高并发地访问，是一种非常“热点”的数据。这个时候，需要考虑一个问题：缓存被“击穿”的问题，这个和缓存雪崩的区别在于这里针对某一 key 缓存，前者则是很多 key。缓存在某个时间点过期的时候，恰好在这个时间点对这个 Key 有大量的并发请求过来，这些请求发现缓存过期一般都会从后端 DB 加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端 DB 压垮。</p>
-<h5><span id="解决方案">解决方案</span></h5><ol>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>合理的使用 <strong>缓存</strong> 能够明显加快访问的速度，同时降低数据源的压力。这也是 <code>Redis</code> 最常用的功能。<code>Redis</code> 提供了 <strong>键值过期时间</strong>（<code>EXPIRE key seconds</code>）设置，并且也提供了灵活控制 <strong>最大内存</strong> 和 <strong>内存溢出</strong> 后的 <strong>淘汰策略</strong>。</p>
+<h4 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h4><p>缓存穿透是指查询一个一定不存在的数据，由于缓存是不命中时被动写的，并且出于容错考虑，如果从存储层查不到数据则不写入缓存，这将导致这个不存在的数据每次请求都要到存储层去查询，失去了缓存的意义。在流量大时，可能DB就挂掉了，要是有人利用不存在的key频繁攻击我们的应用，这就是漏洞。</p>
+<p>有很多种方法可以有效地解决缓存穿透问题，最常见的则是采用布隆过滤器，将所有可能存在的数据哈希到一个足够大的bitmap中，一个一定不存在的数据会被 这个bitmap拦截掉，从而避免了对底层存储系统的查询压力。另外也有一个更为简单粗暴的方法（我们采用的就是这种），如果一个查询返回的数据为空（不管是数 据不存在，还是系统故障），我们仍然把这个空结果进行缓存，但它的过期时间会很短，最长不超过五分钟。</p>
+<h4 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h4><p>缓存雪崩是指在我们设置缓存时采用了相同的过期时间，导致缓存在某一时刻同时失效，请求全部转发到DB，DB瞬时压力过重雪崩。</p>
+<p>缓存失效时的雪崩效应对底层系统的冲击非常可怕。大多数系统设计者考虑用加锁或者队列的方式保证缓存的单线 程（进程）写，从而避免失效时大量的并发请求落到底层存储系统上。这里分享一个简单方案就时讲缓存失效时间分散开，比如我们可以在原有的失效时间基础上增加一个随机值，比如1-5分钟随机，这样每一个缓存的过期时间的重复率就会降低，就很难引发集体失效的事件。</p>
+<h4 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h4><p>对于一些设置了过期时间的key，如果这些key可能会在某些时间点被超高并发地访问，是一种非常“热点”的数据。这个时候，需要考虑一个问题：缓存被“击穿”的问题，这个和缓存雪崩的区别在于这里针对某一key缓存，前者则是很多key。缓存在某个时间点过期的时候，恰好在这个时间点对这个Key有大量的并发请求过来，这些请求发现缓存过期一般都会从后端DB加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端DB压垮。</p>
+<h5 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h5><ol>
 <li><p>互斥锁</p>
-<p>业界比较常用的做法，是使用 mutex。简单地来说，就是在缓存失效的时候（判断拿出来的值为空），不是立即去 load db，而是先使用缓存工具的某些带成功操作返回值的操作（比如 Redis 的 SETNX 或者 Memcache 的 ADD）去 set 一个 mutex key，当操作返回成功时，再进行 load db 的操作并回设缓存；否则，就重试整个 get 缓存的方法。SETNX，是「SET if Not eXists」的缩写，也就是只有不存在的时候才设置，可以利用它来实现锁的效果。所以这里给出代码参考：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//Redis</span>
-<span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      <span class="token class-name">String</span> value <span class="token operator">=</span> redis<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>value <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 代表缓存值过期</span>
-          <span class="token comment">// 设置 3min 的超时，防止 del 操作失败的时候，下次缓存过期一直不能 load db</span>
-		  <span class="token keyword">if</span> <span class="token punctuation">(</span>redis<span class="token punctuation">.</span><span class="token function">setnx</span><span class="token punctuation">(</span>key_mutex<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">3</span> <span class="token operator">*</span> <span class="token number">60</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  <span class="token comment">// 代表设置成功</span>
-               value <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                      redis<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">,</span> expire_secs<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                      redis<span class="token punctuation">.</span><span class="token function">del</span><span class="token punctuation">(</span>key_mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
-              <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>  <span class="token comment">// 这个时候代表同时候的其他线程已经 load db 并回设到缓存了，这时候重试获取缓存值即可</span>
-                      <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                      <span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 重试</span>
-              <span class="token punctuation">&#125;</span>
-          <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-              <span class="token keyword">return</span> value<span class="token punctuation">;</span>      
-          <span class="token punctuation">&#125;</span>
- <span class="token punctuation">&#125;</span>
-
-<span class="token comment">//Memcache</span>
-<span class="token keyword">if</span> <span class="token punctuation">(</span>memcache<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
-    <span class="token comment">// 3 min timeout to avoid mutex holder crash  </span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>memcache<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>key_mutex<span class="token punctuation">,</span> <span class="token number">3</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
-        value <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        memcache<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        memcache<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>key_mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>  
-        <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        <span class="token function">retry</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-    <span class="token punctuation">&#125;</span>  
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>业界比较常用的做法，是使用mutex。简单地来说，就是在缓存失效的时候（判断拿出来的值为空），不是立即去load db，而是先使用缓存工具的某些带成功操作返回值的操作（比如Redis的SETNX或者Memcache的ADD）去set一个mutex key，当操作返回成功时，再进行load db的操作并回设缓存；否则，就重试整个get缓存的方法。SETNX，是「SET if Not eXists」的缩写，也就是只有不存在的时候才设置，可以利用它来实现锁的效果。所以这里给出代码参考：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Redis</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">get</span><span class="params">(key)</span> </span>&#123;</span><br><span class="line">      String value = redis.get(key);</span><br><span class="line">      <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123; <span class="comment">//代表缓存值过期</span></span><br><span class="line">          <span class="comment">//设置3min的超时，防止del操作失败的时候，下次缓存过期一直不能load db</span></span><br><span class="line">		  <span class="keyword">if</span> (redis.setnx(key_mutex, <span class="number">1</span>, <span class="number">3</span> * <span class="number">60</span>) == <span class="number">1</span>) &#123;  <span class="comment">//代表设置成功</span></span><br><span class="line">               value = db.get(key);</span><br><span class="line">                      redis.set(key, value, expire_secs);</span><br><span class="line">                      redis.del(key_mutex);</span><br><span class="line">              &#125; <span class="keyword">else</span> &#123;  <span class="comment">//这个时候代表同时候的其他线程已经load db并回设到缓存了，这时候重试获取缓存值即可</span></span><br><span class="line">                      sleep(<span class="number">50</span>);</span><br><span class="line">                      get(key);  <span class="comment">//重试</span></span><br><span class="line">              &#125;</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">              <span class="keyword">return</span> value;      </span><br><span class="line">          &#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Memcache</span></span><br><span class="line"><span class="keyword">if</span> (memcache.get(key) == <span class="keyword">null</span>) &#123;  </span><br><span class="line">    <span class="comment">// 3 min timeout to avoid mutex holder crash  </span></span><br><span class="line">    <span class="keyword">if</span> (memcache.add(key_mutex, <span class="number">3</span> * <span class="number">60</span> * <span class="number">1000</span>) == <span class="keyword">true</span>) &#123;  </span><br><span class="line">        value = db.get(key);  </span><br><span class="line">        memcache.set(key, value);  </span><br><span class="line">        memcache.delete(key_mutex);  </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">        sleep(<span class="number">50</span>);  </span><br><span class="line">        retry();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>提前使用互斥锁</p>
-<p>在 value 内部设置 1 个超时值 (timeout1), timeout1 比实际的 memcache timeout(timeout2) 小。当从 cache 读取到 timeout1 发现它已经过期时候，马上延长 timeout1 并重新设置到 cache。然后再从数据库加载数据并设置到 cache 中。伪代码如下：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java">
-v <span class="token operator">=</span> memcache<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-<span class="token keyword">if</span> <span class="token punctuation">(</span>v <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>memcache<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>key_mutex<span class="token punctuation">,</span> <span class="token number">3</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
-        value <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        memcache<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        memcache<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>key_mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>  
-        <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        <span class="token function">retry</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-    <span class="token punctuation">&#125;</span>  
-<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>  
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>v<span class="token punctuation">.</span>timeout <span class="token operator">&lt;=</span> <span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>memcache<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>key_mutex<span class="token punctuation">,</span> <span class="token number">3</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
-            <span class="token comment">// extend the timeout for other threads  </span>
-            v<span class="token punctuation">.</span>timeout <span class="token operator">+=</span> <span class="token number">3</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">;</span>  
-            memcache<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> v<span class="token punctuation">,</span> KEY_TIMEOUT <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-  
-            <span class="token comment">// load the latest value from db  </span>
-            v <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-            v<span class="token punctuation">.</span>timeout <span class="token operator">=</span> KEY_TIMEOUT<span class="token punctuation">;</span>  
-            memcache<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">,</span> KEY_TIMEOUT <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-            memcache<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>key_mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>  
-            <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-            <span class="token function">retry</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        <span class="token punctuation">&#125;</span>  
-    <span class="token punctuation">&#125;</span>  
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在value内部设置1个超时值(timeout1), timeout1比实际的memcache timeout(timeout2)小。当从cache读取到timeout1发现它已经过期时候，马上延长timeout1并重新设置到cache。然后再从数据库加载数据并设置到cache中。伪代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">v = memcache.get(key);  </span><br><span class="line"><span class="keyword">if</span> (v == <span class="keyword">null</span>) &#123;  </span><br><span class="line">    <span class="keyword">if</span> (memcache.add(key_mutex, <span class="number">3</span> * <span class="number">60</span> * <span class="number">1000</span>) == <span class="keyword">true</span>) &#123;  </span><br><span class="line">        value = db.get(key);  </span><br><span class="line">        memcache.set(key, value);  </span><br><span class="line">        memcache.delete(key_mutex);  </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">        sleep(<span class="number">50</span>);  </span><br><span class="line">        retry();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">    <span class="keyword">if</span> (v.timeout &lt;= now()) &#123;  </span><br><span class="line">        <span class="keyword">if</span> (memcache.add(key_mutex, <span class="number">3</span> * <span class="number">60</span> * <span class="number">1000</span>) == <span class="keyword">true</span>) &#123;  </span><br><span class="line">            <span class="comment">// extend the timeout for other threads  </span></span><br><span class="line">            v.timeout += <span class="number">3</span> * <span class="number">60</span> * <span class="number">1000</span>;  </span><br><span class="line">            memcache.set(key, v, KEY_TIMEOUT * <span class="number">2</span>);  </span><br><span class="line">  </span><br><span class="line">            <span class="comment">// load the latest value from db  </span></span><br><span class="line">            v = db.get(key);  </span><br><span class="line">            v.timeout = KEY_TIMEOUT;  </span><br><span class="line">            memcache.set(key, value, KEY_TIMEOUT * <span class="number">2</span>);  </span><br><span class="line">            memcache.delete(key_mutex);  </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">            sleep(<span class="number">50</span>);  </span><br><span class="line">            retry();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>永远不过期</p>
 <p>这里的“永远不过期”包含两层意思：</p>
 <blockquote>
-<p>(1) 从 redis 上看，确实没有设置过期时间，这就保证了，不会出现热点 key 过期问题，也就是“物理”不过期。</p>
-<p>(2) 从功能上看，如果不过期，那不就成静态的了吗？所以我们把过期时间存在 key 对应的 value 里，如果发现要过期了，通过一个后台的异步线程进行缓存的构建，也就是“逻辑”过期</p>
+<p>(1) 从redis上看，确实没有设置过期时间，这就保证了，不会出现热点key过期问题，也就是“物理”不过期。</p>
+<p>(2) 从功能上看，如果不过期，那不就成静态的了吗？所以我们把过期时间存在key对应的value里，如果发现要过期了，通过一个后台的异步线程进行缓存的构建，也就是“逻辑”过期</p>
 </blockquote>
-<p>​    从实战看，这种方法对于性能非常友好，唯一不足的就是构建缓存时候，其余线程 (非构建缓存的线程) 可能访问的是老数据，但是对于一般的互联网功能来说这个还是可以忍受。</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java">
-<span class="token class-name">String</span> <span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">String</span> key<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
-        <span class="token class-name">V</span> v <span class="token operator">=</span> redis<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        <span class="token class-name">String</span> value <span class="token operator">=</span> v<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        <span class="token keyword">long</span> timeout <span class="token operator">=</span> v<span class="token punctuation">.</span><span class="token function">getTimeout</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>v<span class="token punctuation">.</span>timeout <span class="token operator">&lt;=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
-            <span class="token comment">// 异步更新后台异常执行  </span>
-            threadPool<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Runnable</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
-                <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
-                    <span class="token class-name">String</span> keyMutex <span class="token operator">=</span> <span class="token string">"mutex:"</span> <span class="token operator">+</span> key<span class="token punctuation">;</span>  
-                    <span class="token keyword">if</span> <span class="token punctuation">(</span>redis<span class="token punctuation">.</span><span class="token function">setnx</span><span class="token punctuation">(</span>keyMutex<span class="token punctuation">,</span> <span class="token string">"1"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
-                        <span class="token comment">// 3 min timeout to avoid mutex holder crash  </span>
-                        redis<span class="token punctuation">.</span><span class="token function">expire</span><span class="token punctuation">(</span>keyMutex<span class="token punctuation">,</span> <span class="token number">3</span> <span class="token operator">*</span> <span class="token number">60</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-                        <span class="token class-name">String</span> dbValue <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-                        redis<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> dbValue<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-                        redis<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>keyMutex<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-                    <span class="token punctuation">&#125;</span>  
-                <span class="token punctuation">&#125;</span>  
-            <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        <span class="token punctuation">&#125;</span>  
-        <span class="token keyword">return</span> value<span class="token punctuation">;</span>  
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>​    从实战看，这种方法对于性能非常友好，唯一不足的就是构建缓存时候，其余线程(非构建缓存的线程)可能访问的是老数据，但是对于一般的互联网功能来说这个还是可以忍受。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function">String <span class="title">get</span><span class="params">(<span class="keyword">final</span> String key)</span> </span>&#123;  </span><br><span class="line">        V v = redis.get(key);  </span><br><span class="line">        String value = v.getValue();  </span><br><span class="line">        <span class="keyword">long</span> timeout = v.getTimeout();  </span><br><span class="line">        <span class="keyword">if</span> (v.timeout &lt;= System.currentTimeMillis()) &#123;  </span><br><span class="line">            <span class="comment">// 异步更新后台异常执行  </span></span><br><span class="line">            threadPool.execute(<span class="keyword">new</span> Runnable() &#123;  </span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">                    String keyMutex = <span class="string">&quot;mutex:&quot;</span> + key;  </span><br><span class="line">                    <span class="keyword">if</span> (redis.setnx(keyMutex, <span class="string">&quot;1&quot;</span>)) &#123;  </span><br><span class="line">                        <span class="comment">// 3 min timeout to avoid mutex holder crash  </span></span><br><span class="line">                        redis.expire(keyMutex, <span class="number">3</span> * <span class="number">60</span>);  </span><br><span class="line">                        String dbValue = db.get(key);  </span><br><span class="line">                        redis.set(key, dbValue);  </span><br><span class="line">                        redis.delete(keyMutex);  </span><br><span class="line">                    &#125;  </span><br><span class="line">                &#125;  </span><br><span class="line">            &#125;);  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">return</span> value;  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <ol>
 <li><p>资源保护</p>
-<p>采用 netflix 的 hystrix，可以做资源的隔离保护主线程池，如果把这个应用到缓存的构建也未尝不可。</p>
+<p>采用netflix的hystrix，可以做资源的隔离保护主线程池，如果把这个应用到缓存的构建也未尝不可。</p>
 <p>四种解决方案：没有最佳只有最合适</p>
 </li>
 </ol>
@@ -295,8 +254,8 @@ v <span class="token operator">=</span> memcache<span class="token punctuation">
 <tbody>
 <tr>
 <td>简单分布式互斥锁（mutex key）</td>
-<td>1. 思路简单 2. 保证一致性</td>
-<td>1. 代码复杂度增大 2. 存在死锁的风险 3. 存在线程池阻塞的风险</td>
+<td>1. 思路简单2. 保证一致性</td>
+<td>1. 代码复杂度增大2. 存在死锁的风险3. 存在线程池阻塞的风险</td>
 </tr>
 <tr>
 <td>“提前”使用互斥锁</td>
@@ -306,44 +265,68 @@ v <span class="token operator">=</span> memcache<span class="token punctuation">
 <tr>
 <td>不过期(本文)</td>
 <td>1. 异步构建缓存，不会阻塞线程池</td>
-<td>1. 不保证一致性。2. 代码复杂度增大(每个 value 都要维护一个 timekey)。3. 占用一定的内存空间(每个 value 都要维护一个 timekey)。</td>
+<td>1. 不保证一致性。2. 代码复杂度增大(每个value都要维护一个timekey)。3. 占用一定的内存空间(每个value都要维护一个timekey)。</td>
 </tr>
 <tr>
-<td>资源隔离组件 hystrix(本文)</td>
-<td>1. hystrix 技术成熟，有效保证后端。2. hystrix 监控强大。</td>
+<td>资源隔离组件hystrix(本文)</td>
+<td>1. hystrix技术成熟，有效保证后端。2. hystrix监控强大。</td>
 <td>1. 部分访问存在降级策略。</td>
 </tr>
 </tbody>
 </table>
 </div>
-<h4><span id="过期策略">过期策略 </span></h4><p> 大部分场景 <code> 不适合缓存一致存在 </code>，首先，你的 sql 数据库的内容可能很多就不说了，另外，返回给你的对象如果是完整的 pojo 对象还好，但是如果是使用不同参数各种关联查询出来的结果那么 redis 中会储存太多冷数据。占用资源而得不到销毁。我们学过<code> 操作系统 </code> 也知道在计算机的 <code> 缓存实现 </code> 中有）先进先出的算法（<strong>FIFO</strong>）；最近最少使用算法（<strong>LRU</strong>）；最佳淘汰算法（<strong>OPT</strong>）；最少访问页面算法（<strong>LFR</strong>）等磁盘调度算法。对于 web 开发也可以借鉴。根据时间来的 FIFO 是最好实现的。因为 redis 在 <code> 全局 key</code>支持过期策略。</p>
-<p>而开发中可能还会遇到 <code> 其他问题</code>。比如过期时间的选择上，如果过久会导致数据聚集。而过少可能导致频繁查询数据库甚至可能会导致缓存雪崩等问题。</p>
-<p>所以，过期策略一定要设置。并且对于 <code> 关键 key</code>一定要 <code> 小心谨慎设计</code>。</p>
-<h3><span id="排行榜">排行榜 </span></h3><p> 每个网站都有自己的排行榜，例如按照 <strong>热度排名 </strong> 的排行榜，<strong> 发布时间 </strong> 的排行榜，<strong> 答题排行榜 </strong> 等等。<code>Redis</code> 提供了 <strong> 列表 </strong>（<code>list</code>）和 <strong> 有序集合</strong>（<code>zset</code>）数据结构，合理的使用这些数据结构，可以很方便的构建各种排行榜系统。</p>
-<h3><span id="计数器">计数器 </span></h3><p><strong> 计数器 </strong> 在网站应用中非常重要。例如：<strong> 点赞数 </strong> 加 <code>1</code>，<strong>浏览数 </strong> 加 <code>1</code>。还有常用的 <strong> 限流操作 </strong>，限制每个用户每秒 <strong> 访问系统的次数 </strong> 等等。<code>Redis</code> 支持 <strong> 计数功能 </strong>（<code>INCR key</code>），而且计数的 <strong> 性能 </strong> 也非常好，计数的同时也可以设置 <strong> 超时时间 </strong>，这样就可以 <strong> 实现限流</strong>。</p>
-<h3><span id="社交网络">社交网络 </span></h3><p> 赞 / 踩，粉丝，共同好友 / 喜好，推送，下拉刷新等是社交网站必备的功能。由于社交网站 <strong>访问量通常比较大 </strong>，而且 <strong> 传统的数据库 </strong> 不太适合保存这类数据，<code>Redis</code> 提供的 <strong> 数据结构</strong> 可以相对比较容易实现这些功能。</p>
-<h3><span id="消息队列">消息队列 </span></h3><p><code>Redis</code> 提供的 <strong> 发布订阅 </strong>（<code>PUB/SUB</code>）和 <strong> 阻塞队列 </strong> 的功能，虽然和专业的消息队列比，还 <strong> 不够强大</strong>，但对于一般的消息队列功能基本满足。</p>
+<h4 id="过期策略"><a href="#过期策略" class="headerlink" title="过期策略"></a>过期策略</h4><p>大部分场景<code>不适合缓存一致存在</code>，首先，你的sql数据库的内容可能很多就不说了，另外，返回给你的对象如果是完整的pojo对象还好，但是如果是使用不同参数各种关联查询出来的结果那么redis中会储存太多冷数据。占用资源而得不到销毁。我们学过<code>操作系统</code>也知道在计算机的<code>缓存实现</code>中有）先进先出的算法（<strong>FIFO</strong>）；最近最少使用算法（<strong>LRU</strong>）；最佳淘汰算法（<strong>OPT</strong>）；最少访问页面算法（<strong>LFR</strong>）等磁盘调度算法。对于web开发也可以借鉴。根据时间来的FIFO是最好实现的。因为redis在<code>全局key</code>支持过期策略。</p>
+<p>而开发中可能还会遇到<code>其他问题</code>。比如过期时间的选择上，如果过久会导致数据聚集。而过少可能导致频繁查询数据库甚至可能会导致缓存雪崩等问题。</p>
+<p>所以，过期策略一定要设置。并且对于<code>关键key</code>一定要<code>小心谨慎设计</code>。</p>
+<h3 id="排行榜"><a href="#排行榜" class="headerlink" title="排行榜"></a>排行榜</h3><p>每个网站都有自己的排行榜，例如按照 <strong>热度排名</strong> 的排行榜，<strong>发布时间</strong> 的排行榜，<strong>答题排行榜</strong> 等等。<code>Redis</code> 提供了 <strong>列表</strong>（<code>list</code>）和 <strong>有序集合</strong>（<code>zset</code>）数据结构，合理的使用这些数据结构，可以很方便的构建各种排行榜系统。</p>
+<h3 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h3><p><strong>计数器</strong> 在网站应用中非常重要。例如：<strong>点赞数</strong>加 <code>1</code>，<strong>浏览数</strong> 加 <code>1</code>。还有常用的 <strong>限流操作</strong>，限制每个用户每秒 <strong>访问系统的次数</strong> 等等。<code>Redis</code> 支持 <strong>计数功能</strong>（<code>INCR key</code>），而且计数的 <strong>性能</strong> 也非常好，计数的同时也可以设置 <strong>超时时间</strong>，这样就可以 <strong>实现限流</strong>。</p>
+<h3 id="社交网络"><a href="#社交网络" class="headerlink" title="社交网络"></a>社交网络</h3><p>赞/踩，粉丝，共同好友/喜好，推送，下拉刷新等是社交网站必备的功能。由于社交网站 <strong>访问量通常比较大</strong>，而且 <strong>传统的数据库</strong> 不太适合保存这类数据，<code>Redis</code> 提供的 <strong>数据结构</strong> 可以相对比较容易实现这些功能。</p>
+<h3 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h3><p><code>Redis</code> 提供的 <strong>发布订阅</strong>（<code>PUB/SUB</code>）和 <strong>阻塞队列</strong> 的功能，虽然和专业的消息队列比，还 <strong>不够强大</strong>，但对于一般的消息队列功能基本满足。</p>
 
-            </div>
-            <!-- Post Comments -->
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Redis/"># Redis</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2018/09/08/Python/Python%E7%9A%84%E5%85%A8%E5%B1%80%E8%A7%A3%E9%87%8A%E5%99%A8%E9%94%81%E6%98%AF%E4%BB%80%E4%B9%88/">Python的全局解释器锁是什么</a>
+            
+            
+            <a class="next" rel="next" href="/2018/03/01/Redis/Redis%E8%AF%A6%E8%A7%A3%E4%B9%8B%E2%80%94%E2%80%94%E5%8D%95%E7%BA%BF%E7%A8%8B%E9%AB%98%E5%B9%B6%E5%8F%91/">Redis详解之——单线程高并发</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

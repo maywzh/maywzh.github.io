@@ -1,342 +1,315 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>(转载)阿里Redis开发规范笔记 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/03/rmHZdE9TpyWg7DK.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>(转载) 阿里 Redis 开发规范笔记</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>本文主要介绍在使用阿里云 Redis 的开发规范，从下面几个方面进行说明。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">(转载)阿里Redis开发规范笔记</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 8, 2017&nbsp;&nbsp;14:18:48</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>本文主要介绍在使用阿里云Redis的开发规范，从下面几个方面进行说明。</p>
 <ul>
 <li>键值设计</li>
 <li>命令使用</li>
 <li>客户端使用</li>
 <li>相关工具</li>
 </ul>
-<p>通过本文的介绍可以减少使用 Redis 过程带来的问题。</p>
+<p>通过本文的介绍可以减少使用Redis过程带来的问题。</p>
 <a id="more"></a>
-<h2><span id="键值设计">键值设计 </span></h2><h3><span id="key-名设计">key 名设计</span></h3><h4><span id="可读性和可管理性"> 可读性和可管理性 </span></h4><p> 以业务名 (或数据库名) 为前缀(防止 key 冲突)，用冒号分隔，比如业务名: 表名:id</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java">ugc<span class="token operator">:</span>video<span class="token operator">:</span><span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h4><span id="简洁性">简洁性 </span></h4><p> 保证语义的前提下，控制 key 的长度，当 key 较多时，内存占用也不容忽视，例如：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java">user<span class="token operator">:</span><span class="token punctuation">&#123;</span>uid<span class="token punctuation">&#125;</span><span class="token operator">:</span>friends<span class="token operator">:</span>messages<span class="token operator">:</span><span class="token punctuation">&#123;</span>mid<span class="token punctuation">&#125;</span>简化为 u<span class="token operator">:</span><span class="token punctuation">&#123;</span>uid<span class="token punctuation">&#125;</span><span class="token operator">:</span>fr<span class="token operator">:</span>m<span class="token operator">:</span><span class="token punctuation">&#123;</span>mid<span class="token punctuation">&#125;</span>。<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h4><span id="不要包含特殊字符">不要包含特殊字符 </span></h4><p> 反例：包含空格、换行、单双引号以及其他转义字符</p>
-<h3><span id="value-设计">value 设计 </span></h3><h4><span id="拒绝-bigkey"> 拒绝 bigkey</span></h4><p>防止网卡流量、慢查询，string 类型控制在 10KB 以内，hash、list、set、zset 元素个数不要超过 5000。反例：一个包含 200 万个元素的 list。非字符串的 bigkey，不要使用 del 删除，使用 hscan、sscan、zscan 方式渐进式删除，同时要注意防止 bigkey 过期时间自动删除问题(例如一个 200 万的 zset 设置 1 小时过期，会触发 del 操作，造成阻塞，而且该操作不会不出现在慢查询中(latency 可查))，查找方法和删除方法</p>
-<h4><span id="选择适合的数据类型">选择适合的数据类型 </span></h4><p> 例如：实体类型(要合理控制和使用数据结构内存编码优化配置, 例如 ziplist，但也要注意节省内存和性能之间的平衡)</p>
+<h2 id="键值设计"><a href="#键值设计" class="headerlink" title="键值设计"></a>键值设计</h2><h3 id="key名设计"><a href="#key名设计" class="headerlink" title="key名设计"></a>key名设计</h3><h4 id="可读性和可管理性"><a href="#可读性和可管理性" class="headerlink" title="可读性和可管理性"></a>可读性和可管理性</h4><p>以业务名(或数据库名)为前缀(防止key冲突)，用冒号分隔，比如业务名:表名:id</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ugc:video:<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h4 id="简洁性"><a href="#简洁性" class="headerlink" title="简洁性"></a>简洁性</h4><p>保证语义的前提下，控制key的长度，当key较多时，内存占用也不容忽视，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user:&#123;uid&#125;:friends:messages:&#123;mid&#125;简化为u:&#123;uid&#125;:fr:m:&#123;mid&#125;。</span><br></pre></td></tr></table></figure>
+<h4 id="不要包含特殊字符"><a href="#不要包含特殊字符" class="headerlink" title="不要包含特殊字符"></a>不要包含特殊字符</h4><p>反例：包含空格、换行、单双引号以及其他转义字符</p>
+<h3 id="value设计"><a href="#value设计" class="headerlink" title="value设计"></a>value设计</h3><h4 id="拒绝bigkey"><a href="#拒绝bigkey" class="headerlink" title="拒绝bigkey"></a>拒绝bigkey</h4><p>防止网卡流量、慢查询，string类型控制在10KB以内，hash、list、set、zset元素个数不要超过5000。反例：一个包含200万个元素的list。非字符串的bigkey，不要使用del删除，使用hscan、sscan、zscan方式渐进式删除，同时要注意防止bigkey过期时间自动删除问题(例如一个200万的zset设置1小时过期，会触发del操作，造成阻塞，而且该操作不会不出现在慢查询中(latency可查))，查找方法和删除方法</p>
+<h4 id="选择适合的数据类型"><a href="#选择适合的数据类型" class="headerlink" title="选择适合的数据类型"></a>选择适合的数据类型</h4><p>例如：实体类型(要合理控制和使用数据结构内存编码优化配置,例如ziplist，但也要注意节省内存和性能之间的平衡)</p>
 <p>反例：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java">set user<span class="token operator">:</span><span class="token number">1</span><span class="token operator">:</span>name tom
-set user<span class="token operator">:</span><span class="token number">1</span><span class="token operator">:</span>age <span class="token number">19</span>
-set user<span class="token operator">:</span><span class="token number">1</span><span class="token operator">:</span>favor football<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set user:<span class="number">1</span>:name tom</span><br><span class="line">set user:<span class="number">1</span>:age <span class="number">19</span></span><br><span class="line">set user:<span class="number">1</span>:favor football</span><br></pre></td></tr></table></figure>
 <p>正例：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java">hmset user<span class="token operator">:</span><span class="token number">1</span> name tom age <span class="token number">19</span> favor football<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h4><span id="控制-key-的生命周期">控制 key 的生命周期</span></h4><p>redis 不是垃圾桶，建议使用 expire 设置过期时间(条件允许可以打散过期时间，防止集中过期)，不过期的数据重点关注 idletime。</p>
-<h2><span id="命令使用">命令使用 </span></h2><h3><span id="on命令关注-n-的数量">O(N)命令关注 N 的数量 </span></h3><p> 例如 hgetall、lrange、smembers、zrange、sinter 等并非不能使用，但是需要明确 N 的值。有遍历的需求可以使用 hscan、sscan、zscan 代替。</p>
-<h3><span id="禁用命令">禁用命令 </span></h3><p> 禁止线上使用 keys、flushall、flushdb 等，通过 redis 的 rename 机制禁掉命令，或者使用 scan 的方式渐进式处理。</p>
-<h3><span id="合理使用-select">合理使用 select*</span></h3><p>redis 的多数据库较弱，使用数字进行区分，很多客户端支持较差，同时多业务用多数据库实际还是单线程处理，会有干扰。</p>
-<h3><span id="使用批量操作提高效率">使用批量操作提高效率</span></h3><ul>
-<li>原生命令：例如 mget、mset。</li>
-<li>非原生命令：可以使用 pipeline 提高效率。</li>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hmset user:<span class="number">1</span> name tom age <span class="number">19</span> favor football</span><br></pre></td></tr></table></figure>
+<h4 id="控制key的生命周期"><a href="#控制key的生命周期" class="headerlink" title="控制key的生命周期"></a>控制key的生命周期</h4><p>redis不是垃圾桶，建议使用expire设置过期时间(条件允许可以打散过期时间，防止集中过期)，不过期的数据重点关注idletime。</p>
+<h2 id="命令使用"><a href="#命令使用" class="headerlink" title="命令使用"></a>命令使用</h2><h3 id="O-N-命令关注N的数量"><a href="#O-N-命令关注N的数量" class="headerlink" title="O(N)命令关注N的数量"></a>O(N)命令关注N的数量</h3><p>例如hgetall、lrange、smembers、zrange、sinter等并非不能使用，但是需要明确N的值。有遍历的需求可以使用hscan、sscan、zscan代替。</p>
+<h3 id="禁用命令"><a href="#禁用命令" class="headerlink" title="禁用命令"></a>禁用命令</h3><p>禁止线上使用keys、flushall、flushdb等，通过redis的rename机制禁掉命令，或者使用scan的方式渐进式处理。</p>
+<h3 id="合理使用select"><a href="#合理使用select" class="headerlink" title="合理使用select*"></a>合理使用select*</h3><p>redis的多数据库较弱，使用数字进行区分，很多客户端支持较差，同时多业务用多数据库实际还是单线程处理，会有干扰。</p>
+<h3 id="使用批量操作提高效率"><a href="#使用批量操作提高效率" class="headerlink" title="使用批量操作提高效率"></a>使用批量操作提高效率</h3><ul>
+<li>原生命令：例如mget、mset。</li>
+<li>非原生命令：可以使用pipeline提高效率。</li>
 </ul>
-<p>但要注意控制一次批量操作的元素个数(例如 500 以内，实际也和元素字节数有关)。</p>
+<p>但要注意控制一次批量操作的元素个数(例如500以内，实际也和元素字节数有关)。</p>
 <p>注意两者不同：</p>
 <ul>
-<li>原生是原子操作，pipeline 是非原子操作。</li>
-<li>pipeline 可以打包不同的命令，原生做不到</li>
-<li>pipeline 需要客户端和服务端同时支持。</li>
+<li>原生是原子操作，pipeline是非原子操作。</li>
+<li>pipeline可以打包不同的命令，原生做不到</li>
+<li>pipeline需要客户端和服务端同时支持。</li>
 </ul>
-<h3><span id="不建议过多使用-redis-事务功能">不建议过多使用 Redis 事务功能 </span></h3><p>Redis 的事务功能较弱(不支持回滚)，而且集群版本(自研和官方) 要求一次事务操作的 key 必须在一个 slot 上(可以使用 hashtag 功能解决)</p>
-<h3><span id="redis-集群版本在使用-lua-上有特殊要求">Redis 集群版本在使用 Lua 上有特殊要求</span></h3><p>1、所有 key 都应该由 KEYS 数组来传递，redis.call/pcall 里面调用的 redis 命令，key 的位置，必须是 KEYS array, 否则直接返回 error，”-ERR bad lua script for redis cluster, all the keys that the script uses should be passed using the KEYS arrayrn”2、所有 key，必须在 1 个 slot 上，否则直接返回 error, “-ERR eval/evalsha command keys must in same slotrn”</p>
-<h3><span id="monitor-命令">monitor 命令 </span></h3><p> 必要情况下使用 monitor 命令时，要注意不要长时间使用。</p>
-<h2><span id="客户端使用">客户端使用 </span></h2><h3><span id="避免多个应用使用一个-redis-实例"> 避免多个应用使用一个 Redis 实例 </span></h3><p> 不相干的业务拆分，公共数据做服务化。</p>
-<h3><span id="使用连接池">使用连接池 </span></h3><p> 可以有效控制连接，同时提高效率，标准使用方式：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java">执行命令如下：
-<span class="token class-name">Jedis</span> jedis <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-<span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
-    jedis <span class="token operator">=</span> jedisPool<span class="token punctuation">.</span><span class="token function">getResource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token comment">// 具体的命令</span>
-    jedis<span class="token punctuation">.</span><span class="token function">executeCommand</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"op key &#123;&#125; error:"</span> <span class="token operator">+</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> key<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span> <span class="token keyword">finally</span> <span class="token punctuation">&#123;</span>
- <span class="token comment">// 注意这里不是关闭连接，在 JedisPool 模式下，Jedis 会被归还给资源池。</span>
- <span class="token keyword">if</span> <span class="token punctuation">(</span>jedis <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
-        jedis<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="熔断功能">熔断功能 </span></h3><p> 高并发下建议客户端添加熔断功能(例如 netflix hystrix)</p>
-<h3><span id="合理的加密">合理的加密 </span></h3><p> 设置合理的密码，如有必要可以使用 SSL 加密访问（阿里云 Redis 支持）</p>
-<h3><span id="淘汰策略">淘汰策略 </span></h3><p> 根据自身业务类型，选好 maxmemory-policy(最大内存淘汰策略)，设置好过期时间。默认策略是 volatile-lru，即超过最大内存后，在过期键中使用 lru 算法进行 key 的剔除，保证不过期数据不被删除，但是可能会出现 OOM 问题。</p>
+<h3 id="不建议过多使用Redis事务功能"><a href="#不建议过多使用Redis事务功能" class="headerlink" title="不建议过多使用Redis事务功能"></a>不建议过多使用Redis事务功能</h3><p>Redis的事务功能较弱(不支持回滚)，而且集群版本(自研和官方)要求一次事务操作的key必须在一个slot上(可以使用hashtag功能解决)</p>
+<h3 id="Redis集群版本在使用Lua上有特殊要求"><a href="#Redis集群版本在使用Lua上有特殊要求" class="headerlink" title="Redis集群版本在使用Lua上有特殊要求"></a>Redis集群版本在使用Lua上有特殊要求</h3><p>1、所有key都应该由 KEYS 数组来传递，redis.call/pcall 里面调用的redis命令，key的位置，必须是KEYS array, 否则直接返回error，”-ERR bad lua script for redis cluster, all the keys that the script uses should be passed using the KEYS arrayrn”2、所有key，必须在1个slot上，否则直接返回error, “-ERR eval/evalsha command keys must in same slotrn”</p>
+<h3 id="monitor命令"><a href="#monitor命令" class="headerlink" title="monitor命令"></a>monitor命令</h3><p>必要情况下使用monitor命令时，要注意不要长时间使用。</p>
+<h2 id="客户端使用"><a href="#客户端使用" class="headerlink" title="客户端使用"></a>客户端使用</h2><h3 id="避免多个应用使用一个Redis实例"><a href="#避免多个应用使用一个Redis实例" class="headerlink" title="避免多个应用使用一个Redis实例"></a>避免多个应用使用一个Redis实例</h3><p>不相干的业务拆分，公共数据做服务化。</p>
+<h3 id="使用连接池"><a href="#使用连接池" class="headerlink" title="使用连接池"></a>使用连接池</h3><p>可以有效控制连接，同时提高效率，标准使用方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">执行命令如下：</span><br><span class="line">Jedis jedis = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    jedis = jedisPool.getResource();</span><br><span class="line"> <span class="comment">//具体的命令</span></span><br><span class="line">    jedis.executeCommand()</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    logger.error(<span class="string">&quot;op key &#123;&#125; error: &quot;</span> + e.getMessage(), key, e);</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> <span class="comment">//注意这里不是关闭连接，在JedisPool模式下，Jedis会被归还给资源池。</span></span><br><span class="line"> <span class="keyword">if</span> (jedis != <span class="keyword">null</span>)</span><br><span class="line">        jedis.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="熔断功能"><a href="#熔断功能" class="headerlink" title="熔断功能"></a>熔断功能</h3><p>高并发下建议客户端添加熔断功能(例如netflix hystrix)</p>
+<h3 id="合理的加密"><a href="#合理的加密" class="headerlink" title="合理的加密"></a>合理的加密</h3><p>设置合理的密码，如有必要可以使用SSL加密访问（阿里云Redis支持）</p>
+<h3 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h3><p>根据自身业务类型，选好maxmemory-policy(最大内存淘汰策略)，设置好过期时间。默认策略是volatile-lru，即超过最大内存后，在过期键中使用lru算法进行key的剔除，保证不过期数据不被删除，但是可能会出现OOM问题。</p>
 <p>其他策略如下：</p>
 <ul>
-<li>allkeys-lru：根据 LRU 算法删除键，不管数据有没有设置超时属性，直到腾出足够空间为止。</li>
+<li>allkeys-lru：根据LRU算法删除键，不管数据有没有设置超时属性，直到腾出足够空间为止。</li>
 <li>allkeys-random：随机删除所有键，直到腾出足够空间为止。</li>
-<li>volatile-random: 随机删除过期键，直到腾出足够空间为止。</li>
-<li>volatile-ttl：根据键值对象的 ttl 属性，删除最近将要过期数据。如果没有，回退到 noeviction 策略。</li>
-<li>noeviction：不会剔除任何数据，拒绝所有写入操作并返回客户端错误信息”(error) OOM command not allowed when used memory”，此时 Redis 只响应读操作。</li>
+<li>volatile-random:随机删除过期键，直到腾出足够空间为止。</li>
+<li>volatile-ttl：根据键值对象的ttl属性，删除最近将要过期数据。如果没有，回退到noeviction策略。</li>
+<li>noeviction：不会剔除任何数据，拒绝所有写入操作并返回客户端错误信息”(error) OOM command not allowed when used memory”，此时Redis只响应读操作。</li>
 </ul>
-<h2><span id="相关工具">相关工具 </span></h2><h3><span id="数据同步"> 数据同步</span></h3><p>redis 间数据同步可以使用：redis-port</p>
-<h3><span id="big-key-搜索">big key 搜索</span></h3><p>redis 大 key 搜索工具</p>
-<h3><span id="热点-key-寻找">热点 key 寻找 </span></h3><p> 内部实现使用 monitor，所以建议短时间使用 facebook 的 redis-faina 阿里云 Redis 已经在内核层面解决热点 key 问题</p>
-<h2><span id="删除-bigkey">删除 bigkey</span></h2><ul>
-<li>下面操作可以使用 pipeline 加速。</li>
-<li>redis 4.0 已经支持 key 的异步删除，欢迎使用。</li>
+<h2 id="相关工具"><a href="#相关工具" class="headerlink" title="相关工具"></a>相关工具</h2><h3 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h3><p>redis间数据同步可以使用：redis-port</p>
+<h3 id="big-key搜索"><a href="#big-key搜索" class="headerlink" title="big key搜索"></a>big key搜索</h3><p>redis大key搜索工具</p>
+<h3 id="热点key寻找"><a href="#热点key寻找" class="headerlink" title="热点key寻找"></a>热点key寻找</h3><p>内部实现使用monitor，所以建议短时间使用facebook的redis-faina 阿里云Redis已经在内核层面解决热点key问题</p>
+<h2 id="删除bigkey"><a href="#删除bigkey" class="headerlink" title="删除bigkey"></a>删除bigkey</h2><ul>
+<li>下面操作可以使用pipeline加速。</li>
+<li>redis 4.0已经支持key的异步删除，欢迎使用。</li>
 </ul>
-<h3><span id="hash-删除-hscan-hdel">Hash 删除: hscan + hdel</span></h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">delBigHash</span><span class="token punctuation">(</span><span class="token class-name">String</span> host<span class="token punctuation">,</span> <span class="token keyword">int</span> port<span class="token punctuation">,</span> <span class="token class-name">String</span> password<span class="token punctuation">,</span> <span class="token class-name">String</span> bigHashKey<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
- <span class="token class-name">Jedis</span> jedis <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Jedis</span><span class="token punctuation">(</span>host<span class="token punctuation">,</span> port<span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token keyword">if</span> <span class="token punctuation">(</span>password <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token string">""</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>password<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        jedis<span class="token punctuation">.</span><span class="token function">auth</span><span class="token punctuation">(</span>password<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
- <span class="token class-name">ScanParams</span> scanParams <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ScanParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token class-name">String</span> cursor <span class="token operator">=</span> <span class="token string">"0"</span><span class="token punctuation">;</span>
- <span class="token keyword">do</span> <span class="token punctuation">&#123;</span>
- <span class="token class-name">ScanResult</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Entry</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">></span><span class="token punctuation">></span></span> scanResult <span class="token operator">=</span> jedis<span class="token punctuation">.</span><span class="token function">hscan</span><span class="token punctuation">(</span>bigHashKey<span class="token punctuation">,</span> cursor<span class="token punctuation">,</span> scanParams<span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Entry</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">></span><span class="token punctuation">></span></span> entryList <span class="token operator">=</span> scanResult<span class="token punctuation">.</span><span class="token function">getResult</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token keyword">if</span> <span class="token punctuation">(</span>entryList <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>entryList<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
- <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Entry</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">></span></span> entry <span class="token operator">:</span> entryList<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                jedis<span class="token punctuation">.</span><span class="token function">hdel</span><span class="token punctuation">(</span>bigHashKey<span class="token punctuation">,</span> entry<span class="token punctuation">.</span><span class="token function">getKey</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-        cursor <span class="token operator">=</span> scanResult<span class="token punctuation">.</span><span class="token function">getStringCursor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token string">"0"</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>cursor<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
- <span class="token comment">// 删除 bigkey</span>
-    jedis<span class="token punctuation">.</span><span class="token function">del</span><span class="token punctuation">(</span>bigHashKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="list-删除-ltrim">List 删除: ltrim</span></h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">delBigList</span><span class="token punctuation">(</span><span class="token class-name">String</span> host<span class="token punctuation">,</span> <span class="token keyword">int</span> port<span class="token punctuation">,</span> <span class="token class-name">String</span> password<span class="token punctuation">,</span> <span class="token class-name">String</span> bigListKey<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
- <span class="token class-name">Jedis</span> jedis <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Jedis</span><span class="token punctuation">(</span>host<span class="token punctuation">,</span> port<span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token keyword">if</span> <span class="token punctuation">(</span>password <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token string">""</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>password<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        jedis<span class="token punctuation">.</span><span class="token function">auth</span><span class="token punctuation">(</span>password<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
- <span class="token keyword">long</span> llen <span class="token operator">=</span> jedis<span class="token punctuation">.</span><span class="token function">llen</span><span class="token punctuation">(</span>bigListKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token keyword">int</span> counter <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
- <span class="token keyword">int</span> left <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">;</span>
- <span class="token keyword">while</span> <span class="token punctuation">(</span>counter <span class="token operator">&lt;</span> llen<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
- <span class="token comment">// 每次从左侧截掉 100 个</span>
-        jedis<span class="token punctuation">.</span><span class="token function">ltrim</span><span class="token punctuation">(</span>bigListKey<span class="token punctuation">,</span> left<span class="token punctuation">,</span> llen<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        counter <span class="token operator">+=</span> left<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
- <span class="token comment">// 最终删除 key</span>
-    jedis<span class="token punctuation">.</span><span class="token function">del</span><span class="token punctuation">(</span>bigListKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="set-删除-sscan-srem">Set 删除: sscan + srem</span></h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">delBigSet</span><span class="token punctuation">(</span><span class="token class-name">String</span> host<span class="token punctuation">,</span> <span class="token keyword">int</span> port<span class="token punctuation">,</span> <span class="token class-name">String</span> password<span class="token punctuation">,</span> <span class="token class-name">String</span> bigSetKey<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
- <span class="token class-name">Jedis</span> jedis <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Jedis</span><span class="token punctuation">(</span>host<span class="token punctuation">,</span> port<span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token keyword">if</span> <span class="token punctuation">(</span>password <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token string">""</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>password<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        jedis<span class="token punctuation">.</span><span class="token function">auth</span><span class="token punctuation">(</span>password<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
- <span class="token class-name">ScanParams</span> scanParams <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ScanParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token class-name">String</span> cursor <span class="token operator">=</span> <span class="token string">"0"</span><span class="token punctuation">;</span>
- <span class="token keyword">do</span> <span class="token punctuation">&#123;</span>
- <span class="token class-name">ScanResult</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> scanResult <span class="token operator">=</span> jedis<span class="token punctuation">.</span><span class="token function">sscan</span><span class="token punctuation">(</span>bigSetKey<span class="token punctuation">,</span> cursor<span class="token punctuation">,</span> scanParams<span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> memberList <span class="token operator">=</span> scanResult<span class="token punctuation">.</span><span class="token function">getResult</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token keyword">if</span> <span class="token punctuation">(</span>memberList <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>memberList<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
- <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">String</span> member <span class="token operator">:</span> memberList<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                jedis<span class="token punctuation">.</span><span class="token function">srem</span><span class="token punctuation">(</span>bigSetKey<span class="token punctuation">,</span> member<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-        cursor <span class="token operator">=</span> scanResult<span class="token punctuation">.</span><span class="token function">getStringCursor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token string">"0"</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>cursor<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
- <span class="token comment">// 删除 bigkey</span>
-    jedis<span class="token punctuation">.</span><span class="token function">del</span><span class="token punctuation">(</span>bigSetKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="sortedset-删除-zscan-zrem">SortedSet 删除: zscan + zrem</span></h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">delBigZset</span><span class="token punctuation">(</span><span class="token class-name">String</span> host<span class="token punctuation">,</span> <span class="token keyword">int</span> port<span class="token punctuation">,</span> <span class="token class-name">String</span> password<span class="token punctuation">,</span> <span class="token class-name">String</span> bigZsetKey<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
- <span class="token class-name">Jedis</span> jedis <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Jedis</span><span class="token punctuation">(</span>host<span class="token punctuation">,</span> port<span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token keyword">if</span> <span class="token punctuation">(</span>password <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token string">""</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>password<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        jedis<span class="token punctuation">.</span><span class="token function">auth</span><span class="token punctuation">(</span>password<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
- <span class="token class-name">ScanParams</span> scanParams <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ScanParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token class-name">String</span> cursor <span class="token operator">=</span> <span class="token string">"0"</span><span class="token punctuation">;</span>
- <span class="token keyword">do</span> <span class="token punctuation">&#123;</span>
- <span class="token class-name">ScanResult</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Tuple</span><span class="token punctuation">></span></span> scanResult <span class="token operator">=</span> jedis<span class="token punctuation">.</span><span class="token function">zscan</span><span class="token punctuation">(</span>bigZsetKey<span class="token punctuation">,</span> cursor<span class="token punctuation">,</span> scanParams<span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Tuple</span><span class="token punctuation">></span></span> tupleList <span class="token operator">=</span> scanResult<span class="token punctuation">.</span><span class="token function">getResult</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
- <span class="token keyword">if</span> <span class="token punctuation">(</span>tupleList <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>tupleList<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
- <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Tuple</span> tuple <span class="token operator">:</span> tupleList<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                jedis<span class="token punctuation">.</span><span class="token function">zrem</span><span class="token punctuation">(</span>bigZsetKey<span class="token punctuation">,</span> tuple<span class="token punctuation">.</span><span class="token function">getElement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-        cursor <span class="token operator">=</span> scanResult<span class="token punctuation">.</span><span class="token function">getStringCursor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token string">"0"</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>cursor<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
- <span class="token comment">// 删除 bigkey</span>
-    jedis<span class="token punctuation">.</span><span class="token function">del</span><span class="token punctuation">(</span>bigZsetKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="Hash删除-hscan-hdel"><a href="#Hash删除-hscan-hdel" class="headerlink" title="Hash删除: hscan + hdel"></a>Hash删除: hscan + hdel</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delBigHash</span><span class="params">(String host, <span class="keyword">int</span> port, String password, String bigHashKey)</span> </span>&#123;</span><br><span class="line"> Jedis jedis = <span class="keyword">new</span> Jedis(host, port);</span><br><span class="line"> <span class="keyword">if</span> (password != <span class="keyword">null</span> &amp;&amp; !<span class="string">&quot;&quot;</span>.equals(password)) &#123;</span><br><span class="line">        jedis.auth(password);</span><br><span class="line">    &#125;</span><br><span class="line"> ScanParams scanParams = <span class="keyword">new</span> ScanParams().count(<span class="number">100</span>);</span><br><span class="line"> String cursor = <span class="string">&quot;0&quot;</span>;</span><br><span class="line"> <span class="keyword">do</span> &#123;</span><br><span class="line"> ScanResult&lt;Entry&lt;String, String&gt;&gt; scanResult = jedis.hscan(bigHashKey, cursor, scanParams);</span><br><span class="line"> List&lt;Entry&lt;String, String&gt;&gt; entryList = scanResult.getResult();</span><br><span class="line"> <span class="keyword">if</span> (entryList != <span class="keyword">null</span> &amp;&amp; !entryList.isEmpty()) &#123;</span><br><span class="line"> <span class="keyword">for</span> (Entry&lt;String, String&gt; entry : entryList) &#123;</span><br><span class="line">                jedis.hdel(bigHashKey, entry.getKey());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        cursor = scanResult.getStringCursor();</span><br><span class="line">    &#125; <span class="keyword">while</span> (!<span class="string">&quot;0&quot;</span>.equals(cursor));</span><br><span class="line"></span><br><span class="line"> <span class="comment">//删除bigkey</span></span><br><span class="line">    jedis.del(bigHashKey);</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<h3 id="List删除-ltrim"><a href="#List删除-ltrim" class="headerlink" title="List删除: ltrim"></a>List删除: ltrim</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delBigList</span><span class="params">(String host, <span class="keyword">int</span> port, String password, String bigListKey)</span> </span>&#123;</span><br><span class="line"> Jedis jedis = <span class="keyword">new</span> Jedis(host, port);</span><br><span class="line"> <span class="keyword">if</span> (password != <span class="keyword">null</span> &amp;&amp; !<span class="string">&quot;&quot;</span>.equals(password)) &#123;</span><br><span class="line">        jedis.auth(password);</span><br><span class="line">    &#125;</span><br><span class="line"> <span class="keyword">long</span> llen = jedis.llen(bigListKey);</span><br><span class="line"> <span class="keyword">int</span> counter = <span class="number">0</span>;</span><br><span class="line"> <span class="keyword">int</span> left = <span class="number">100</span>;</span><br><span class="line"> <span class="keyword">while</span> (counter &lt; llen) &#123;</span><br><span class="line"> <span class="comment">//每次从左侧截掉100个</span></span><br><span class="line">        jedis.ltrim(bigListKey, left, llen);</span><br><span class="line">        counter += left;</span><br><span class="line">    &#125;</span><br><span class="line"> <span class="comment">//最终删除key</span></span><br><span class="line">    jedis.del(bigListKey);</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<h3 id="Set删除-sscan-srem"><a href="#Set删除-sscan-srem" class="headerlink" title="Set删除: sscan + srem"></a>Set删除: sscan + srem</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delBigSet</span><span class="params">(String host, <span class="keyword">int</span> port, String password, String bigSetKey)</span> </span>&#123;</span><br><span class="line"> Jedis jedis = <span class="keyword">new</span> Jedis(host, port);</span><br><span class="line"> <span class="keyword">if</span> (password != <span class="keyword">null</span> &amp;&amp; !<span class="string">&quot;&quot;</span>.equals(password)) &#123;</span><br><span class="line">        jedis.auth(password);</span><br><span class="line">    &#125;</span><br><span class="line"> ScanParams scanParams = <span class="keyword">new</span> ScanParams().count(<span class="number">100</span>);</span><br><span class="line"> String cursor = <span class="string">&quot;0&quot;</span>;</span><br><span class="line"> <span class="keyword">do</span> &#123;</span><br><span class="line"> ScanResult&lt;String&gt; scanResult = jedis.sscan(bigSetKey, cursor, scanParams);</span><br><span class="line"> List&lt;String&gt; memberList = scanResult.getResult();</span><br><span class="line"> <span class="keyword">if</span> (memberList != <span class="keyword">null</span> &amp;&amp; !memberList.isEmpty()) &#123;</span><br><span class="line"> <span class="keyword">for</span> (String member : memberList) &#123;</span><br><span class="line">                jedis.srem(bigSetKey, member);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        cursor = scanResult.getStringCursor();</span><br><span class="line">    &#125; <span class="keyword">while</span> (!<span class="string">&quot;0&quot;</span>.equals(cursor));</span><br><span class="line"></span><br><span class="line"> <span class="comment">//删除bigkey</span></span><br><span class="line">    jedis.del(bigSetKey);</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<h3 id="SortedSet删除-zscan-zrem"><a href="#SortedSet删除-zscan-zrem" class="headerlink" title="SortedSet删除: zscan + zrem"></a>SortedSet删除: zscan + zrem</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delBigZset</span><span class="params">(String host, <span class="keyword">int</span> port, String password, String bigZsetKey)</span> </span>&#123;</span><br><span class="line"> Jedis jedis = <span class="keyword">new</span> Jedis(host, port);</span><br><span class="line"> <span class="keyword">if</span> (password != <span class="keyword">null</span> &amp;&amp; !<span class="string">&quot;&quot;</span>.equals(password)) &#123;</span><br><span class="line">        jedis.auth(password);</span><br><span class="line">    &#125;</span><br><span class="line"> ScanParams scanParams = <span class="keyword">new</span> ScanParams().count(<span class="number">100</span>);</span><br><span class="line"> String cursor = <span class="string">&quot;0&quot;</span>;</span><br><span class="line"> <span class="keyword">do</span> &#123;</span><br><span class="line"> ScanResult&lt;Tuple&gt; scanResult = jedis.zscan(bigZsetKey, cursor, scanParams);</span><br><span class="line"> List&lt;Tuple&gt; tupleList = scanResult.getResult();</span><br><span class="line"> <span class="keyword">if</span> (tupleList != <span class="keyword">null</span> &amp;&amp; !tupleList.isEmpty()) &#123;</span><br><span class="line"> <span class="keyword">for</span> (Tuple tuple : tupleList) &#123;</span><br><span class="line">                jedis.zrem(bigZsetKey, tuple.getElement());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        cursor = scanResult.getStringCursor();</span><br><span class="line">    &#125; <span class="keyword">while</span> (!<span class="string">&quot;0&quot;</span>.equals(cursor));</span><br><span class="line"></span><br><span class="line"> <span class="comment">//删除bigkey</span></span><br><span class="line">    jedis.del(bigZsetKey);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>原作者：付磊 - 起扬 <br> 原文链接：<a href="https://link.zhihu.com/?target=https%3A//yq.aliyun.com/articles/531067">阿里云 Redis 开发规范 - 云栖社区 - 阿里云 </a><br> 原出处：阿里云</p>
+<p>原作者：付磊-起扬<br>原文链接：<a href="https://link.zhihu.com/?target=https%3A//yq.aliyun.com/articles/531067">阿里云Redis开发规范-云栖社区-阿里云</a><br>原出处：阿里云</p>
 </blockquote>
 
-            </div>
-            <!-- Post Comments -->
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Redis/"># Redis</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2017/01/09/Linux/%E5%B7%A5%E5%85%B7%E4%B9%8B%E7%AE%80%E6%98%8Etmux%E7%8E%A9%E6%B3%95%E6%95%99%E7%A8%8B/">简明tmux玩法教程</a>
+            
+            
+            <a class="next" rel="next" href="/2017/01/05/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E4%B9%8B%E5%BE%AE%E6%9C%8D%E5%8A%A1/">什么是微服务</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

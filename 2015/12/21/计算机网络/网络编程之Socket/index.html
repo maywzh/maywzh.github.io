@@ -1,416 +1,331 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>探秘socket | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/23/iwyWKROgfjVtPJs.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>探秘 socket</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>我们经常在网络编程接触 socket 这个概念，简而言之，socket 就是网络套接字，提供一个网络通信的接口给通信的进程，但这样讲了等于没讲，今天就来好好研究研究。</p>
-<h2><span id="啥是-socket">啥是 socket</span></h2><p>虽然 socket 平时还是相当常用的，每当需要做网络编程的时候都会用到它，但深究起来，似乎还真的没办法说的很清楚。计算机里边有许多概念就是这样，比较抽象，解释了跟没解释一样。在此我们用大白话描述一下，争取让”街上卖煎饼果子的大叔“都能听懂。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">探秘socket</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">December 21, 2015&nbsp;&nbsp;3:28:18</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>我们经常在网络编程接触socket这个概念，简而言之，socket就是网络套接字，提供一个网络通信的接口给通信的进程，但这样讲了等于没讲，今天就来好好研究研究。</p>
+<h2 id="啥是socket"><a href="#啥是socket" class="headerlink" title="啥是socket"></a>啥是socket</h2><p>虽然socket平时还是相当常用的，每当需要做网络编程的时候都会用到它，但深究起来，似乎还真的没办法说的很清楚。计算机里边有许多概念就是这样，比较抽象，解释了跟没解释一样。在此我们用大白话描述一下，争取让”街上卖煎饼果子的大叔“都能听懂。</p>
 <p>简单来说，<strong>socket 是对底层网络通信的一层抽象，让程序员可以像文件那样操作网络上发送和接收的数据。</strong></p>
 <a id="more"></a>
 <blockquote>
 <p>veryone knows what a files is… It’s that “photo”, “document”, or “music” that you use. Programs are made of files, in fact, the whole Linux operating system is just a collection of files… But, now for the weird part. Not only is that digital photo that you uploaded to your computer a file, but your monitor is a file too! You see, in Linux, everything is a file! WOW!!! How can that be? Let’s try to explain it.</p>
-<p>在 linux 和 Unix 系统中，一起都是文件。</p>
+<p>在linux和Unix系统中，一起都是文件。</p>
 </blockquote>
 <p>这么说更加一脸懵逼了。我们举个例子。</p>
-<p>A 与 B 打电话，A、B 正对应于需要通信的两个进程。A 想要和 B 通信，那么 A 就需要调用通信接口发信息（拨打电话），B 也调用通信接口接受信息（接电话）。电话在这里就相当于 socket，是 A、B 语音通信的接口，而电话的原理，A、B 并不关心（进程不关心网络通信实现的细节）。</p>
-<p>假设现在你要编程网络程序，进行服务器端和客户端的通信（数据交换）。对于服务端的通信进程 SPrs 和客户端的通信进程 CPrs 来说，他们的核心功能其实就是发送、接受数据。而中间的数据缓冲、监听端口、控制 IO、封装解析 TCP/IP 协议等工作是非常标准化而繁琐的。那么按照模块分层设计原则，这些底层的功能就应该用接口来实现。socket 正是这样一个接口，它将网络连接封装为一个 socket 模块，对于想要通信的双方而言，只要调用 socket，就好像他们在直接通话一样。</p>
+<p>A与B打电话，A、B正对应于需要通信的两个进程。A想要和B通信，那么A就需要调用通信接口发信息（拨打电话），B也调用通信接口接受信息（接电话）。电话在这里就相当于socket，是A、B语音通信的接口，而电话的原理，A、B并不关心（进程不关心网络通信实现的细节）。</p>
+<p>假设现在你要编程网络程序，进行服务器端和客户端的通信（数据交换）。对于服务端的通信进程SPrs和客户端的通信进程CPrs来说，他们的核心功能其实就是发送、接受数据。而中间的数据缓冲、监听端口、控制IO、封装解析TCP/IP协议等工作是非常标准化而繁琐的。那么按照模块分层设计原则，这些底层的功能就应该用接口来实现。socket正是这样一个接口，它将网络连接封装为一个socket模块，对于想要通信的双方而言，只要调用socket，就好像他们在直接通话一样。</p>
 <p>socket，它现在已经是操作系统的一部分，在 linux 中是标准的系统调用，只要调用它提供的一组接口（下面会详解常用函数的使用），就能轻松地建立连接，读写数据，关闭连接，让网络操作就像文件操作一样简单。</p>
-<h2><span id="通信地址">通信地址 </span></h2><p> 正如想要打电话需要知道电话号码和分机号一样，在网络编程中，想要通信的双方也需要知道对方的通信地址。</p>
-<p>在网络编程中，一个进程的地址是一个三元组（ip, port 端口, protocol 协议）。</p>
+<h2 id="通信地址"><a href="#通信地址" class="headerlink" title="通信地址"></a>通信地址</h2><p>正如想要打电话需要知道电话号码和分机号一样，在网络编程中，想要通信的双方也需要知道对方的通信地址。</p>
+<p>在网络编程中，一个进程的地址是一个三元组（ip, port端口, protocol协议）。</p>
 <p>ip 地址是网络层用来路由和通信的标识符，端口（port） 是传输层管理的。而 socket 是在这两层之上，所以需要这两个地址来标识。这里的协议指的是 ipv4，ipv6 或者其他协议。</p>
-<h2><span id="socket-类型">socket 类型</span></h2><p>socket 类型在创建时指定，常用的有三种</p>
+<h2 id="socket类型"><a href="#socket类型" class="headerlink" title="socket类型"></a>socket类型</h2><p>socket类型在创建时指定，常用的有三种</p>
 <ul>
 <li><p><code>SOCK_STREAM</code>：面向连接的稳定通信，底层是 TCP 协议。</p>
 </li>
 <li><p><code>SOCK_DGRAM</code>：无连接的通信，底层是 UDP 协议，需要上层的协议来保证可靠性。</p>
 </li>
-<li><p><code>SOCK_RAW</code>：更加灵活的数据控制，可指定 IP 头部。</p>
+<li><p><code>SOCK_RAW</code>：更加灵活的数据控制，可指定IP头部。</p>
 </li>
 </ul>
-<h2><span id="实战">实战 </span></h2><p> 一个典型的 tcp socket 连接如下图</p>
-<h3><span id="创建-socket">创建 socket</span></h3><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> socketid <span class="token operator">=</span> <span class="token function">socket</span><span class="token punctuation">(</span>family<span class="token punctuation">,</span> type<span class="token punctuation">,</span> protocol<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">//socketid: socket 描述符，可以看做是一个文件描述符，通过它来读 / 写数据</span>
-
-<span class="token comment">//family：整数，通信域。 </span>
-<span class="token comment">//   - AF_INET：因特网协议协议，网络地址，最常用。</span>
-<span class="token comment">//   - AF_UNIX，本地通信，文件地址</span>
-
-<span class="token comment">//type：通信类型</span>
-<span class="token comment">//   - SOCK_STREAM：可靠的，面向连接的服务，TCP 协议</span>
-<span class="token comment">//   - SOCK_DGRAM：不可靠，无连接的服务，UDP 协议</span>
-<span class="token comment">//   - SOCK_RAW：需要自己管理 IP 头部的数据</span>
-
-<span class="token comment">//protocol：协议, 一般设为 0， 表示使用默认协议</span>
-<span class="token comment">//   - IPPROTO_TCP，IPPROTO_UDP</span>
-    <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="关闭-socket">关闭 socket</span></h3><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> status <span class="token operator">=</span> <span class="token function">close</span><span class="token punctuation">(</span>socketid<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 返回值 0 正确</span>
-<span class="token comment">// 返回值 -1 出错</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><p>一个典型的tcp socket连接如下图</p>
+<h3 id="创建socket"><a href="#创建socket" class="headerlink" title="创建socket"></a>创建socket</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> socketid = socket(family, type, protocol);</span><br><span class="line"><span class="comment">//socketid: socket 描述符，可以看做是一个文件描述符，通过它来读/写数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//family：整数，通信域。 </span></span><br><span class="line"><span class="comment">//   - AF_INET：因特网协议协议，网络地址，最常用。</span></span><br><span class="line"><span class="comment">//   - AF_UNIX，本地通信，文件地址</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//type：通信类型</span></span><br><span class="line"><span class="comment">//   - SOCK_STREAM：可靠的，面向连接的服务，TCP 协议</span></span><br><span class="line"><span class="comment">//   - SOCK_DGRAM：不可靠，无连接的服务，UDP 协议</span></span><br><span class="line"><span class="comment">//   - SOCK_RAW：需要自己管理 IP 头部的数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//protocol：协议, 一般设为 0， 表示使用默认协议</span></span><br><span class="line"><span class="comment">//   - IPPROTO_TCP，IPPROTO_UDP</span></span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+<h3 id="关闭socket"><a href="#关闭socket" class="headerlink" title="关闭socket"></a>关闭socket</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> status = close(socketid);</span><br><span class="line"><span class="comment">//返回值0 正确</span></span><br><span class="line"><span class="comment">//返回值-1 出错</span></span><br></pre></td></tr></table></figure>
 <p>关闭连接和释放端口。</p>
-<h3><span id="服务端-客户端绑定bind地址三元组到-socket">服务端 / 客户端绑定（bind）地址三元组到 socket</span></h3><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">bind</span><span class="token punctuation">(</span><span class="token keyword">int</span> fd<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">struct</span> <span class="token class-name">sockaddr</span> <span class="token operator">*</span><span class="token punctuation">,</span> socklen_t<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 还记得那句话吗，在 Unix 系统里，一切都是文件，socket 也对应一个文件描述符 fd</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h3 id="服务端-客户端绑定（bind）地址三元组到-socket"><a href="#服务端-客户端绑定（bind）地址三元组到-socket" class="headerlink" title="服务端/客户端绑定（bind）地址三元组到 socket"></a>服务端/客户端绑定（bind）地址三元组到 socket</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bind</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">const</span> struct sockaddr *, <span class="keyword">socklen_t</span>)</span></span>;</span><br><span class="line"><span class="comment">// 还记得那句话吗，在Unix系统里，一切都是文件，socket也对应一个文件描述符fd</span></span><br></pre></td></tr></table></figure>
 <p>把 socket 绑定到某个地址三元组，用于 server 端监听端口。第一个参数是 socket 的描述符，第二个参数 <code>struct sockaddr</code> 是地址结构体，第三个参数是地址结构体的长度。绑定失败的话返回值为负数，否则为 -1，并且设置 <code>errno</code>。</p>
 <p>其中最重要的就是地址结构体，它在 <code>netinet/in.h</code> 中被定义：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">struct</span> <span class="token class-name">sockaddr_in</span>
-<span class="token punctuation">&#123;</span>
-  <span class="token keyword">short</span>   sin_family<span class="token punctuation">;</span> <span class="token comment">/* must be AF_INET */</span>
-  u_short sin_port<span class="token punctuation">;</span>   <span class="token comment">/* 端口号，必须要通过 htons 转换为网络格式 */</span>
-  <span class="token keyword">struct</span>  <span class="token class-name">in_addr</span> sin_addr<span class="token punctuation">;</span>  <span class="token comment">/* ip 地址 */</span>
-  <span class="token keyword">char</span>    sin_zero<span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">/* Not used, must be zero */</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">short</span>   sin_family; <span class="comment">/* must be AF_INET */</span></span><br><span class="line">  u_short sin_port;   <span class="comment">/* 端口号，必须要通过 htons 转换为网络格式 */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span>  <span class="title">in_addr</span> <span class="title">sin_addr</span>;</span>  <span class="comment">/* ip 地址 */</span></span><br><span class="line">  <span class="keyword">char</span>    sin_zero[<span class="number">8</span>]; <span class="comment">/* Not used, must be zero */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>其中， <code>in_addr</code> 也是在同一个文件夹被定义，格式为：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">struct</span> <span class="token class-name">in_addr</span>
-<span class="token punctuation">&#123;</span>
-    uint32_t s_addr<span class="token punctuation">;</span> <span class="token comment">//32 位整数 本机地址</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-<span class="token comment">// 可以用 INADDR_ANY 变量表示接受来自任何地址的连接，使用之前需要把地址变量初始化为全 0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">in_addr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">uint32_t</span> s_addr; <span class="comment">//32位整数 本机地址</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//可以用 INADDR_ANY 变量表示接受来自任何地址的连接，使用之前需要把地址变量初始化为全0</span></span><br></pre></td></tr></table></figure>
 <p>服务器端的 <code>s_addr</code> 是本机地址，<code>sockaddr</code> 是通用的 socket 地址结构，<code>sockaddr_in</code> 是网络 socket 的结构，参数有一个类型转换的过程。</p>
-<h3><span id="服务端监听listensocket">服务端监听（listen）socket</span></h3><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">listen</span><span class="token punctuation">(</span>sockfd<span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 参数 1 socket 描述符</span>
-<span class="token comment">// 参数 2 最大连接数，表示发来请求但是没有被 accept 的连接数量。</span>
-<span class="token comment">// listen 函数在成功时返回 0，失败时返回 -1，并且设置错误代码。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="服务端监听（listen）socket"><a href="#服务端监听（listen）socket" class="headerlink" title="服务端监听（listen）socket"></a>服务端监听（listen）socket</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">listen(sockfd, <span class="number">5</span>);</span><br><span class="line"><span class="comment">// 参数1 socket 描述符</span></span><br><span class="line"><span class="comment">// 参数2 最大连接数，表示发来请求但是没有被 accept 的连接数量。</span></span><br><span class="line"><span class="comment">// listen 函数在成功时返回 0，失败时返回 -1，并且设置错误代码。</span></span><br></pre></td></tr></table></figure>
 <p><code>listen</code> 系统调用让服务端进程监听在指定的 socket 上面，函数在成功时返回 0，失败时返回 -1，并且设置错误代码。</p>
-<h3><span id="客户端请求连接connect">客户端请求连接（connect）</span></h3><p>客户端要连接自己的 socket 和服务器的监听 socket：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">connect</span><span class="token punctuation">(</span><span class="token keyword">int</span> socket<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">struct</span> <span class="token class-name">sockaddr</span><span class="token operator">*</span> address<span class="token punctuation">,</span> size_t address_len<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// socket 是客户端本地创建的套接字</span>
-<span class="token comment">// address 是服务器的三元组地址</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="客户端请求连接（connect）"><a href="#客户端请求连接（connect）" class="headerlink" title="客户端请求连接（connect）"></a>客户端请求连接（connect）</h3><p>客户端要连接自己的 socket 和服务器的监听socket：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">connect</span><span class="params">(<span class="keyword">int</span> socket, <span class="keyword">const</span> struct sockaddr* address, <span class="keyword">size_t</span> address_len)</span></span>;</span><br><span class="line"><span class="comment">// socket 是客户端本地创建的套接字</span></span><br><span class="line"><span class="comment">// address 是服务器的三元组地址</span></span><br></pre></td></tr></table></figure>
 <p>成功调用时，服务器端将收到请求，<code>accept</code> 连接之后，就在两者之间建立了 socket 通信的管道，之后的读写就是直接对 socket 进行操作。</p>
-<h3><span id="服务端接受accept连接">服务端接受（accept）连接</span></h3><pre class="line-numbers language-c" data-language="c"><code class="language-c">new_socket <span class="token operator">=</span> <span class="token function">accept</span><span class="token punctuation">(</span>socket_desc<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">sockaddr</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>client<span class="token punctuation">,</span> <span class="token punctuation">(</span>socklen_t<span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>c<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="服务端接受（accept）连接"><a href="#服务端接受（accept）连接" class="headerlink" title="服务端接受（accept）连接"></a>服务端接受（accept）连接</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">new_socket = accept(socket_desc, (struct sockaddr *)&amp;client, (<span class="keyword">socklen_t</span>*)&amp;c);</span><br></pre></td></tr></table></figure>
 <p>每当接收到客户端的连接请求时，服务端调用<code>accept</code> 函数接受该连接，把客户端的 socket 地址信息保存到 <code>client</code> 变量里，新建一个 socket，返回其描述符，然后数据的读写就能通过新 socket 进行。 新 socket 的地址和服务器监听 socket 是一样的，如果不关心客户端地址信息的话，可以把第二个和第三个参数都设置为空指针 <code>NULL</code>。</p>
 <p>有了 <code>client</code> 变量，就能得到客户端的 <code>ip</code> 和 <code>port</code> ：</p>
-<pre class="line-numbers language-none"><code class="language-none">char *client_ip &#x3D; inet_ntoa(client.sin_addr);
-int client_port &#x3D; ntohs(client.sin_port);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">char</span> *client_ip = inet<span class="constructor">_ntoa(<span class="params">client</span>.<span class="params">sin_addr</span>)</span>;</span><br><span class="line"><span class="built_in">int</span> client_port = ntohs(client.sin_port);</span><br></pre></td></tr></table></figure>
 <p><strong>如果没有客户端连接，<code>accept</code> 函数将会阻塞，直到有连接过来</strong>。</p>
-<h3><span id="读-写write数据">读 / 写（Write）数据 </span></h3><p> 上面那么多的函数调用，只是建立了服务器端和客户端的连接，算是通信前的准备工作，两者都有了自己的 socket 描述符。 有了 socket 描述符，就可以像文件那样进行读写数据：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">write</span><span class="token punctuation">(</span>socket_des<span class="token punctuation">,</span> message<span class="token punctuation">,</span> <span class="token function">strlen</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token function">read</span><span class="token punctuation">(</span>socket_des<span class="token punctuation">,</span> buffer<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>buffer<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h3 id="读-写（Write）数据"><a href="#读-写（Write）数据" class="headerlink" title="读/写（Write）数据"></a>读/写（Write）数据</h3><p>上面那么多的函数调用，只是建立了服务器端和客户端的连接，算是通信前的准备工作，两者都有了自己的 socket 描述符。 有了 socket 描述符，就可以像文件那样进行读写数据：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">write(socket_des, message, <span class="built_in">strlen</span>(message));</span><br><span class="line">read(socket_des, buffer, <span class="keyword">sizeof</span>(buffer));</span><br></pre></td></tr></table></figure>
 <p>需要注意的是，<code>read</code> 函数调用是阻塞的，也就是说如果没有数据发送过来的话，该函数会一直等待，直到可以读到数据。</p>
 <p><code>read</code>和 <code>write</code> 返回的是实际读写的数据，这个数据最大是 buffer 的大小。如果传输的数据大于 buffer 的话，需要在程序里显式地去读取，否则会出错。</p>
 <p>你可能会想，我一直读到返回的数据小于 <code>sizeof(buff)</code> 不就行了。嗯，这是一个解决方案，不过要判断返回值不是 0，因为返回值是 0 表示连接已经中断（需要调用 <code>close</code> 来关闭 socket），而不是没有数据发送过来。</p>
-<h3><span id="其他常用函数">其他常用函数</span></h3><ol>
+<h3 id="其他常用函数"><a href="#其他常用函数" class="headerlink" title="其他常用函数"></a>其他常用函数</h3><ol>
 <li><p>获取 ip 地址</p>
 <p>很多时候，我们只知道服务器的域名，并不知道 ip 地址。<code>gethostbyname</code> 函数就能完成这个功能，<code>netdb.h</code> 文件里有它的定义，它的原型是：</p>
-<pre class="line-numbers language-none"><code class="language-none">#include &lt;netdb.h&gt; struct hostent * gethostbyname(const char *name);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netdb.h&gt;</span> struct hostent * gethostbyname(const char *name);</span></span><br></pre></td></tr></table></figure>
 <p>参数 <code>name</code> 是诸如 <code>www.google.com</code> 的字符串，返回值是 <code>struct hostent</code> 结构体，用来存储得到的地址信息。</p>
-<pre class="line-numbers language-none"><code class="language-none">struct hostent &#123; char *h_name; &#x2F;* Official name of host. *&#x2F; char **h_aliases; &#x2F;* Alias list. *&#x2F; int h_addrtype; &#x2F;* Host address type. *&#x2F; int h_length; &#x2F;* Length of address. *&#x2F; char **h_addr_list; &#x2F;* List of addresses from name server. *&#x2F; &#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">hostent</span> &#123;</span> <span class="keyword">char</span> *h_name; <span class="comment">/* Official name of host. */</span> <span class="keyword">char</span> **h_aliases; <span class="comment">/* Alias list. */</span> <span class="keyword">int</span> h_addrtype; <span class="comment">/* Host address type. */</span> <span class="keyword">int</span> h_length; <span class="comment">/* Length of address. */</span> <span class="keyword">char</span> **h_addr_list; <span class="comment">/* List of addresses from name server. */</span> &#125;;</span><br></pre></td></tr></table></figure>
 <p>如果函数调用失败，返回空指针 <code>NULL</code>。</p>
 </li>
 <li><p>把 long 类型的 ip 转换为字符串类型</p>
-<pre class="line-numbers language-none"><code class="language-none">#include &lt;arpa&#x2F;inet.h&gt; char *inet_ntoa(struct in_addr); int inet_aton(const char *cp, struct in_addr *inp);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#<span class="keyword">include</span> &lt;arpa/inet.h&gt; <span class="built_in">char</span> *inet<span class="constructor">_ntoa(<span class="params">struct</span> <span class="params">in_addr</span>)</span>; <span class="built_in">int</span> inet<span class="constructor">_aton(<span class="params">const</span> <span class="params">char</span> <span class="operator">*</span><span class="params">cp</span>, <span class="params">struct</span> <span class="params">in_addr</span> <span class="operator">*</span><span class="params">inp</span>)</span>;</span><br></pre></td></tr></table></figure>
 <p>上面的函数返回可用的 in_addr 结构体，需要你手动赋值。下面的函数把转换后的结构拷贝到 inp 指向的结构体里面，然后 inp 就可以直接使用了。</p>
 </li>
 <li><p>把字符串类型的 ip 转换为 long 类型</p>
-<pre class="line-numbers language-none"><code class="language-none">#include &lt;arpa&#x2F;inet.h&gt; in_addr_t inet_addr(const char *ip);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#<span class="keyword">include</span> &lt;arpa/inet.h&gt; in_addr_t inet<span class="constructor">_addr(<span class="params">const</span> <span class="params">char</span> <span class="operator">*</span><span class="params">ip</span>)</span>;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>把字符串转换成整数</p>
-<pre class="line-numbers language-none"><code class="language-none">int atoi(const char *nptr);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">atoi</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *nptr)</span></span>;</span><br></pre></td></tr></table></figure>
 <p>这个可以把从键盘输入的端口号转换成可用的整数。</p>
 </li>
 <li><p><code>getpeername</code>：获取连在某个 socket 另一端的客户地址(ip 和 port)</p>
-<pre class="line-numbers language-none"><code class="language-none">int getpeername(int sockfd, struct sockaddr *addr, socklen_t *addrlen);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getpeername</span><span class="params">(<span class="keyword">int</span> sockfd, struct sockaddr *addr, <span class="keyword">socklen_t</span> *addrlen)</span></span>;</span><br></pre></td></tr></table></figure>
 <p>返回的信息保存在 addr 结构体里。</p>
 </li>
 </ol>
-<h2><span id="demo-演示">Demo 演示 </span></h2><p> 本 demo 实现一个 EchoServer，监听 54321 端口，接受客户端的信息并加上时间戳发送回去。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;sys/socket.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;netinet/in.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;arpa/inet.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;errno.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;string.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;sys/types.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;time.h></span></span>
-
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token expression">BUFFER_SIZE <span class="token number">1024</span></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token expression">PORT <span class="token number">54321</span></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token expression">BACKLOG <span class="token number">5</span></span></span>
-
-<span class="token keyword">int</span> <span class="token function">setup_sock</span><span class="token punctuation">(</span><span class="token keyword">int</span> port<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token comment">/*
-        * This function sets up a socket listening on local port.
-        *
-        * port: port number to listen on.
-        * :return: socket file descriptor.
-        */</span>
-    <span class="token keyword">int</span> listen_fd<span class="token punctuation">;</span>
-    <span class="token keyword">struct</span> <span class="token class-name">sockaddr_in</span> serv_addr<span class="token punctuation">;</span>
-    
-    listen_fd <span class="token operator">=</span> <span class="token function">socket</span><span class="token punctuation">(</span>AF_INET<span class="token punctuation">,</span> SOCK_STREAM<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">memset</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>serv_addr<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>serv_addr<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    serv_addr<span class="token punctuation">.</span>sin_family <span class="token operator">=</span> AF_INET<span class="token punctuation">;</span>
-    serv_addr<span class="token punctuation">.</span>sin_addr<span class="token punctuation">.</span>s_addr <span class="token operator">=</span> <span class="token function">htonl</span><span class="token punctuation">(</span>INADDR_ANY<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    serv_addr<span class="token punctuation">.</span>sin_port <span class="token operator">=</span> <span class="token function">htons</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token function">bind</span><span class="token punctuation">(</span>listen_fd<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">sockaddr</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>serv_addr<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>serv_addr<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">listen</span><span class="token punctuation">(</span>listen_fd<span class="token punctuation">,</span> BACKLOG<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token keyword">return</span> listen_fd<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-
-<span class="token keyword">void</span> <span class="token function">echo_request</span><span class="token punctuation">(</span><span class="token keyword">int</span> conn_fd<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> n<span class="token punctuation">;</span>
-    time_t ticks<span class="token punctuation">;</span>
-    <span class="token keyword">char</span> sendBuff<span class="token punctuation">[</span>BUFFER_SIZE<span class="token punctuation">]</span><span class="token punctuation">;</span>
-    <span class="token keyword">char</span> recvBuff<span class="token punctuation">[</span>BUFFER_SIZE<span class="token punctuation">]</span><span class="token punctuation">;</span>
-    
-    <span class="token function">memset</span><span class="token punctuation">(</span>sendBuff<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>sendBuff<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">memset</span><span class="token punctuation">(</span>recvBuff<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>recvBuff<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token keyword">while</span><span class="token punctuation">(</span> <span class="token punctuation">(</span>n <span class="token operator">=</span> <span class="token function">recv</span><span class="token punctuation">(</span>conn_fd<span class="token punctuation">,</span> recvBuff<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>recvBuff<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span>
-    <span class="token punctuation">&#123;</span>
-        ticks <span class="token operator">=</span> <span class="token function">time</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token function">snprintf</span><span class="token punctuation">(</span>sendBuff<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>sendBuff<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"%.24s:"</span><span class="token punctuation">,</span> <span class="token function">ctime</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ticks<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-        recvBuff<span class="token punctuation">[</span>n<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'\0'</span><span class="token punctuation">;</span>
-        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"received:  %s"</span><span class="token punctuation">,</span> recvBuff<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token function">strcat</span><span class="token punctuation">(</span>sendBuff<span class="token punctuation">,</span> recvBuff<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token function">send</span><span class="token punctuation">(</span>conn_fd<span class="token punctuation">,</span> sendBuff<span class="token punctuation">,</span> <span class="token function">strlen</span><span class="token punctuation">(</span>sendBuff<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"received 0 bytes, close.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">close</span><span class="token punctuation">(</span>conn_fd<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span>argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> listen_fd <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> conn_fd <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    socklen_t cli_len<span class="token punctuation">;</span>
-    <span class="token keyword">struct</span> <span class="token class-name">sockaddr_in</span> cli_addr<span class="token punctuation">;</span>
-    
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"start server...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">memset</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>cli_addr<span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>cli_addr<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    listen_fd <span class="token operator">=</span> <span class="token function">setup_sock</span><span class="token punctuation">(</span>PORT<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"listening on 0.0.0.0 %d...\n"</span><span class="token punctuation">,</span> PORT<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    cli_len <span class="token operator">=</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>cli_addr<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
-    <span class="token punctuation">&#123;</span>
-        conn_fd <span class="token operator">=</span> <span class="token function">accept</span><span class="token punctuation">(</span>listen_fd<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">sockaddr</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>cli_addr<span class="token punctuation">,</span> <span class="token operator">&amp;</span>cli_len<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"client ip: %s, port: %d\n"</span><span class="token punctuation">,</span>
-                <span class="token function">inet_ntoa</span><span class="token punctuation">(</span>cli_addr<span class="token punctuation">.</span>sin_addr<span class="token punctuation">)</span><span class="token punctuation">,</span>
-                <span class="token function">ntohs</span><span class="token punctuation">(</span>cli_addr<span class="token punctuation">.</span>sin_port<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-        <span class="token function">echo_request</span><span class="token punctuation">(</span>conn_fd<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="Demo演示"><a href="#Demo演示" class="headerlink" title="Demo演示"></a>Demo演示</h2><p>本demo实现一个EchoServer，监听54321端口，接受客户端的信息并加上时间戳发送回去。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFFER_SIZE 1024</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PORT 54321</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BACKLOG 5</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setup_sock</span><span class="params">(<span class="keyword">int</span> port)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        * This function sets up a socket listening on local port.</span></span><br><span class="line"><span class="comment">        *</span></span><br><span class="line"><span class="comment">        * port: port number to listen on.</span></span><br><span class="line"><span class="comment">        * :return: socket file descriptor.</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">    <span class="keyword">int</span> listen_fd;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">serv_addr</span>;</span></span><br><span class="line">    </span><br><span class="line">    listen_fd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">memset</span>(&amp;serv_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(serv_addr));</span><br><span class="line">    </span><br><span class="line">    serv_addr.sin_family = AF_INET;</span><br><span class="line">    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);</span><br><span class="line">    serv_addr.sin_port = htons(port);</span><br><span class="line">    </span><br><span class="line">    bind(listen_fd, (struct sockaddr*)&amp;serv_addr, <span class="keyword">sizeof</span>(serv_addr));</span><br><span class="line">    listen(listen_fd, BACKLOG);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> listen_fd;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">echo_request</span><span class="params">(<span class="keyword">int</span> conn_fd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="keyword">time_t</span> ticks;</span><br><span class="line">    <span class="keyword">char</span> sendBuff[BUFFER_SIZE];</span><br><span class="line">    <span class="keyword">char</span> recvBuff[BUFFER_SIZE];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">memset</span>(sendBuff, <span class="number">0</span>, <span class="keyword">sizeof</span>(sendBuff));</span><br><span class="line">    <span class="built_in">memset</span>(recvBuff, <span class="number">0</span>, <span class="keyword">sizeof</span>(recvBuff));</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span>( (n = recv(conn_fd, recvBuff, <span class="keyword">sizeof</span>(recvBuff), <span class="number">0</span>)) &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        ticks = time(<span class="literal">NULL</span>);</span><br><span class="line">        <span class="built_in">snprintf</span>(sendBuff, <span class="keyword">sizeof</span>(sendBuff), <span class="string">&quot;%.24s: &quot;</span>, ctime(&amp;ticks));</span><br><span class="line">    </span><br><span class="line">        recvBuff[n] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;received:  %s&quot;</span>, recvBuff);</span><br><span class="line">        <span class="built_in">strcat</span>(sendBuff, recvBuff);</span><br><span class="line">        send(conn_fd, sendBuff, <span class="built_in">strlen</span>(sendBuff), <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;received 0 bytes, close.\n&quot;</span>);</span><br><span class="line">    close(conn_fd);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> listen_fd = <span class="number">0</span>, conn_fd = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">socklen_t</span> cli_len;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">cli_addr</span>;</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;start server...\n&quot;</span>);</span><br><span class="line">    <span class="built_in">memset</span>(&amp;cli_addr, <span class="string">&#x27;0&#x27;</span>, <span class="keyword">sizeof</span>(cli_addr));</span><br><span class="line">    </span><br><span class="line">    listen_fd = setup_sock(PORT);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;listening on 0.0.0.0 %d...\n&quot;</span>, PORT);</span><br><span class="line">    </span><br><span class="line">    cli_len = <span class="keyword">sizeof</span>(cli_addr);</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        conn_fd = accept(listen_fd, (struct sockaddr*)&amp;cli_addr, &amp;cli_len);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;client ip: %s, port: %d\n&quot;</span>,</span><br><span class="line">                inet_ntoa(cli_addr.sin_addr),</span><br><span class="line">                ntohs(cli_addr.sin_port));</span><br><span class="line">    </span><br><span class="line">        echo_request(conn_fd);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>用 telnet 测试的结果如下：</p>
-<h2><span id="参考资料">参考资料</span></h2><ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
 <li><a target="_blank" rel="noopener" href="http://www.csd.uoc.gr/~hy556/material/tutorials/cs556-3rd-tutorial.pdf">Introduction to Sockets Programming in C using TCP/IP</a></li>
 <li><a target="_blank" rel="noopener" href="http://beej.us/guide/bgnet/">Beej’s Guide to Network Programming Using Internet Sockets</a></li>
 <li><a target="_blank" rel="noopener" href="http://www.binarytides.com/socket-programming-c-linux-tutorial/">socket programming in C on Linux</a></li>
 </ul>
 
-            </div>
-            <!-- Post Comments -->
-            
-            
-    <!-- 使用 valine -->
-<div id="comment">
-    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
-<script>
-    new Valine({
-        el: '#comment' ,
-        notify: false,
-        verify: false,
-        app_id: '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
-        app_key: 'UrBohelQ00fEUxu5npX46rtL',
-        placeholder: 'Just go go',
-        pageSize: '10',
-        avatar: 'mm',
-        avatar_cdn: 'https://gravatar.loli.net/avatar/'
-    });
-</script>
-</div>
-<style>
-   #comment{
-        padding: 2pc;
-    }
-</style>
-
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/TCP-IP/"># TCP/IP</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2015/12/25/git/git%E7%AC%94%E8%AE%B0%E4%B9%8B%E4%BB%A3%E7%90%86/">GitHub 使用代理</a>
+            
+            
+            <a class="next" rel="next" href="/2015/12/16/Linux/Linux%E4%B8%AD%E7%9A%84lsof/">Linux中的lsof</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

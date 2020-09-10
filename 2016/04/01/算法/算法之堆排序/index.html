@@ -1,167 +1,205 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>排序之堆排序与JavaScript实现 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/23/lAvyqsoD4U35Ork.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>排序之堆排序与 JavaScript 实现</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <h3><span id="成堆-heapify">成堆 <code>Heapify</code></span></h3><p>对于一个给定的数组，我们不一定实现堆这个类，而是通过 <strong> 成堆 (Heapify)</strong> 这样的操作来使得数组具有堆的性质。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">排序之堆排序与JavaScript实现</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 1, 2016&nbsp;&nbsp;21:07:39</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="成堆-Heapify"><a href="#成堆-Heapify" class="headerlink" title="成堆 Heapify"></a>成堆 <code>Heapify</code></h3><p>对于一个给定的数组，我们不一定实现堆这个类，而是通过<strong>成堆 (Heapify)</strong> 这样的操作来使得数组具有堆的性质。</p>
 <p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/Heapify.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/Heapify.png" alt="img"></a></p>
 <p>如图所示，要使得这个数组所对应的完全二叉树形成一个最大堆，只需要使得每一棵子树都形成最大堆即可。那么不难看出，所有的叶子结点都可以看作是一个仅有一个元素的最大堆，所以我们只需要从最后一个非叶子结点开始，通过前一节的 <code>shiftDown</code> 操作，就可以很容易的构建出最大堆来。</p>
 <blockquote>
@@ -176,68 +214,17 @@
 <p>动画演示:</p>
 <p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/Heapify.gif"><img src="http://mitscherlich.me/assets/imooc-algorithms/Heapify.gif" alt="img"></a></p>
 <p>示例代码</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">const</span> <span class="token punctuation">&#123;</span> PrintableMaxHeap <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./02-Max-Heap-Class-Basic'</span><span class="token punctuation">)</span>
-
-<span class="token comment">// heapSort1, 将所有的元素依次添加到堆中, 在将所有元素从堆中依次取出来, 即完成了排序</span>
-<span class="token comment">// 无论是创建堆的过程, 还是从堆中依次取出元素的过程, 时间复杂度均为 O(nlogn)</span>
-<span class="token comment">// 整个堆排序的整体时间复杂度为 O(nlogn)</span>
-exports<span class="token punctuation">.</span><span class="token function-variable function">heapSort1</span> <span class="token operator">=</span> <span class="token parameter">array</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">const</span> n <span class="token operator">=</span> array<span class="token punctuation">.</span>length
-  <span class="token keyword">const</span> maxHeap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PrintableMaxHeap</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span>
-  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> i <span class="token keyword">of</span> array<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    maxHeap<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    array<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> maxHeap<span class="token punctuation">.</span><span class="token function">extractMax</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token keyword">return</span> array
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">// heapSort2, 借助我们的 heapify 过程创建堆</span>
-<span class="token comment">// 此时, 创建堆的过程时间复杂度为 O(n), 将所有元素依次从堆中取出来, 时间复杂度为 O(nlogn)</span>
-<span class="token comment">// 堆排序的总体时间复杂度依然是 O(nlogn), 但是比上述 heapSort1 性能更优, 因为创建堆的性能更优</span>
-exports<span class="token punctuation">.</span><span class="token function-variable function">heapSort2</span> <span class="token operator">=</span> <span class="token parameter">array</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">const</span> n <span class="token operator">=</span> array<span class="token punctuation">.</span>length
-  <span class="token keyword">const</span> maxHeap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PrintableMaxHeap</span><span class="token punctuation">(</span>array<span class="token punctuation">,</span> n<span class="token punctuation">)</span>
-  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    array<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> maxHeap<span class="token punctuation">.</span><span class="token function">extractMax</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token keyword">return</span> array
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">MaxHeap</span> <span class="token punctuation">&#123;</span>
-  <span class="token comment">// 新的构造函数，传入一个数组使其成最大堆</span>
-  <span class="token function">constructor</span> <span class="token punctuation">(</span><span class="token parameter">array</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">const</span> n <span class="token operator">=</span> array<span class="token punctuation">.</span>length
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#data <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Array</span><span class="token punctuation">(</span>n <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#capacity <span class="token operator">=</span> n
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> array<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">=</span> n
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>n <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span> i <span class="token operator">>=</span> <span class="token number">1</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      <span class="token function">shiftDownEnhance</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">,</span> i<span class="token punctuation">,</span> n<span class="token punctuation">)</span>  <span class="token comment">// 见【慕课】重学算法 - part.3 堆排序 (1)</span>
-    <span class="token punctuation">&#125;</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token operator">...</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4><span id="通过堆进行排序">通过堆进行排序 </span></h4><p> 通过新的构造函数，我们可以方便的将一个数组构造为最大堆，显而易见的，我们将数组放入再取出最大堆的过程，其实就完成了一次排序。我们可以这样实现:</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">/**
- * generateRandomArray @see https://github.com/Mitscherlich/Play-with-Algorithms-JS/blob/master/test/utils/index.js#L8
- */</span>
-<span class="token keyword">const</span> sorted <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-<span class="token keyword">const</span> array <span class="token operator">=</span> <span class="token function">generateRandomArray</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span>
-<span class="token keyword">const</span> maxHeap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MaxHeap</span><span class="token punctuation">(</span>array<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>maxHeap<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  sorted<span class="token punctuation">.</span><span class="token function">unshift</span><span class="token punctuation">(</span>maxHeap<span class="token punctuation">.</span><span class="token function">extractMax</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>sorted<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; PrintableMaxHeap &#125; = <span class="built_in">require</span>(<span class="string">&#x27;./02-Max-Heap-Class-Basic&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// heapSort1, 将所有的元素依次添加到堆中, 在将所有元素从堆中依次取出来, 即完成了排序</span></span><br><span class="line"><span class="comment">// 无论是创建堆的过程, 还是从堆中依次取出元素的过程, 时间复杂度均为 O(nlogn)</span></span><br><span class="line"><span class="comment">// 整个堆排序的整体时间复杂度为 O(nlogn)</span></span><br><span class="line"><span class="built_in">exports</span>.heapSort1 = <span class="function"><span class="params">array</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> n = array.length</span><br><span class="line">  <span class="keyword">const</span> maxHeap = <span class="keyword">new</span> PrintableMaxHeap(n)</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> i <span class="keyword">of</span> array) &#123;</span><br><span class="line">    maxHeap.insert(i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    array[i] = maxHeap.extractMax()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// heapSort2, 借助我们的 heapify 过程创建堆</span></span><br><span class="line"><span class="comment">// 此时, 创建堆的过程时间复杂度为 O(n), 将所有元素依次从堆中取出来, 时间复杂度为 O(nlogn)</span></span><br><span class="line"><span class="comment">// 堆排序的总体时间复杂度依然是 O(nlogn), 但是比上述 heapSort1 性能更优, 因为创建堆的性能更优</span></span><br><span class="line"><span class="built_in">exports</span>.heapSort2 = <span class="function"><span class="params">array</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> n = array.length</span><br><span class="line">  <span class="keyword">const</span> maxHeap = <span class="keyword">new</span> PrintableMaxHeap(array, n)</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    array[i] = maxHeap.extractMax()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaxHeap</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 新的构造函数，传入一个数组使其成最大堆</span></span><br><span class="line">  <span class="keyword">constructor</span> (array) &#123;</span><br><span class="line">    <span class="keyword">const</span> n = array.length</span><br><span class="line">    this.#data = new Array(n + 1)</span><br><span class="line">    this.#capacity = n</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">      this.#data[i + 1] = array[i]</span><br><span class="line">    &#125;</span><br><span class="line">    this.#count = n</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="built_in">Math</span>.floor(n / <span class="number">2</span>); i &gt;= <span class="number">1</span>; i--) &#123;</span><br><span class="line">      shiftDownEnhance(this.#data, i, n)  // 见【慕课】重学算法 - part.3 堆排序 (1)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="通过堆进行排序"><a href="#通过堆进行排序" class="headerlink" title="通过堆进行排序"></a>通过堆进行排序</h4><p>通过新的构造函数，我们可以方便的将一个数组构造为最大堆，显而易见的，我们将数组放入再取出最大堆的过程，其实就完成了一次排序。我们可以这样实现:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * generateRandomArray <span class="doctag">@see </span>https://github.com/Mitscherlich/Play-with-Algorithms-JS/blob/master/test/utils/index.js#L8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> sorted = []</span><br><span class="line"><span class="keyword">const</span> array = generateRandomArray(<span class="number">50</span>, <span class="number">0</span>, <span class="number">100</span>)</span><br><span class="line"><span class="keyword">const</span> maxHeap = <span class="keyword">new</span> MaxHeap(array.slice())</span><br><span class="line"><span class="keyword">while</span> (!maxHeap.isEmpty()) &#123;</span><br><span class="line">  sorted.unshift(maxHeap.extractMax())</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(sorted))</span><br></pre></td></tr></table></figure>
 <p>值得注意的是，这种通过 <code>Heapify</code> 来成堆的操作并进行堆排序速度由于上一节我们一个一个将元素插入进堆的操作，事实上，这两种操作的算法复杂度的确有所不同的：</p>
 <ul>
 <li>将 <code>n</code> 个元素注意插入空堆中：$O(nlog{n})$</li>
 <li><code>Heapfiy</code>：$O(n)$</li>
 </ul>
 <p>由于堆算法复杂度的证明不是本系列的重点并且有点难，感兴趣的同学可以自己来进行详细地推导证明，这里并不展开。</p>
-<h3><span id="数组的原地堆排序">数组的原地堆排序 </span></h3><p> 无论是将元素逐一插入空堆还是通过 <code>Heapify</code> 来使数组成堆，我们实际上都开辟了一个堆的空间 (也就是使用了额外的 $O(n)$ 的空间复杂度)。但结合上面 <code>Heapify</code> 的思想，我们也可以很容易的改造堆排序的过程，使数组原地完成堆排序的操作。</p>
+<h3 id="数组的原地堆排序"><a href="#数组的原地堆排序" class="headerlink" title="数组的原地堆排序"></a>数组的原地堆排序</h3><p>无论是将元素逐一插入空堆还是通过 <code>Heapify</code> 来使数组成堆，我们实际上都开辟了一个堆的空间 (也就是使用了额外的 $O(n)$ 的空间复杂度)。但结合上面 <code>Heapify</code> 的思想，我们也可以很容易的改造堆排序的过程，使数组原地完成堆排序的操作。</p>
 <p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/HeapSort0.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/HeapSort0.png" alt="img"></a></p>
 <blockquote>
 <p>一个已经形成最大堆的数组</p>
@@ -248,292 +235,84 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/HeapSort2.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/HeapSort2.png" alt="img"></a></p>
 <p>那么重复上述操作就可以使整个数组完成排序。</p>
 <p>示例代码 </p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">const</span> <span class="token function-variable function">shiftDown</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">array<span class="token punctuation">,</span> n<span class="token punctuation">,</span> k</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">*</span> k <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">&lt;</span> n<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">let</span> j <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> k <span class="token operator">+</span> <span class="token number">1</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>j <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">&lt;</span> n <span class="token operator">&amp;&amp;</span> array<span class="token punctuation">[</span>j <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">></span> array<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      j<span class="token operator">++</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>array<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">>=</span> array<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      <span class="token keyword">break</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token comment">// swap(arr[k] , arr[j])</span>
-    <span class="token punctuation">[</span>array<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">,</span> array<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span>array<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">,</span> array<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">]</span>
-    k <span class="token operator">=</span> j
-  <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">// 不使用一个额外的最大堆, 直接在原数组上进行原地的堆排序</span>
-<span class="token class-name">Array</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">heapSort</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">const</span> array <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token keyword">const</span> n <span class="token operator">=</span> array<span class="token punctuation">.</span>length
-  <span class="token comment">// heapify</span>
-  <span class="token comment">// 注意，此时我们的堆是从 0 开始索引的</span>
-  <span class="token comment">// 从(最后一个元素的索引 -1)/2 开始</span>
-  <span class="token comment">// 最后一个元素的索引 = n-1</span>
-  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span><span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span> i <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">shiftDown</span><span class="token punctuation">(</span>array<span class="token punctuation">,</span> n<span class="token punctuation">,</span> i<span class="token punctuation">)</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// swap(arr[0], arr[i])</span>
-    <span class="token punctuation">[</span>array<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> array<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span>array<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> array<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
-    <span class="token function">shiftDown</span><span class="token punctuation">(</span>array<span class="token punctuation">,</span> i<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token keyword">return</span> array
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> shiftDown = <span class="function">(<span class="params">array, n, k</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">2</span> * k + <span class="number">1</span> &lt; n) &#123;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">2</span> * k + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> (j + <span class="number">1</span> &lt; n &amp;&amp; array[j + <span class="number">1</span>] &gt; array[j]) &#123;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (array[k] &gt;= array[j]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// swap(arr[k] , arr[j])</span></span><br><span class="line">    [array[k], array[j]] = [array[j], array[k]]</span><br><span class="line">    k = j</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不使用一个额外的最大堆, 直接在原数组上进行原地的堆排序</span></span><br><span class="line"><span class="built_in">Array</span>.prototype.heapSort = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> array = <span class="built_in">this</span>.slice()</span><br><span class="line">  <span class="keyword">const</span> n = array.length</span><br><span class="line">  <span class="comment">// heapify</span></span><br><span class="line">  <span class="comment">// 注意，此时我们的堆是从 0 开始索引的</span></span><br><span class="line">  <span class="comment">// 从(最后一个元素的索引-1)/2 开始</span></span><br><span class="line">  <span class="comment">// 最后一个元素的索引 = n-1</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="built_in">Math</span>.floor((n - <span class="number">1</span>) / <span class="number">2</span>); i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    shiftDown(array, n, i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">    <span class="comment">// swap(arr[0], arr[i])</span></span><br><span class="line">    [array[<span class="number">0</span>], array[i]] = [array[i], array[<span class="number">0</span>]]</span><br><span class="line">    shiftDown(array, i, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>类似的，最后使用一步交换进行优化:</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 优化的 shiftDown 过程, 使用赋值的方式取代不断的 swap,</span>
-<span class="token comment">// 该优化思想和我们之前对插入排序进行优化的思路是一致的</span>
-<span class="token keyword">const</span> <span class="token function-variable function">shiftDownEnhance</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">array<span class="token punctuation">,</span> n<span class="token punctuation">,</span> k</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">const</span> e <span class="token operator">=</span> array<span class="token punctuation">[</span>k<span class="token punctuation">]</span>
-  <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">*</span> k <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">&lt;</span> n<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">let</span> j <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> k <span class="token operator">+</span> <span class="token number">1</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>j <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">&lt;</span> n <span class="token operator">&amp;&amp;</span> array<span class="token punctuation">[</span>j <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">></span> array<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      j<span class="token operator">++</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>e <span class="token operator">>=</span> array<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      <span class="token keyword">break</span>
-    <span class="token punctuation">&#125;</span>
-    array<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">=</span> array<span class="token punctuation">[</span>j<span class="token punctuation">]</span>
-    k <span class="token operator">=</span> j
-  <span class="token punctuation">&#125;</span>
-  array<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">=</span> e
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">// 优化的堆排序</span>
-<span class="token class-name">Array</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">heapSortEnhance</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">const</span> array <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token keyword">const</span> n <span class="token operator">=</span> array<span class="token punctuation">.</span>length
-  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span><span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span> i <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">shiftDownEnhance</span><span class="token punctuation">(</span>array<span class="token punctuation">,</span> n<span class="token punctuation">,</span> i<span class="token punctuation">)</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// swap(arr[0], arr[i])</span>
-    <span class="token punctuation">[</span>array<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> array<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span>array<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> array<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
-    <span class="token function">shiftDownEnhance</span><span class="token punctuation">(</span>array<span class="token punctuation">,</span> i<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token keyword">return</span> array
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="索引堆">索引堆 </span></h3><p> 在上面的实现的堆中，我们总是直接操作原右数组元素。这在处理基本数据或者简单类型时没有问题，但往往我们面对的数据类型并非如此。例如，我们在处理 <code>CMS</code> 内容时如果使用对这种结构，一旦要交换的数据量非常大，交换操作本身变得非常慢；而这种问题还可以通过技术手段解决；又例如在操作系统的进程调度时，我们可能根据进程的 <code>pid</code> 数组构建了最大堆来表示进程的优先级，一旦我们直接交换了堆中元素的位置，我们就无法根据新的索引找到原来的进程，也就使得 <code>pid</code> 和进程脱离了关系；像这种情况使用 <strong> 索引堆 </strong> 就更为方便。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 优化的 shiftDown 过程, 使用赋值的方式取代不断的 swap,</span></span><br><span class="line"><span class="comment">// 该优化思想和我们之前对插入排序进行优化的思路是一致的</span></span><br><span class="line"><span class="keyword">const</span> shiftDownEnhance = <span class="function">(<span class="params">array, n, k</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> e = array[k]</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">2</span> * k + <span class="number">1</span> &lt; n) &#123;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">2</span> * k + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> (j + <span class="number">1</span> &lt; n &amp;&amp; array[j + <span class="number">1</span>] &gt; array[j]) &#123;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (e &gt;= array[j]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    array[k] = array[j]</span><br><span class="line">    k = j</span><br><span class="line">  &#125;</span><br><span class="line">  array[k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优化的堆排序</span></span><br><span class="line"><span class="built_in">Array</span>.prototype.heapSortEnhance = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> array = <span class="built_in">this</span>.slice()</span><br><span class="line">  <span class="keyword">const</span> n = array.length</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="built_in">Math</span>.floor((n - <span class="number">1</span>) / <span class="number">2</span>); i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    shiftDownEnhance(array, n, i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">    <span class="comment">// swap(arr[0], arr[i])</span></span><br><span class="line">    [array[<span class="number">0</span>], array[i]] = [array[i], array[<span class="number">0</span>]]</span><br><span class="line">    shiftDownEnhance(array, i, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="索引堆"><a href="#索引堆" class="headerlink" title="索引堆"></a>索引堆</h3><p>在上面的实现的堆中，我们总是直接操作原右数组元素。这在处理基本数据或者简单类型时没有问题，但往往我们面对的数据类型并非如此。例如，我们在处理 <code>CMS</code> 内容时如果使用对这种结构，一旦要交换的数据量非常大，交换操作本身变得非常慢；而这种问题还可以通过技术手段解决；又例如在操作系统的进程调度时，我们可能根据进程的 <code>pid</code> 数组构建了最大堆来表示进程的优先级，一旦我们直接交换了堆中元素的位置，我们就无法根据新的索引找到原来的进程，也就使得 <code>pid</code> 和进程脱离了关系；像这种情况使用<strong>索引堆</strong>就更为方便。</p>
 <p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/IndexMaxHeap.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/IndexMaxHeap.png" alt="img"></a></p>
 <blockquote>
 <p>索引最大堆示意图</p>
 </blockquote>
 <p>示例代码</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">shiftUp</span> <span class="token punctuation">(</span><span class="token parameter">data<span class="token punctuation">,</span> indexes<span class="token punctuation">,</span> k</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">const</span> e <span class="token operator">=</span> indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span>
-  <span class="token keyword">while</span> <span class="token punctuation">(</span>k <span class="token operator">></span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> data<span class="token punctuation">[</span>indexes<span class="token punctuation">[</span>Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>k <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span> data<span class="token punctuation">[</span>e<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// swap(indexes[k/2], indexes[k])</span>
-    indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">=</span> indexes<span class="token punctuation">[</span>Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>k <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
-    k <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>k <span class="token operator">/=</span> <span class="token number">2</span><span class="token punctuation">)</span>
-  <span class="token punctuation">&#125;</span>
-  indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">=</span> e
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">function</span> <span class="token function">shiftDown</span> <span class="token punctuation">(</span><span class="token parameter">data<span class="token punctuation">,</span> indexes<span class="token punctuation">,</span> k<span class="token punctuation">,</span> count</span> <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">const</span> e <span class="token operator">=</span> indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span>
-  <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">*</span> k <span class="token operator">&lt;=</span> count<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">let</span> j <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> k <span class="token comment">// 此轮循环中, swap(indexes[k], indexes[j])</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>j <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">&lt;=</span> count <span class="token operator">&amp;&amp;</span> data<span class="token punctuation">[</span>indexes<span class="token punctuation">[</span>j <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">></span> data<span class="token punctuation">[</span>indexes<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      j<span class="token operator">++</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>data<span class="token punctuation">[</span>e<span class="token punctuation">]</span> <span class="token operator">>=</span> data<span class="token punctuation">[</span>indexes<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      <span class="token keyword">break</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token comment">// swap(indexes[k], indexes[j])</span>
-    indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">=</span> indexes<span class="token punctuation">[</span>j<span class="token punctuation">]</span>
-    k <span class="token operator">=</span> j
-  <span class="token punctuation">&#125;</span>
-  indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">=</span> e
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">class</span> <span class="token class-name">IndexMaxHeap</span> <span class="token punctuation">&#123;</span>
-  <span class="token comment">// 构造函数, 构造一个空堆, 可容纳 capacity 个元素</span>
-  <span class="token function">constructor</span> <span class="token punctuation">(</span><span class="token parameter">capacity</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#data <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Array</span><span class="token punctuation">(</span>capacity <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Array</span><span class="token punctuation">(</span>capacity <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">=</span> <span class="token number">0</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#capacity <span class="token operator">=</span> capacity
-  <span class="token punctuation">&#125;</span>
-  <span class="token function">size</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token punctuation">&#125;</span>
-  <span class="token function">isEmpty</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">===</span> <span class="token number">0</span> <span class="token punctuation">&#125;</span>
-  <span class="token comment">// 获取最大索引堆中的堆顶元素</span>
-  <span class="token function">getItem</span> <span class="token punctuation">(</span><span class="token parameter">i</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token punctuation">&#125;</span>
-  <span class="token comment">// 传入的 i 是从 0 开始索引的</span>
-  <span class="token function">insert</span> <span class="token punctuation">(</span><span class="token parameter">i<span class="token punctuation">,</span> item</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    i <span class="token operator">+=</span> <span class="token number">1</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> item
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> i
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token operator">++</span>
-    <span class="token function">shiftUp</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">)</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token function">extractMax</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">const</span> ret <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
-    <span class="token comment">// swap(data[indexes[1]], data[indexes[count]])</span>
-    <span class="token punctuation">;</span><span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">-=</span> <span class="token number">1</span>
-    <span class="token function">shiftDown</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">)</span>
-    <span class="token keyword">return</span> ret
-  <span class="token punctuation">&#125;</span>
-  <span class="token function">extractMaxIndex</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">const</span> ret <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">1</span>
-    <span class="token comment">// swap(data[indexes[1]], data[indexes[count]])</span>
-    <span class="token punctuation">;</span><span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">-=</span> <span class="token number">1</span>
-    <span class="token function">shiftDown</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">)</span>
-    <span class="token keyword">return</span> ret
-  <span class="token punctuation">&#125;</span>
-  <span class="token comment">// 将最大索引堆中索引为 i 的元素修改为 newItem</span>
-  <span class="token function">change</span> <span class="token punctuation">(</span><span class="token parameter">i<span class="token punctuation">,</span> item</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    i <span class="token operator">+=</span> <span class="token number">1</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> item
-    <span class="token comment">// 找到 indexes[j] = i, j 表示 data[i] 在堆中的位置</span>
-    <span class="token comment">// 之后 shiftUp(j), 再 shiftDown(j)</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> j <span class="token operator">=</span> i<span class="token punctuation">;</span> j <span class="token operator">&lt;=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> j<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">===</span> i<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token function">shiftUp</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">,</span> j<span class="token punctuation">)</span>
-        <span class="token function">shiftDown</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">,</span> j<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">)</span>
-        <span class="token keyword">return</span>
-      <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-  <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>上面这个索引堆的类不仅实现了最基本的堆的操作，还实现了一些索引堆可以完成的特殊操作；而最重要的就是 <code>change</code> 操作，用户可以通过给定一个索引来方便的修改堆中某个元素的值。但可以注意到，修改完这个元素后，要使得堆继续形成最大堆，我们仍需要对新插入的元素进行 <code>shiftUp</code> 和 <code>shiftDown</code> 来维持堆的性质，而这使得修改元素的复杂度变成了 $O(n+log{n}) ~ O(n)$，这与堆的插入删除元素 $O(nlog{n})$ 的复杂度并不相符，我们可以尝试建立对 <strong> 索引的索引 </strong> 来优化这个过程：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shiftUp</span> (<span class="params">data, indexes, k</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> e = indexes[k]</span><br><span class="line">  <span class="keyword">while</span> (k &gt; <span class="number">1</span> &amp;&amp; data[indexes[<span class="built_in">Math</span>.floor(k / <span class="number">2</span>)]] &lt; data[e]) &#123;</span><br><span class="line">    <span class="comment">// swap(indexes[k/2], indexes[k])</span></span><br><span class="line">    indexes[k] = indexes[<span class="built_in">Math</span>.floor(k / <span class="number">2</span>)]</span><br><span class="line">    k = <span class="built_in">Math</span>.floor(k /= <span class="number">2</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  indexes[k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shiftDown</span> (<span class="params">data, indexes, k, count </span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> e = indexes[k]</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">2</span> * k &lt;= count) &#123;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">2</span> * k <span class="comment">// 此轮循环中, swap(indexes[k], indexes[j])</span></span><br><span class="line">    <span class="keyword">if</span> (j + <span class="number">1</span> &lt;= count &amp;&amp; data[indexes[j + <span class="number">1</span>]] &gt; data[indexes[j]]) &#123;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (data[e] &gt;= data[indexes[j]]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// swap(indexes[k], indexes[j])</span></span><br><span class="line">    indexes[k] = indexes[j]</span><br><span class="line">    k = j</span><br><span class="line">  &#125;</span><br><span class="line">  indexes[k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IndexMaxHeap</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 构造函数, 构造一个空堆, 可容纳 capacity 个元素</span></span><br><span class="line">  <span class="keyword">constructor</span> (capacity) &#123;</span><br><span class="line">    this.#data = new Array(capacity + 1)</span><br><span class="line">    this.#indexes = new Array(capacity + 1)</span><br><span class="line">    this.#count = 0</span><br><span class="line">    this.#capacity = capacity</span><br><span class="line">  &#125;</span><br><span class="line">  size () &#123; return this.#count &#125;</span><br><span class="line">  isEmpty () &#123; return this.#count === 0 &#125;</span><br><span class="line">  <span class="comment">// 获取最大索引堆中的堆顶元素</span></span><br><span class="line">  getItem (i) &#123; return this.#data[i + 1] &#125;</span><br><span class="line">  <span class="comment">// 传入的 i 是从 0 开始索引的</span></span><br><span class="line">  insert (i, item) &#123;</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    this.#data[this.#count + 1] = item</span><br><span class="line">    this.#indexes[this.#count + 1] = i</span><br><span class="line">    this.#count++</span><br><span class="line">    shiftUp(this.#data, this.#indexes, this.#count)</span><br><span class="line">  &#125;</span><br><span class="line">  extractMax () &#123;</span><br><span class="line">    const ret = this.#data[this.#indexes[1]]</span><br><span class="line">    <span class="comment">// swap(data[indexes[1]], data[indexes[count]])</span></span><br><span class="line">    ;[this.#indexes[1], this.#indexes[this.#count]] = [this.#indexes[this.#count], this.#indexes[1]]</span><br><span class="line">    this.#count -= 1</span><br><span class="line">    shiftDown(this.#data, this.#indexes, 1, this.#count)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">  &#125;</span><br><span class="line">  extractMaxIndex () &#123;</span><br><span class="line">    const ret = this.#indexes[1] - 1</span><br><span class="line">    <span class="comment">// swap(data[indexes[1]], data[indexes[count]])</span></span><br><span class="line">    ;[this.#indexes[1], this.#indexes[this.#count]] = [this.#indexes[this.#count], this.#indexes[1]]</span><br><span class="line">    this.#count -= 1</span><br><span class="line">    shiftDown(this.#data, this.#indexes, 1, this.#count)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 将最大索引堆中索引为 i 的元素修改为 newItem</span></span><br><span class="line">  change (i, item) &#123;</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    this.#data[i] = item</span><br><span class="line">    <span class="comment">// 找到 indexes[j] = i, j 表示 data[i] 在堆中的位置</span></span><br><span class="line">    <span class="comment">// 之后 shiftUp(j), 再 shiftDown(j)</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = i; j &lt;= <span class="built_in">this</span>.size(); j++) &#123;</span><br><span class="line">      if (this.#indexes[j] === i) &#123;</span><br><span class="line">        shiftUp(this.#data, this.#indexes, j)</span><br><span class="line">        shiftDown(this.#data, this.#indexes, j, this.#count)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这个索引堆的类不仅实现了最基本的堆的操作，还实现了一些索引堆可以完成的特殊操作；而最重要的就是 <code>change</code> 操作，用户可以通过给定一个索引来方便的修改堆中某个元素的值。但可以注意到，修改完这个元素后，要使得堆继续形成最大堆，我们仍需要对新插入的元素进行 <code>shiftUp</code> 和 <code>shiftDown</code> 来维持堆的性质，而这使得修改元素的复杂度变成了 $O(n+log{n}) ~ O(n)$，这与堆的插入删除元素 $O(nlog{n})$ 的复杂度并不相符，我们可以尝试建立对<strong>索引的索引</strong>来优化这个过程：</p>
 <p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/RevIndexMaxHeap.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/RevIndexMaxHeap.png" alt="img"></a></p>
 <blockquote>
 <p>优化索引最大堆示意图</p>
 </blockquote>
 <p>用 <code>reverse</code> 数组来表示 <code>i</code> 在 <code>indexes</code>(堆)中的位置：</p>
-<pre class="line-numbers language-pseudocode" data-language="pseudocode"><code class="language-pseudocode">if 
-	indexes[i] &#x3D; j
-	reverse[j] &#x3D; i
-then 
-	indexes[reverse[i]] &#x3D; i
-	reverse[indexes[i]] &#x3D; i<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">if </span><br><span class="line">	indexes[i] &#x3D; j</span><br><span class="line">	reverse[j] &#x3D; i</span><br><span class="line">then </span><br><span class="line">	indexes[reverse[i]] &#x3D; i</span><br><span class="line">	reverse[indexes[i]] &#x3D; i</span><br></pre></td></tr></table></figure>
 <p>这样，我们就可以在 $O(1)$ 内找到一个索引对应的元素：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">shiftUpEnhance</span> <span class="token punctuation">(</span><span class="token parameter">data<span class="token punctuation">,</span> indexes<span class="token punctuation">,</span> reverse<span class="token punctuation">,</span> k</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">const</span> e <span class="token operator">=</span> indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span>
-  <span class="token keyword">while</span> <span class="token punctuation">(</span>k <span class="token operator">></span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> data<span class="token punctuation">[</span>indexes<span class="token punctuation">[</span>Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>k <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span> data<span class="token punctuation">[</span>e<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// swap(indexes[k/2], indexes[k])</span>
-    indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">=</span> indexes<span class="token punctuation">[</span>Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>k <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
-    reverse<span class="token punctuation">[</span>indexes<span class="token punctuation">[</span>Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>k <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>k <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span>
-    reverse<span class="token punctuation">[</span>indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> k
-    k <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>k <span class="token operator">/=</span> <span class="token number">2</span><span class="token punctuation">)</span>
-  <span class="token punctuation">&#125;</span>
-  indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">=</span> e
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">function</span> <span class="token function">shiftDownEnhance</span> <span class="token punctuation">(</span><span class="token parameter">data<span class="token punctuation">,</span> indexes<span class="token punctuation">,</span> reverse<span class="token punctuation">,</span> k<span class="token punctuation">,</span> count</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">const</span> e <span class="token operator">=</span> indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span>
-  <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">*</span> k <span class="token operator">&lt;=</span> count<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">let</span> j <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> k <span class="token comment">// 此轮循环中, swap(indexes[k], indexes[j])</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>j <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">&lt;=</span> count <span class="token operator">&amp;&amp;</span> data<span class="token punctuation">[</span>indexes<span class="token punctuation">[</span>j <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">></span> data<span class="token punctuation">[</span>indexes<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      j<span class="token operator">++</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>data<span class="token punctuation">[</span>e<span class="token punctuation">]</span> <span class="token operator">>=</span> data<span class="token punctuation">[</span>indexes<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      <span class="token keyword">break</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token comment">// swap(indexes[k], indexes[j])</span>
-    indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">=</span> indexes<span class="token punctuation">[</span>j<span class="token punctuation">]</span>
-    reverse<span class="token punctuation">[</span>indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> k
-    reverse<span class="token punctuation">[</span>indexes<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> j
-    k <span class="token operator">=</span> j
-  <span class="token punctuation">&#125;</span>
-  indexes<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">=</span> e
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">class</span> <span class="token class-name">IndexMaxHeap</span> <span class="token punctuation">&#123;</span>
-  <span class="token comment">// 构造函数, 构造一个空堆, 可容纳 capacity 个元素</span>
-  <span class="token function">constructor</span> <span class="token punctuation">(</span><span class="token parameter">capacity</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#data <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Array</span><span class="token punctuation">(</span>capacity <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Array</span><span class="token punctuation">(</span>capacity <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#reverse <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Array</span><span class="token punctuation">(</span>capacity <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">fill</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token comment">// 填入 0 使得默认的索引索引位置为 0 (总是无效的元素)</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">=</span> <span class="token number">0</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#capacity <span class="token operator">=</span> capacity
-  <span class="token punctuation">&#125;</span>
-  <span class="token operator">...</span>
-  <span class="token comment">// 传入的 i 是从 0 开始索引的</span>
-  <span class="token function">insert</span> <span class="token punctuation">(</span><span class="token parameter">i<span class="token punctuation">,</span> item</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    i <span class="token operator">+=</span> <span class="token number">1</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> item
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> i
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#reverse<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">+</span> <span class="token number">1</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token operator">++</span>
-    <span class="token function">shiftUpEnhance</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#reverse<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">)</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token function">extractMax</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">const</span> ret <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
-    <span class="token comment">// swap(data[indexes[1]], data[indexes[count]])</span>
-    <span class="token punctuation">;</span><span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#reverse<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#reverse<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">-=</span> <span class="token number">1</span>
-    <span class="token function">shiftDownEnhance</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#reverse<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">)</span>
-    <span class="token keyword">return</span> ret
-  <span class="token punctuation">&#125;</span>
-  <span class="token function">extractMaxIndex</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">const</span> ret <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">1</span>
-    <span class="token comment">// swap(data[indexes[1]], data[indexes[count]])</span>
-    <span class="token punctuation">;</span><span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#reverse<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#reverse<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#count <span class="token operator">-=</span> <span class="token number">1</span>
-    <span class="token function">shiftDownEnhance</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#reverse<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">)</span>
-    <span class="token keyword">return</span> ret
-  <span class="token punctuation">&#125;</span>
-  <span class="token comment">// 将最大索引堆中索引为 i 的元素修改为 newItem</span>
-  <span class="token function">change</span> <span class="token punctuation">(</span><span class="token parameter">i<span class="token punctuation">,</span> item</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    i <span class="token operator">+=</span> <span class="token number">1</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> item
-    <span class="token comment">// 找到 indexes[j] = i, j 表示 data[i] 在堆中的位置</span>
-    <span class="token comment">// 之后 shiftUp(j), 再 shiftDown(j)</span>
-    <span class="token comment">// for (let j = i; j &lt;= this.size(); j++) &#123;</span>
-    <span class="token comment">//   if (this.#indexes[j] === i) &#123;</span>
-    <span class="token comment">//     shiftUpEnhance(this.#data, this.#indexes, j)</span>
-    <span class="token comment">//     shiftDownEnhance(this.#data, this.#indexes, j, this.#count)</span>
-    <span class="token comment">//     return</span>
-    <span class="token comment">//   &#125;</span>
-    <span class="token comment">// &#125;</span>
-    <span class="token comment">// 有了 reverse 之后,</span>
-    <span class="token comment">// 我们可以非常简单的通过 reverse 直接定位索引 i 在 indexes 中的位置</span>
-    <span class="token keyword">const</span> j <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#reverse<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
-    <span class="token function">shiftUpEnhance</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#reverse<span class="token punctuation">,</span> j<span class="token punctuation">)</span>
-    <span class="token function">shiftDownEnhance</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#data<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#indexes<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#reverse<span class="token punctuation">,</span> j<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#count<span class="token punctuation">)</span>
-  <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="排序总结">排序总结</span></h3><p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/SortSummary.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/SortSummary.png" alt="img"></a></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shiftUpEnhance</span> (<span class="params">data, indexes, reverse, k</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> e = indexes[k]</span><br><span class="line">  <span class="keyword">while</span> (k &gt; <span class="number">1</span> &amp;&amp; data[indexes[<span class="built_in">Math</span>.floor(k / <span class="number">2</span>)]] &lt; data[e]) &#123;</span><br><span class="line">    <span class="comment">// swap(indexes[k/2], indexes[k])</span></span><br><span class="line">    indexes[k] = indexes[<span class="built_in">Math</span>.floor(k / <span class="number">2</span>)]</span><br><span class="line">    reverse[indexes[<span class="built_in">Math</span>.floor(k / <span class="number">2</span>)]] = <span class="built_in">Math</span>.floor(k / <span class="number">2</span>)</span><br><span class="line">    reverse[indexes[k]] = k</span><br><span class="line">    k = <span class="built_in">Math</span>.floor(k /= <span class="number">2</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  indexes[k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shiftDownEnhance</span> (<span class="params">data, indexes, reverse, k, count</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> e = indexes[k]</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">2</span> * k &lt;= count) &#123;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">2</span> * k <span class="comment">// 此轮循环中, swap(indexes[k], indexes[j])</span></span><br><span class="line">    <span class="keyword">if</span> (j + <span class="number">1</span> &lt;= count &amp;&amp; data[indexes[j + <span class="number">1</span>]] &gt; data[indexes[j]]) &#123;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (data[e] &gt;= data[indexes[j]]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// swap(indexes[k], indexes[j])</span></span><br><span class="line">    indexes[k] = indexes[j]</span><br><span class="line">    reverse[indexes[k]] = k</span><br><span class="line">    reverse[indexes[j]] = j</span><br><span class="line">    k = j</span><br><span class="line">  &#125;</span><br><span class="line">  indexes[k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IndexMaxHeap</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 构造函数, 构造一个空堆, 可容纳 capacity 个元素</span></span><br><span class="line">  <span class="keyword">constructor</span> (capacity) &#123;</span><br><span class="line">    this.#data = new Array(capacity + 1)</span><br><span class="line">    this.#indexes = new Array(capacity + 1)</span><br><span class="line">    this.#reverse = new Array(capacity + 1).fill(0) // 填入 0 使得默认的索引索引位置为 0 (总是无效的元素)</span><br><span class="line">    this.#count = 0</span><br><span class="line">    this.#capacity = capacity</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">  <span class="comment">// 传入的 i 是从 0 开始索引的</span></span><br><span class="line">  insert (i, item) &#123;</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    this.#data[this.#count + 1] = item</span><br><span class="line">    this.#indexes[this.#count + 1] = i</span><br><span class="line">    this.#reverse[i] = this.#count + 1</span><br><span class="line">    this.#count++</span><br><span class="line">    shiftUpEnhance(this.#data, this.#indexes, this.#reverse, this.#count)</span><br><span class="line">  &#125;</span><br><span class="line">  extractMax () &#123;</span><br><span class="line">    const ret = this.#data[this.#indexes[1]]</span><br><span class="line">    <span class="comment">// swap(data[indexes[1]], data[indexes[count]])</span></span><br><span class="line">    ;[this.#indexes[1], this.#indexes[this.#count]] = [this.#indexes[this.#count], this.#indexes[1]]</span><br><span class="line">    this.#reverse[this.#indexes[1]] = 1</span><br><span class="line">    this.#reverse[this.#indexes[this.#count]] = 0</span><br><span class="line">    this.#count -= 1</span><br><span class="line">    shiftDownEnhance(this.#data, this.#indexes, this.#reverse, 1, this.#count)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">  &#125;</span><br><span class="line">  extractMaxIndex () &#123;</span><br><span class="line">    const ret = this.#indexes[1] - 1</span><br><span class="line">    <span class="comment">// swap(data[indexes[1]], data[indexes[count]])</span></span><br><span class="line">    ;[this.#indexes[1], this.#indexes[this.#count]] = [this.#indexes[this.#count], this.#indexes[1]]</span><br><span class="line">    this.#reverse[this.#indexes[1]] = 1</span><br><span class="line">    this.#reverse[this.#indexes[this.#count]] = 0</span><br><span class="line">    this.#count -= 1</span><br><span class="line">    shiftDownEnhance(this.#data, this.#indexes, this.#reverse, 1, this.#count)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 将最大索引堆中索引为 i 的元素修改为 newItem</span></span><br><span class="line">  change (i, item) &#123;</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    this.#data[i] = item</span><br><span class="line">    <span class="comment">// 找到 indexes[j] = i, j 表示 data[i] 在堆中的位置</span></span><br><span class="line">    <span class="comment">// 之后 shiftUp(j), 再 shiftDown(j)</span></span><br><span class="line">    <span class="comment">// for (let j = i; j &lt;= this.size(); j++) &#123;</span></span><br><span class="line">    <span class="comment">//   if (this.#indexes[j] === i) &#123;</span></span><br><span class="line">    <span class="comment">//     shiftUpEnhance(this.#data, this.#indexes, j)</span></span><br><span class="line">    <span class="comment">//     shiftDownEnhance(this.#data, this.#indexes, j, this.#count)</span></span><br><span class="line">    <span class="comment">//     return</span></span><br><span class="line">    <span class="comment">//   &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 有了 reverse 之后,</span></span><br><span class="line">    <span class="comment">// 我们可以非常简单的通过reverse直接定位索引i在indexes中的位置</span></span><br><span class="line">    const j = this.#reverse[i]</span><br><span class="line">    shiftUpEnhance(this.#data, this.#indexes, this.#reverse, j)</span><br><span class="line">    shiftDownEnhance(this.#data, this.#indexes, this.#reverse, j, this.#count)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="排序总结"><a href="#排序总结" class="headerlink" title="排序总结"></a>排序总结</h3><p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/SortSummary.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/SortSummary.png" alt="img"></a></p>
 <blockquote>
 <p>四大重要排序算法比较</p>
 </blockquote>
-<p>本系列的排序算法到这里就完结了。我们一共只为大家介绍了 <strong> 两</strong>类 <strong> 七</strong>种排序算法，大家也许还知道或者学习过其他更多的排序算法，这里限于篇幅就不一一为大家介绍了。</p>
-<p>我们主要学习的就是上图四种 <strong> 基于比较的排序算法</strong>。除了插入排序复杂度为 $O(n^2)$ 以外，其余几种排序算法复杂度均为 $O(nlog{n})$，但这也并不是说明插入排序不好，事实上我们在测试中可以发现在完全有序的数组上插入排序的复杂度退化为 $O(n)$，甚至优于同等的高级排序算法。这说明我们在编程开发时应学会结合实际情况，选择最优的排序算法，而不是只会做一个 <code>API caller</code>。</p>
-<h4><span id="排序算法的稳定性">排序算法的稳定性 </span></h4><p> 再看图中，我们看到了一个概念：<strong>稳定排序 </strong>。这是指对于<strong> 相等的 </strong> 元素，在排序前后，想等元素的 <strong> 相对位置 </strong> 没有发生改变。例如对一组学生成绩排序时，不仅要对成绩进行排序，还在在学生成绩想等时按姓名的字典序排序，很可能大部分时候原始数据都已经按姓名的字典序排好序了，但是快速排序和堆排序就有可能打乱原来的顺序。</p>
+<p>本系列的排序算法到这里就完结了。我们一共只为大家介绍了<strong>两</strong>类<strong>七</strong>种排序算法，大家也许还知道或者学习过其他更多的排序算法，这里限于篇幅就不一一为大家介绍了。</p>
+<p>我们主要学习的就是上图四种<strong>基于比较的排序算法</strong>。除了插入排序复杂度为 $O(n^2)$ 以外，其余几种排序算法复杂度均为 $O(nlog{n})$，但这也并不是说明插入排序不好，事实上我们在测试中可以发现在完全有序的数组上插入排序的复杂度退化为 $O(n)$，甚至优于同等的高级排序算法。这说明我们在编程开发时应学会结合实际情况，选择最优的排序算法，而不是只会做一个 <code>API caller</code>。</p>
+<h4 id="排序算法的稳定性"><a href="#排序算法的稳定性" class="headerlink" title="排序算法的稳定性"></a>排序算法的稳定性</h4><p>再看图中，我们看到了一个概念：<strong>稳定排序</strong>。这是指对于<strong>相等的</strong>元素，在排序前后，想等元素的<strong>相对位置</strong>没有发生改变。例如对一组学生成绩排序时，不仅要对成绩进行排序，还在在学生成绩想等时按姓名的字典序排序，很可能大部分时候原始数据都已经按姓名的字典序排好序了，但是快速排序和堆排序就有可能打乱原来的顺序。</p>
 <p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/SortStable.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/SortStable.png" alt="img"></a></p>
 <blockquote>
 <p>排序算法遇到相等的元素时行为有所不同</p>
 </blockquote>
 <p>但这并不是评价算法优劣的关键，因为我们可以通过修改排序比较的逻辑，或者干脆把比较的过程形成一个回调接口传递给用户，让用户自己完成比较的逻辑，从而使不稳定的排序变得稳定。</p>
 
-            </div>
-            <!-- Post Comments -->
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/JavaScript/"># JavaScript</a>
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2016/04/16/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BB%8E%E5%90%8C%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%88%B0%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">从同步编程到异步编程</a>
+            
+            
+            <a class="next" rel="next" href="/2016/03/30/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8BUbuntu%E6%90%AD%E5%BB%BAAFP%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ETimeMachine%E6%9C%8D%E5%8A%A1/">如何在Ubuntu上搭建TimeCapsule服务</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

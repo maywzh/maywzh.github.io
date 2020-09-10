@@ -1,182 +1,220 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>操作系统虚拟存储器机制 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/29/1hGuYMmkf5246sj.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>操作系统虚拟存储器机制</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>每当我们安心的使用 LINUX 系统或者在编写 C 语言的时候，安心的使用 malloc 或者 free 的时候，我们很少关注过其底层的内存是怎么工作的，CPU 是如何获取从主存中获取数据的，我们的寻址是不是可以直接寻找到对应的数据，还是通过某种转化机制。实际上，对于每一个进程，它所能接触到的地址都不是实际的物理地址，而是通过虚拟地址进行映射而来的。这里来研究一下虚拟存储器的技术细节。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">操作系统虚拟存储器机制</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 15, 2017&nbsp;&nbsp;7:09:57</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>每当我们安心的使用LINUX系统或者在编写C语言的时候，安心的使用malloc或者free的时候，我们很少关注过其底层的内存是怎么工作的，CPU是如何获取从主存中获取数据的，我们的寻址是不是可以直接寻找到对应的数据，还是通过某种转化机制。实际上，对于每一个进程，它所能接触到的地址都不是实际的物理地址，而是通过虚拟地址进行映射而来的。这里来研究一下虚拟存储器的技术细节。</p>
 <a id="more"></a>
-<h3><span id="物理内存和虚拟内存">物理内存和虚拟内存 </span></h3><h4><span id="物理内存"> 物理内存 </span></h4><p> 物理内存就是我们电脑上的 RAM 提供的内存。他是固定的，内存条的容量多大，物理内存就有多大（集成显卡系统除外）。但是如果程序运行很多或者程序本身很大的话，就会导致大量的物理内存占用，甚至导致物理内存消耗殆尽。</p>
-<h4><span id="虚拟内存">虚拟内存 </span></h4><p> 简明的说，虚拟内存就是在硬盘上划分一块页面文件，充当内存。当程序在运行时，有一部分资源还没有用上或者同时打开几个程序却只操作其中一个程序时，系统没必要将程序所有的资源都塞在物理内存中，于是，系统将这些暂时不用的资源放在虚拟内存上，等到需要时在调出来用。</p>
-<p>值得一提的是，虽然可以直接把物理地址理解成插在机器上那根内存本身，把内存看成一个从 0 字节一直到最大空量逐字节的编号的大数组，然后把这个数组叫做物理地址，但是事实上，这只是一个硬件提供给软件的抽像，内存的寻址方式并不是这样。所以，说它是“与 地址总线相对应”，是更贴切一些，为了理解方便，这种模型的理解也不算错误。</p>
-<h3><span id="物理地址与逻辑地址">物理地址与逻辑地址 </span></h3><p><strong> 物理地址 (physical address)</strong>：用于内存芯片级的单元寻址，与处理器和 CPU 连接的地址总线相对应。它是加载到内存地址寄存器中的地址，内存单元的真正地址。在前端总线上传输的内存地址都是物理内存地址，编号从 0 开始一直到可用物理内存的最高端。这些数字被北桥(Nortbridge chip) 映射到实际的内存条上。物理地址是明确的、最终用在总线上的编号，不必转换，不必分页，也没有特权级检查(no translation, no paging, no privilege checks)。</p>
-<p><strong>逻辑地址 (logical address)</strong>：是指由程序产生的与段相关的偏移地址部分。例如，你在进行 C 语言指针<a target="_blank" rel="noopener" href="http://www.2cto.com/kf"> 编程 </a> 中，可以读取指针变量本身值 (&amp; 操作)，实际上这个值就是逻辑地址，它是相对于你当前进程数据段的地址，不和绝对物理地址相干。<br><strong> 线性地址 (linear address) 或也叫虚拟地址 (virtual address)</strong><br> 跟逻辑地址类似，它也是一个不真实的地址，如果逻辑地址是对应的硬件平台段式管理转换前地址的话，那么线性地址则对应了硬件页式内存的转换前地址。</p>
-<h4><span id="为什么需要虚拟地址">为什么需要虚拟地址</span></h4><ul>
-<li>主存的容量有限。虽然我们现在的主存容量在不断上升，4G，8G，16G 的主存都出现在市面上。但是我们的进程是无限，如果计算机上的每一个进程都独占一块物理存储器(即物理地址空间)。那么，主存就会很快被用完。但是，实际上，每个进程在不同的时刻都是只会用同一块主存的数据，这就说明了其实只要在进程想要主存数据的时候我们把需要的主存加载上就好，换进换出。针对这样的需求，直接提供一整块主存的物理地址就明显不符合。</li>
-<li>进程间通信的需求。如果每个进程都 独占一块物理地址，这样就只能通过 socket 这样的手段进行进程通信，但如果进程间能使用同一块物理地址就可以解决这个问题。</li>
+<h3 id="物理内存和虚拟内存"><a href="#物理内存和虚拟内存" class="headerlink" title="物理内存和虚拟内存"></a>物理内存和虚拟内存</h3><h4 id="物理内存"><a href="#物理内存" class="headerlink" title="物理内存"></a>物理内存</h4><p>物理内存就是我们电脑上的RAM提供的内存。他是固定的，内存条的容量多大，物理内存就有多大（集成显卡系统除外）。但是如果程序运行很多或者程序本身很大的话，就会导致大量的物理内存占用，甚至导致物理内存消耗殆尽。</p>
+<h4 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h4><p>简明的说，虚拟内存就是在硬盘上划分一块页面文件，充当内存。当程序在运行时，有一部分资源还没有用上或者同时打开几个程序却只操作其中一个程序时，系统没必要将程序所有的资源都塞在物理内存中，于是，系统将这些暂时不用的资源放在虚拟内存上，等到需要时在调出来用。</p>
+<p>值得一提的是，虽然可以直接把物理地址理解成插在机器上那根内存本身，把内存看成一个从0字节一直到最大空量逐字节的编号的大数组，然后把这个数组叫做物理地址，但是事实上，这只是一个硬件提供给软件的抽像，内存的寻址方式并不是这样。所以，说它是“与 地址总线相对应”，是更贴切一些，为了理解方便，这种模型的理解也不算错误。</p>
+<h3 id="物理地址与逻辑地址"><a href="#物理地址与逻辑地址" class="headerlink" title="物理地址与逻辑地址"></a>物理地址与逻辑地址</h3><p><strong>物理地址(physical address)</strong>：用于内存芯片级的单元寻址，与处理器和CPU连接的地址总线相对应。它是加载到内存地址寄存器中的地址，内存单元的真正地址。在前端总线上传输的内存地址都是物理内存地址，编号从0开始一直到可用物理内存的最高端。这些数字被北桥(Nortbridge chip)映射到实际的内存条上。物理地址是明确的、最终用在总线上的编号，不必转换，不必分页，也没有特权级检查(no translation, no paging, no privilege checks)。</p>
+<p><strong>逻辑地址(logical address)</strong>：是指由程序产生的与段相关的偏移地址部分。例如，你在进行C语言指针<a target="_blank" rel="noopener" href="http://www.2cto.com/kf">编程</a>中，可以读取指针变量本身值(&amp;操作)，实际上这个值就是逻辑地址，它是相对于你当前进程数据段的地址，不和绝对物理地址相干。<br><strong>线性地址(linear address)或也叫虚拟地址(virtual address)</strong><br>跟逻辑地址类似，它也是一个不真实的地址，如果逻辑地址是对应的硬件平台段式管理转换前地址的话，那么线性地址则对应了硬件页式内存的转换前地址。</p>
+<h4 id="为什么需要虚拟地址"><a href="#为什么需要虚拟地址" class="headerlink" title="为什么需要虚拟地址"></a>为什么需要虚拟地址</h4><ul>
+<li>主存的容量有限。虽然我们现在的主存容量在不断上升，4G，8G，16G的主存都出现在市面上。但是我们的进程是无限，如果计算机上的每一个进程都独占一块物理存储器(即物理地址空间)。那么，主存就会很快被用完。但是，实际上，每个进程在不同的时刻都是只会用同一块主存的数据，这就说明了其实只要在进程想要主存数据的时候我们把需要的主存加载上就好，换进换出。针对这样的需求，直接提供一整块主存的物理地址就明显不符合。</li>
+<li>进程间通信的需求。如果每个进程都 独占一块物理地址，这样就只能通过socket这样的手段进行进程通信，但如果进程间能使用同一块物理地址就可以解决这个问题。</li>
 <li>主存的保护问题。对于主存来说，需要说明这段内存是可读的，可写的，还是可执行的。针对这点，光用物理地址也是很难做到的。</li>
 </ul>
-<p>针对物理地址的直接映射的许多弊端，计算机的设计中就采取了一个虚拟化设计，就是虚拟内存。CPU 通过发出虚拟地址，虚拟地址再通过 MMU 翻译成物理地址，最后获得数据，具体的操作如下所示：</p>
+<p>针对物理地址的直接映射的许多弊端，计算机的设计中就采取了一个虚拟化设计，就是虚拟内存。CPU通过发出虚拟地址，虚拟地址再通过MMU翻译成物理地址，最后获得数据，具体的操作如下所示：</p>
 <p><img src="https://i.loli.net/2020/08/26/VNLy6mGz5qMOX3h.jpg" alt="20171106142548425 (2)"></p>
 <p>利用了虚拟内存就可以比较有效的解决以上三个问题，在每一个进程开始创建的时候，都会分配一个虚拟存储器（就是一段虚拟地址）然后通过虚拟地址和物理地址的映射来获取真实数据，这样进程就不会直接接触到物理地址，甚至不知道自己调用的那块物理地址的数据。</p>
-<h4><span id="虚拟地址空间">虚拟地址空间 </span></h4><p> 当处理器读取或写入内存位置时，它会使用虚拟地址。 在读取或写入操作过程中，处理器会将虚拟地址转换为物理地址。 通过虚拟地址访问内存有以下优势：</p>
+<h4 id="虚拟地址空间"><a href="#虚拟地址空间" class="headerlink" title="虚拟地址空间"></a>虚拟地址空间</h4><p>当处理器读取或写入内存位置时，它会使用虚拟地址。 在读取或写入操作过程中，处理器会将虚拟地址转换为物理地址。 通过虚拟地址访问内存有以下优势：</p>
 <ul>
 <li>程序可以使用一系列连续的虚拟地址来访问物理内存中不连续的大内存缓冲区。</li>
 <li>程序可以使用一系列虚拟地址来访问大于可用物理内存的内存缓冲区。 当物理内存的供应量变小时，内存管理器会将物理内存页（通常大小为 4 KB）保存到磁盘文件。 数据或代码页会根据需要在物理内存与磁盘之间移动。</li>
@@ -185,74 +223,98 @@
 <p>进程可用的虚拟地址范围称为该进程的“虚拟地址空间” 。 每个用户模式进程都有其各自的专用虚拟地址空间。 对于 32 位进程，虚拟地址空间通常为 2 GB，范围从 0x00000000 至 0x7FFFFFFF。 对于 64 位 Windows 上的 64 位进程，虚拟地址空间为 128 TB，范围从 0x000’00000000 至 0x7FFF’FFFFFFFF。 一系列虚拟地址有时称为一系列“虚拟内存” 。</p>
 <p><img src="https://i.loli.net/2020/08/26/SupEMq4Jgi6Waol.png" alt="图：两个进程的虚拟地址空间"></p>
 <p>该图显示了两个 64 位进程的虚拟地址空间：Notepad.exe 和 MyApp.exe。 每个进程都有其各自的虚拟地址空间，范围从 0x000’0000000 至 0x7FF’FFFFFFFF。 每个阴影块都表示虚拟内存或物理内存的一个页（大小为 4 KB）。 注意，Notepad 进程使用从 0x7F7’93950000 开始的虚拟地址的三个连续页面。 但虚拟地址的这三个连续页面会映射到物理内存中的非连续页面。 另请注意，两个进程都使用从 0x7F7’93950000 开始的虚拟内存页面，但这些虚拟页面映射到物理内存的不同页面。</p>
-<h4><span id="地址分页">地址分页 </span></h4><p> 对于一整块连续的内存，直接连续使用也是不太符合实际的。于是，就有分页的概念。将 1024 个地址分成一页，通过访问页来访问数据。那么有了页就要有如何寻找页的概念了。我们通过每一页的首地址作为页入口，即 (PTE) 来检索页。那么，对于这些 PTE，我们也需要一个专门的数据结构来进行管理，这样的数据结构就是页表(page table)。</p>
-<h3><span id="虚拟存储器缓存">虚拟存储器缓存 </span></h3><p> 静态随机存储器 （SRAM） 的速度是动态随机存储器（DRAM）的 10 倍，DRAM 是磁盘速度的百来倍，所以 SRAM 常作为 CPU 上 L1，L2，L3 缓存的材料，DRAM 作为主存，针对于 SRAM 和 DRAM，cache MISS 的惩罚而言，DRAM 的惩罚更大，因为 DRAM 的读写速度是磁盘的几百倍，所以利用在 DRAM 的缓存的作用就更大了，针对于虚拟存储器的缓存作用可以用下图所示：</p>
+<h4 id="地址分页"><a href="#地址分页" class="headerlink" title="地址分页"></a>地址分页</h4><p>对于一整块连续的内存，直接连续使用也是不太符合实际的。于是，就有分页的概念。将1024个地址分成一页，通过访问页来访问数据。那么有了页就要有如何寻找页的概念了。我们通过每一页的首地址作为页入口，即(PTE)来检索页。那么，对于这些PTE，我们也需要一个专门的数据结构来进行管理，这样的数据结构就是页表(page table)。</p>
+<h3 id="虚拟存储器缓存"><a href="#虚拟存储器缓存" class="headerlink" title="虚拟存储器缓存"></a>虚拟存储器缓存</h3><p>静态随机存储器 （SRAM） 的速度是动态随机存储器（DRAM）的10倍，DRAM是磁盘速度的百来倍，所以SRAM常作为CPU上L1，L2，L3缓存的材料，DRAM作为主存，针对于SRAM和DRAM，cache MISS的惩罚而言，DRAM的惩罚更大，因为DRAM的读写速度是磁盘的几百倍，所以利用在DRAM的缓存的作用就更大了，针对于虚拟存储器的缓存作用可以用下图所示：</p>
 <p><img src="https://i.loli.net/2020/08/26/aEXmFkuPO1Y8v7f.png" alt="20171106150701652"></p>
-<h4><span id="缺页中断">缺页中断 </span></h4><p> 虚拟存储器中的块分为：未分配的，缓存的，未缓存的。<br>未分配的：顾名思义，这一块的虚拟存储器不映射于任何块。<br>缓存的：这一块的虚拟存储器映射于已经存在于 DRAM 中的物理页。<br>未缓存的：这一块的虚拟存储器映射于存在于磁盘中的虚拟页。（也就是要使用就要把磁盘中的虚拟页替换到 DRAM 中的物理页，会发生 Page Fault ）<br>有效和无效通过一个 valid bit(有效位)来进行判断。</p>
+<h4 id="缺页中断"><a href="#缺页中断" class="headerlink" title="缺页中断"></a>缺页中断</h4><p>虚拟存储器中的块分为：未分配的，缓存的，未缓存的。<br>未分配的：顾名思义，这一块的虚拟存储器不映射于任何块。<br>缓存的：这一块的虚拟存储器映射于已经存在于DRAM中的物理页。<br>未缓存的：这一块的虚拟存储器映射于存在于磁盘中的虚拟页。（也就是要使用就要把磁盘中的虚拟页替换到DRAM中的物理页，会发生Page Fault ）<br>有效和无效通过一个valid bit(有效位)来进行判断。</p>
 <p><img src="https://i.loli.net/2020/08/26/hf9zc1nRVw6BSLG.png" alt="20171106151241526"></p>
-<p>上图中，VM 缺页，对 VP3 中的字的引用不命中，触发缺页。</p>
-<h4><span id="缺页置换">缺页置换 </span></h4><p>DRAM 里面有：页表，PTE（页表入口），物理存储器<br> 磁盘里面：虚拟页表</p>
-<p>那么对于缓存来说：就有页命中，和页不命中两种情况 <br> 页命中：在图中就类似于 VP1,VP2, 这类的页表，直接缓存在 DRAM 中的物理存储器中，可以直接从 DRAM 中获取速度就快了。<br>页不命中：就是访问页表中未缓存的 PTE，如 VP3,VP6 之类，如下图所说明的情况</p>
+<p>上图中，VM缺页，对VP3中的字的引用不命中，触发缺页。</p>
+<h4 id="缺页置换"><a href="#缺页置换" class="headerlink" title="缺页置换"></a>缺页置换</h4><p>DRAM里面有：页表，PTE（页表入口），物理存储器<br>磁盘里面：虚拟页表</p>
+<p>那么对于缓存来说：就有页命中，和页不命中两种情况<br>页命中：在图中就类似于VP1,VP2,这类的页表，直接缓存在DRAM中的物理存储器中，可以直接从DRAM中获取速度就快了。<br>页不命中：就是访问页表中未缓存的PTE，如VP3,VP6之类，如下图所说明的情况</p>
 <p><img src="https://i.loli.net/2020/08/26/JimQ8bnewxrafUG.png" alt="20171106151903458"></p>
-<p>虚拟地址想访问 VP3 的时候，发现 VP3 未在缓存中，发生缺页错误，利用替换算法 (替换算法可能是 FIFO，或者 LRU) 将物理存储器中的一个 VP3 从物理存储器中导出，VP4 从磁盘导入 DRAM 中。此时,PTE3 就变成了已缓存，PTE4 变成了未缓存。这时候在进行地址翻译，就变成页命中了。<br>可见，缺页错误从磁盘导入的效率是非常低的，但是由于局部性原理，进程往往更多的在较小的活动页面上工作，很少有大跨度的访问内存，使得缺页错误产生的可能性降低。页命中的可能性提高。获取数据的效率就快了很多。</p>
-<h3><span id="虚拟存储器作用">虚拟存储器作用 </span></h3><p> 虚拟存储器的作用有如下几点：</p>
+<p>虚拟地址想访问VP3的时候，发现VP3未在缓存中，发生缺页错误，利用替换算法(替换算法可能是FIFO，或者LRU)将物理存储器中的一个VP3从物理存储器中导出，VP4从磁盘导入DRAM中。此时,PTE3就变成了已缓存，PTE4变成了未缓存。这时候在进行地址翻译，就变成页命中了。<br>可见，缺页错误从磁盘导入的效率是非常低的，但是由于局部性原理，进程往往更多的在较小的活动页面上工作，很少有大跨度的访问内存，使得缺页错误产生的可能性降低。页命中的可能性提高。获取数据的效率就快了很多。</p>
+<h3 id="虚拟存储器作用"><a href="#虚拟存储器作用" class="headerlink" title="虚拟存储器作用"></a>虚拟存储器作用</h3><p>虚拟存储器的作用有如下几点：</p>
 <ol>
-<li><p>简化共享：利用虚拟地址来映射物理地址，使得可以让多个进程的不同虚拟地址映射同一块物理地址，比如类似于 printf，这一类常用的库，不会把 printf 的代码拷贝到每一个进程，而是让不同进程都使用同一块 printf.</p>
+<li><p>简化共享：利用虚拟地址来映射物理地址，使得可以让多个进程的不同虚拟地址映射同一块物理地址，比如类似于printf，这一类常用的库，不会把printf的代码拷贝到每一个进程，而是让不同进程都使用同一块printf.</p>
 </li>
-<li><p>虚拟存储器作为存储器保护的工具，在虚拟存储器里面可以设计该 PTE 是可读，可写，还是可执行的。如果一旦出现只读的 PTE 被写入了，CPU 就会发送出现 segmentation fault(段错误)但并不会影响到实际存放数据的物理内存，</p>
+<li><p>虚拟存储器作为存储器保护的工具，在虚拟存储器里面可以设计该PTE是可读，可写，还是可执行的。如果一旦出现只读的PTE被写入了，CPU就会发送出现segmentation fault(段错误)但并不会影响到实际存放数据的物理内存，</p>
 <p><img src="https://i.loli.net/2020/08/26/mzVwEvieXfNkrLS.png" alt="20171106154635188"></p>
 </li>
 </ol>
-<h3><span id="地址转换">地址转换 </span></h3><p> 地址翻译的目的是通过 MMU 将虚拟地址翻译成物理地址。</p>
-<h4><span id="虚拟地址的地址位">虚拟地址的地址位</span></h4><p><img src="https://i.loli.net/2020/08/26/Z6IApWlGDs5ca8X.png" alt="20171106165015337"></p>
-<h4><span id="一级页表地址转换">一级页表地址转换 </span></h4><p> 无论是虚拟地址还是物理地址都被分成两个部分，一个页号 (PN)，用来寻找对应的存储页，还有一个偏移量(PO) 用来寻找在对应页中的偏移量。对于偏移量来说，虚拟页的偏移量和物理页的偏移量是相同的。那么，说明我们所需要的转化就是从虚拟页号转化到物理页号。</p>
+<h3 id="地址转换"><a href="#地址转换" class="headerlink" title="地址转换"></a>地址转换</h3><p>地址翻译的目的是通过MMU将虚拟地址翻译成物理地址。</p>
+<h4 id="虚拟地址的地址位"><a href="#虚拟地址的地址位" class="headerlink" title="虚拟地址的地址位"></a>虚拟地址的地址位</h4><p><img src="https://i.loli.net/2020/08/26/Z6IApWlGDs5ca8X.png" alt="20171106165015337"></p>
+<h4 id="一级页表地址转换"><a href="#一级页表地址转换" class="headerlink" title="一级页表地址转换"></a>一级页表地址转换</h4><p>无论是虚拟地址还是物理地址都被分成两个部分，一个页号(PN)，用来寻找对应的存储页，还有一个偏移量(PO)用来寻找在对应页中的偏移量。对于偏移量来说，虚拟页的偏移量和物理页的偏移量是相同的。那么，说明我们所需要的转化就是从虚拟页号转化到物理页号。</p>
 <p>   <img src="https://i.loli.net/2020/08/26/v1X839J2wiKNW5Q.png" alt="20171106165756623"></p>
-<p>这也就意味着我们可以使用一个小 trick 加速翻译的速度，分别将 VPN,VPO 分开传输，VPN 传输到 MMU 进行翻译，VPO 直接传输到 L1 cache 进行偏移检索，而不是等到 VPN 翻译成 PPN 再进行翻译，这个称作是 <strong> 优化地址翻译</strong></p>
-<h5><span id="翻译页号">翻译页号 </span></h5><p> 翻译页号的步骤就是通过 VPN 在页表中进行寻找找到对应的 PTE, 如果发现 PTE 的有效位为 0, 说明页面不存在，就出现缺页错误，重新加载页面到物理存储器中，然后设有效位为 1（上面的缺页错误说的就是这个问题）。反之，有效位为 1，说明页命中，取出 PPN 和 VPO 一合，得到物理地址，下图分别说明了，页命中与缺页异常两种情况的翻译情况：</p>
+<p>这也就意味着我们可以使用一个小trick加速翻译的速度，分别将VPN,VPO分开传输，VPN传输到MMU进行翻译，VPO直接传输到L1 cache进行偏移检索，而不是等到VPN翻译成PPN再进行翻译，这个称作是<strong>优化地址翻译</strong></p>
+<h5 id="翻译页号"><a href="#翻译页号" class="headerlink" title="翻译页号"></a>翻译页号</h5><p>翻译页号的步骤就是通过VPN在页表中进行寻找找到对应的PTE,如果发现PTE的有效位为0,说明页面不存在，就出现缺页错误，重新加载页面到物理存储器中，然后设有效位为1（上面的缺页错误说的就是这个问题）。反之，有效位为1，说明页命中，取出PPN和VPO一合，得到物理地址，下图分别说明了，页命中与缺页异常两种情况的翻译情况：</p>
 <p><img src="https://i.loli.net/2020/08/26/lxEHDnFzj3g5wGL.png" alt="20171106171923231"></p>
 <p><img src="https://i.loli.net/2020/08/26/BJYeXUE5OIsSrdA.png" alt="20171106171934562"></p>
-<h4><span id="tlb-加速地址翻译">TLB 加速地址翻译 </span></h4><p> 通过 DRAM 中的页表来进行地址翻译的速度有可能太慢了，无法满足速度的需求。这个时候就要 TLB 中派上用场了，TLB 实际位于 CPU 缓存寄存器 Cache 中，作为 SRAM 的一部分，速度是快于页表查询的。TLB 的实际作用，做一个映射，将 VPN 在 TLB 中寻找，找到对应的 PPN。那么问题来了，TLB 是怎么做的映射的呢？这时候就要说明一下 VPN 对于 TLB 来说可以分成那几块，请看下图</p>
+<h4 id="TLB加速地址翻译"><a href="#TLB加速地址翻译" class="headerlink" title="TLB加速地址翻译"></a>TLB加速地址翻译</h4><p>通过DRAM中的页表来进行地址翻译的速度有可能太慢了，无法满足速度的需求。这个时候就要TLB中派上用场了，TLB实际位于CPU缓存寄存器Cache中，作为SRAM的一部分，速度是快于页表查询的。TLB的实际作用，做一个映射，将VPN在TLB中寻找，找到对应的PPN。那么问题来了，TLB是怎么做的映射的呢？这时候就要说明一下VPN对于TLB来说可以分成那几块，请看下图</p>
 <p><img src="https://i.loli.net/2020/08/26/tWgEMXiYOsorfln.png" alt="20171106173628712"></p>
-<p>可以看见 VPN 被分为 (TLBT:TLB 标记，TLBI:TLB 索引)<br> 这时候再来看看 TLB 构成是什么样的呢？<br>这里展示的是一个四路组相连的一个 TLB</p>
+<p>可以看见VPN被分为(TLBT:TLB标记，TLBI:TLB索引)<br>这时候再来看看TLB构成是什么样的呢？<br>这里展示的是一个四路组相连的一个TLB</p>
 <p><img src="https://i.loli.net/2020/08/26/W1QKoHsaiVGC89F.png" alt="20171106174024990"></p>
-<p>TLBI 的两位就说明该选 TLB 的那一组，前面的 6 位 TLBT 说明标记位。</p>
-<h4><span id="二级和多级页表地址转换">二级和多级页表地址转换 </span></h4><p> 二级页表或者多级页表都是为了更快的检索和更节约空间，请先看下面一个二级页表的例子：</p>
+<p>TLBI的两位就说明该选TLB的那一组，前面的6位TLBT说明标记位。</p>
+<h4 id="二级和多级页表地址转换"><a href="#二级和多级页表地址转换" class="headerlink" title="二级和多级页表地址转换"></a>二级和多级页表地址转换</h4><p>二级页表或者多级页表都是为了更快的检索和更节约空间，请先看下面一个二级页表的例子：</p>
 <p><img src="https://i.loli.net/2020/08/26/i3vRDMFNL1JjVSa.png" alt="20171106174828443"></p>
-<p>首先二级页表并不复杂，就相当于多了一次映射，我们做一个简单的计算来说明二级页表容量关系，在一级页表中，一个 PTE 指向的是二级页表中，1024 个 PTE 的一页，那么二级页表中的一个 PTE 也就指向虚拟存储器中的一页，也就是 1KB 的地址空间，一个地址中有 32 位，也就是 4 个字节，那么在二级页表中的一个 PTE 所包含的容量就为 4KB 字节。对于一级页表而言，一个 PTE 就代表着 4MB 字节的空间，1K 的一级页表就代表了 4GB 字节的空间，4GB 已经是现在很多内存条的容量了。</p>
-<p>那么对于多级页表，一个 VPN 又是怎么分配和映射的呢。相信下面的一张图就可以说明清楚。</p>
+<p>首先二级页表并不复杂，就相当于多了一次映射，我们做一个简单的计算来说明二级页表容量关系，在一级页表中，一个PTE指向的是二级页表中，1024个PTE的一页，那么二级页表中的一个PTE也就指向虚拟存储器中的一页，也就是1KB的地址空间，一个地址中有32位，也就是4个字节，那么在二级页表中的一个PTE所包含的容量就为4KB字节。对于一级页表而言，一个PTE就代表着4MB字节的空间，1K的一级页表就代表了4GB字节的空间，4GB已经是现在很多内存条的容量了。</p>
+<p>那么对于多级页表，一个VPN又是怎么分配和映射的呢。相信下面的一张图就可以说明清楚。</p>
 <p><img src="https://i.loli.net/2020/08/26/sqMklVFunyQ46oe.png" alt="20171106180207151"></p>
-<h4><span id="物理地址处理">物理地址处理 </span></h4><p> 那么，现在我们得到了物理地址，那么通过物理地址又怎么在物理存储器中寻找到我们想要的数据呢？<br>先来看一下我们的物理地址分成那几个部分</p>
+<h4 id="物理地址处理"><a href="#物理地址处理" class="headerlink" title="物理地址处理"></a>物理地址处理</h4><p>那么，现在我们得到了物理地址，那么通过物理地址又怎么在物理存储器中寻找到我们想要的数据呢？<br>先来看一下我们的物理地址分成那几个部分</p>
 <p><img src="https://i.loli.net/2020/08/26/8v37wVRaNFrnZWS.png" alt="20171106180519329"></p>
-<p>可以看到物理地址被分成了三个部分：CO(块偏移)，CI（索引），CT（标签）三个部分 <br> 那么物理存储器又长什么样子呢？请看下图：</p>
+<p>可以看到物理地址被分成了三个部分：CO(块偏移)，CI（索引），CT（标签）三个部分<br>那么物理存储器又长什么样子呢？请看下图：</p>
 <p><img src="/Users/maywzh/Downloads/v2-d0aff2a40985bcb402b9335e07e05eaf_r.jpg" alt="v2-d0aff2a40985bcb402b9335e07e05eaf_r"></p>
-<p>物理地址先找到 CI 索引，找到对应的 set 集合，然后判断这个集合的 valid bit 是否等于一并且 tag 是否与 CT 一致。如果这些条件都符合，在通过 CO 偏移找到想要的数据。</p>
-<h4><span id="实例">实例 </span></h4><p> 首先，我们的翻译实例是基于一级页表之间的转换，关于虚拟地址以及物理地址的长度及位置如下图所示：</p>
+<p>物理地址先找到CI索引，找到对应的set集合，然后判断这个集合的valid bit是否等于一并且tag是否与CT一致。如果这些条件都符合，在通过CO偏移找到想要的数据。</p>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><p>首先，我们的翻译实例是基于一级页表之间的转换，关于虚拟地址以及物理地址的长度及位置如下图所示：</p>
 <p><img src="https://i.loli.net/2020/08/26/1HfOaQLxwrEyAhd.png" alt="20171106182322110"></p>
 <p><img src="https://i.loli.net/2020/08/26/Ou8KtNv6jRTIrCi.png" alt="20171106182336973"><br>接下来，我们就来实际翻译的虚拟地址。<br>我们翻译的地址为:0x03d4</p>
-<p><img src="https://i.loli.net/2020/08/26/WtzSrwiD7NgKu8b.jpg" alt="实例 1"></p>
+<p><img src="https://i.loli.net/2020/08/26/WtzSrwiD7NgKu8b.jpg" alt="实例1"></p>
 <p><img src="https://i.loli.net/2020/08/26/jGdLQOwtuEeP5Za.jpg" alt="fd59ed9f-db1b-3ee3-8f7e-2d6e4935645c"></p>
-<p>我们得到了 CO=0x0, CI=0x5, CT=0x0d<br>我们先通过 CI 找索引，然后再通过 CT 对照，很高兴，我们发现标记位相同，都为 0x0D, 且有效位为 1，于是乎我们再通过 CO=0 的偏移，取出了数据 0x36。<br>这个就是翻译的全过程。</p>
+<p>我们得到了CO=0x0, CI=0x5, CT=0x0d<br>我们先通过CI找索引，然后再通过CT对照，很高兴，我们发现标记位相同，都为0x0D,且有效位为1，于是乎我们再通过CO=0的偏移，取出了数据0x36。<br>这个就是翻译的全过程。</p>
 
-            </div>
-            <!-- Post Comments -->
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%86%85%E5%AD%98/"># 内存</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2017/10/16/OS/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E7%BC%BA%E9%A1%B5%E4%B8%AD%E6%96%AD%E5%8F%8A%E7%BD%AE%E6%8D%A2/">操作系统之缺页中断及置换</a>
+            
+            
+            <a class="next" rel="next" href="/2017/10/13/OS/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%BC%96%E8%AF%91%E3%80%81%E9%93%BE%E6%8E%A5%E5%92%8C%E8%A3%85%E5%85%A5%20/">程序的编译、链接和装入</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

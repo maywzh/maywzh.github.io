@@ -1,237 +1,273 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>WakaTime - 时间记录工具 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/26/CKVlxaFgNEfQwLr.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>WakaTime - 时间记录工具</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>提高自制力的一个有效的方式就是自我量化，其中一个重要的维度即是时间记录，通过对我们的工作、生活各个方面进行数据记录和分析，可以帮助我们优化自己的时间管理策略，提高生产力。<br>对程序员而言，我们迫切需求有一个工具能够记录我们在工作中的时间分配和利用率。对于项目管理而言，也有了解开发人员开发效率的需求。<br><a href="WakaTime.com">WakaTime</a>正是这样一个工具。它专为程序员和开发者而设计，通过简单配置，它就可以记录我们花在各个项目、各种工具 (IDE、浏览器、编辑器等) 以及具体工作内容的时间。<br>对比 Rescuetime 的大而全，Wakatime 专精于记录编程和编辑的方面。推荐开发者都去试试，至少可以帮助提升自制力… :)</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">WakaTime - 时间记录工具</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 28, 2017&nbsp;&nbsp;21:06:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>提高自制力的一个有效的方式就是自我量化，其中一个重要的维度即是时间记录，通过对我们的工作、生活各个方面进行数据记录和分析，可以帮助我们优化自己的时间管理策略，提高生产力。<br>对程序员而言，我们迫切需求有一个工具能够记录我们在工作中的时间分配和利用率。对于项目管理而言，也有了解开发人员开发效率的需求。<br><a href="WakaTime.com">WakaTime</a>正是这样一个工具。它专为程序员和开发者而设计，通过简单配置，它就可以记录我们花在各个项目、各种工具(IDE、浏览器、编辑器等)以及具体工作内容的时间。<br>对比Rescuetime的大而全，Wakatime专精于记录编程和编辑的方面。推荐开发者都去试试，至少可以帮助提升自制力… :)</p>
 <a id="more"></a>
 <p>。</p>
 <center>△ WakaTime 仪表盘</center>
 
-<h3><span id="开始使用">开始使用 </span></h3><p> 首先去 <a href="WakaTime.com">WakaTime</a> 注册一个账户。我们也可以用自己的 Github 账户来授权登陆 WakaTime。然后我们需要给我们的 IDE 或者编辑器安装 WakaTime 时间记录插件，目前 WakaTime 已经基本支持主流的 IDE。</p>
-<h3><span id="安装-ide-插件">安装 IDE 插件 </span></h3><p> 我们以 VS Code 和 Chrome 为例，分别给 IDE 和浏览器安装插件。</p>
-<p>点击左边栏 Supported IDES 这个选项，然后点击 VS Code 选项。</p>
-<p>按照官网的提示，我们在 VS Code 中下载好插件，重启 VS Code</p>
+<h3 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h3><p>首先去<a href="WakaTime.com">WakaTime</a>注册一个账户。我们也可以用自己的Github账户来授权登陆WakaTime。然后我们需要给我们的IDE或者编辑器安装WakaTime时间记录插件，目前WakaTime已经基本支持主流的IDE。</p>
+<h3 id="安装IDE插件"><a href="#安装IDE插件" class="headerlink" title="安装IDE插件"></a>安装IDE插件</h3><p>我们以VS Code和Chrome为例，分别给IDE和浏览器安装插件。</p>
+<p>点击左边栏Supported IDES这个选项，然后点击VS Code选项。</p>
+<p>按照官网的提示，我们在VS Code 中下载好插件，重启VS Code</p>
 <p>按<code>F1</code>，出现选项框</p>
-<p>选择 WakaTime API Key， 此时我们需要去 <a target="_blank" rel="noopener" href="https://WakaTime.com/settings/account">WakaTime Account</a> 页面获取我们的 API Key，来关联我们的账户。</p>
-<p>把 API Key 复制下来粘贴到 VS Code 的 WakaTime API Key 框，然后<code>Enter</code>。</p>
-<p>此时 VS Code 的 WakaTime 就配置完成了。</p>
-<h3><span id="数据可视化">数据可视化 </span></h3><p> 到<a target="_blank" rel="noopener" href="https://WakaTime.com/dashboard">WakaTime Dashboard</a>页面查看，我们的 VS Code 已经开始记录了。</p>
-<p>(我这里是已经安装了多个 IDE 插件的结果)</p>
-<p>如果 VS Code 打开了一个项目，例如我们打开一个 tcpudp 的 demo。</p>
-<p>在 <a target="_blank" rel="noopener" href="https://WakaTime.com/dashboard">WakaTime Dashboard</a> 的下面的 Projects 栏就会多出一个</p>
+<p>选择WakaTime API Key， 此时我们需要去<a target="_blank" rel="noopener" href="https://WakaTime.com/settings/account">WakaTime Account</a>页面获取我们的API Key，来关联我们的账户。</p>
+<p>把API Key复制下来粘贴到VS Code的WakaTime API Key框，然后<code>Enter</code>。</p>
+<p>此时VS Code的WakaTime就配置完成了。</p>
+<h3 id="数据可视化"><a href="#数据可视化" class="headerlink" title="数据可视化"></a>数据可视化</h3><p>到<a target="_blank" rel="noopener" href="https://WakaTime.com/dashboard">WakaTime Dashboard</a>页面查看，我们的VS Code已经开始记录了。</p>
+<p>(我这里是已经安装了多个IDE插件的结果)</p>
+<p>如果VS Code打开了一个项目，例如我们打开一个tcpudp的demo。</p>
+<p>在<a target="_blank" rel="noopener" href="https://WakaTime.com/dashboard">WakaTime Dashboard</a>的下面的Projects栏就会多出一个</p>
 <p>里面也有项目所用语言、编辑器的细节。</p>
 <p><a target="_blank" rel="noopener" href="https://WakaTime.com/dashboard">WakaTime Dashboard</a>也有各个项目的时间轴，可以查看我们在每个项目上花的时间。</p>
-<h3><span id="设置目标">设置目标 </span></h3><p> 我们可以为每个项目设置每日要完成的目标，例如每工作日花三小时。</p>
+<h3 id="设置目标"><a href="#设置目标" class="headerlink" title="设置目标"></a>设置目标</h3><p>我们可以为每个项目设置每日要完成的目标，例如每工作日花三小时。</p>
 <p>可以订阅这个目标，然后系统会发送邮件给我们提醒。</p>
-<h3><span id="集成到其他网站">集成到其他网站</span></h3><p>WakaTime 提供了统计结果的 HTML 代码，我们可以把它分享到 Facebook 等社交网站上，也可以直接挂在我们的博客上。</p>
-<h3><span id="积分榜">积分榜 </span></h3><p> 我们可以把自己的数据放在 Leaderboards 上去排位。</p>
-<h3><span id="api-文档">API 文档 </span></h3><p> 可以在 <a target="_blank" rel="noopener" href="https://WakaTime.com/developers">WakaTime API</a> 里面查询 WakaTime 提供的 API，来进行丰富的功能定制。</p>
+<h3 id="集成到其他网站"><a href="#集成到其他网站" class="headerlink" title="集成到其他网站"></a>集成到其他网站</h3><p>WakaTime提供了统计结果的HTML代码，我们可以把它分享到Facebook等社交网站上，也可以直接挂在我们的博客上。</p>
+<h3 id="积分榜"><a href="#积分榜" class="headerlink" title="积分榜"></a>积分榜</h3><p>我们可以把自己的数据放在Leaderboards上去排位。</p>
+<h3 id="API文档"><a href="#API文档" class="headerlink" title="API文档"></a>API文档</h3><p>可以在<a target="_blank" rel="noopener" href="https://WakaTime.com/developers">WakaTime API</a>里面查询WakaTime提供的API，来进行丰富的功能定制。</p>
 
-            </div>
-            <!-- Post Comments -->
-            
-            
-    <!-- 使用 valine -->
-<div id="comment">
-    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
-<script>
-    new Valine({
-        el: '#comment' ,
-        notify: false,
-        verify: false,
-        app_id: '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
-        app_key: 'UrBohelQ00fEUxu5npX46rtL',
-        placeholder: 'Just go go',
-        pageSize: '10',
-        avatar: 'mm',
-        avatar_cdn: 'https://gravatar.loli.net/avatar/'
-    });
-</script>
-</div>
-<style>
-   #comment{
-        padding: 2pc;
-    }
-</style>
-
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%97%B6%E9%97%B4%E7%AE%A1%E7%90%86/"># 时间管理</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2017/09/28/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%AE%AE%E4%B9%8BRaft%E7%AE%97%E6%B3%95/">分布式协议之Raft算法</a>
+            
+            
+            <a class="next" rel="next" href="/2017/09/20/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%B9%8BCAP%E5%AE%9A%E7%90%86/">分布式系统理论之CAP定理</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

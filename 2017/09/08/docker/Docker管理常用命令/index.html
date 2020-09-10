@@ -1,201 +1,239 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>Docker管理常用命令 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/29/W4Mmi1SLqHOtcpb.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>Docker 管理常用命令</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>Docker 的常用命令一般分为：镜像管理、容器管理。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Docker管理常用命令</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 8, 2017&nbsp;&nbsp;14:25:13</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/DevOps/">DevOps</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>Docker 的常用命令一般分为：镜像管理、容器管理。</p>
 <a id="more"></a>
-<h2><span id="镜像管理命令">镜像管理命令 </span></h2><p> 下面使用 busybox 软件作为示例，busybox 软件是一个集成了非常多最常用的 Linux 命令和工具的软件集合。</p>
-<h3><span id="查看所有镜像">查看所有镜像</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker images<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="镜像管理命令"><a href="#镜像管理命令" class="headerlink" title="镜像管理命令"></a>镜像管理命令</h2><p>下面使用 busybox 软件作为示例，busybox 软件是一个集成了非常多最常用的 Linux 命令和工具的软件集合。</p>
+<h3 id="查看所有镜像"><a href="#查看所有镜像" class="headerlink" title="查看所有镜像"></a>查看所有镜像</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
 <ul>
 <li>REPOSITORY：镜像来自哪个仓库</li>
 <li>TAG：镜像的标签信息，版本之类的信息</li>
-<li>IMAGE ID：镜像创建时的 id</li>
+<li>IMAGE ID：镜像创建时的id</li>
 <li>CREATED：镜像创建的时间</li>
 <li>SIZE：镜像文件大小</li>
 <li>下载软件镜像</li>
 </ul>
-<pre class="line-numbers language-text" data-language="text"><code class="language-text">docker pull busybox:latest<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull busybox:latest</span><br></pre></td></tr></table></figure>
 <p>备注：latest 表示使用 busybox 软件的最新版本，所以软件默认下载都是 latest 版本。</p>
-<h3><span id="导出镜像">导出镜像</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker save busybox &gt; busybox.tar<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="导出镜像"><a href="#导出镜像" class="headerlink" title="导出镜像"></a>导出镜像</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker save busybox &gt; busybox.tar</span><br></pre></td></tr></table></figure>
 <p>备注：把 busybox 镜像导出为 busybox.tar 文件，可以把 busybox.tar 文件复制到别的操作系统上使用，免除下载时网络慢的问题。</p>
-<h3><span id="删除镜像">删除镜像</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker rmi busybox:latest<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>备注：镜像一般都会根据版本打包，如果有下载一个软件的多个版本就需要指定具体版本信息。如 busybox:1.26 就会删除 busybox 软件的 1.26 版本的镜像，不会删除 latest 版本的镜像。</p>
-<h3><span id="导入镜像">导入镜像</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker load &lt; busybox.tar<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi busybox:latest</span><br></pre></td></tr></table></figure>
+<p>备注：镜像一般都会根据版本打包，如果有下载一个软件的多个版本就需要指定具体版本信息。如 busybox:1.26 就会删除 busybox 软件的 1.26 版本的镜像，不会删除latest 版本的镜像。</p>
+<h3 id="导入镜像"><a href="#导入镜像" class="headerlink" title="导入镜像"></a>导入镜像</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker load &lt; busybox.tar</span><br></pre></td></tr></table></figure>
 <p>备注：使用导出命令导出的镜像，可以通过此命令导入到没有下载此软件的操作系统，方便网络条件差的情况使用。</p>
-<h3><span id="更改镜像名">更改镜像名</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker tag busybox:latest busybox:test<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>备注：busybox:latest 原镜像名，busybox:test 要改成的镜像名</p>
-<h2><span id="容器管理命令">容器管理命令 </span></h2><h3><span id="运行容器"> 运行容器</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker run -d --name&#x3D;busybox busybox:latest ping 114.114.114.114<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="更改镜像名"><a href="#更改镜像名" class="headerlink" title="更改镜像名"></a>更改镜像名</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag busybox:latest busybox:test</span><br></pre></td></tr></table></figure>
+<p>备注：busybox:latest原镜像名，busybox:test要改成的镜像名</p>
+<h2 id="容器管理命令"><a href="#容器管理命令" class="headerlink" title="容器管理命令"></a>容器管理命令</h2><h3 id="运行容器"><a href="#运行容器" class="headerlink" title="运行容器"></a>运行容器</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name=busybox busybox:latest ping 114.114.114.114</span><br></pre></td></tr></table></figure>
 <ul>
-<li><code>run</code>：run 参数代表启动容器</li>
-<li><code>-d</code>：以后台 daemon 的方式运行</li>
+<li><code>run</code>：run参数代表启动容器</li>
+<li><code>-d</code>：以后台daemon的方式运行</li>
 <li><code>--name</code>：指定一个容器的名字，此后操作都需要使用这个名字来定位容器。</li>
 <li><code>busybox:latest</code>：容器所使用的镜像名字</li>
 <li><code>ping 114.114.114.114</code>：启动容器执行的命令</li>
 <li>查看运行的容器</li>
 </ul>
-<pre class="line-numbers language-text" data-language="text"><code class="language-text">docker ps<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h3><span id="查看所有容器">查看所有容器</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker ps -a<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+<h3 id="查看所有容器"><a href="#查看所有容器" class="headerlink" title="查看所有容器"></a>查看所有容器</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
 <ul>
-<li><code>CONTAINER ID</code>：容器启动的 id</li>
+<li><code>CONTAINER ID</code>：容器启动的id</li>
 <li><code>IMAGE</code>：使用哪个镜像启动的容器</li>
 <li><code>COMMAND</code>：启动容器的命令</li>
 <li><code>CREATED</code>：创建容器的时间</li>
@@ -204,35 +242,59 @@
 <li><code>NAMES</code>：容器启动的名字</li>
 <li>启动容器</li>
 </ul>
-<pre class="line-numbers language-text" data-language="text"><code class="language-text">docker start busybox<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h3><span id="重新启动容器">。重新启动容器</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker restart busybox<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h3><span id="停止容器">停止容器</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker stop busybox<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h3><span id="杀死容器">杀死容器</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker kill busybox<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h3><span id="删除运行中的容器">删除运行中的容器</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker rm -f busybox<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h3><span id="执行容器内命令">执行容器内命令</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker exec -it busybox ls<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start busybox</span><br></pre></td></tr></table></figure>
+<h3 id="。重新启动容器"><a href="#。重新启动容器" class="headerlink" title="。重新启动容器"></a>。重新启动容器</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker restart busybox</span><br></pre></td></tr></table></figure>
+<h3 id="停止容器"><a href="#停止容器" class="headerlink" title="停止容器"></a>停止容器</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop busybox</span><br></pre></td></tr></table></figure>
+<h3 id="杀死容器"><a href="#杀死容器" class="headerlink" title="杀死容器"></a>杀死容器</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker kill busybox</span><br></pre></td></tr></table></figure>
+<h3 id="删除运行中的容器"><a href="#删除运行中的容器" class="headerlink" title="删除运行中的容器"></a>删除运行中的容器</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm -f busybox</span><br></pre></td></tr></table></figure>
+<h3 id="执行容器内命令"><a href="#执行容器内命令" class="headerlink" title="执行容器内命令"></a>执行容器内命令</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it busybox ls</span><br></pre></td></tr></table></figure>
 <p>备注：-it 交互终端</p>
-<h3><span id="复制容器内文件">复制容器内文件</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker cp busybox:&#x2F;etc&#x2F;hosts hosts<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h3><span id="查看容器日志">查看容器日志</span></h3><pre class="line-numbers language-text" data-language="text"><code class="language-text">docker logs -f busybox<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-            </div>
-            <!-- Post Comments -->
-            
+<h3 id="复制容器内文件"><a href="#复制容器内文件" class="headerlink" title="复制容器内文件"></a>复制容器内文件</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp busybox:/etc/hosts hosts</span><br></pre></td></tr></table></figure>
+<h3 id="查看容器日志"><a href="#查看容器日志" class="headerlink" title="查看容器日志"></a>查看容器日志</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs -f busybox</span><br></pre></td></tr></table></figure>
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Docker/"># Docker</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2017/09/09/MySQL/MySQL%E9%9D%A2%E8%AF%95%E9%A2%98%E8%AF%A6%E8%A7%A3/">MySQL面试题详解</a>
+            
+            
+            <a class="next" rel="next" href="/2017/09/04/%E5%88%B7%E9%A2%98/Leetcode%E5%88%86%E7%B1%BB%E5%88%B7%E9%A2%98%E6%8C%87%E5%8D%97/">Leetcode分类刷题指南</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

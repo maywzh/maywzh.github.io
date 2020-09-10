@@ -1,191 +1,268 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>密码学之椭圆曲线 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
         var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
         }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
 
 
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/11/dZQSnTFhgxkplMJ.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>密码学之椭圆曲线</h2>
-                </a>
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>我们在《几何》课本里学过二元一次方程表示直线，二元二次方程表示圆锥曲线(圆，椭圆，双曲线和抛物线)，那么二元三次方程表示什么曲线呢？答案自然就是椭圆曲线。为了方便研究，大部分的二元三次方程可以简化成魏尔斯特拉斯方程的形式。其中，系数 a 和 b 需要满足条件 $4a^3 + 27b^2 \neq 0$，该条件保证方程中不会出现非奇异点以获得平滑的椭圆曲线。</p>
-<p>椭圆曲线的形状跟椭圆毫无关系。当初数学家们在研究如何计算椭圆弧长的时候发现需要求解如下类型的积分, 由于和椭圆相关，积分中的分母项 $y =\sqrt{(x^3+ax+b)}$ 便被称作椭圆曲线。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">密码学之椭圆曲线</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 5, 2019&nbsp;&nbsp;1:35:55</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>我们在《几何》课本里学过二元一次方程表示直线，二元二次方程表示圆锥曲线(圆，椭圆，双曲线和抛物线)，那么二元三次方程表示什么曲线呢？答案自然就是椭圆曲线。为了方便研究，大部分的二元三次方程可以简化成魏尔斯特拉斯方程的形式。其中，系数a 和b 需要满足条件$4a^3 + 27b^2 \neq 0$，该条件保证方程中不会出现非奇异点以获得平滑的椭圆曲线。</p>
+<p>椭圆曲线的形状跟椭圆毫无关系。当初数学家们在研究如何计算椭圆弧长的时候发现需要求解如下类型的积分, 由于和椭圆相关，积分中的分母项$y =\sqrt{(x^3+ax+b)}$ 便被称作椭圆曲线。</p>
 <script type="math/tex; mode=display">
 \int_{\alpha}^{\beta}{\frac{dx}{\sqrt{x^3+ax+b}}}</script><p>下图展示了一些合法的椭圆曲线，</p>
 <p><img src="https://i.loli.net/2020/09/11/HVAGpxoOJeICg4L.png" alt="img"></p>
 <p>下图展示了两种非法的椭圆曲线，分别存在一个尖点和叉点使曲线不平滑。</p>
 <p><img src="https://i.loli.net/2020/09/11/PBChKjWvuZrtcwx.png" alt="6663612-59e2ae0394772adb"></p>
 <a id="more"></a>
-<h2><span id="密码学与有限循环群">密码学与有限循环群 </span></h2><p> 现代密码学算法和协议中，消息是作为有限空间中的数字或元素来处理的。加密和解密的各种操作必须在消息之间进行变换，以使变换服从有限消息空间内部的封闭性。然而，数的一般运算诸如加减乘除并不满足有限空间内部的封闭性。所以密码算法通常运行于具有某些保持封闭性的代数结构的空间中，这种代数结构就是 <strong> 有限循环群</strong>。在数学中，群是一种代数结构，由一个集合以及一个二元运算组成。群必须满足以下四个条件：封闭性，结合律，存在单位元和存在逆元。</p>
-<h2><span id="椭圆曲线群定义">椭圆曲线群定义</span></h2><p>1985 年，Neal Koblitz 和 Victor S.Miller 分别独立提出利用椭圆曲线产生椭圆曲线循环群用于密码学。在数学上，椭圆曲线群的元素为椭圆曲线上的点，群操作为”+”,”+”的定义为，给定曲线两点 $P，Q，P+Q$ 等于 $P$ 和 $Q$ 两点的连线与曲线交点沿 X 轴的对称点，如果 $P=Q$，则 $P+P$ 等于 P 在曲线上的切线与曲线交点沿 X 轴的对称点。该群的单位元为无穷远零点记作 $O=(0,0)$，有 $P+O=P$，点 P 的逆元为其沿 X 轴的对称点，记作 $-P$。</p>
-<p>下图演示了如何计算 $P+Q=R(P\neq Q)$</p>
+<h2 id="密码学与有限循环群"><a href="#密码学与有限循环群" class="headerlink" title="密码学与有限循环群"></a>密码学与有限循环群</h2><p>现代密码学算法和协议中，消息是作为有限空间中的数字或元素来处理的。加密和解密的各种操作必须在消息之间进行变换，以使变换服从有限消息空间内部的封闭性。然而，数的一般运算诸如加减乘除并不满足有限空间内部的封闭性。所以密码算法通常运行于具有某些保持封闭性的代数结构的空间中，这种代数结构就是<strong>有限循环群</strong>。在数学中，群是一种代数结构，由一个集合以及一个二元运算组成。群必须满足以下四个条件：封闭性，结合律，存在单位元和存在逆元。</p>
+<h2 id="椭圆曲线群定义"><a href="#椭圆曲线群定义" class="headerlink" title="椭圆曲线群定义"></a>椭圆曲线群定义</h2><p>1985年，Neal Koblitz和Victor S.Miller分别独立提出利用椭圆曲线产生椭圆曲线循环群用于密码学。在数学上，椭圆曲线群的元素为椭圆曲线上的点，群操作为”+”,”+”的定义为，给定曲线两点$P，Q，P+Q$等于$P$和$Q$两点的连线与曲线交点沿X轴的对称点，如果$P=Q$，则$P+P$等于P在曲线上的切线与曲线交点沿X轴的对称点。该群的单位元为无穷远零点记作$O=(0,0)$，有$P+O=P$，点P的逆元为其沿X轴的对称点，记作$-P$。</p>
+<p>下图演示了如何计算$P+Q=R(P\neq Q)$</p>
 <p><img src="https://i.loli.net/2020/09/11/42pa379WjufgEOs.png" alt="6663612-092e13fc0b2a01eb"></p>
-<p>下图演示了如何计算 $P+Q=2P=R(P=Q)$。</p>
+<p>下图演示了如何计算$P+Q=2P=R(P=Q)$。</p>
 <p><img src="https://i.loli.net/2020/09/11/aOgDzy4JedX1RnS.png" alt="6663612-6f8e91a21db4b3e3"></p>
-<p>下图演示了如何计算 $P$ 的逆元 $-P$。</p>
+<p>下图演示了如何计算$P$的逆元$-P$。</p>
 <p><img src="https://i.loli.net/2020/09/11/iuAdvgZBc54NKwn.png" alt="6663612-ef00d3b116ffb790"></p>
-<h2><span id="椭圆曲线有限循环群">椭圆曲线有限循环群 </span></h2><p> 前面介绍的椭圆曲线都是基于有理数的，但是计算机运算浮点数 (小数) 的速度较慢，更重要的是四舍五入浮点数会产生误差，导致多次加密解密操作后原始消息不能被还原。故考虑到加密算法的可实现性，密码学上使用基于整数的模加运算产生椭圆曲线有限循环群。</p>
-<p>本文不涉及具体的数学计算，将用具体的例子展示如何产生 ECC 有限循环群。例如考虑 $y^2=x^3-7x+10\ (mod\  19)$ 的集合，该集合中所有的元素如下图所示。模运算把发散的椭圆曲线映射到 $19\times 19$ 的正方形空间中，并且保持了原有曲线的上下对称特性。</p>
+<h2 id="椭圆曲线有限循环群"><a href="#椭圆曲线有限循环群" class="headerlink" title="椭圆曲线有限循环群"></a>椭圆曲线有限循环群</h2><p>前面介绍的椭圆曲线都是基于有理数的，但是计算机运算浮点数(小数)的速度较慢，更重要的是四舍五入浮点数会产生误差，导致多次加密解密操作后原始消息不能被还原。故考虑到加密算法的可实现性，密码学上使用基于整数的模加运算产生椭圆曲线有限循环群。</p>
+<p>本文不涉及具体的数学计算，将用具体的例子展示如何产生ECC有限循环群。例如考虑$y^2=x^3-7x+10\ (mod\  19)$的集合，该集合中所有的元素如下图所示。模运算把发散的椭圆曲线映射到$19\times 19$的正方形空间中，并且保持了原有曲线的上下对称特性。</p>
 <p><img src="https://i.loli.net/2020/09/11/wA3g81lh6yupBQO.png" alt="6663612-95901135c214ebea"></p>
-<p>下图展示了 $y^2=x^3-7x+10\ (mod\ 19)$ 集合中的元素和椭圆曲线的关系。</p>
-<p>点 $Q’$ 映射到点 $Q$，点 P 的对称点也由点 $-P’$ 映射到点 $-P$。</p>
+<p>下图展示了$y^2=x^3-7x+10\ (mod\ 19)$集合中的元素和椭圆曲线的关系。</p>
+<p>点$Q’$映射到点$Q$，点P的对称点也由点$-P’$映射到点$-P$。</p>
 <p><img src="https://i.loli.net/2020/09/11/OlF2SeAchVWC486.png" alt="6663612-f99ccd0e5533dc70"></p>
-<p>如果取一个更大的质数 $p$ 进行模运算，集合中的元素点也会相应地增多。下图展示了利用同一个曲线方程进行不同模运算的结果。在实际的椭圆曲线加密算法中，使用长度为 192-256 位的质数 $p$ 进行模运算。</p>
+<p>如果取一个更大的质数$p$进行模运算，集合中的元素点也会相应地增多。下图展示了利用同一个曲线方程进行不同模运算的结果。在实际的椭圆曲线加密算法中，使用长度为192-256位的质数$p$进行模运算。</p>
 <p><img src="https://i.loli.net/2020/09/11/IB4EoegpHlNiT71.png" alt="6663612-6aa923268fa3e091"></p>
-<p>现在我们基于 $y^2=x^3-7x+10\ (mod\ 19)$，利用产生元 $P=(2,2)$ 来生成 ECC 有限循环群。如下图所示。具体的计算使用 <a target="_blank" rel="noopener" href="http://www.christelbach.com/ECCalculator.aspx"> 在线 ECC 计算器</a>。</p>
+<p>现在我们基于$y^2=x^3-7x+10\ (mod\ 19)$，利用产生元$P=(2,2)$来生成ECC有限循环群。如下图所示。具体的计算使用<a target="_blank" rel="noopener" href="http://www.christelbach.com/ECCalculator.aspx">在线ECC计算器</a>。</p>
 <p>得到如下结果:</p>
 <script type="math/tex; mode=display">
 1P=(2,2)\\
@@ -196,36 +273,62 @@
 ...\\
 22P=(13,11)\\
 23P=(2,17)\\
-24P=(0,0)</script><p>$G={nP|P=(2,2)}$ 完整的集合为</p>
+24P=(0,0)</script><p>$G={nP|P=(2,2)}$完整的集合为</p>
 <p>${p=(2,2),2P=(13,8),3P=(1,2), … 23P=(2,17),24P=O=(0,0)}$</p>
-<h2><span id="椭圆曲线离散对数问题-ecdlp">椭圆曲线离散对数问题 ECDLP</span></h2><p>请问上图中与点 $Q$ 相对应的 $n$ 值为多少？</p>
-<p>查找集合 $G={nP|P=(2,2)}$ 中的元素可知答案是 $Q=(5,10)=10P$，但是实际应用中没有现成的集合可供查表。若已知某个点 Q，只能用比较原始的方法演算可能的 $n$ 值，目前可实现的效率最高的算法为 Baby-step giant-step 算法，计算复杂度为 $O(\sqrt{n})$。反过来，如果已知 n 计算 $n*P$ 则简单的多，因为有限循环群满足结合律，可以使用 square and multiply 算法，计算复杂度为 $O(2log2n)$。例如，比特币使用名为 secp256k1 的标准 ECC 曲线，$n$ 的长度为 256 位. Baby-step giant-step 算法的计算复杂度为 $O(2^{128})$，而 square and multiply 算法的计算复杂度仅为 O(512)。</p>
-<p>用密码学术语描述为：ECC 有限循环群构成了一个单向函数 $Q=nP$，已知 $n,P$ 可以很容易计算 $Q$；反过来已知 $P,Q$ 则难以计算 $n$. 于是 $(n,Q=n\cdot P)$ 构成了一对私钥和公钥。</p>
-<p>举个具体的例子，利用 square and multiply 算法计算 Q=137P，仅需 9 步便得到计算结果。</p>
-<h2><span id="ecdh-基于椭圆曲线的-diffie-hellman-密钥交换">ECDH 基于椭圆曲线的 Diffie-Hellman 密钥交换</span></h2><p>ECC 可以用于加密解密，但是由于其算法复杂计算速度慢，故莱迪思 iCE40 UltraPlus 系列芯片综合使用 ECDH 算法进行密钥交换，再通过 AES 进行消息的快速加密 / 解密助力于 IoT 通信。故本文以 iCE40 UltraPlus 芯片的 Security IP 为例介绍 ECDH 密钥交换。下图为 ECDH 密钥交换算法的示意图，iCE40Plus 和 Host 分别产生自己的私钥和公钥，然后通过公共网络把公钥分享给对方，再各自使用私钥在本地计算出相同的密钥进行 AES 加密通信。</p>
+<h2 id="椭圆曲线离散对数问题ECDLP"><a href="#椭圆曲线离散对数问题ECDLP" class="headerlink" title="椭圆曲线离散对数问题ECDLP"></a>椭圆曲线离散对数问题ECDLP</h2><p>请问上图中与点$Q$相对应的$n$值为多少？</p>
+<p>查找集合$G={nP|P=(2,2)}$中的元素可知答案是$Q=(5,10)=10P$，但是实际应用中没有现成的集合可供查表。若已知某个点Q，只能用比较原始的方法演算可能的$n$值，目前可实现的效率最高的算法为Baby-step giant-step算法，计算复杂度为$O(\sqrt{n})$。反过来，如果已知n计算$n*P$则简单的多，因为有限循环群满足结合律，可以使用square and multiply算法，计算复杂度为$O(2log2n)$。例如，比特币使用名为secp256k1的标准ECC曲线，$n$的长度为256位. Baby-step giant-step算法的计算复杂度为$O(2^{128})$，而square and multiply算法的计算复杂度仅为O(512)。</p>
+<p>用密码学术语描述为：ECC有限循环群构成了一个单向函数$Q=nP$，已知$n,P$可以很容易计算$Q$；反过来已知$P,Q$则难以计算$n$.于是$(n,Q=n\cdot P )$构成了一对私钥和公钥。</p>
+<p>举个具体的例子，利用square and multiply 算法计算Q=137P，仅需9步便得到计算结果。</p>
+<h2 id="ECDH基于椭圆曲线的Diffie-Hellman密钥交换"><a href="#ECDH基于椭圆曲线的Diffie-Hellman密钥交换" class="headerlink" title="ECDH基于椭圆曲线的Diffie-Hellman密钥交换"></a>ECDH基于椭圆曲线的Diffie-Hellman密钥交换</h2><p>ECC可以用于加密解密，但是由于其算法复杂计算速度慢，故莱迪思iCE40 UltraPlus系列芯片综合使用ECDH算法进行密钥交换，再通过AES进行消息的快速加密/解密助力于IoT通信。故本文以iCE40 UltraPlus芯片的Security IP为例介绍ECDH密钥交换。下图为ECDH密钥交换算法的示意图，iCE40Plus和Host分别产生自己的私钥和公钥，然后通过公共网络把公钥分享给对方，再各自使用私钥在本地计算出相同的密钥进行AES加密通信。</p>
 <p><img src="https://i.loli.net/2020/09/11/IHxbt7OJ8SgXFka.png" alt="6663612-b52df96317d4d4bf"></p>
-<p>由于有限循环群满足交换律，我们可以验证 ${KEY}<em>{Host}=m\cdot n\cdot P=n\cdot m\cdot P={KEY}</em>{FPGA}$</p>
+<p>由于有限循环群满足交换律，我们可以验证${KEY}<em>{Host}=m\cdot n\cdot P=n\cdot m\cdot P={KEY}</em>{FPGA}$</p>
 
-            </div>
-            <!-- Post Comments -->
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/"># 密码学</a>
+                    
+                        <a href="/tags/%E6%95%B0%E5%AD%A6/"># 数学</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/01/04/go/Go%E8%AF%AD%E8%A8%80%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B/">Go语言编译过程</a>
+            
+            
+            <a class="next" rel="next" href="/2019/10/10/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%AD%A6%E4%B9%8BDiffie-Hellman%E5%AF%86%E9%92%A5%E4%BA%A4%E6%8D%A2/">密码学之Diffie-Hellman密钥交换</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

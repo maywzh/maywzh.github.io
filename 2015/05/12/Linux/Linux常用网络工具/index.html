@@ -1,257 +1,305 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>Linux常用网络工具 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>Linux 常用网络工具</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <h2><span id="网络工具">网络工具</span></h2><p>Linux 中提供了强大的网络工具包，用于监测系统中的网络通信状态。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Linux常用网络工具</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">May 12, 2015&nbsp;&nbsp;19:10:02</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/DevOps/">DevOps</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="网络工具"><a href="#网络工具" class="headerlink" title="网络工具"></a>网络工具</h2><p>Linux中提供了强大的网络工具包，用于监测系统中的网络通信状态。</p>
 <a id="more"></a>
-<h2><span id="查询网络服务和端口">查询网络服务和端口</span></h2><p>netstat 命令用于显示各种网络相关信息，如网络连接，路由表，接口状态 (Interface Statistics)，masquerade 连接，多播成员 (Multicast Memberships) 等等。</p>
+<h2 id="查询网络服务和端口"><a href="#查询网络服务和端口" class="headerlink" title="查询网络服务和端口"></a>查询网络服务和端口</h2><p>netstat 命令用于显示各种网络相关信息，如网络连接，路由表，接口状态 (Interface Statistics)，masquerade 连接，多播成员 (Multicast Memberships) 等等。</p>
 <p>列出所有端口 (包括监听和未监听的):</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$netstat</span> -a<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$netstat</span> -a</span><br></pre></td></tr></table></figure>
 <p>列出所有 tcp 端口:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$netstat</span> -at<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$netstat</span> -at</span><br></pre></td></tr></table></figure>
 <p>列出所有有监听的服务状态:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$netstat</span> -l<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>使用 netstat 工具查询端口:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$netstat</span> -antp <span class="token operator">|</span> <span class="token function">grep</span> <span class="token number">6379</span>
-tcp        <span class="token number">0</span>      <span class="token number">0</span> <span class="token number">127.0</span>.0.1:6379          <span class="token number">0.0</span>.0.0:*               LISTEN      <span class="token number">25501</span>/redis-server
-
-<span class="token variable">$ps</span> <span class="token number">25501</span>
-  PID TTY      STAT   TIME COMMAND
-<span class="token number">25501</span> ?        Ssl   <span class="token number">28</span>:21 ./redis-server ./redis.conf<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2><span id="查看文件状态">查看文件状态</span></h2><p>lsof（list open files）是一个列出当前系统打开文件的工具。在 linux 环境下，任何事物都以文件的形式存在，通过文件不仅仅可以访问常规数据，还可以访问网络连接和硬件。所以如传输控制协议 (TCP) 和用户数据报协议 (UDP) 套接字等； 在查询网络端口时，经常会用到这个工具。</p>
-<p>查询 7902 端口现在运行什么程序:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 分为两步</span>
-<span class="token comment"># 第一步，查询使用该端口的进程的 PID；</span>
-    <span class="token variable">$lsof</span> -i:7902
-    COMMAND   PID   <span class="token environment constant">USER</span>   FD   TYPE    DEVICE SIZE NODE NAME
-    WSL     <span class="token number">30294</span> tuapp    4u  IPv4 <span class="token number">447684086</span>       TCP <span class="token number">10.6</span>.50.37:tnos-dp <span class="token punctuation">(</span>LISTEN<span class="token punctuation">)</span>
-
-<span class="token comment"># 查到 30294</span>
-<span class="token comment"># 使用 ps 工具查询进程详情：</span>
-<span class="token variable">$ps</span> -ef <span class="token operator">|</span> <span class="token function">grep</span> <span class="token number">30294</span>
-tdev5  <span class="token number">30294</span> <span class="token number">26160</span>  <span class="token number">0</span> Sep10 ?        01:10:50 tdesl -k <span class="token number">43476</span>
-root     <span class="token number">22781</span> <span class="token number">22698</span>  <span class="token number">0</span> 00:54 pts/20   00:00:00 <span class="token function">grep</span> <span class="token number">11554</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$netstat</span> -l</span><br></pre></td></tr></table></figure>
+<p>使用netstat工具查询端口:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$netstat</span> -antp | grep 6379</span><br><span class="line">tcp        0      0 127.0.0.1:6379          0.0.0.0:*               LISTEN      25501/redis-server</span><br><span class="line"></span><br><span class="line"><span class="variable">$ps</span> 25501</span><br><span class="line">  PID TTY      STAT   TIME COMMAND</span><br><span class="line">25501 ?        Ssl   28:21 ./redis-server ./redis.conf</span><br></pre></td></tr></table></figure>
+<h2 id="查看文件状态"><a href="#查看文件状态" class="headerlink" title="查看文件状态"></a>查看文件状态</h2><p>lsof（list open files）是一个列出当前系统打开文件的工具。在linux环境下，任何事物都以文件的形式存在，通过文件不仅仅可以访问常规数据，还可以访问网络连接和硬件。所以如传输控制协议 (TCP) 和用户数据报协议 (UDP) 套接字等； 在查询网络端口时，经常会用到这个工具。</p>
+<p>查询7902端口现在运行什么程序:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#分为两步</span></span><br><span class="line"><span class="comment">#第一步，查询使用该端口的进程的PID；</span></span><br><span class="line">    <span class="variable">$lsof</span> -i:7902</span><br><span class="line">    COMMAND   PID   USER   FD   TYPE    DEVICE SIZE NODE NAME</span><br><span class="line">    WSL     30294 tuapp    4u  IPv4 447684086       TCP 10.6.50.37:tnos-dp (LISTEN)</span><br><span class="line"></span><br><span class="line"><span class="comment">#查到30294</span></span><br><span class="line"><span class="comment">#使用ps工具查询进程详情：</span></span><br><span class="line"><span class="variable">$ps</span> -ef | grep 30294</span><br><span class="line">tdev5  30294 26160  0 Sep10 ?        01:10:50 tdesl -k 43476</span><br><span class="line">root     22781 22698  0 00:54 pts/20   00:00:00 grep 11554</span><br></pre></td></tr></table></figure>
 <p>注解</p>
-<p>以上介绍 lsof 关于网络方面的应用，这个工具非常强大，需要好好掌握，详见 <a target="_blank" rel="noopener" href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/lsof.html#lsof">lsof 一切皆文件</a> ;</p>
-<h2><span id="网络路由">网络路由 </span></h2><p> 查看路由状态:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$route</span> -n<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>发送 ping 包到地址 IP:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$ping</span> IP<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>探测前往地址 IP 的路由路径:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$traceroute</span> IP<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>DNS 查询，寻找域名 domain 对应的 IP:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$host</span> domain<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>反向 DNS 查询:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$host</span> IP<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h2><span id="镜像下载">镜像下载 </span></h2><p> 直接下载文件或者网页:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$wget</span> url<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>以上介绍lsof关于网络方面的应用，这个工具非常强大，需要好好掌握，详见 <a target="_blank" rel="noopener" href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/lsof.html#lsof">lsof 一切皆文件</a> ;</p>
+<h2 id="网络路由"><a href="#网络路由" class="headerlink" title="网络路由"></a>网络路由</h2><p>查看路由状态:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$route</span> -n</span><br></pre></td></tr></table></figure>
+<p>发送ping包到地址IP:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ping</span> IP</span><br></pre></td></tr></table></figure>
+<p>探测前往地址IP的路由路径:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$traceroute</span> IP</span><br></pre></td></tr></table></figure>
+<p>DNS查询，寻找域名domain对应的IP:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$host</span> domain</span><br></pre></td></tr></table></figure>
+<p>反向DNS查询:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$host</span> IP</span><br></pre></td></tr></table></figure>
+<h2 id="镜像下载"><a href="#镜像下载" class="headerlink" title="镜像下载"></a>镜像下载</h2><p>直接下载文件或者网页:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$wget</span> url</span><br></pre></td></tr></table></figure>
 <p>常用选项:</p>
 <ul>
-<li>–limit-rate : 下载限速</li>
+<li>–limit-rate :下载限速</li>
 <li>-o：指定日志文件；输出都写入日志；</li>
 <li>-c：断点续传</li>
 </ul>
-<h2><span id="ftp-sftp-lftp-ssh">ftp sftp lftp ssh</span></h2><p>SSH 登陆:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$ssh</span> ID@host<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>ssh 登陆远程服务器 host，ID 为用户名。</p>
-<p>ftp/sftp 文件传输:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$sftp</span> ID@host<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>登陆服务器 host，ID 为用户名。sftp 登陆后，可以使用下面的命令进一步操作：</p>
+<h2 id="ftp-sftp-lftp-ssh"><a href="#ftp-sftp-lftp-ssh" class="headerlink" title="ftp sftp lftp ssh"></a>ftp sftp lftp ssh</h2><p>SSH登陆:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ssh</span> ID@host</span><br></pre></td></tr></table></figure>
+<p>ssh登陆远程服务器host，ID为用户名。</p>
+<p>ftp/sftp文件传输:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sftp</span> ID@host</span><br></pre></td></tr></table></figure>
+<p>登陆服务器host，ID为用户名。sftp登陆后，可以使用下面的命令进一步操作：</p>
 <ul>
 <li>get filename # 下载文件</li>
 <li>put filename # 上传文件</li>
-<li>ls # 列出 host 上当前路径的所有文件</li>
-<li>cd # 在 host 上更改当前路径</li>
+<li>ls # 列出host上当前路径的所有文件</li>
+<li>cd # 在host上更改当前路径</li>
 <li>lls # 列出本地主机上当前路径的所有文件</li>
 <li>lcd # 在本地主机更改当前路径</li>
 </ul>
-<p>lftp 同步文件夹(类似 rsync 工具):</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">lftp -u user:pass <span class="token function">host</span>
-lftp user@host:~<span class="token operator">></span> mirror -n<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<h2><span id="网络复制">网络复制 </span></h2><p> 将本地 localpath 指向的文件上传到远程主机的 path 路径:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$scp</span> localpath ID@host:path<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>以 ssh 协议，遍历下载 path 路径下的整个文件系统，到本地的 localpath:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$scp</span> -r ID@site:path localpath<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>lftp同步文件夹(类似rsync工具):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lftp -u user:pass host</span><br><span class="line">lftp user@host:~&gt; mirror -n</span><br></pre></td></tr></table></figure>
+<h2 id="网络复制"><a href="#网络复制" class="headerlink" title="网络复制"></a>网络复制</h2><p>将本地localpath指向的文件上传到远程主机的path路径:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$scp</span> localpath ID@host:path</span><br></pre></td></tr></table></figure>
+<p>以ssh协议，遍历下载path路径下的整个文件系统，到本地的localpath:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$scp</span> -r ID@site:path localpath</span><br></pre></td></tr></table></figure>
 
-            </div>
-            <!-- Post Comments -->
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Linux/"># Linux</a>
+                    
+                        <a href="/tags/Terminal/"># Terminal</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2015/06/18/Linux/Linux%E5%8A%A8%E6%80%81%E5%BA%93%E7%BC%96%E8%AF%91%E6%8C%87%E5%8D%97/">Linux动态库编译指南</a>
+            
+            
+            <a class="next" rel="next" href="/2015/04/09/Linux/Linux%E6%9D%83%E9%99%90%E7%B3%BB%E7%BB%9F/">如何理解Linux权限系统</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

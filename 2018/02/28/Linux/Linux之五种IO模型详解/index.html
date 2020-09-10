@@ -1,194 +1,232 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>Linux五种IO模型详解 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/28/jogd2NXQ5MuIvKc.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>Linux 五种 IO 模型详解</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>I/O 与计算是计算机系统的最核心的两个功能，而 I/O 往往占据了相当多的资源和时间，所以如何提高 I/O 性能，成为了性能优化的极其重要的点。这里我们结合一些其他的 Linux 系统核心概念来比较基本的五种 I/O 模型。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Linux五种IO模型详解</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 28, 2018&nbsp;&nbsp;21:40:10</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>I/O与计算是计算机系统的最核心的两个功能，而I/O往往占据了相当多的资源和时间，所以如何提高I/O性能，成为了性能优化的极其重要的点。这里我们结合一些其他的Linux系统核心概念来比较基本的五种I/O模型。</p>
 <a id="more"></a>
-<h2><span id="概念引入">概念引入 </span></h2><h3><span id="用户空间和内核空间"> 用户空间和内核空间 </span></h3><p> 现在操作系统都是采用虚拟存储器，那么对 32 位操作系统而言，它的寻址空间（虚拟存储空间）为 4G（2 的 32 次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核（kernel），保证内核的安全，操作系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对 linux 操作系统而言，将最高的 1G 字节（从虚拟地址 0xC0000000 到 0xFFFFFFFF），供内核使用，称为内核空间，而将较低的 3G 字节（从虚拟地址 0x00000000 到 0xBFFFFFFF），供各个进程使用，称为用户空间。</p>
-<h3><span id="进程切换">进程切换 </span></h3><p> 为了控制进程的执行，内核必须有能力挂起正在 CPU 上运行的进程，并恢复以前挂起的某个进程的执行。这种行为被称为进程切换。因此可以说，任何进程都是在操作系统内核的支持下运行的，是与内核紧密相关的。</p>
+<h2 id="概念引入"><a href="#概念引入" class="headerlink" title="概念引入"></a>概念引入</h2><h3 id="用户空间和内核空间"><a href="#用户空间和内核空间" class="headerlink" title="用户空间和内核空间"></a>用户空间和内核空间</h3><p>现在操作系统都是采用虚拟存储器，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核（kernel），保证内核的安全，操作系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G字节（从虚拟地址0xC0000000到0xFFFFFFFF），供内核使用，称为内核空间，而将较低的3G字节（从虚拟地址0x00000000到0xBFFFFFFF），供各个进程使用，称为用户空间。</p>
+<h3 id="进程切换"><a href="#进程切换" class="headerlink" title="进程切换"></a>进程切换</h3><p>为了控制进程的执行，内核必须有能力挂起正在CPU上运行的进程，并恢复以前挂起的某个进程的执行。这种行为被称为进程切换。因此可以说，任何进程都是在操作系统内核的支持下运行的，是与内核紧密相关的。</p>
 <p>从一个进程的运行转到另一个进程上运行，这个过程中经过下面这些变化：</p>
 <ol>
 <li>保存处理机上下文，包括程序计数器和其他寄存器。</li>
-<li>更新 PCB 信息。</li>
-<li>把进程的 PCB 移入相应的队列，如就绪、在某事件阻塞等队列。</li>
-<li>选择另一个进程执行，并更新其 PCB。</li>
+<li>更新PCB信息。</li>
+<li>把进程的PCB移入相应的队列，如就绪、在某事件阻塞等队列。</li>
+<li>选择另一个进程执行，并更新其PCB。</li>
 <li>更新内存管理的数据结构。</li>
 <li>恢复处理机上下文。</li>
 </ol>
-<p>详见 <a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://guojing.me/linux-kernel-architecture/posts/process-switch/"> 进程切换</a>。</p>
-<h3><span id="进程阻塞">进程阻塞 </span></h3><p> 正在执行的进程，由于期待的某些事件未发生，如请求系统资源失败、等待某种操作的完成、新数据尚未到达或无新工作做等，则由系统自动执行阻塞原语(Block)，使自己由运行状态变为阻塞状态。可见，进程的阻塞是进程自身的一种主动行为，也因此只有处于运行态的进程（获得 CPU），才可能将其转为阻塞状态。当进程进入阻塞状态，是不占用 CPU 资源的。</p>
-<h3><span id="文件描述符-fd">文件描述符 FD</span></h3><p>文件描述符（File descriptor）是计算机科学中的一个术语，是一个用于表述指向文件的引用的抽象化概念。</p>
-<p>文件描述符在形式上是一个非负整数。实际上，它是一个索引值，指向内核为每一个进程所维护的该进程打开文件的记录表。当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。在程序设计中，一些涉及底层的程序编写往往会围绕着文件描述符展开。但是文件描述符这一概念往往只适用于 UNIX、Linux 这样的操作系统。</p>
-<h3><span id="缓存-io">缓存 IO</span></h3><p>缓存 IO 又被称作标准 IO，大多数文件系统的默认 IO 操作都是缓存 IO。在 Linux 的缓存 IO 机制中，操作系统会将 IO 的数据缓存在文件系统的页缓存（ page cache ）中，也就是说，数据会先被拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓冲区拷贝到应用程序的地址空间。</p>
+<p>详见<a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://guojing.me/linux-kernel-architecture/posts/process-switch/">进程切换</a>。</p>
+<h3 id="进程阻塞"><a href="#进程阻塞" class="headerlink" title="进程阻塞"></a>进程阻塞</h3><p>正在执行的进程，由于期待的某些事件未发生，如请求系统资源失败、等待某种操作的完成、新数据尚未到达或无新工作做等，则由系统自动执行阻塞原语(Block)，使自己由运行状态变为阻塞状态。可见，进程的阻塞是进程自身的一种主动行为，也因此只有处于运行态的进程（获得CPU），才可能将其转为阻塞状态。当进程进入阻塞状态，是不占用CPU资源的。</p>
+<h3 id="文件描述符FD"><a href="#文件描述符FD" class="headerlink" title="文件描述符FD"></a>文件描述符FD</h3><p>文件描述符（File descriptor）是计算机科学中的一个术语，是一个用于表述指向文件的引用的抽象化概念。</p>
+<p>文件描述符在形式上是一个非负整数。实际上，它是一个索引值，指向内核为每一个进程所维护的该进程打开文件的记录表。当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。在程序设计中，一些涉及底层的程序编写往往会围绕着文件描述符展开。但是文件描述符这一概念往往只适用于UNIX、Linux这样的操作系统。</p>
+<h3 id="缓存IO"><a href="#缓存IO" class="headerlink" title="缓存IO"></a>缓存IO</h3><p>缓存 IO 又被称作标准 IO，大多数文件系统的默认 IO 操作都是缓存 IO。在 Linux 的缓存 IO 机制中，操作系统会将 IO 的数据缓存在文件系统的页缓存（ page cache ）中，也就是说，数据会先被拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓冲区拷贝到应用程序的地址空间。</p>
 <p><strong>缓存 IO 的缺点：</strong></p>
 <p>数据在传输过程中需要在应用程序地址空间和内核进行多次数据拷贝操作，这些数据拷贝操作所带来的 CPU 以及内存开销是非常大的。</p>
-<h2><span id="五种-io-模型">五种 I/O 模型 </span></h2><h3><span id="同步阻塞-blocking-io"> 同步阻塞 Blocking I/O</span></h3><blockquote>
+<h2 id="五种I-O模型"><a href="#五种I-O模型" class="headerlink" title="五种I/O模型"></a>五种I/O模型</h2><h3 id="同步阻塞-Blocking-I-O"><a href="#同步阻塞-Blocking-I-O" class="headerlink" title="同步阻塞 Blocking I/O"></a>同步阻塞 Blocking I/O</h3><blockquote>
 <p>我和女友点完餐后，不知道什么时候能做好，只好坐在餐厅里面等，直到做好，然后吃完才离开。女友本想还和我一起逛街的，但是不知道饭能什么时候做好，只好和我一起在餐厅等，而不能去逛街，直到吃完饭才能去逛街，中间等待做饭的时间浪费掉了。<code>这就是典型的阻塞</code>。</p>
 </blockquote>
-<p>同步阻塞 IO 模型是最常用的一个模型，也是最简单的模型。在 linux 中，默认情况下所有的 socket 都是 blocking。它符合人们最常见的思考逻辑。阻塞就是进程 “被” 休息, CPU 处理其它进程去了。</p>
-<p>在这个 IO 模型中，用户空间的应用程序执行一个系统调用（recvform），这会导致应用程序阻塞，什么也不干，直到数据准备好，并且将数据从内核复制到用户进程，最后进程再处理数据，在等待数据到处理数据的两个阶段，整个进程都被阻塞。<strong>不能处理别的网络 IO</strong>。调用应用程序处于一种不再消费 CPU 而只是简单等待响应的状态，因此从处理的角度来看，这是非常有效的。在调用 recv()/recvfrom()函数时，发生在内核中等待数据和复制数据的过程，大致如下图：</p>
+<p>同步阻塞 IO 模型是最常用的一个模型，也是最简单的模型。在linux中，默认情况下所有的socket都是blocking。它符合人们最常见的思考逻辑。阻塞就是进程 “被” 休息, CPU处理其它进程去了。</p>
+<p>在这个IO模型中，用户空间的应用程序执行一个系统调用（recvform），这会导致应用程序阻塞，什么也不干，直到数据准备好，并且将数据从内核复制到用户进程，最后进程再处理数据，在等待数据到处理数据的两个阶段，整个进程都被阻塞。<strong>不能处理别的网络IO</strong>。调用应用程序处于一种不再消费 CPU 而只是简单等待响应的状态，因此从处理的角度来看，这是非常有效的。在调用recv()/recvfrom()函数时，发生在内核中等待数据和复制数据的过程，大致如下图：</p>
 <p><img src="https://i.loli.net/2020/08/28/V7co6PrnFAxOWei.png" alt="java10-1557020023"></p>
-<p>当用户进程调用了 <code>recv()/recvfrom()</code> 这个系统调用，kernel 就开始了 IO 的第一个阶段：准备数据（对于网络 IO 来说，很多时候数据在一开始还没有到达。比如，还没有收到一个完整的 UDP 包。这个时候 kernel 就要等待足够的数据到来）。这个过程需要等待，也就是说数据被拷贝到操作系统内核的缓冲区中是需要一个过程的。而在用户进程这边，整个进程会被阻塞（当然，是进程自己选择的阻塞）。第二个阶段：当 kernel 一直等到数据准备好了，它就会将数据从 kernel 中拷贝到用户内存，然后 kernel 返回结果，用户进程才解除 block 的状态，重新运行起来。</p>
-<p>所以，blocking IO 的特点就是在 IO 执行的两个阶段都被 block 了。</p>
+<p>当用户进程调用了<code>recv()/recvfrom()</code>这个系统调用，kernel就开始了IO的第一个阶段：准备数据（对于网络IO来说，很多时候数据在一开始还没有到达。比如，还没有收到一个完整的UDP包。这个时候kernel就要等待足够的数据到来）。这个过程需要等待，也就是说数据被拷贝到操作系统内核的缓冲区中是需要一个过程的。而在用户进程这边，整个进程会被阻塞（当然，是进程自己选择的阻塞）。第二个阶段：当kernel一直等到数据准备好了，它就会将数据从kernel中拷贝到用户内存，然后kernel返回结果，用户进程才解除block的状态，重新运行起来。</p>
+<p>所以，blocking IO的特点就是在IO执行的两个阶段都被block了。</p>
 <p><strong>优点：</strong></p>
 <ul>
 <li><p>能够及时返回数据，无延迟；</p>
@@ -200,61 +238,61 @@
 <ul>
 <li>等待时间长，性能较差；</li>
 </ul>
-<h3><span id="同步非阻塞-nonblocking-io">同步非阻塞 Nonblocking I/O</span></h3><blockquote>
+<h3 id="同步非阻塞-Nonblocking-I-O"><a href="#同步非阻塞-Nonblocking-I-O" class="headerlink" title="同步非阻塞 Nonblocking I/O"></a>同步非阻塞 Nonblocking I/O</h3><blockquote>
 <p>我女友不甘心白白在这等，又想去逛商场，又担心饭好了。所以我们逛一会，回来询问服务员饭好了没有，来来回回好多次，饭都还没吃都快累死了啦。<code>这就是非阻塞</code>。需要不断的询问，是否准备好了。</p>
 </blockquote>
 <p>同步非阻塞就是 “每隔一会儿瞄一眼进度条” 的轮询（polling）方式。在这种模型中，设备是以非阻塞的形式打开的。这意味着 IO 操作不会立即完成，<code>read</code> 操作可能会返回一个错误代码，说明这个命令不能立即满足（<code>EAGAIN</code> 或 <code>EWOULDBLOCK</code>）。</p>
-<p>在网络 IO 时候，非阻塞 IO 也会进行 recvform 系统调用，检查数据是否准备好，与阻塞 IO 不一样，”非阻塞将大的整片时间的阻塞分成 N 多的小的阻塞, 所以进程不断地有机会 ‘被’ CPU 光顾”。</p>
-<p>也就是说非阻塞的 <code>recvform</code> 系统调用调用之后，进程并没有被阻塞，内核马上返回给进程，如果数据还没准备好，此时会返回一个 <code>error</code>。进程在返回之后，可以干点别的事情，然后再发起 recvform 系统调用。重复上面的过程，循环往复的进行<code>recvform</code> 系统调用。这个过程通常被称之为轮询。轮询检查内核数据，直到数据准备好，再拷贝数据到进程，进行数据处理。<strong>需要注意，拷贝数据整个过程，进程仍然是属于阻塞的状态</strong>。</p>
-<p>在 linux 下，可以通过设置 socket 使其变为 non-blocking。当对一个 non-blocking socket 执行读操作时，流程如图所示：</p>
+<p>在网络IO时候，非阻塞IO也会进行recvform系统调用，检查数据是否准备好，与阻塞IO不一样，”非阻塞将大的整片时间的阻塞分成N多的小的阻塞, 所以进程不断地有机会 ‘被’ CPU光顾”。</p>
+<p>也就是说非阻塞的<code>recvform</code>系统调用调用之后，进程并没有被阻塞，内核马上返回给进程，如果数据还没准备好，此时会返回一个<code>error</code>。进程在返回之后，可以干点别的事情，然后再发起recvform系统调用。重复上面的过程，循环往复的进行<code>recvform</code>系统调用。这个过程通常被称之为轮询。轮询检查内核数据，直到数据准备好，再拷贝数据到进程，进行数据处理。<strong>需要注意，拷贝数据整个过程，进程仍然是属于阻塞的状态</strong>。</p>
+<p>在linux下，可以通过设置socket使其变为non-blocking。当对一个non-blocking socket执行读操作时，流程如图所示：</p>
 <p><img src="https://i.loli.net/2020/08/28/RbsD6CcZVMBvFaq.png" alt="20152818_DXcj"></p>
-<p>当用户进程发出 <code>read</code> 操作时，如果 kernel 中的数据还没有准备好，那么它并不会 block 用户进程，而是立刻返回一个 error。从用户进程角度讲，它发起一个 read 操作后，并不需要等待，而是马上就得到了一个结果。用户进程判断结果是一个 error 时，它就知道数据还没有准备好，于是它可以再次发送 <code>read</code> 操作。一旦 kernel 中的数据准备好了，并且又再次收到了用户进程的 system call，那么它马上就将数据拷贝到了用户内存，然后返回。</p>
-<p>所以，nonblocking IO 的特点是用户进程需要不断的主动询问 kernel 数据好了没有。</p>
+<p>当用户进程发出<code>read</code>操作时，如果kernel中的数据还没有准备好，那么它并不会block用户进程，而是立刻返回一个error。从用户进程角度讲，它发起一个read操作后，并不需要等待，而是马上就得到了一个结果。用户进程判断结果是一个error时，它就知道数据还没有准备好，于是它可以再次发送<code>read</code>操作。一旦kernel中的数据准备好了，并且又再次收到了用户进程的system call，那么它马上就将数据拷贝到了用户内存，然后返回。</p>
+<p>所以，nonblocking IO的特点是用户进程需要不断的主动询问kernel数据好了没有。</p>
 <p><strong>同步非阻塞方式相比同步阻塞方式：</strong></p>
 <p><strong>优点</strong>：能够在等待任务完成的时间里干其他活了（包括提交其他任务，也就是 “后台” 可以有多个任务在同时执行）。</p>
-<p><strong>缺点</strong>：任务完成的响应延迟增大了，因为每过一段时间才去轮询一次 read 操作，而任务可能在两次轮询之间的任意时间完成。这会导致整体数据吞吐量的降低。</p>
-<h3><span id="多路复用-multiplexing-io">多路复用 Multiplexing I/O</span></h3><blockquote>
-<p>餐厅安装了电子屏幕用来显示点餐的状态，这样我和女友逛街一会，回来就不用去询问服务员了，直接看电子屏幕就可以了。这样每个人的餐是否好了，都直接看电子屏幕就可以了，这就是典型的 IO 多路复用。</p>
+<p><strong>缺点</strong>：任务完成的响应延迟增大了，因为每过一段时间才去轮询一次read操作，而任务可能在两次轮询之间的任意时间完成。这会导致整体数据吞吐量的降低。</p>
+<h3 id="多路复用-Multiplexing-I-O"><a href="#多路复用-Multiplexing-I-O" class="headerlink" title="多路复用 Multiplexing I/O"></a>多路复用 Multiplexing I/O</h3><blockquote>
+<p>餐厅安装了电子屏幕用来显示点餐的状态，这样我和女友逛街一会，回来就不用去询问服务员了，直接看电子屏幕就可以了。这样每个人的餐是否好了，都直接看电子屏幕就可以了，这就是典型的IO多路复用。</p>
 </blockquote>
-<p>由于同步非阻塞方式需要不断主动轮询，轮询占据了很大一部分过程，轮询会消耗大量的 CPU 时间，而 “后台” 可能有多个任务在同时进行，人们就想到了循环查询多个任务的完成状态，只要有任何一个任务完成，就去处理它。<strong>如果轮询不是进程的用户态，而是有人帮忙就好了。</strong>那么这就是所谓的 “IO 多路复用”。UNIX/Linux 下的 <code>select</code>、<code>poll</code>、<code>epoll</code> 就是干这个的（<code>epoll</code> 比 <code>poll</code>、<code>select</code> 效率高，做的事情是一样的）。</p>
-<p>I/O 多路复用有两个特别的系统调用 <code>select</code>、<code>poll</code>、<code>epoll</code> 函数。<code>select</code>调用是内核级别的，<code>select</code>轮询相对非阻塞的轮询的区别在于——前者可以等待多个 socket，能实现同时对多个 IO 端口进行监听，当其中任何一个 socket 的数据准好了，就能返回进行可读，然后进程再进行 <code>recvform</code> 系统调用，将数据由内核拷贝到用户进程，当然这个过程是阻塞的。<code>select</code>或 <code>poll</code> 调用之后，会阻塞进程，与 blocking IO 阻塞不同在于，此时的 <code>select</code> 不是等到 socket 数据全部到达再处理, 而是有了一部分数据就会调用用户进程来处理。如何知道有一部分数据到达了呢？监视的事情交给了内核，内核负责数据到达的处理。也可以理解为”非阻塞”吧。</p>
-<p>I/O 复用模型会用到 <code>select</code>、<code>poll</code>、<code>epoll</code> 函数，这几个函数也会使进程阻塞，但是和阻塞 I/O 所不同的的，这两个函数可以同时阻塞多个 I/O 操作。而且可以同时对多个读操作、多个写操作的 I/O 函数进行检测，直到有数据可读或可写时（注意不是全部数据可读或可写），才真正调用 I/O 操作函数。</p>
-<p>对于多路复用，也就是轮询多个 socket。多路复用既然可以处理多个 IO，也就带来了新的问题，多个 IO 之间的顺序变得不确定了，当然也可以针对不同的编号。具体流程，如下图所示：</p>
+<p>由于同步非阻塞方式需要不断主动轮询，轮询占据了很大一部分过程，轮询会消耗大量的CPU时间，而 “后台” 可能有多个任务在同时进行，人们就想到了循环查询多个任务的完成状态，只要有任何一个任务完成，就去处理它。<strong>如果轮询不是进程的用户态，而是有人帮忙就好了。</strong>那么这就是所谓的 “IO 多路复用”。UNIX/Linux 下的 <code>select</code>、<code>poll</code>、<code>epoll</code> 就是干这个的（<code>epoll</code> 比 <code>poll</code>、<code>select</code> 效率高，做的事情是一样的）。</p>
+<p>I/O多路复用有两个特别的系统调用<code>select</code>、<code>poll</code>、<code>epoll</code>函数。<code>select</code>调用是内核级别的，<code>select</code>轮询相对非阻塞的轮询的区别在于——前者可以等待多个socket，能实现同时对多个IO端口进行监听，当其中任何一个socket的数据准好了，就能返回进行可读，然后进程再进行<code>recvform</code>系统调用，将数据由内核拷贝到用户进程，当然这个过程是阻塞的。<code>select</code>或<code>poll</code>调用之后，会阻塞进程，与blocking IO阻塞不同在于，此时的<code>select</code>不是等到socket数据全部到达再处理, 而是有了一部分数据就会调用用户进程来处理。如何知道有一部分数据到达了呢？监视的事情交给了内核，内核负责数据到达的处理。也可以理解为”非阻塞”吧。</p>
+<p>I/O复用模型会用到<code>select</code>、<code>poll</code>、<code>epoll</code>函数，这几个函数也会使进程阻塞，但是和阻塞I/O所不同的的，这两个函数可以同时阻塞多个I/O操作。而且可以同时对多个读操作、多个写操作的I/O函数进行检测，直到有数据可读或可写时（注意不是全部数据可读或可写），才真正调用I/O操作函数。</p>
+<p>对于多路复用，也就是轮询多个socket。多路复用既然可以处理多个IO，也就带来了新的问题，多个IO之间的顺序变得不确定了，当然也可以针对不同的编号。具体流程，如下图所示：</p>
 <p><img src="https://i.loli.net/2020/08/28/T1hwz5douryFOXb.png" alt="20164149_LD8E"></p>
-<p>IO multiplexing 就是我们说的 <code>select</code>，<code>poll</code>，<code>epoll</code>，有些地方也称这种 IO 方式为 event driven IO。<code>select/epoll</code> 的好处就在于单个 process 就可以同时处理多个网络连接的 IO。它的基本原理就是 <code>select</code>，<code>poll</code>，<code>epoll</code> 这个 function 会不断的轮询所负责的所有 socket，当某个 socket 有数据到达了，就通知用户进程。</p>
-<p>当用户进程调用了 select，那么整个进程会被 block，而同时，kernel 会“监视”所有 select 负责的 socket，当任何一个 socket 中的数据准备好了，select 就会返回。这个时候用户进程再调用 read 操作，将数据从 kernel 拷贝到用户进程。</p>
+<p>IO multiplexing就是我们说的<code>select</code>，<code>poll</code>，<code>epoll</code>，有些地方也称这种IO方式为event driven IO。<code>select/epoll</code>的好处就在于单个process就可以同时处理多个网络连接的IO。它的基本原理就是<code>select</code>，<code>poll</code>，<code>epoll</code>这个function会不断的轮询所负责的所有socket，当某个socket有数据到达了，就通知用户进程。</p>
+<p>当用户进程调用了select，那么整个进程会被block，而同时，kernel会“监视”所有select负责的socket，当任何一个socket中的数据准备好了，select就会返回。这个时候用户进程再调用read操作，将数据从kernel拷贝到用户进程。</p>
 <blockquote>
-<p>多路复用的特点是通过一种机制一个进程能同时等待 IO 文件描述符，内核监视这些文件描述符（套接字描述符），其中的任意一个进入读就绪状态，select， poll，epoll 函数就可以返回。对于监视的方式，又可以分为 select， poll， epoll 三种方式。</p>
+<p>多路复用的特点是通过一种机制一个进程能同时等待IO文件描述符，内核监视这些文件描述符（套接字描述符），其中的任意一个进入读就绪状态，select， poll，epoll函数就可以返回。对于监视的方式，又可以分为 select， poll， epoll三种方式。</p>
 </blockquote>
-<p>上面的图和 blocking IO 的图其实并没有太大的不同，事实上，还更差一些。因为这里需要使用两个 system call (<code>select</code> 和 <code>recvfrom</code>)，而 blocking IO 只调用了一个 system call (<code>recvfrom</code>)。但是，用 <code>select</code> 的优势在于它可以同时处理多个 connection。</p>
-<p>所以，如果处理的连接数不是很高的话，使用 <code>select/epoll</code> 的 web server 不一定比使用 multi-threading + blocking IO 的 web server 性能更好，可能延迟还更大。（<code>select/epoll</code>的优势并不是对于单个连接能处理得更快，而是在于能处理更多的连接。）</p>
-<p>在 IO multiplexing Model 中，实际中，对于每一个 socket，一般都设置成为 non-blocking，但是，如上图所示，整个用户的 process 其实是一直被 block 的。只不过 process 是被 <code>select</code> 这个函数 block，而不是被 socket IO 给 block。所以 <strong>IO 多路复用是阻塞在<code>select，epoll</code> 这样的系统调用之上，而没有阻塞在真正的 I/O 系统调用如 recvfrom 之上。</strong></p>
-<p>在 I/O 编程过程中，当需要同时处理多个客户端接入请求时，可以利用多线程或者 I/O 多路复用技术进行处理。I/O 多路复用技术通过把多个 I/O 的阻塞复用到同一个 select 的阻塞上，从而使得系统在单线程的情况下可以同时处理多个客户端请求。与传统的多线程 / 多进程模型比<strong>，I/O 多路复用的最大优势是系统开销小，系统不需要创建新的额外进程或者线程</strong>，也不需要维护这些进程和线程的运行，降底了系统的维护工作量，节省了系统资源，I/O 多路复用的主要应用场景如下：</p>
+<p>上面的图和blocking IO的图其实并没有太大的不同，事实上，还更差一些。因为这里需要使用两个system call (<code>select</code> 和 <code>recvfrom</code>)，而blocking IO只调用了一个system call (<code>recvfrom</code>)。但是，用<code>select</code>的优势在于它可以同时处理多个connection。</p>
+<p>所以，如果处理的连接数不是很高的话，使用<code>select/epoll</code>的web server不一定比使用multi-threading + blocking IO的web server性能更好，可能延迟还更大。（<code>select/epoll</code>的优势并不是对于单个连接能处理得更快，而是在于能处理更多的连接。）</p>
+<p>在IO multiplexing Model中，实际中，对于每一个socket，一般都设置成为non-blocking，但是，如上图所示，整个用户的process其实是一直被block的。只不过process是被<code>select</code>这个函数block，而不是被socket IO给block。所以<strong>IO多路复用是阻塞在<code>select，epoll</code>这样的系统调用之上，而没有阻塞在真正的I/O系统调用如recvfrom之上。</strong></p>
+<p>在I/O编程过程中，当需要同时处理多个客户端接入请求时，可以利用多线程或者I/O多路复用技术进行处理。I/O多路复用技术通过把多个I/O的阻塞复用到同一个select的阻塞上，从而使得系统在单线程的情况下可以同时处理多个客户端请求。与传统的多线程/多进程模型比<strong>，I/O多路复用的最大优势是系统开销小，系统不需要创建新的额外进程或者线程</strong>，也不需要维护这些进程和线程的运行，降底了系统的维护工作量，节省了系统资源，I/O多路复用的主要应用场景如下：</p>
 <ul>
 <li><p>服务器需要同时处理多个处于监听状态或者多个连接状态的套接字。</p>
 </li>
 <li><p>服务器需要同时处理多种网络协议的套接字。</p>
 </li>
 </ul>
-<p>了解了前面三种 IO 模式，在用户进程进行系统调用的时候，<strong>他们在等待数据到来的时候，处理的方式不一样，直接等待，轮询，<code>select</code>或 <code>poll</code> 轮询</strong>，两个阶段过程：</p>
+<p>了解了前面三种IO模式，在用户进程进行系统调用的时候，<strong>他们在等待数据到来的时候，处理的方式不一样，直接等待，轮询，<code>select</code>或<code>poll</code>轮询</strong>，两个阶段过程：</p>
 <ol>
 <li><p>第一个阶段有的阻塞，有的不阻塞，有的可以阻塞又可以不阻塞。</p>
 </li>
 <li><p>第二个阶段都是阻塞的。</p>
 </li>
 </ol>
-<p><strong><u>从整个 IO 过程来看，他们都是顺序执行的，因此可以归为同步模型(synchronous)。都是进程主动等待且向内核检查状态。</u></strong></p>
+<p><strong><u>从整个IO过程来看，他们都是顺序执行的，因此可以归为同步模型(synchronous)。都是进程主动等待且向内核检查状态。</u></strong></p>
 <p>高并发的程序一般使用同步非阻塞方式而非多线程 + 同步阻塞方式。要理解这一点，首先要扯到并发和并行的区别。比如去某部门办事需要依次去几个窗口，办事大厅里的人数就是并发数，而窗口个数就是并行度。也就是说并发数是指同时进行的任务数（如同时服务的 HTTP 请求，而并行数是可以同时工作的物理资源数量（如 CPU 核数）。通过合理调度任务的不同阶段，并发数可以远远大于并行度，这就是区区几个 CPU 可以支持上万个用户并发请求的奥秘。在这种高并发的情况下，为每个任务（用户请求）创建一个进程或线程的开销非常大。而同步非阻塞方式可以把多个 IO 请求丢到后台去，这就可以在一个进程里服务大量的并发 IO 请求。</p>
-<h4><span id="到底是同步阻塞还是异步阻塞">到底是同步阻塞还是异步阻塞 </span></h4><p> 同步是需要主动等待消息通知，而异步则是被动接收消息通知，通过回调、通知、状态等方式来被动获取消息。IO 多路复用在阻塞到 select 阶段时，用户进程是主动等待并调用 select 函数获取数据就绪状态消息，并且其进程状态为阻塞。所以，把 IO 多路复用归为同步阻塞模式。</p>
-<h3><span id="信号驱动-io-signal-driven-io">信号驱动 IO Signal-driven I/O</span></h3><p>允许 Socket 进行信号驱动 IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个 SIGIO 信号，可以在信号处理函数中调用 I/O 操作函数处理数据。过程如下图所示：</p>
+<h4 id="到底是同步阻塞还是异步阻塞"><a href="#到底是同步阻塞还是异步阻塞" class="headerlink" title="到底是同步阻塞还是异步阻塞"></a>到底是同步阻塞还是异步阻塞</h4><p>同步是需要主动等待消息通知，而异步则是被动接收消息通知，通过回调、通知、状态等方式来被动获取消息。IO多路复用在阻塞到select阶段时，用户进程是主动等待并调用select函数获取数据就绪状态消息，并且其进程状态为阻塞。所以，把IO多路复用归为同步阻塞模式。</p>
+<h3 id="信号驱动IO-Signal-driven-I-O"><a href="#信号驱动IO-Signal-driven-I-O" class="headerlink" title="信号驱动IO Signal-driven I/O"></a>信号驱动IO Signal-driven I/O</h3><p>允许Socket进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。过程如下图所示：</p>
 <p><img src="https://i.loli.net/2020/08/28/tI3sfV4oyaSiNwE.png" alt="21091434_DsZb"></p>
-<h3><span id="异步非阻塞-asynchronous-io">异步非阻塞 asynchronous I/O</span></h3><blockquote>
+<h3 id="异步非阻塞-asynchronous-I-O"><a href="#异步非阻塞-asynchronous-I-O" class="headerlink" title="异步非阻塞 asynchronous I/O"></a>异步非阻塞 asynchronous I/O</h3><blockquote>
 <p>女友不想逛街，又餐厅太吵了，回家好好休息一下。于是我们叫外卖，打个电话点餐，然后我和女友可以在家好好休息一下，饭好了送货员送到家里来。这就是典型的异步，只需要打个电话说一下，然后可以做自己的事情，饭好了就送来了。</p>
 </blockquote>
-<p>相对于同步 IO，异步 IO 不是顺序执行。用户进程进行 aio_read 系统调用之后，无论内核数据是否准备好，都会直接返回给用户进程，然后用户态进程可以去做别的事情。等到 socket 数据准备好了，内核直接复制数据给进程，然后从内核向进程发送通知。IO 两个阶段，进程都是非阻塞的。</p>
-<p>Linux 提供了 AIO 库函数实现异步，但是用的很少。目前有很多开源的异步 IO 库，例如 libevent、libev、libuv。异步过程如下图所示：</p>
+<p>相对于同步IO，异步IO不是顺序执行。用户进程进行aio_read系统调用之后，无论内核数据是否准备好，都会直接返回给用户进程，然后用户态进程可以去做别的事情。等到socket数据准备好了，内核直接复制数据给进程，然后从内核向进程发送通知。IO两个阶段，进程都是非阻塞的。</p>
+<p>Linux提供了AIO库函数实现异步，但是用的很少。目前有很多开源的异步IO库，例如libevent、libev、libuv。异步过程如下图所示：</p>
 <p><img src="https://i.loli.net/2020/08/28/rsQRKLS6MxgYA2q.png" alt="20175459_gtgw"></p>
-<p>用户进程发起 aio_read 操作之后，立刻就可以开始去做其它的事。而另一方面，从 kernel 的角度，当它受到一个 asynchronous read 之后，首先它会立刻返回，所以不会对用户进程产生任何 block。然后，kernel 会等待数据准备完成，然后将数据拷贝到用户内存。当这一切都完成之后，kernel 会给用户进程发送一个 signal 或执行一个基于线程的回调函数来完成这次 IO 处理过程，告诉它 read 操作完成了。</p>
+<p>用户进程发起aio_read操作之后，立刻就可以开始去做其它的事。而另一方面，从kernel的角度，当它受到一个asynchronous read之后，首先它会立刻返回，所以不会对用户进程产生任何block。然后，kernel会等待数据准备完成，然后将数据拷贝到用户内存。当这一切都完成之后，kernel会给用户进程发送一个signal或执行一个基于线程的回调函数来完成这次 IO 处理过程，告诉它read操作完成了。</p>
 <p><strong>在 Linux 中，通知的方式是 “信号”：</strong></p>
 <blockquote>
 <p>如果这个进程正在用户态忙着做别的事（例如在计算两个矩阵的乘积），那就强行打断之，调用事先注册的信号处理函数，这个函数可以决定何时以及如何处理这个异步任务。由于信号处理函数是突然闯进来的，因此跟中断处理程序一样，有很多事情是不能做的，因此保险起见，一般是把事件 “登记” 一下放进队列，然后返回该进程原来在做的事。</p>
@@ -269,41 +307,69 @@
 <p>同步非阻塞模型允许处理和 IO 操作重叠进行，但是这需要应用程序根据重现的规则来检查 IO 操作的状态。</p>
 <p>这样就剩下异步非阻塞 IO 了，它允许处理和 IO 操作重叠进行，包括 IO 操作完成的通知。</p>
 </blockquote>
-<p>IO 多路复用除了需要阻塞之外，<code>select</code>函数所提供的功能（异步阻塞 IO）与 AIO 类似。不过，它是对通知事件进行阻塞，而不是对 IO 调用进行阻塞。</p>
-<h3><span id="关于异步阻塞">关于异步阻塞 </span></h3><p> 有时我们的 API 只提供异步通知方式，例如在 node.js 里，但业务逻辑需要的是做完一件事后做另一件事，例如数据库连接初始化后才能开始接受用户的 HTTP 请求，这样的业务逻辑就需要调用者是以阻塞方式来工作。</p>
+<p>IO多路复用除了需要阻塞之外，<code>select</code>函数所提供的功能（异步阻塞 IO）与 AIO 类似。不过，它是对通知事件进行阻塞，而不是对 IO 调用进行阻塞。</p>
+<h3 id="关于异步阻塞"><a href="#关于异步阻塞" class="headerlink" title="关于异步阻塞"></a>关于异步阻塞</h3><p>有时我们的 API 只提供异步通知方式，例如在 node.js 里，但业务逻辑需要的是做完一件事后做另一件事，例如数据库连接初始化后才能开始接受用户的 HTTP 请求，这样的业务逻辑就需要调用者是以阻塞方式来工作。</p>
 <p>为了在异步环境里模拟 “顺序执行” 的效果，就需要把同步代码转换成异步形式，这称为 CPS（Continuation Passing Style）变换。BYVoid 大神的 <a target="_blank" rel="noopener" href="https://link.jianshu.com?t=https://github.com/BYVoid/continuation">continuation.js</a> 库就是一个 CPS 变换的工具。用户只需用比较符合人类常理的同步方式书写代码，CPS 变换器会把它转换成层层嵌套的异步回调形式。</p>
 <p><img src="https://i.loli.net/2020/08/28/Dxzcvh826j9Osfe.png" alt="20183314_5rY1"></p>
 <p><img src="https://i.loli.net/2020/08/28/sGLikDutaBUR4TQ.png" alt="20183327_wIGf"></p>
 <p>另外一种使用阻塞方式的理由是降低响应延迟。如果采用非阻塞方式，一个任务 A 被提交到后台，就开始做另一件事 B，但 B 还没做完，A 就完成了，这时要想让 A 的完成事件被尽快处理（比如 A 是个紧急事务），要么丢弃做到一半的 B，要么保存 B 的中间状态并切换回 A，任务的切换是需要时间的（不管是从磁盘载入到内存，还是从内存载入到高速缓存），这势必降低 A 的响应速度。因此，对实时系统或者延迟敏感的事务，有时采用阻塞方式比非阻塞方式更好。</p>
-<h2><span id="总结">总结 </span></h2><h3><span id="阻塞-vs-非阻塞"> 阻塞 vs 非阻塞 </span></h3><p> 调用 blocking IO 会一直 block 住对应的进程直到操作完成，而 non-blocking IO 在 kernel 还准备数据的情况下会立刻返回。</p>
-<h3><span id="同步-vs-异步">同步 vs 异步 </span></h3><p> 关于 synchronous 和 asynchronous，POSIX 给出了如下的定义：</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="阻塞vs非阻塞"><a href="#阻塞vs非阻塞" class="headerlink" title="阻塞vs非阻塞"></a>阻塞vs非阻塞</h3><p>调用blocking IO会一直block住对应的进程直到操作完成，而non-blocking IO在kernel还准备数据的情况下会立刻返回。</p>
+<h3 id="同步vs异步"><a href="#同步vs异步" class="headerlink" title="同步vs异步"></a>同步vs异步</h3><p>关于synchronous和asynchronous，POSIX给出了如下的定义：</p>
 <blockquote>
 <p>A synchronous I/O operation causes the requesting process to be blocked until that I/O operation completes;</p>
 <p>An asynchronous I/O operation does not cause the requesting process to be blocked;</p>
 </blockquote>
-<p>两者的区别就在于 synchronous IO 做”IO operation”的时候会将 process 阻塞。按照这个定义，之前所述的 blocking IO，non-blocking IO，IO multiplexing 都属于 synchronous IO。</p>
-<p>有人会说，non-blocking IO 并没有被 block 啊。这里有个非常“狡猾”的地方，定义中所指的”IO operation”是指真实的 IO 操作，就是例子中的 <code>recvfrom</code> 这个 system call。non-blocking IO 在执行 <code>recvfrom</code> 这个 system call 的时候，如果 kernel 的数据没有准备好，这时候不会 block 进程。但是，当 kernel 中数据准备好的时候，recvfrom 会将数据从 kernel 拷贝到用户内存中，这个时候进程是被 block 了，在这段时间内，进程是被 block 的。</p>
+<p>两者的区别就在于synchronous IO做”IO operation”的时候会将process阻塞。按照这个定义，之前所述的blocking IO，non-blocking IO，IO multiplexing都属于synchronous IO。</p>
+<p>有人会说，non-blocking IO并没有被block啊。这里有个非常“狡猾”的地方，定义中所指的”IO operation”是指真实的IO操作，就是例子中的<code>recvfrom</code>这个system call。non-blocking IO在执行<code>recvfrom</code>这个system call的时候，如果kernel的数据没有准备好，这时候不会block进程。但是，当kernel中数据准备好的时候，recvfrom会将数据从kernel拷贝到用户内存中，这个时候进程是被block了，在这段时间内，进程是被block的。</p>
 
-            </div>
-            <!-- Post Comments -->
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Linux/"># Linux</a>
+                    
+                        <a href="/tags/I-O/"># I/O</a>
+                    
+                        <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"># 操作系统</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2018/03/01/docker/Docker%20%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">Docker核心技术与原理初探</a>
+            
+            
+            <a class="next" rel="next" href="/2018/02/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BTCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91/">TCP三次握手的底层逻辑</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

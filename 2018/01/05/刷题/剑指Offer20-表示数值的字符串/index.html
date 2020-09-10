@@ -1,171 +1,209 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>剑指Offer20.表示数值的字符串 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>剑指 Offer20. 表示数值的字符串</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>一道经典的自动状态机题。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">剑指Offer20.表示数值的字符串</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 5, 2018&nbsp;&nbsp;2:11:29</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%88%B7%E9%A2%98/">刷题</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>一道经典的自动状态机题。</p>
 <a id="more"></a>
-<h2><span id="题目描述">题目描述 </span></h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/biao-shi-shu-zhi-de-zi-fu-chuan-lcof/"> 剑指 Offer20. 表示数值的字符串</a></p>
+<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/biao-shi-shu-zhi-de-zi-fu-chuan-lcof/">剑指Offer20.表示数值的字符串</a></p>
 <p>请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。例如，字符串”+100”、”5e2”、”-123”、”3.1416”、”-1E-16”、”0123”都表示数值，但”12e”、”1a3.14”、”1.2.3”、”+-5”及”12e+5.4”都不是。</p>
-<h2><span id="思路">思路 </span></h2><p> 这题是典型的自动状态机，定义当前状态，以当前字符作为状态转移动作。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>这题是典型的自动状态机，定义当前状态，以当前字符作为状态转移动作。</p>
 <p><strong>字符类型</strong>：</p>
 <p>空格 「 」、数字「 0—9 」 、正负号 「 +- 」 、小数点 「 . 」 、幂符号 「 eEeE 」 。</p>
 <p><strong>状态定义</strong>：</p>
@@ -184,126 +222,54 @@
 </ol>
 <p>合法的结束状态有 2, 3, 7, 8 。</p>
 <p><img src="https://i.loli.net/2020/09/02/2JV9ULagksCuj4P.png" alt="6f41d7e46fd0344c013980e3f46429dd7a7311bb4292783a482466a90f15747b-Picture1"></p>
-<h2><span id="题解">题解</span></h2><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> State <span class="token builtin">int</span>
-<span class="token keyword">type</span> CharType <span class="token builtin">int</span>
+<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> State <span class="keyword">int</span></span><br><span class="line"><span class="keyword">type</span> CharType <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">    STATE_INITIAL State = <span class="literal">iota</span></span><br><span class="line">    STATE_INT_SIGN</span><br><span class="line">    STATE_INTEGER</span><br><span class="line">    STATE_POINT</span><br><span class="line">    STATE_POINT_WITHOUT_INT</span><br><span class="line">    STATE_FRACTION</span><br><span class="line">    STATE_EXP</span><br><span class="line">    STATE_EXP_SIGN</span><br><span class="line">    STATE_EXP_NUMBER</span><br><span class="line">    STATE_END</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">    CHAR_NUMBER CharType = <span class="literal">iota</span></span><br><span class="line">    CHAR_EXP</span><br><span class="line">    CHAR_POINT</span><br><span class="line">    CHAR_SIGN</span><br><span class="line">    CHAR_SPACE</span><br><span class="line">    CHAR_ILLEGAL</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">toCharType</span><span class="params">(ch <span class="keyword">byte</span>)</span> <span class="title">CharType</span></span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> ch &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;9&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> CHAR_NUMBER</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;e&#x27;</span>, <span class="string">&#x27;E&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> CHAR_EXP</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;.&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> CHAR_POINT</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;+&#x27;</span>, <span class="string">&#x27;-&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> CHAR_SIGN</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27; &#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> CHAR_SPACE</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">return</span> CHAR_ILLEGAL</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">isNumber</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">    transfer := <span class="keyword">map</span>[State]<span class="keyword">map</span>[CharType]State&#123;</span><br><span class="line">        STATE_INITIAL: <span class="keyword">map</span>[CharType]State&#123;</span><br><span class="line">            CHAR_SPACE:  STATE_INITIAL,</span><br><span class="line">            CHAR_NUMBER: STATE_INTEGER,</span><br><span class="line">            CHAR_POINT:  STATE_POINT_WITHOUT_INT,</span><br><span class="line">            CHAR_SIGN:   STATE_INT_SIGN,</span><br><span class="line">        &#125;,</span><br><span class="line">        STATE_INT_SIGN: <span class="keyword">map</span>[CharType]State&#123;</span><br><span class="line">            CHAR_NUMBER: STATE_INTEGER,</span><br><span class="line">            CHAR_POINT:  STATE_POINT_WITHOUT_INT,</span><br><span class="line">        &#125;,</span><br><span class="line">        STATE_INTEGER: <span class="keyword">map</span>[CharType]State&#123;</span><br><span class="line">            CHAR_NUMBER: STATE_INTEGER,</span><br><span class="line">            CHAR_EXP:    STATE_EXP,</span><br><span class="line">            CHAR_POINT:  STATE_POINT,</span><br><span class="line">            CHAR_SPACE:  STATE_END,</span><br><span class="line">        &#125;,</span><br><span class="line">        STATE_POINT: <span class="keyword">map</span>[CharType]State&#123;</span><br><span class="line">            CHAR_NUMBER: STATE_FRACTION,</span><br><span class="line">            CHAR_EXP:    STATE_EXP,</span><br><span class="line">            CHAR_SPACE:  STATE_END,</span><br><span class="line">        &#125;,</span><br><span class="line">        STATE_POINT_WITHOUT_INT: <span class="keyword">map</span>[CharType]State&#123;</span><br><span class="line">            CHAR_NUMBER: STATE_FRACTION,</span><br><span class="line">        &#125;,</span><br><span class="line">        STATE_FRACTION: <span class="keyword">map</span>[CharType]State&#123;</span><br><span class="line">            CHAR_NUMBER: STATE_FRACTION,</span><br><span class="line">            CHAR_EXP:    STATE_EXP,</span><br><span class="line">            CHAR_SPACE:  STATE_END,</span><br><span class="line">        &#125;,</span><br><span class="line">        STATE_EXP: <span class="keyword">map</span>[CharType]State&#123;</span><br><span class="line">            CHAR_NUMBER: STATE_EXP_NUMBER,</span><br><span class="line">            CHAR_SIGN:   STATE_EXP_SIGN,</span><br><span class="line">        &#125;,</span><br><span class="line">        STATE_EXP_SIGN: <span class="keyword">map</span>[CharType]State&#123;</span><br><span class="line">            CHAR_NUMBER: STATE_EXP_NUMBER,</span><br><span class="line">        &#125;,</span><br><span class="line">        STATE_EXP_NUMBER: <span class="keyword">map</span>[CharType]State&#123;</span><br><span class="line">            CHAR_NUMBER: STATE_EXP_NUMBER,</span><br><span class="line">            CHAR_SPACE:  STATE_END,</span><br><span class="line">        &#125;,</span><br><span class="line">        STATE_END: <span class="keyword">map</span>[CharType]State&#123;</span><br><span class="line">            CHAR_SPACE: STATE_END,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">    state := STATE_INITIAL</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(s); i++ &#123;</span><br><span class="line">        typ := toCharType(s[i])</span><br><span class="line">        <span class="keyword">if</span> _, ok := transfer[state][typ]; !ok &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            state = transfer[state][typ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> state == STATE_INTEGER || state == STATE_POINT || state == STATE_FRACTION || state == STATE_EXP_NUMBER || state == STATE_END</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<span class="token keyword">const</span> <span class="token punctuation">(</span>
-    STATE_INITIAL State <span class="token operator">=</span> <span class="token boolean">iota</span>
-    STATE_INT_SIGN
-    STATE_INTEGER
-    STATE_POINT
-    STATE_POINT_WITHOUT_INT
-    STATE_FRACTION
-    STATE_EXP
-    STATE_EXP_SIGN
-    STATE_EXP_NUMBER
-    STATE_END
-<span class="token punctuation">)</span>
-
-<span class="token keyword">const</span> <span class="token punctuation">(</span>
-    CHAR_NUMBER CharType <span class="token operator">=</span> <span class="token boolean">iota</span>
-    CHAR_EXP
-    CHAR_POINT
-    CHAR_SIGN
-    CHAR_SPACE
-    CHAR_ILLEGAL
-<span class="token punctuation">)</span>
-
-<span class="token keyword">func</span> <span class="token function">toCharType</span><span class="token punctuation">(</span>ch <span class="token builtin">byte</span><span class="token punctuation">)</span> CharType <span class="token punctuation">&#123;</span>
-    <span class="token keyword">switch</span> ch <span class="token punctuation">&#123;</span>
-    <span class="token keyword">case</span> <span class="token string">'0'</span><span class="token punctuation">,</span> <span class="token string">'1'</span><span class="token punctuation">,</span> <span class="token string">'2'</span><span class="token punctuation">,</span> <span class="token string">'3'</span><span class="token punctuation">,</span> <span class="token string">'4'</span><span class="token punctuation">,</span> <span class="token string">'5'</span><span class="token punctuation">,</span> <span class="token string">'6'</span><span class="token punctuation">,</span> <span class="token string">'7'</span><span class="token punctuation">,</span> <span class="token string">'8'</span><span class="token punctuation">,</span> <span class="token string">'9'</span><span class="token punctuation">:</span>
-        <span class="token keyword">return</span> CHAR_NUMBER
-    <span class="token keyword">case</span> <span class="token string">'e'</span><span class="token punctuation">,</span> <span class="token string">'E'</span><span class="token punctuation">:</span>
-        <span class="token keyword">return</span> CHAR_EXP
-    <span class="token keyword">case</span> <span class="token string">'.'</span><span class="token punctuation">:</span>
-        <span class="token keyword">return</span> CHAR_POINT
-    <span class="token keyword">case</span> <span class="token string">'+'</span><span class="token punctuation">,</span> <span class="token string">'-'</span><span class="token punctuation">:</span>
-        <span class="token keyword">return</span> CHAR_SIGN
-    <span class="token keyword">case</span> <span class="token string">''</span><span class="token punctuation">:</span>
-        <span class="token keyword">return</span> CHAR_SPACE
-    <span class="token keyword">default</span><span class="token punctuation">:</span>
-        <span class="token keyword">return</span> CHAR_ILLEGAL
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">isNumber</span><span class="token punctuation">(</span>s <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token builtin">bool</span> <span class="token punctuation">&#123;</span>
-    transfer <span class="token operator">:=</span> <span class="token keyword">map</span><span class="token punctuation">[</span>State<span class="token punctuation">]</span><span class="token keyword">map</span><span class="token punctuation">[</span>CharType<span class="token punctuation">]</span>State<span class="token punctuation">&#123;</span>
-        STATE_INITIAL<span class="token punctuation">:</span> <span class="token keyword">map</span><span class="token punctuation">[</span>CharType<span class="token punctuation">]</span>State<span class="token punctuation">&#123;</span>
-            CHAR_SPACE<span class="token punctuation">:</span>  STATE_INITIAL<span class="token punctuation">,</span>
-            CHAR_NUMBER<span class="token punctuation">:</span> STATE_INTEGER<span class="token punctuation">,</span>
-            CHAR_POINT<span class="token punctuation">:</span>  STATE_POINT_WITHOUT_INT<span class="token punctuation">,</span>
-            CHAR_SIGN<span class="token punctuation">:</span>   STATE_INT_SIGN<span class="token punctuation">,</span>
-        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-        STATE_INT_SIGN<span class="token punctuation">:</span> <span class="token keyword">map</span><span class="token punctuation">[</span>CharType<span class="token punctuation">]</span>State<span class="token punctuation">&#123;</span>
-            CHAR_NUMBER<span class="token punctuation">:</span> STATE_INTEGER<span class="token punctuation">,</span>
-            CHAR_POINT<span class="token punctuation">:</span>  STATE_POINT_WITHOUT_INT<span class="token punctuation">,</span>
-        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-        STATE_INTEGER<span class="token punctuation">:</span> <span class="token keyword">map</span><span class="token punctuation">[</span>CharType<span class="token punctuation">]</span>State<span class="token punctuation">&#123;</span>
-            CHAR_NUMBER<span class="token punctuation">:</span> STATE_INTEGER<span class="token punctuation">,</span>
-            CHAR_EXP<span class="token punctuation">:</span>    STATE_EXP<span class="token punctuation">,</span>
-            CHAR_POINT<span class="token punctuation">:</span>  STATE_POINT<span class="token punctuation">,</span>
-            CHAR_SPACE<span class="token punctuation">:</span>  STATE_END<span class="token punctuation">,</span>
-        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-        STATE_POINT<span class="token punctuation">:</span> <span class="token keyword">map</span><span class="token punctuation">[</span>CharType<span class="token punctuation">]</span>State<span class="token punctuation">&#123;</span>
-            CHAR_NUMBER<span class="token punctuation">:</span> STATE_FRACTION<span class="token punctuation">,</span>
-            CHAR_EXP<span class="token punctuation">:</span>    STATE_EXP<span class="token punctuation">,</span>
-            CHAR_SPACE<span class="token punctuation">:</span>  STATE_END<span class="token punctuation">,</span>
-        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-        STATE_POINT_WITHOUT_INT<span class="token punctuation">:</span> <span class="token keyword">map</span><span class="token punctuation">[</span>CharType<span class="token punctuation">]</span>State<span class="token punctuation">&#123;</span>
-            CHAR_NUMBER<span class="token punctuation">:</span> STATE_FRACTION<span class="token punctuation">,</span>
-        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-        STATE_FRACTION<span class="token punctuation">:</span> <span class="token keyword">map</span><span class="token punctuation">[</span>CharType<span class="token punctuation">]</span>State<span class="token punctuation">&#123;</span>
-            CHAR_NUMBER<span class="token punctuation">:</span> STATE_FRACTION<span class="token punctuation">,</span>
-            CHAR_EXP<span class="token punctuation">:</span>    STATE_EXP<span class="token punctuation">,</span>
-            CHAR_SPACE<span class="token punctuation">:</span>  STATE_END<span class="token punctuation">,</span>
-        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-        STATE_EXP<span class="token punctuation">:</span> <span class="token keyword">map</span><span class="token punctuation">[</span>CharType<span class="token punctuation">]</span>State<span class="token punctuation">&#123;</span>
-            CHAR_NUMBER<span class="token punctuation">:</span> STATE_EXP_NUMBER<span class="token punctuation">,</span>
-            CHAR_SIGN<span class="token punctuation">:</span>   STATE_EXP_SIGN<span class="token punctuation">,</span>
-        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-        STATE_EXP_SIGN<span class="token punctuation">:</span> <span class="token keyword">map</span><span class="token punctuation">[</span>CharType<span class="token punctuation">]</span>State<span class="token punctuation">&#123;</span>
-            CHAR_NUMBER<span class="token punctuation">:</span> STATE_EXP_NUMBER<span class="token punctuation">,</span>
-        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-        STATE_EXP_NUMBER<span class="token punctuation">:</span> <span class="token keyword">map</span><span class="token punctuation">[</span>CharType<span class="token punctuation">]</span>State<span class="token punctuation">&#123;</span>
-            CHAR_NUMBER<span class="token punctuation">:</span> STATE_EXP_NUMBER<span class="token punctuation">,</span>
-            CHAR_SPACE<span class="token punctuation">:</span>  STATE_END<span class="token punctuation">,</span>
-        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-        STATE_END<span class="token punctuation">:</span> <span class="token keyword">map</span><span class="token punctuation">[</span>CharType<span class="token punctuation">]</span>State<span class="token punctuation">&#123;</span>
-            CHAR_SPACE<span class="token punctuation">:</span> STATE_END<span class="token punctuation">,</span>
-        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-    <span class="token punctuation">&#125;</span>
-    state <span class="token operator">:=</span> STATE_INITIAL
-    <span class="token keyword">for</span> i <span class="token operator">:=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token function">len</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
-        typ <span class="token operator">:=</span> <span class="token function">toCharType</span><span class="token punctuation">(</span>s<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
-        <span class="token keyword">if</span> <span class="token boolean">_</span><span class="token punctuation">,</span> ok <span class="token operator">:=</span> transfer<span class="token punctuation">[</span>state<span class="token punctuation">]</span><span class="token punctuation">[</span>typ<span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token operator">!</span>ok <span class="token punctuation">&#123;</span>
-            <span class="token keyword">return</span> <span class="token boolean">false</span>
-        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-            state <span class="token operator">=</span> transfer<span class="token punctuation">[</span>state<span class="token punctuation">]</span><span class="token punctuation">[</span>typ<span class="token punctuation">]</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">return</span> state <span class="token operator">==</span> STATE_INTEGER <span class="token operator">||</span> state <span class="token operator">==</span> STATE_POINT <span class="token operator">||</span> state <span class="token operator">==</span> STATE_FRACTION <span class="token operator">||</span> state <span class="token operator">==</span> STATE_EXP_NUMBER <span class="token operator">||</span> state <span class="token operator">==</span> STATE_END
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-            </div>
-            <!-- Post Comments -->
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        <a href="/tags/%E8%87%AA%E5%8A%A8%E7%8A%B6%E6%80%81%E6%9C%BA/"># 自动状态机</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2018/01/08/%E5%88%B7%E9%A2%98/Leetcode300-%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/">Leetcode300.最长上升子序列</a>
+            
+            
+            <a class="next" rel="next" href="/2018/01/02/%E5%88%B7%E9%A2%98/Leetcode1115.%E4%BA%A4%E6%9B%BF%E6%89%93%E5%8D%B0FooBar%E9%A2%98%E8%A7%A3/">Leetcode1115.交替打印FooBar</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

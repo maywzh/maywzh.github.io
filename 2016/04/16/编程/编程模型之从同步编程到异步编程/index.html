@@ -1,270 +1,286 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>从同步编程到异步编程 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/23/qhEIfp6rvdGkj7B.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>从同步编程到异步编程</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>虽然我们生活在一个异步的世界里，但对于多数编程初学者来说，异步还是很陌生。学习一门编程语言，通常都是从同步流程开始的，即顺序、分支和循环。而异步流程是什么呢——开始一个异步调用，然后……就没有然后了。异步程序跑哪去了？</p>
-<p>异步程序会以某种异步的形式在运行着，比如多线程、异步 IO 等，直到处理完成。那如果需要处理结果怎么办？给一个程序入口，让它处理完当前过程之后，把处理结果送到这个入口，然后执行另一段程序——俗称回调。回调一般使用 <code>callback</code> 这个名称，不过有时候我更喜欢使用 <code>next</code>，因为它代表着下一个处理步骤。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">从同步编程到异步编程</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 16, 2016&nbsp;&nbsp;1:55:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>虽然我们生活在一个异步的世界里，但对于多数编程初学者来说，异步还是很陌生。学习一门编程语言，通常都是从同步流程开始的，即顺序、分支和循环。而异步流程是什么呢——开始一个异步调用，然后……就没有然后了。异步程序跑哪去了？</p>
+<p>异步程序会以某种异步的形式在运行着，比如多线程、异步IO等，直到处理完成。那如果需要处理结果怎么办？给一个程序入口，让它处理完当前过程之后，把处理结果送到这个入口，然后执行另一段程序——俗称回调。回调一般使用 <code>callback</code> 这个名称，不过有时候我更喜欢使用 <code>next</code>，因为它代表着下一个处理步骤。</p>
 <a id="more"></a>
-<h2><span id="同步和异步的概念">同步和异步的概念 </span></h2><p> 现在我们接触到了一些概念，比如同步和异步，它们是什么？</p>
+<h2 id="同步和异步的概念"><a href="#同步和异步的概念" class="headerlink" title="同步和异步的概念"></a>同步和异步的概念</h2><p>现在我们接触到了一些概念，比如同步和异步，它们是什么？</p>
 <p>这两个概念并不来源于编程语言，而是来源于低层指令，甚至更低层的——电路。它们是基于时序的两个概念，其中，“步”是指步调，所以同步表示相同的步调，而异步表示不同的步调。当然这两个概念提升到程序这个级别的时候，精确的意思与时钟无关，但所表示的意义仍然未变。</p>
-<h3><span id="同步">同步 </span></h3><p> 举个生活中的例子来说明这个问题——排除买票。售票厅开了一个窗口，有一队人在排队依次买票。这个队伍中，前面一个人往前走了一步，后面的人才能往前走一步；前面的人在等待，后面的人就一定在等待。那么在理想的情况下，所有人可以同时向前迈步。OK，大家步伐一致，称为同步。</p>
+<h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><p>举个生活中的例子来说明这个问题——排除买票。售票厅开了一个窗口，有一队人在排队依次买票。这个队伍中，前面一个人往前走了一步，后面的人才能往前走一步；前面的人在等待，后面的人就一定在等待。那么在理想的情况下，所有人可以同时向前迈步。OK，大家步伐一致，称为同步。</p>
 <p>这里把售票窗口看作是处理器，每个人看作是等待执行的指令，买票这个动作就是在执行指令。它的特点是按步就班，如果一个人买票时间过长（指令执行时间过长），就会造成阻塞。</p>
-<h3><span id="异步多线程">异步（多线程）</span></h3><p>现在买票的人渐渐多起来，所以售票厅多开了几个窗口同时售票。每个单独的队伍仍然保持着同步，但不同的队伍之间，步伐不再一致，称为异步。A 队列售票很顺利，队伍在有序快速的前进，但 B 队列的某个顾客似乎在付费时遇到点麻烦，花了很长的时候，造成阻塞，但这对 A 队列并不产生影响。</p>
+<h3 id="异步（多线程）"><a href="#异步（多线程）" class="headerlink" title="异步（多线程）"></a>异步（多线程）</h3><p>现在买票的人渐渐多起来，所以售票厅多开了几个窗口同时售票。每个单独的队伍仍然保持着同步，但不同的队伍之间，步伐不再一致，称为异步。A 队列售票很顺利，队伍在有序快速的前进，但 B 队列的某个顾客似乎在付费时遇到点麻烦，花了很长的时候，造成阻塞，但这对 A 队列并不产生影响。</p>
 <p>这时候的售票厅可以看作是在以多线程的方式运行着异步程序。从这个例子可以看到异步的两个特点：其一，两个异步流程之间相互独立，它们相互不会阻塞（有个前提，不需要等待共享资源的情况下）；其二，<strong>异步程序内部仍然是同步的</strong>。</p>
-<h3><span id="异步io">异步（IO）</span></h3><p>上面的例子比较符合多线程异步的情况。那 IO 异步又是什么样呢？</p>
+<h3 id="异步（IO）"><a href="#异步（IO）" class="headerlink" title="异步（IO）"></a>异步（IO）</h3><p>上面的例子比较符合多线程异步的情况。那 IO 异步又是什么样呢？</p>
 <p>年底了，M 在准备年终汇报的资料，这可是个紧张的工作（CPU），要收集不少数据来写好些文案。为了其中一份文案，M 需要车间的生产数据，但跑一趟车间（IO）可需要花不少时间，所以他让 N 去车间收集数据，自己则继续写其它方案，同时等 N 把数据收集回来（启动异步程序）。半天以后，N 带回了数据（插入事件消息），M 继续完成手上的文案（完成当前事件循环），之后使用 N 带回来的数据开始撰写关于车间的报告（新的事件循环）……</p>
 <p>IO 的处理速度比 CPU 慢得多，所以 IO 异步让 CPU 不必闲置着等待 IO 操作完成。当 IO 操作完成之后，CPU 会适地使用 IO 操作结果继续工作。</p>
-<h2><span id="同步逻辑和异步逻辑">同步逻辑和异步逻辑 </span></h2><p> 回到程序上来，我们以一个函数的处理过程来描述同步和异步的处理方式。</p>
-<h3><span id="同步逻辑">同步逻辑 </span></h3><p> 那么，同步处理过程是：</p>
-<pre class="line-numbers language-none"><code class="language-none">接受输入 ⇒ 处理 ⇒ 产生输出
-复制代码<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="同步逻辑和异步逻辑"><a href="#同步逻辑和异步逻辑" class="headerlink" title="同步逻辑和异步逻辑"></a>同步逻辑和异步逻辑</h2><p>回到程序上来，我们以一个函数的处理过程来描述同步和异步的处理方式。</p>
+<h3 id="同步逻辑"><a href="#同步逻辑" class="headerlink" title="同步逻辑"></a>同步逻辑</h3><p>那么，同步处理过程是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">接受输入 ⇒ 处理 ⇒ 产生输出</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
 <p>用一段伪代码来描述就是</p>
 <blockquote>
-<p>注：本文中的伪代码比较接近 JavaScript 语法，而有时候为了说明类型，采用了 TypeScript 的类型申明语法。</p>
+<p>注：本文中的伪代码比较接近 JavaScript语法，而有时候为了说明类型，采用了 TypeScript 的类型申明语法。</p>
 </blockquote>
-<pre class="line-numbers language-none"><code class="language-none">function func(input) &#123;
-    do something with input
-    return output
-&#125;
-复制代码<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span><span class="params">(input)</span></span> &#123;</span><br><span class="line">    <span class="keyword">do</span> something with <span class="built_in">input</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">output</span></span><br><span class="line">&#125;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
 <p>这是标准的 IPO(Input-Process-Output) 处理。</p>
-<h3><span id="异步逻辑">异步逻辑 </span></h3><p> 而异步呢，是：</p>
-<pre class="line-numbers language-none"><code class="language-none">接受输入 ⇒ 处理 ⇒ 启动下一步（如果有）
-复制代码<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h3 id="异步逻辑"><a href="#异步逻辑" class="headerlink" title="异步逻辑"></a>异步逻辑</h3><p>而异步呢，是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">接受输入 ⇒ 处理 ⇒ 启动下一步（如果有）</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
 <p>用伪代码来描述就是：</p>
-<pre class="line-numbers language-none"><code class="language-none">function asyncFunc(input, next) &#123;
-    do something with input
-    if (next is a entry) &#123;
-        next(output)
-    &#125;
-&#125;
-复制代码<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asyncFunc</span><span class="params">(input, next)</span></span> &#123;</span><br><span class="line">    <span class="keyword">do</span> something with <span class="built_in">input</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">next</span> is a entry) &#123;</span><br><span class="line">        <span class="built_in">next</span>(<span class="built_in">output</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
 <p>这个过程称为 IPN(Input-Process-Next)。</p>
 <p>注意到这里的 Next，下一步，只有一步。这一步，囊括了后续的若干步骤。所以这一步，只能是后续若干步骤封装出来一个模块入口，或者说函数。</p>
 <p>因此，<strong>模块化思想在异步思维中是一个非常关键的思想</strong>。很多初学者写代码喜欢像记流水账一样一句句往下写，动不动就是成百上千行的函数，这就是一种缺乏模块化思想的表现。模块化思想需要训练，分析代码的相关性，提炼函数，提取对象，在具有一定经验之后还需要掌握模块细化的粒度平衡。这不是一朝一夕之功，不过我推荐看看“设计模式”和“重构”相关的书籍。</p>
-<h2><span id="异步开发工具sdk-和语法层面的">异步开发工具（SDK 和语法层面的）</span></h2><h3><span id="承诺promise">承诺（Promise）</span></h3><p>再想想上面关于年终汇报的例子，M 请 N 去车间收集数据的时候，N 会说：“好的，我很快就把数据带回来”，这是一种承诺。基于这个承诺，M 才能安排后面撰写关于车间的汇报材料。这个过程用伪代码来描述就是</p>
-<pre class="line-numbers language-none"><code class="language-none">function collectData(): Promise &#123;
-    &#x2F;&#x2F; N 去收集数据，产生了一个承诺
-    return new Promise(resolve &#x3D;&gt; &#123;
-        collect data from workshop
-        &#x2F;&#x2F; 这个承诺最终会带来数据
-        resolve(data)
-    &#125;)
-&#125;
-
-function writeWorkshopReport(data) &#123;
-    write report with data
-&#125;
-
-&#x2F;&#x2F; 收集数据的承诺兑现之后，可将这个数据用于写报告
-collectData()
-    .then(data &#x3D;&gt; writeWorkshopReport(data))
-复制代码<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>以 JavaScript 为代表的一些语言 SDK 中使用了 <code>Promise</code>。不过 C# 中是采用的 <code>Task</code> 和 <code>Task&lt;T&gt;</code>，相应的，使用了 <code>Task.ContinueWith</code> 和 <code>Task&lt;T&gt;.ContinueWith</code> 来代替 <code>Promise.then</code>。</p>
-<h3><span id="异步逻辑同步化">异步逻辑同步化 </span></h3><p> 上面提到了同步思维和异步思维在一个处理步骤中的区别。如果跳出一个处理步骤，从更大范围的处理流程来看，异步与同步其实也没多大区别，都是 <code>输入 --&gt; 处理 --&gt; 产生输出 --&gt; 将输出用于下一步骤 </code>，唯一要注意的是需要等待异步处理产生的输出，我们可以称之为<strong> 异步等待</strong>。由于我们可以一边进行异步等待（async wait，简写 await），一边做别的事情，所以这个等待并不产生阻塞。但是，由于声明了这个等待，编译器 / 解释器会将后面的代码自动放在等待完成之后调用，这让异步代码写起来就像写同步代码一样。</p>
+<h2 id="异步开发工具（SDK和语法层面的）"><a href="#异步开发工具（SDK和语法层面的）" class="headerlink" title="异步开发工具（SDK和语法层面的）"></a>异步开发工具（SDK和语法层面的）</h2><h3 id="承诺（Promise）"><a href="#承诺（Promise）" class="headerlink" title="承诺（Promise）"></a>承诺（Promise）</h3><p>再想想上面关于年终汇报的例子，M 请 N 去车间收集数据的时候，N 会说：“好的，我很快就把数据带回来”，这是一种承诺。基于这个承诺，M 才能安排后面撰写关于车间的汇报材料。这个过程用伪代码来描述就是</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">collectData</span>(<span class="params"></span>): <span class="title">Promise</span> </span>&#123;</span><br><span class="line">    <span class="comment">// N 去收集数据，产生了一个承诺</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">        collect data <span class="keyword">from</span> workshop</span><br><span class="line">        <span class="comment">// 这个承诺最终会带来数据</span></span><br><span class="line">        resolve(data)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">writeWorkshopReport</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">    write report <span class="keyword">with</span> data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 收集数据的承诺兑现之后，可将这个数据用于写报告</span></span><br><span class="line">collectData()</span><br><span class="line">    .then(<span class="function"><span class="params">data</span> =&gt;</span> writeWorkshopReport(data))</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>以 JavaScript为代表的一些语言 SDK 中使用了 <code>Promise</code>。不过 C# 中是采用的 <code>Task</code> 和 <code>Task&lt;T&gt;</code>，相应的，使用了 <code>Task.ContinueWith</code> 和 <code>Task&lt;T&gt;.ContinueWith</code> 来代替 <code>Promise.then</code>。</p>
+<h3 id="异步逻辑同步化"><a href="#异步逻辑同步化" class="headerlink" title="异步逻辑同步化"></a>异步逻辑同步化</h3><p>上面提到了同步思维和异步思维在一个处理步骤中的区别。如果跳出一个处理步骤，从更大范围的处理流程来看，异步与同步其实也没多大区别，都是 <code>输入--&gt;处理--&gt;产生输出--&gt;将输出用于下一步骤</code>，唯一要注意的是需要等待异步处理产生的输出，我们可以称之为<strong>异步等待</strong>。由于我们可以一边进行异步等待（async wait，简写 await），一边做别的事情，所以这个等待并不产生阻塞。但是，由于声明了这个等待，编译器/解释器会将后面的代码自动放在等待完成之后调用，这让异步代码写起来就像写同步代码一样。</p>
 <p>上面的例子使用异步等待的伪代码会像这样</p>
-<pre class="line-numbers language-none"><code class="language-none">async function collectData(): Promise &#123;
-    collect data from workshop
-    &#x2F;&#x2F; 多数语言会把 async 函数的返回值封装成 Promise
-    return data
-&#125;
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">collectData</span>(<span class="params"></span>): <span class="title">Promise</span> </span>&#123;</span><br><span class="line">    collect data <span class="keyword">from</span> workshop</span><br><span class="line">    <span class="comment">// 多数语言会把 async 函数的返回值封装成 Promise</span></span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">writeWorkshopReport</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">    write report <span class="keyword">with</span> data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// await 只能用于声明为 async 的函数中</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    data = <span class="keyword">await</span> collectData()</span><br><span class="line">    writeWorkshopReport(data)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义了异步 main 函数，一定要记得调用，不然它是不会执行的</span></span><br><span class="line">main()</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>像 C# 和 JavaScript等语言都从语法层面规定了 <code>await</code> 必须用在声明为 <code>async</code> 的函数中，这就从编译/解释的层面限定了 <code>await</code> 的用途，只要使用了 <code>await</code>，那它所处的就一定是一个异步上下文。而 <code>async</code> 也要求编译器/解释器对其返回值进行一些自动处理，比如在 JavaScript中，其返回值如果不是 Promise 对象，它会自动封装成一个 Promise 对象；而在 C# 中，它会自动封装成 <code>Task</code> 或 <code>Task&lt;T&gt;</code>（所以 <code>async</code> 方法的类型需要声明为 <code>Task</code> 或 <code>Task&lt;T&gt;</code>）。</p>
+<h3 id="注意，注意，注意"><a href="#注意，注意，注意" class="headerlink" title="注意，注意，注意"></a>注意，注意，注意</h3><p>尽管语言服务在异步程序同步化方面已经做了很多工作，但是仍然避免不了一些人为错误，比如忘记写 <code>await</code> 关键字。在强类型语言中编译器会检查得严格一些，但如果是在 JavaScript中，忘记写 <code>await</code> 意味着原本应该取得一个值的语句，会取到一个 Promise。解释器不会对此质疑，但程序运行的结果会不正确。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>总的来说，异步编程并不是特别困难的事情。使用 async/await 语言特性甚至可以用类似编写同步代码的方法来编写异步代码。但语法糖终究是糖，要想把异步编程掌握得更好，还是需要去了解和熟悉异步、回调、Promise、模块化、设计模式、重构等概念。</p>
 
-function writeWorkshopReport(data) &#123;
-    write report with data
-&#125;
-
-&#x2F;&#x2F; await 只能用于声明为 async 的函数中
-async function main() &#123;
-    data &#x3D; await collectData()
-    writeWorkshopReport(data)
-&#125;
-
-&#x2F;&#x2F; 定义了异步 main 函数，一定要记得调用，不然它是不会执行的
-main()
-复制代码<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>像 C# 和 JavaScript 等语言都从语法层面规定了 <code>await</code> 必须用在声明为 <code>async</code> 的函数中，这就从编译 / 解释的层面限定了 <code>await</code> 的用途，只要使用了 <code>await</code>，那它所处的就一定是一个异步上下文。而 <code>async</code> 也要求编译器 / 解释器对其返回值进行一些自动处理，比如在 JavaScript 中，其返回值如果不是 Promise 对象，它会自动封装成一个 Promise 对象；而在 C# 中，它会自动封装成 <code>Task</code> 或 <code>Task&lt;T&gt;</code>（所以 <code>async</code> 方法的类型需要声明为 <code>Task</code> 或 <code>Task&lt;T&gt;</code>）。</p>
-<h3><span id="注意注意注意">注意，注意，注意 </span></h3><p> 尽管语言服务在异步程序同步化方面已经做了很多工作，但是仍然避免不了一些人为错误，比如忘记写 <code>await</code> 关键字。在强类型语言中编译器会检查得严格一些，但如果是在 JavaScript 中，忘记写 <code>await</code> 意味着原本应该取得一个值的语句，会取到一个 Promise。解释器不会对此质疑，但程序运行的结果会不正确。</p>
-<h2><span id="小结">小结 </span></h2><p> 总的来说，异步编程并不是特别困难的事情。使用 async/await 语言特性甚至可以用类似编写同步代码的方法来编写异步代码。但语法糖终究是糖，要想把异步编程掌握得更好，还是需要去了解和熟悉异步、回调、Promise、模块化、设计模式、重构等概念。</p>
-
-            </div>
-            <!-- Post Comments -->
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%BC%82%E6%AD%A5/"># 异步</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2016/07/18/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B9%8B%E7%89%88%E6%9C%AC%E5%8F%B7/">如何理解版本号</a>
+            
+            
+            <a class="next" rel="next" href="/2016/04/01/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E4%B9%8B%E5%A0%86%E6%8E%92%E5%BA%8F/">排序之堆排序与JavaScript实现</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

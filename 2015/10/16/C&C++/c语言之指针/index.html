@@ -1,334 +1,709 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-<meta name="author" content="maywzh">
-
-
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<title>理解 c 语言中的指针 | 0x01 MAYSTORY </title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="在考虑指针的问题之前，首先我们来回顾一下如何定义一个变量。 1int x; int类型需要四个字节来存储，这四个字节是从内存中分配而来的，内存在逻辑上是一个线性的存储器，它以字节为单位被划分为许多小的单元。为了区分这些单元，计算机给每一个单元都分配了一个唯一的十六进制整数作为编号，叫做内存地址(简称地址)。由于这些单元啊数量众多，所以这个内存地址本身就需要四个字节(32位bit位)来表示。我们所说">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解c语言中的指针">
+<meta property="og:url" content="https://io.maywzh.com/2015/10/16/C&C++/c%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%8C%87%E9%92%88/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="在考虑指针的问题之前，首先我们来回顾一下如何定义一个变量。 1int x; int类型需要四个字节来存储，这四个字节是从内存中分配而来的，内存在逻辑上是一个线性的存储器，它以字节为单位被划分为许多小的单元。为了区分这些单元，计算机给每一个单元都分配了一个唯一的十六进制整数作为编号，叫做内存地址(简称地址)。由于这些单元啊数量众多，所以这个内存地址本身就需要四个字节(32位bit位)来表示。我们所说">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2015-10-16T13:28:11.000Z">
+<meta property="article:modified_time" content="2020-09-11T00:07:32.684Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="C&#x2F;C++">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://io.maywzh.com/2015/10/16/C&C++/c%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%8C%87%E9%92%88/">
 
 
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
-</header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
 </script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
+
+  <title>理解c语言中的指针 | Cult I.O.</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
+  </div>
 </div>
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
-</script>
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
 
     
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">理解 c 语言中的指针</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2015/10/16/C&C++/c%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%8C%87%E9%92%88/">
 
-                    
-                        <span class="post-time">
-                        Date: <a href="#">October 16, 2015&nbsp;&nbsp;21:28:11</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
 
-        <div class="post-content">
-            <p>在考虑指针的问题之前，首先我们来回顾一下如何定义一个变量。</p>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          理解c语言中的指针
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2015.10.16 21:28:11" itemprop="dateCreated datePublished" datetime="2015-10-16T21:28:11+08:00">2015.10.16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2015/10/16/C&C++/c%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%8C%87%E9%92%88/" class="post-meta-item leancloud_visitors" data-flag-title="理解c语言中的指针" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在考虑指针的问题之前，首先我们来回顾一下如何定义一个变量。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> x;</span><br></pre></td></tr></table></figure>
-<p><code>int</code> 类型需要四个字节来存储，这四个字节是从内存中分配而来的，内存在逻辑上是一个线性的存储器，它以字节为单位被划分为许多小的单元。为了区分这些单元，计算机给每一个单元都分配了一个唯一的十六进制整数作为编号，叫做内存地址 (简称地址)。由于这些单元啊数量众多，所以这个内存地址本身就需要四个字节 (32 位 bit 位) 来表示。我们所说的 32 位系统就是这个意思。它最大的可寻址范围为 <code>2^32</code> 字节，即 4GB。目前正在占据主流的 64 位系统的最大可寻址范围是 <code>2^64</code> 字节。</p>
-<p>理论上说，我们只需要这些内存地址就可以定位到我们所要读写的内存单元，但这些地址不方便理解和记忆，c 语言允许程序员给这些地址起名字，就是我们所说的变量名。</p>
-<p>回到 <code>int x</code> 这个声明，它实际上做了两件事：</p>
+<p><code>int</code>类型需要四个字节来存储，这四个字节是从内存中分配而来的，内存在逻辑上是一个线性的存储器，它以字节为单位被划分为许多小的单元。为了区分这些单元，计算机给每一个单元都分配了一个唯一的十六进制整数作为编号，叫做内存地址(简称地址)。由于这些单元啊数量众多，所以这个内存地址本身就需要四个字节(32位bit位)来表示。我们所说的32位系统就是这个意思。它最大的可寻址范围为<code>2^32</code>字节，即4GB。目前正在占据主流的64位系统的最大可寻址范围是<code>2^64</code>字节。</p>
+<p>理论上说，我们只需要这些内存地址就可以定位到我们所要读写的内存单元，但这些地址不方便理解和记忆，c语言允许程序员给这些地址起名字，就是我们所说的变量名。</p>
+<p>回到<code>int x</code>这个声明，它实际上做了两件事：</p>
 <ol>
-<li>从内存中划分出 4 个字节；</li>
-<li>将这个内存单元约定一个名字为 x；</li>
+<li>从内存中划分出4个字节；</li>
+<li>将这个内存单元约定一个名字为x；</li>
 </ol>
 <p>一个固定的内存单元的地址是固定的，但存储的值确是可变的。</p>
 <a id="more"></a>
-<h2 id="指针概念"><a href="#指针概念" class="headerlink" title="指针概念"></a>指针概念</h2><h3 id="获取变量的地址"><a href="#获取变量的地址" class="headerlink" title="获取变量的地址"></a>获取变量的地址</h3><p>由于有变量名的存在，我们不需要一个具体地址就可以操作它来进行各种运算，但有的时候需要得到其地址，为了满足其需要，c 语言提供了取地址运算符 <code>&amp;</code>。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">5</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;value is % d\n&quot;</span>, x);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;address is % d\n&quot;</span>, &amp;x);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 5；</span></span><br><span class="line"><span class="comment">// 2293620</span></span><br></pre></td></tr></table></figure>
-<p><code>int</code> 变量需要四个字节，每个内存单元只有一个字节的容量，所以程序会分配四个连续的单元给 x。<code>&amp;x</code> 就是第一个单元的地址，即 <strong> 首地址 </strong>。我们可以用一个无符号整型变量来存储它。</p>
+<h2 id="指针概念"><a href="#指针概念" class="headerlink" title="指针概念"></a>指针概念</h2><h3 id="获取变量的地址"><a href="#获取变量的地址" class="headerlink" title="获取变量的地址"></a>获取变量的地址</h3><p>由于有变量名的存在，我们不需要一个具体地址就可以操作它来进行各种运算，但有的时候需要得到其地址，为了满足其需要，c语言提供了取地址运算符<code>&amp;</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">5</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;value is %d\n&quot;</span>, x);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;address is %d\n&quot;</span>, &amp;x);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 5；</span></span><br><span class="line"><span class="comment">// 2293620</span></span><br></pre></td></tr></table></figure>
+<p><code>int</code>变量需要四个字节，每个内存单元只有一个字节的容量，所以程序会分配四个连续的单元给x。<code>&amp;x</code>就是第一个单元的地址，即<strong>首地址</strong>。我们可以用一个无符号整型变量来存储它。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> addr = (<span class="keyword">int</span>)&amp;x;</span><br></pre></td></tr></table></figure>
-<p>C 语言处于类型安全的考虑，认为一个地址与一个整数不等价（虽然实际上是一回事），所以想把变量 <code>x</code> 的地址存在一个 <code>int</code> 中，需要使用强制转化。</p>
-<p>上面的代码中 <code>addr</code> 也是一个整型变量，它也有自己的地址，那么也可以通过 <code>&amp;</code> 来获取它的地址。</p>
+<p>C语言处于类型安全的考虑，认为一个地址与一个整数不等价（虽然实际上是一回事），所以想把变量<code>x</code>的地址存在一个<code>int</code>中，需要使用强制转化。</p>
+<p>上面的代码中<code>addr</code>也是一个整型变量，它也有自己的地址，那么也可以通过<code>&amp;</code>来获取它的地址。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> addr_of_addr = (<span class="keyword">int</span>)&amp;addr;</span><br></pre></td></tr></table></figure>
 <p>那么这样是否可以</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> addr_of_addr = (<span class="keyword">int</span>)&amp;&amp;x; <span class="comment">// 编译错误 </span></span><br></pre></td></tr></table></figure>
-<p>为什么会编译报错呢，这是因为取一个变量的地址后，得到的是一个数值，而不是一个变量，取地址只对于变量才有意义。所以只有将这个数值存放于一个变量 addr 中，才能取得这个变量 <code>addr</code> 的地址。</p>
-<h3 id="指针变量"><a href="#指针变量" class="headerlink" title="指针变量"></a>指针变量</h3><p>由于使用 <code>unsigned int</code> 存储地址会导致无法根据地址得到相应内存单元的值，即取内容，所以 C 语言中用指针变量来存储地址。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> addr_of_addr = (<span class="keyword">int</span>)&amp;&amp;x; <span class="comment">//编译错误</span></span><br></pre></td></tr></table></figure>
+<p>为什么会编译报错呢，这是因为取一个变量的地址后，得到的是一个数值，而不是一个变量，取地址只对于变量才有意义。所以只有将这个数值存放于一个变量addr中，才能取得这个变量<code>addr</code>的地址。</p>
+<h3 id="指针变量"><a href="#指针变量" class="headerlink" title="指针变量"></a>指针变量</h3><p>由于使用<code>unsigned int</code>存储地址会导致无法根据地址得到相应内存单元的值，即取内容，所以C语言中用指针变量来存储地址。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>* p = &amp;x;</span><br></pre></td></tr></table></figure>
-<p>如果要声明一个只想 <code>int</code> 变量的指针是，就使用变量之前加一个 <code>*</code> 来说明这是个指针变量。</p>
-<p>如果要定义多个指针，则必须每个变量名前都加星号 <code>*</code>。对一个指针变量前面加上 <code>*</code> 代表取指针指向的地址内存储的变量的值。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">int</span> * p = &amp;x;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;x = % d\n&quot;</span>, x);  <span class="comment">//5</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;add_x = % d\n&quot;</span> , &amp;x); <span class="comment">//-345631352</span></span><br><span class="line">    *p = <span class="number">6</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;x = % d\n&quot;</span>, x); <span class="comment">//6</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;add_x = % d\n&quot;</span> , &amp;x); <span class="comment">//-345631352</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码可以看出，修改 <code>*p</code> 也会直接修改 <code>x</code> 的值，因为这是对 <code>p</code> 直接指向的内存单元进行操作。</p>
+<p>如果要声明一个只想<code>int</code>变量的指针是，就使用变量之前加一个<code>*</code>来说明这是个指针变量。</p>
+<p>如果要定义多个指针，则必须每个变量名前都加星号<code>*</code>。对一个指针变量前面加上<code>*</code>代表取指针指向的地址内存储的变量的值。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">int</span> * p = &amp;x;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;x = %d\n&quot;</span>, x);  <span class="comment">//5</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;add_x = %d\n&quot;</span> , &amp;x); <span class="comment">//-345631352</span></span><br><span class="line">    *p = <span class="number">6</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;x = %d\n&quot;</span>, x); <span class="comment">//6</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;add_x = %d\n&quot;</span> , &amp;x); <span class="comment">//-345631352</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码可以看出，修改<code>*p</code>也会直接修改<code>x</code>的值，因为这是对<code>p</code>直接指向的内存单元进行操作。</p>
 <p>如果对指针变量进行加减一个整数，称之为指针的移动。</p>
-<p><code>p+n</code> 等价于 <code>(TYPE*)(int) p+n*sizeof (TYPE)</code></p>
-<p>一个指针加减一个整数 <code>n</code>，存储的地址将会加上 <code>n</code> 倍所指向类型的大小。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">double</span> val=<span class="number">5.0</span>;</span><br><span class="line">    <span class="keyword">double</span> *p = &amp;val;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;d%\n&quot;</span>, p); <span class="comment">//12344426</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;d%\n&quot;</span>, p + <span class="number">1</span>); <span class="comment">//12344434 增加了 sizeof (double)==8</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="指针类型"><a href="#指针类型" class="headerlink" title="指针类型"></a>指针类型</h3><p>指针的类型的含义是：<strong> 指针变量的本身的类型 </strong>。</p>
-<p>上文我们已经知道了指针变量存储的是一个地址，这个地址是 32 位或者 64 位，取决于操作系统。</p>
+<p><code>p+n</code> 等价于<code>(TYPE*)(int)p+n*sizeof(TYPE)</code></p>
+<p>一个指针加减一个整数<code>n</code>，存储的地址将会加上<code>n</code>倍所指向类型的大小。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">double</span> val=<span class="number">5.0</span>;</span><br><span class="line">    <span class="keyword">double</span> *p = &amp;val;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;d%\n&quot;</span>, p); <span class="comment">//12344426</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;d%\n&quot;</span>, p + <span class="number">1</span>); <span class="comment">//12344434 增加了sizeof(double)==8</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="指针类型"><a href="#指针类型" class="headerlink" title="指针类型"></a>指针类型</h3><p>指针的类型的含义是：<strong>指针变量的本身的类型</strong>。</p>
+<p>上文我们已经知道了指针变量存储的是一个地址，这个地址是32位或者64位，取决于操作系统。</p>
 <p>那么可以得出结论，一个操作系统中，所有的指针变量的大小都是相等的。</p>
-<p>从语法的角度看，你只要 <strong> 把指针声明语句里的指针名字去掉 </strong>，剩下的部分就是这个指针的类型。这是指针本身所具有的类型。让我们看看例一中各个指针的类型：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>* ptr;<span class="comment">// 指针的类型是 int*</span></span><br><span class="line"><span class="keyword">char</span>* ptr;<span class="comment">// 指针的类型是 char*</span></span><br><span class="line"><span class="keyword">int</span>** ptr;<span class="comment">// 指针的类型是 int**</span></span><br><span class="line"><span class="keyword">int</span>(*ptr)[<span class="number">3</span>];<span class="comment">// 指针的类型是 int (*)[3]</span></span><br><span class="line"><span class="keyword">int</span>*(*ptr)[<span class="number">4</span>];<span class="comment">// 指针的类型是 int*(*)[4]</span></span><br></pre></td></tr></table></figure>
+<p>从语法的角度看，你只要<strong>把指针声明语句里的指针名字去掉</strong>，剩下的部分就是这个指针的类型。这是指针本身所具有的类型。让我们看看例一中各个指针的类型：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>* ptr;<span class="comment">//指针的类型是int*</span></span><br><span class="line"><span class="keyword">char</span>* ptr;<span class="comment">//指针的类型是char*</span></span><br><span class="line"><span class="keyword">int</span>** ptr;<span class="comment">//指针的类型是int**</span></span><br><span class="line"><span class="keyword">int</span>(*ptr)[<span class="number">3</span>];<span class="comment">//指针的类型是int(*)[3]</span></span><br><span class="line"><span class="keyword">int</span>*(*ptr)[<span class="number">4</span>];<span class="comment">//指针的类型是int*(*)[4]</span></span><br></pre></td></tr></table></figure>
 <h3 id="指针所指向的类型"><a href="#指针所指向的类型" class="headerlink" title="指针所指向的类型"></a>指针所指向的类型</h3><p>当通过指针来访问指针所指向的内存区时，指针所指向的类型决定了编译器将把那片内存区里的内容当做什么来看待。</p>
-<p>从语法上看，只须把指针声明语句中的指针名字和名字左边的指针声明符 <code>*</code> 去掉，剩下的就是指针所指向的类型。例如：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>*ptr; <span class="comment">// 指针所指向的类型是 int</span></span><br><span class="line"><span class="keyword">char</span>*ptr; <span class="comment">// 指针所指向的的类型是 char</span></span><br><span class="line"><span class="keyword">int</span>**ptr; <span class="comment">// 指针所指向的的类型是 int*</span></span><br><span class="line"><span class="keyword">int</span>(*ptr)[<span class="number">3</span>]; <span class="comment">// 指针所指向的的类型是 int ()[3]</span></span><br><span class="line"><span class="keyword">int</span>*(*ptr)[<span class="number">4</span>]; <span class="comment">// 指针所指向的的类型是 int*()[4]</span></span><br></pre></td></tr></table></figure>
+<p>从语法上看，只须把指针声明语句中的指针名字和名字左边的指针声明符<code>*</code>去掉，剩下的就是指针所指向的类型。例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>*ptr; <span class="comment">//指针所指向的类型是int</span></span><br><span class="line"><span class="keyword">char</span>*ptr; <span class="comment">//指针所指向的的类型是char</span></span><br><span class="line"><span class="keyword">int</span>**ptr; <span class="comment">//指针所指向的的类型是int*</span></span><br><span class="line"><span class="keyword">int</span>(*ptr)[<span class="number">3</span>]; <span class="comment">//指针所指向的的类型是int()[3]</span></span><br><span class="line"><span class="keyword">int</span>*(*ptr)[<span class="number">4</span>]; <span class="comment">//指针所指向的的类型是int*()[4]</span></span><br></pre></td></tr></table></figure>
 <p>在指针的算术运算中，指针所指向的类型有很大的作用。</p>
-<p><strong> 指针的类型 (即指针本身的类型) 和指针所指向的类型是两个概念 </strong>。分清这两个概念是理解指针的关键点之一。</p>
-<h3 id="指针的值"><a href="#指针的值" class="headerlink" title="指针的值"></a>指针的值</h3><p>指针的值是指针本身存储的数值，这个值将被编译器当作一个地址，而不是一个一般的数值。在 32 位程序里，所有类型的指针的值都是一个 32 位整数，因为 32 位程序里内存地址全都是 32 位长。指针所指向的内存区就是从指针的值所代表的那个内存地址开始，长度为 sizeof (指针所指向的类型) 的一片内存区。以后，我们说一个指针的值是 XX，就相当于说该指针指向了以 XX 为首地址的一片内存区域；我们说一个指针指向了某块内存区域，就相当于说该指针的值是这块内存区域的首地址。指针所指向的内存区和指针所指向的类型是两个完全不同的概念。</p>
-<h3 id="指针自身占据的内存"><a href="#指针自身占据的内存" class="headerlink" title="指针自身占据的内存"></a>指针自身占据的内存</h3><p>因为指针本质上就是一个固定位数整数，在 32 位平台里，指针本身占据了 4 个字节的长度。指针本身占据的内存这个概念在判断一个指针表达式是否是左值时很有用。</p>
+<p><strong>指针的类型(即指针本身的类型)和指针所指向的类型是两个概念</strong>。分清这两个概念是理解指针的关键点之一。</p>
+<h3 id="指针的值"><a href="#指针的值" class="headerlink" title="指针的值"></a>指针的值</h3><p>指针的值是指针本身存储的数值，这个值将被编译器当作一个地址，而不是一个一般的数值。在32 位程序里，所有类型的指针的值都是一个32 位整数，因为32 位程序里内存地址全都是32 位长。指针所指向的内存区就是从指针的值所代表的那个内存地址开始，长度为sizeof(指针所指向的类型)的一片内存区。以后，我们说一个指针的值是XX，就相当于说该指针指向了以XX 为首地址的一片内存区域；我们说一个指针指向了某块内存区域，就相当于说该指针的值是这块内存区域的首地址。指针所指向的内存区和指针所指向的类型是两个完全不同的概念。</p>
+<h3 id="指针自身占据的内存"><a href="#指针自身占据的内存" class="headerlink" title="指针自身占据的内存"></a>指针自身占据的内存</h3><p>因为指针本质上就是一个固定位数整数，在32 位平台里，指针本身占据了4 个字节的长度。指针本身占据的内存这个概念在判断一个指针表达式是否是左值时很有用。</p>
 <h2 id="指针运算"><a href="#指针运算" class="headerlink" title="指针运算"></a>指针运算</h2><p>指针可以加上或减去一个整数。指针的这种运算的意义和通常的数值的加减运算的意义是不一样的，以单元为单位。例如：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> a [<span class="number">20</span>];</span><br><span class="line"><span class="keyword">int</span> *ptr=(<span class="keyword">int</span> *) a; <span class="comment">// 强制类型转换并不会改变 a 的类型 </span></span><br><span class="line">ptr++;</span><br></pre></td></tr></table></figure>
-<p>在上例中，指针 ptr 的类型是 int*, 它指向的类型是 int，它被初始化为指向整型变量 a。接下来的第 3 句中，指针 ptr 被加了 1，编译器是这样处理的：它把指针 ptr 的值加上了 sizeof (int)，在 32 位程序中，是被加上了 4，因为在 32 位程序中，int 占 4 个字节。由于地址是用字节做单位的，故 ptr 所指向的地址由原来的变量 a 的地址向高地址方向增加了 4 个字节。由于 char 类型的长度是一个字节，所以，原来 ptr 是指向数组 a 的第 0 号单元开始的四个字节，此时指向了数组 a 中从第 4 号单元开始的四个字节。我们可以用一个指针和一个循环来遍历一个数组，看例子：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> <span class="built_in">array</span>[<span class="number">20</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> *ptr = <span class="built_in">array</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        (*ptr)++;</span><br><span class="line">        ptr++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;% d &quot;</span>, <span class="built_in">array</span>[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个例子将整型数组中各个单元的值加 1。由于每次循环都将指针 ptr 加 1 个单元，所以每次循环都能访问数组的下一个单元。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> a[<span class="number">20</span>];</span><br><span class="line"><span class="keyword">int</span> *ptr=(<span class="keyword">int</span> *)a; <span class="comment">//强制类型转换并不会改变a 的类型</span></span><br><span class="line">ptr++;</span><br></pre></td></tr></table></figure>
+<p>在上例中，指针ptr 的类型是int*,它指向的类型是int，它被初始化为指向整型变量a。接下来的第3句中，指针ptr被加了1，编译器是这样处理的：它把指针ptr 的值加上了sizeof(int)，在32 位程序中，是被加上了4，因为在32 位程序中，int 占4 个字节。由于地址是用字节做单位的，故ptr 所指向的地址由原来的变量a 的地址向高地址方向增加了4 个字节。由于char 类型的长度是一个字节，所以，原来ptr 是指向数组a 的第0 号单元开始的四个字节，此时指向了数组a 中从第4 号单元开始的四个字节。我们可以用一个指针和一个循环来遍历一个数组，看例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> <span class="built_in">array</span>[<span class="number">20</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> *ptr = <span class="built_in">array</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        (*ptr)++;</span><br><span class="line">        ptr++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, <span class="built_in">array</span>[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个例子将整型数组中各个单元的值加1。由于每次循环都将指针ptr加1 个单元，所以每次循环都能访问数组的下一个单元。</p>
 <h2 id="指针表达式"><a href="#指针表达式" class="headerlink" title="指针表达式"></a>指针表达式</h2><p>一个表达式的结果如果是一个指针，那么这个表达式就叫指针表达式。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">int</span> a, b;</span><br><span class="line"><span class="keyword">int</span> <span class="built_in">array</span>[<span class="number">10</span>];</span><br><span class="line"><span class="keyword">int</span> *pa;</span><br><span class="line">pa = &amp;a;         <span class="comment">//&amp;a 是一个指针表达式。</span></span><br><span class="line"><span class="keyword">int</span> **ptr = &amp;pa; <span class="comment">//&amp;pa 也是一个指针表达式。</span></span><br><span class="line">*ptr = &amp;b;       <span class="comment">//*ptr 和 & amp;b 都是指针表达式。</span></span><br><span class="line">pa = <span class="built_in">array</span>;</span><br><span class="line">pa++; <span class="comment">// 这也是指针表达式。</span></span><br><span class="line"><span class="keyword">char</span> *arr [<span class="number">20</span>];</span><br><span class="line"><span class="keyword">char</span> **parr = arr; <span class="comment">// 如果把 arr 看作指针的话，arr 也是指针表达式 </span></span><br><span class="line"><span class="keyword">char</span> *str;</span><br><span class="line">str = *parr;       <span class="comment">//*parr 是指针表达式 </span></span><br><span class="line">str = *(parr + <span class="number">1</span>); <span class="comment">//*(parr+1) 是指针表达式 </span></span><br><span class="line">str = *(parr + <span class="number">2</span>); <span class="comment">//*(parr+2) 是指针表达式 </span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">int</span> a, b;</span><br><span class="line"><span class="keyword">int</span> <span class="built_in">array</span>[<span class="number">10</span>];</span><br><span class="line"><span class="keyword">int</span> *pa;</span><br><span class="line">pa = &amp;a;         <span class="comment">//&amp;a 是一个指针表达式。</span></span><br><span class="line"><span class="keyword">int</span> **ptr = &amp;pa; <span class="comment">//&amp;pa 也是一个指针表达式。</span></span><br><span class="line">*ptr = &amp;b;       <span class="comment">//*ptr 和&amp;b 都是指针表达式。</span></span><br><span class="line">pa = <span class="built_in">array</span>;</span><br><span class="line">pa++; <span class="comment">//这也是指针表达式。</span></span><br><span class="line"><span class="keyword">char</span> *arr[<span class="number">20</span>];</span><br><span class="line"><span class="keyword">char</span> **parr = arr; <span class="comment">//如果把arr 看作指针的话，arr 也是指针表达式</span></span><br><span class="line"><span class="keyword">char</span> *str;</span><br><span class="line">str = *parr;       <span class="comment">//*parr 是指针表达式</span></span><br><span class="line">str = *(parr + <span class="number">1</span>); <span class="comment">//*(parr+1)是指针表达式</span></span><br><span class="line">str = *(parr + <span class="number">2</span>); <span class="comment">//*(parr+2)是指针表达式</span></span><br></pre></td></tr></table></figure>
 <p>由于指针表达式的结果是一个指针，所以指针表达式也具有指针所具有的四个要素：指针的类型，指针所指向的类型，指针指向的内存区，指针自身占据的内存。</p>
 <p>当一个指针表达式的结果指针已经明确地具有了指针自身占据的内存的话，这个指针表达式就是一个左值，否则就不是一个左值。</p>
 <h2 id="数组和指针"><a href="#数组和指针" class="headerlink" title="数组和指针"></a>数组和指针</h2><p>数组的数组名可以看作一个指针</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> *str [<span class="number">3</span>] = &#123;</span><br><span class="line">        <span class="string">&quot;Hello,thisisasample!&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Hi,goodmorning.&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Helloworld&quot;</span>&#125;;</span><br><span class="line"><span class="keyword">char</span> s [<span class="number">80</span>];</span><br><span class="line"><span class="built_in">strcpy</span>(s, str [<span class="number">0</span>]); <span class="comment">// 也可写成 strcpy (s,*str);</span></span><br><span class="line"><span class="built_in">strcpy</span>(s, str [<span class="number">1</span>]); <span class="comment">// 也可写成 strcpy (s,*(str+1));</span></span><br><span class="line"><span class="built_in">strcpy</span>(s, str [<span class="number">2</span>]); <span class="comment">// 也可写成 strcpy (s,*(str+2));</span></span><br></pre></td></tr></table></figure>
-<p>上例中，str 是一个三单元的数组，该数组的每个单元都是一个指针，这些指针各指向一个字符串。把指针数组名 str 当作一个指针的话，它指向数组的第 0 号单元，它的类型是 char <em>*，它指向的类型是 char </em>。</p>
-<p><em>str 也是一个指针，它的类型是 char </em>，它所指向的类型是 char，它指向的地址是字符串 “Hello,thisisasample!” 的第一个字符的地址，即 ‘H’ 的地址。注意：字符串相当于是一个数组，在内存中以数组的形式储存，只不过字符串是一个数组常量，内容不可改变，且只能是右值。如果看成指针的话，他即是常量指针，也是指针常量.</p>
-<p>str+1 也是一个指针，它指向数组的第 1 号单元，它的类型是 char<em>*，它指向的类型是 char</em>。</p>
-<p><em>(str+1) 也是一个指针，它的类型是 char</em>，它所指向的类型是 char，它指向 “Hi,goodmorning.” 的第一个字符’H’</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> *str[<span class="number">3</span>] = &#123;</span><br><span class="line">        <span class="string">&quot;Hello,thisisasample!&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Hi,goodmorning.&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Helloworld&quot;</span>&#125;;</span><br><span class="line"><span class="keyword">char</span> s[<span class="number">80</span>];</span><br><span class="line"><span class="built_in">strcpy</span>(s, str[<span class="number">0</span>]); <span class="comment">//也可写成strcpy(s,*str);</span></span><br><span class="line"><span class="built_in">strcpy</span>(s, str[<span class="number">1</span>]); <span class="comment">//也可写成strcpy(s,*(str+1));</span></span><br><span class="line"><span class="built_in">strcpy</span>(s, str[<span class="number">2</span>]); <span class="comment">//也可写成strcpy(s,*(str+2));</span></span><br></pre></td></tr></table></figure>
+<p>上例中，str 是一个三单元的数组，该数组的每个单元都是一个指针，这些指针各指向一个字符串。把指针数组名str 当作一个指针的话，它指向数组的第0 号单元，它的类型是char <em>*，它指向的类型是char </em>。</p>
+<p><em>str 也是一个指针，它的类型是char </em>，它所指向的类型是char，它指向的地址是字符串”Hello,thisisasample!”的第一个字符的地址，即’H’的地址。注意:字符串相当于是一个数组,在内存中以数组的形式储存,只不过字符串是一个数组常量,内容不可改变,且只能是右值.如果看成指针的话,他即是常量指针,也是指针常量.</p>
+<p>str+1 也是一个指针，它指向数组的第1 号单元，它的类型是char<em>*，它指向的类型是char</em>。</p>
+<p><em>(str+1)也是一个指针，它的类型是char</em>，它所指向的类型是char，它指向”Hi,goodmorning.”的第一个字符’H’</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> <span class="built_in">array</span>[<span class="number">10</span>];</span><br><span class="line"><span class="keyword">int</span>(*ptr)[<span class="number">10</span>];</span><br><span class="line">ptr = &amp;<span class="built_in">array</span>;</span><br></pre></td></tr></table></figure>
-<p>上例中 ptr 是一个指针，它的类型是 int (*)[10]，他指向的类型是 int [10] ，我们用整个数组的首地址来初始化它。在语句 ptr=&amp;array 中，array 代表数组本身。</p>
-<p>本节中提到了函数 sizeof ()，那么我来问一问，sizeof (指针名称) 测出的究竟是指针自身类型的大小呢还是指针所指向的类型的大小？</p>
+<p>上例中ptr 是一个指针，它的类型是int(*)[10]，他指向的类型是int[10] ，我们用整个数组的首地址来初始化它。在语句ptr=&amp;array中，array 代表数组本身。</p>
+<p>本节中提到了函数sizeof()，那么我来问一问，sizeof(指针名称)测出的究竟是指针自身类型的大小呢还是指针所指向的类型的大小？</p>
 <p>答案是前者。例如：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>(*ptr)[<span class="number">10</span>];</span><br></pre></td></tr></table></figure>
-<p>则在 32 位程序中，有：</p>
+<p>则在32 位程序中，有：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">int</span>(*)[<span class="number">10</span>])==<span class="number">4</span></span><br><span class="line"><span class="keyword">sizeof</span>(<span class="keyword">int</span>[<span class="number">10</span>])==<span class="number">40</span></span><br><span class="line"><span class="keyword">sizeof</span>(ptr)==<span class="number">4</span></span><br></pre></td></tr></table></figure>
-<p>实际上，sizeof (对象) 测出的都是对象自身的类型的大小，而不是别的什么类型的大小。</p>
-<h2 id="指针和结构类型的关系"><a href="#指针和结构类型的关系" class="headerlink" title="指针和结构类型的关系"></a>指针和结构类型的关系</h2><p>所有的 C/C++ 编译器在排列数组的单元时，总是把各个数组单元存放在连续的存储区里，单元和单元之间没有空隙。但在存放结构对象的各个成员时，在某种编译环境下，可能会需要字对齐或双字对齐或者是别的什么对齐，需要在相邻两个成员之间加若干个 “填充字节”，这就导致各个成员之间可能会有若干个字节的空隙。</p>
-<h2 id="指针和函数的关系"><a href="#指针和函数的关系" class="headerlink" title="指针和函数的关系"></a>指针和函数的关系</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fun1</span><span class="params">(<span class="keyword">char</span> *,<span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*pfun1)(<span class="keyword">char</span> *,<span class="keyword">int</span>);</span><br><span class="line">pfun1=fun1;</span><br><span class="line"><span class="keyword">int</span> a = (*pfun1)(<span class="string">&quot;abcdefg&quot;</span>,<span class="number">7</span>); <span class="comment">// 通过函数指针调用函数。</span></span><br></pre></td></tr></table></figure>
+<p>实际上，sizeof(对象)测出的都是对象自身的类型的大小，而不是别的什么类型的大小。</p>
+<h2 id="指针和结构类型的关系"><a href="#指针和结构类型的关系" class="headerlink" title="指针和结构类型的关系"></a>指针和结构类型的关系</h2><p>所有的C/C++编译器在排列数组的单元时，总是把各个数组单元存放在连续的存储区里，单元和单元之间没有空隙。但在存放结构对象的各个成员时，在某种编译环境下，可能会需要字对齐或双字对齐或者是别的什么对齐，需要在相邻两个成员之间加若干个”填充字节”，这就导致各个成员之间可能会有若干个字节的空隙。</p>
+<h2 id="指针和函数的关系"><a href="#指针和函数的关系" class="headerlink" title="指针和函数的关系"></a>指针和函数的关系</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fun1</span><span class="params">(<span class="keyword">char</span> *,<span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*pfun1)(<span class="keyword">char</span> *,<span class="keyword">int</span>);</span><br><span class="line">pfun1=fun1;</span><br><span class="line"><span class="keyword">int</span> a = (*pfun1)(<span class="string">&quot;abcdefg&quot;</span>,<span class="number">7</span>); <span class="comment">//通过函数指针调用函数。</span></span><br></pre></td></tr></table></figure>
 <p>可以把指针作为函数的形参。在函数调用语句中，可以用指针表达式来作为实参。</p>
 <p>总结：</p>
 <ol>
-<li><p>其实，myFun 的函数名与 funP、funA 函数指针都是一样的，即都是函数指针。myFun 函数名是一个函数指针常量，而 funP、funA 是函数数指针变量，这是它们的关系。</p>
+<li><p>其实，myFun的函数名与funP、funA函数指针都是一样的，即都是函数指针。myFun函数名是一个函数指针常量，而funP、funA是函数数指针变量，这是它们的关系。</p>
 </li>
-<li><p>但函数名调用如果都得如 (*myFun)(10) 这样，那书写与读起来都是不方便和不习惯的。所以 C 语言的设计者们才会设计成又可允许 myFun (10) 这种形式地调用（这样方便多了，并与数学中的函数形式一样）。</p>
+<li><p>但函数名调用如果都得如(*myFun)(10)这样，那书写与读起来都是不方便和不习惯的。所以C语言的设计者们才会设计成又可允许myFun(10)这种形式地调用（这样方便多了，并与数学中的函数形式一样）。</p>
 </li>
-<li><p>为了统一调用方式，funP 函数指针变量也可以 funP (10) 的形式来调用。</p>
+<li><p>为了统一调用方式，funP函数指针变量也可以funP(10)的形式来调用。</p>
 </li>
-<li><p>赋值时，可以写成 funP=&amp;myFun 形式，也可以写成 funP=myFun。</p>
+<li><p>赋值时，可以写成funP=&amp;myFun形式，也可以写成funP=myFun。</p>
 </li>
-<li><p>但是在声明时，void myFun (int ) 不能写成 void (<em>myFun)(int )。void (</em>funP)(int ) 不能写成 void funP (int )。</p>
+<li><p>但是在声明时，void myFun(int )不能写成void (<em>myFun)(int )。void (</em>funP)(int )不能写成void funP(int )。</p>
 </li>
-<li><p>函数指针变量也可以存入一个数组内。数组的声明方法：int (*fArray [10]) ( int );</p>
+<li><p>函数指针变量也可以存入一个数组内。数组的声明方法：int (*fArray[10]) ( int );</p>
 </li>
 </ol>
-<h2 id="附录-指针类型判断实例"><a href="#附录-指针类型判断实例" class="headerlink" title="附录 - 指针类型判断实例"></a>附录 - 指针类型判断实例</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> p; <span class="comment">// 这是一个普通的整型变量 </span></span><br><span class="line"><span class="keyword">int</span> *p; <span class="comment">// 首先从 P 处开始，先与 * 结合，所以说明 P 是一个指针，然后再与 int 结合，说明指针所指向的内容的类型为 int 型。所以 P 是一个返回整型数据的指针 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> p [<span class="number">3</span>]; <span class="comment">// 首先从 P 处开始，先与 [] 结合，说明 P 是一个数组，然后与 int 结合，说明数组里的元素是整型的，所以 P 是一个由整型数据组成的数组 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> *p [<span class="number">3</span>]; <span class="comment">// 首先从 P 处开始，先与 [] 结合，因为其优先级比 * 高，所以 P 是一个数组，然后再与 * 结合，说明数组里的元素是指针类型，然后再与 int 结合，说明指针所指向的内容的类型是整型的，所以 P 是一个由返回整型数据的指针所组成的数组 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>]; <span class="comment">// 首先从 P 处开始，先与 * 结合，说明 P 是一个指针然后再与 [] 结合 (与 & quot;()&quot; 这步可以忽略，只是为了改变优先级), 说明指针所指向的内容是一个数组，然后再与 int 结合，说明数组里的元素是整型的。所以 P 是一个指向由整型数据组成的数组的指针 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> **p; <span class="comment">// 首先从 P 开始，先与 * 结合，说是 P 是一个指针，然后再与 * 结合，说明指针所指向的元素是指针，然后再与 int 结合，说明该指针所指向的元素是整型数据。由于二级指针以及更高级的指针极少用在复杂的类型中，所以后面更复杂的类型我们就不考虑多级指针了，最多只考虑一级指针.</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">p</span><span class="params">(<span class="keyword">int</span>)</span></span>; <span class="comment">// 从 P 处起，先与 () 结合，说明 P 是一个函数，然后进入 () 里分析，说明该函数有一个整型变量的参数，然后再与外面的 int 结合，说明函数的返回值是一个整型数据 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span>); <span class="comment">// 从 P 处开始，先与指针结合，说明 P 是一个指针，然后与 () 结合，说明指针指向的是一个函数，然后再与 () 里的 int 结合，说明函数有一个 int 型的参数，再与最外层的 int 结合，说明函数的返回类型是整型，所以 P 是一个指向有一个整型参数且返回类型为整型的函数的指针 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> *(*p (<span class="keyword">int</span>))[<span class="number">3</span>]; <span class="comment">// 可以先跳过，不看这个类型，过于复杂从 P 开始，先与 () 结合，说明 P 是一个函数，然后进入 () 里面，与 int 结合，说明函数有一个整型变量参数，然后再与外面的 * 结合，说明函数返回的是一个指针，，然后到最外面一层，先与 [] 结合，说明返回的指针指向的是一个数组，然后再与 * 结合，说明数组里的元素是指针，然后再与 int 结合，说明指针指向的内容是整型数据。所以 P 是一个参数为一个整数据且返回一个指向由整型指针变量组成的数组的指针变量的函数 </span></span><br></pre></td></tr></table></figure>
+<h2 id="附录-指针类型判断实例"><a href="#附录-指针类型判断实例" class="headerlink" title="附录 - 指针类型判断实例"></a>附录 - 指针类型判断实例</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> p; <span class="comment">//这是一个普通的整型变量</span></span><br><span class="line"><span class="keyword">int</span> *p; <span class="comment">//首先从P 处开始,先与*结合,所以说明P 是一个指针,然后再与int 结合,说明指针所指向的内容的类型为int 型.所以P是一个返回整型数据的指针</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> p[<span class="number">3</span>]; <span class="comment">//首先从P 处开始,先与[]结合,说明P 是一个数组,然后与int 结合,说明数组里的元素是整型的,所以P 是一个由整型数据组成的数组</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> *p[<span class="number">3</span>]; <span class="comment">//首先从P 处开始,先与[]结合,因为其优先级比*高,所以P 是一个数组,然后再与*结合,说明数组里的元素是指针类型,然后再与int 结合,说明指针所指向的内容的类型是整型的,所以P 是一个由返回整型数据的指针所组成的数组</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>]; <span class="comment">//首先从P 处开始,先与*结合,说明P 是一个指针然后再与[]结合(与&quot;()&quot;这步可以忽略,只是为了改变优先级),说明指针所指向的内容是一个数组,然后再与int 结合,说明数组里的元素是整型的.所以P 是一个指向由整型数据组成的数组的指针</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> **p; <span class="comment">//首先从P 开始,先与*结合,说是P 是一个指针,然后再与*结合,说明指针所指向的元素是指针,然后再与int 结合,说明该指针所指向的元素是整型数据.由于二级指针以及更高级的指针极少用在复杂的类型中,所以后面更复杂的类型我们就不考虑多级指针了,最多只考虑一级指针.</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">p</span><span class="params">(<span class="keyword">int</span>)</span></span>; <span class="comment">//从P 处起,先与()结合,说明P 是一个函数,然后进入()里分析,说明该函数有一个整型变量的参数,然后再与外面的int 结合,说明函数的返回值是一个整型数据</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span>); <span class="comment">//从P 处开始,先与指针结合,说明P 是一个指针,然后与()结合,说明指针指向的是一个函数,然后再与()里的int 结合,说明函数有一个int 型的参数,再与最外层的int 结合,说明函数的返回类型是整型,所以P 是一个指向有一个整型参数且返回类型为整型的函数的指针</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> *(*p(<span class="keyword">int</span>))[<span class="number">3</span>]; <span class="comment">//可以先跳过,不看这个类型,过于复杂从P 开始,先与()结合,说明P 是一个函数,然后进入()里面,与int 结合,说明函数有一个整型变量参数,然后再与外面的*结合,说明函数返回的是一个指针,,然后到最外面一层,先与[]结合,说明返回的指针指向的是一个数组,然后再与*结合,说明数组里的元素是指针,然后再与int 结合,说明指针指向的内容是整型数据.所以P 是一个参数为一个整数据且返回一个指向由整型指针变量组成的数组的指针变量的函数</span></span><br></pre></td></tr></table></figure>
 
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
 
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/C-C/" rel="tag"><i class="fa fa-tag"></i> C/C++</a>
+          </div>
+
         
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/C-C/"># C/C++</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2015/10/18/Linux/Linux-gcc%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/">Linux GNU-gcc 简明教程</a>
-            
-            
-            <a class="next" rel="next" href="/2015/10/16/Linux/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8Bipcs/">Linux 进程管理之 ipcs</a>
-            
-        </section>
 
 
-    </article>
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/10/16/Linux/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8Bipcs/" rel="prev" title="Linux进程管理之ipcs">
+      <i class="fa fa-chevron-left"></i> Linux进程管理之ipcs
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2015/10/18/Linux/Linux-gcc%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/" rel="next" title="Linux GNU-gcc简明教程">
+      Linux GNU-gcc简明教程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">指针概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%8F%98%E9%87%8F%E7%9A%84%E5%9C%B0%E5%9D%80"><span class="nav-number">1.1.</span> <span class="nav-text">获取变量的地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E5%8F%98%E9%87%8F"><span class="nav-number">1.2.</span> <span class="nav-text">指针变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">指针类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E6%89%80%E6%8C%87%E5%90%91%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.4.</span> <span class="nav-text">指针所指向的类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E7%9A%84%E5%80%BC"><span class="nav-number">1.5.</span> <span class="nav-text">指针的值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E8%87%AA%E8%BA%AB%E5%8D%A0%E6%8D%AE%E7%9A%84%E5%86%85%E5%AD%98"><span class="nav-number">1.6.</span> <span class="nav-text">指针自身占据的内存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E8%BF%90%E7%AE%97"><span class="nav-number">2.</span> <span class="nav-text">指针运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">指针表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88"><span class="nav-number">4.</span> <span class="nav-text">数组和指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E5%92%8C%E7%BB%93%E6%9E%84%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">5.</span> <span class="nav-text">指针和结构类型的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E5%92%8C%E5%87%BD%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">6.</span> <span class="nav-text">指针和函数的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-%E6%8C%87%E9%92%88%E7%B1%BB%E5%9E%8B%E5%88%A4%E6%96%AD%E5%AE%9E%E4%BE%8B"><span class="nav-number">7.</span> <span class="nav-text">附录 - 指针类型判断实例</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">110</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
 </div>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
         
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
     </div>
 </body>
 </html>

@@ -1,310 +1,698 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-<meta name="author" content="maywzh">
-
-
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<title>JavaScript 的原型继承 | 0x01 MAYSTORY </title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="JavaScript继承一般的面向对象的语言对继承的处理方式都是class-based，即基于类的继承。一般是说子类继承了父类，继承的主体是类。而类的对象之间的继承体现于类的继承中。 以Java为例 12public class A&amp;#123;&amp;#125; &#x2F;&#x2F;父类Apublic class B extends A &amp;#123;&amp;#125; &#x2F;&#x2F;子类B继承了父类A 在JavaScript的世界中则">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript的原型继承">
+<meta property="og:url" content="https://io.maywzh.com/2017/07/12/javascript/JavaScript%E4%B9%8B%E5%8E%9F%E5%9E%8B%E7%BB%A7%E6%89%BF/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="JavaScript继承一般的面向对象的语言对继承的处理方式都是class-based，即基于类的继承。一般是说子类继承了父类，继承的主体是类。而类的对象之间的继承体现于类的继承中。 以Java为例 12public class A&amp;#123;&amp;#125; &#x2F;&#x2F;父类Apublic class B extends A &amp;#123;&amp;#125; &#x2F;&#x2F;子类B继承了父类A 在JavaScript的世界中则">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-07-11T17:46:00.000Z">
+<meta property="article:modified_time" content="2020-09-11T00:07:32.701Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://io.maywzh.com/2017/07/12/javascript/JavaScript%E4%B9%8B%E5%8E%9F%E5%9E%8B%E7%BB%A7%E6%89%BF/">
 
 
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
-</header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
 </script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
+
+  <title>JavaScript的原型继承 | Cult I.O.</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
+  </div>
 </div>
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
-</script>
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
 
     
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">JavaScript 的原型继承</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2017/07/12/javascript/JavaScript%E4%B9%8B%E5%8E%9F%E5%9E%8B%E7%BB%A7%E6%89%BF/">
 
-                    
-                        <span class="post-time">
-                        Date: <a href="#">July 12, 2017&nbsp;&nbsp;1:46:00</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
 
-        <div class="post-content">
-            <h2 id="JavaScript-继承"><a href="#JavaScript-继承" class="headerlink" title="JavaScript 继承"></a>JavaScript 继承</h2><p>一般的面向对象的语言对继承的处理方式都是 class-based，即基于类的继承。一般是说子类继承了父类，继承的主体是类。而类的对象之间的继承体现于类的继承中。</p>
-<p>以 Java 为例</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;&#125; <span class="comment">// 父类 A</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span> </span>&#123;&#125; <span class="comment">// 子类 B 继承了父类 A</span></span><br></pre></td></tr></table></figure>
-<p>在 JavaScript 的世界中则并非如此。JS 通过原型链的方式来实现继承，是基于对象的继承。下例中 b 对象继承了 a 对象的所有属性和方法。</p>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript的原型继承
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017.07.12 01:46:00" itemprop="dateCreated datePublished" datetime="2017-07-12T01:46:00+08:00">2017.07.12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/07/12/javascript/JavaScript%E4%B9%8B%E5%8E%9F%E5%9E%8B%E7%BB%A7%E6%89%BF/" class="post-meta-item leancloud_visitors" data-flag-title="JavaScript的原型继承" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2017/07/12/javascript/JavaScript%E4%B9%8B%E5%8E%9F%E5%9E%8B%E7%BB%A7%E6%89%BF/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/07/12/javascript/JavaScript%E4%B9%8B%E5%8E%9F%E5%9E%8B%E7%BB%A7%E6%89%BF/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="JavaScript继承"><a href="#JavaScript继承" class="headerlink" title="JavaScript继承"></a>JavaScript继承</h2><p>一般的面向对象的语言对继承的处理方式都是class-based，即基于类的继承。一般是说子类继承了父类，继承的主体是类。而类的对象之间的继承体现于类的继承中。</p>
+<p>以Java为例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;&#125; <span class="comment">//父类A</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span> </span>&#123;&#125; <span class="comment">//子类B继承了父类A</span></span><br></pre></td></tr></table></figure>
+<p>在JavaScript的世界中则并非如此。JS通过原型链的方式来实现继承，是基于对象的继承。下例中b对象继承了a对象的所有属性和方法。</p>
 <a id="more"></a>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">People</span>(<span class="params">sex</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.sex = sex;</span><br><span class="line">    <span class="built_in">this</span>.say = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log (<span class="built_in">this</span>.sex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> a = <span class="keyword">new</span> People (<span class="string">&quot;man&quot;</span>); <span class="comment">// 实例化 a 对象 </span></span><br><span class="line"><span class="keyword">let</span> b = <span class="built_in">Object</span>.create (a);  <span class="comment">//b 对象继承 a 对象，继承了 a 的属性和方法 </span></span><br><span class="line"><span class="built_in">console</span>.log (b.sex); <span class="comment">//man</span></span><br><span class="line">b.say (); <span class="comment">//man</span></span><br></pre></td></tr></table></figure>
-<p>在这里我们可以说，a 对象是 b 对象的原型。这样的继承方法不需要类，继承在对象之间完成。</p>
-<h2 id="原型继承机制"><a href="#原型继承机制" class="headerlink" title="原型继承机制"></a>原型继承机制</h2><p>对象进行属性查找时，优先查找自己的属性，如果没有查找到再去查找对象的原型上的属性。如果原型对象依旧没有找到，那么递归查找指导原型根部，如果依旧没有找到那么返回 <code>undefined</code>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">st&#x3D;&gt;start: 对象 a</span><br><span class="line">op&#x3D;&gt;operation: 查找属性 p</span><br><span class="line">cond&#x3D;&gt;condition: 是否有属性 p</span><br><span class="line">sub1&#x3D;&gt;subroutine: 转到对象 a 的继承的原型对象 </span><br><span class="line">io&#x3D;&gt;inputoutput: 返回属性 p</span><br><span class="line">e&#x3D;&gt;end: 结束 </span><br><span class="line"></span><br><span class="line">st-&gt;op-&gt;cond</span><br><span class="line">cond (yes)-&gt;io-&gt;e</span><br><span class="line">cond (no)-&gt;sub1 (right)-&gt;op</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">People</span>(<span class="params">sex</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.sex = sex;</span><br><span class="line">    <span class="built_in">this</span>.say = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="built_in">this</span>.sex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> a = <span class="keyword">new</span> People(<span class="string">&quot;man&quot;</span>); <span class="comment">//实例化a对象</span></span><br><span class="line"><span class="keyword">let</span> b = <span class="built_in">Object</span>.create(a);  <span class="comment">//b对象继承a对象，继承了a的属性和方法</span></span><br><span class="line"><span class="built_in">console</span>.log(b.sex); <span class="comment">//man</span></span><br><span class="line">b.say(); <span class="comment">//man</span></span><br></pre></td></tr></table></figure>
+<p>在这里我们可以说，a对象是b对象的原型。这样的继承方法不需要类，继承在对象之间完成。</p>
+<h2 id="原型继承机制"><a href="#原型继承机制" class="headerlink" title="原型继承机制"></a>原型继承机制</h2><p>对象进行属性查找时，优先查找自己的属性，如果没有查找到再去查找对象的原型上的属性。如果原型对象依旧没有找到，那么递归查找指导原型根部，如果依旧没有找到那么返回<code>undefined</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">st&#x3D;&gt;start: 对象a</span><br><span class="line">op&#x3D;&gt;operation: 查找属性p</span><br><span class="line">cond&#x3D;&gt;condition: 是否有属性p</span><br><span class="line">sub1&#x3D;&gt;subroutine: 转到对象a的继承的原型对象</span><br><span class="line">io&#x3D;&gt;inputoutput: 返回属性p</span><br><span class="line">e&#x3D;&gt;end: 结束</span><br><span class="line"></span><br><span class="line">st-&gt;op-&gt;cond</span><br><span class="line">cond(yes)-&gt;io-&gt;e</span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
 <p>这就是原型链的思想，层层往上一级链条上查找。</p>
-<p>ES5 中，可以通过 <code>Object.getPrototypeOf (obj)</code> 来获取 <code>obj</code> 对象的原型，在 Chrome 浏览器中也可以使用非标准的 <code>obj.__proto__</code>。</p>
-<p>JS 中定义一个类的是通过声明一个函数来实现，这个函数也称为构造器。JS 中的构造器有一个特殊的属性 (函数也是对象，所以也有属性) ———— <code>prototype</code>。此 <code>prototype</code> 用来定义通过构造器构造出来的对象的原型，构造器内部的代码用来给对象初始化。如下</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">People</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log (People.prototype); </span><br><span class="line"><span class="comment">//&#123;constructor: People&#125; People.prototype 的构造器为 People</span></span><br><span class="line">People.prototype.say = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log (<span class="built_in">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line">People.prototype.sex = <span class="string">&quot;female&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> p1 = <span class="keyword">new</span> People (<span class="string">&quot;soda&quot;</span>);</span><br><span class="line">p1.constructor <span class="comment">//People</span></span><br><span class="line">p1.sex <span class="comment">//female</span></span><br><span class="line">p1.say (); <span class="comment">//soda</span></span><br></pre></td></tr></table></figure>
-<p>我们可以看出 <code>p1</code> 对象获得了 <code>People.prototype</code> 的属性和方法。实际上，通过 <code>new People ()</code>，<code>p1</code> 以 <code>People</code> 的 <code>prototype</code> 为原型来创建了一个新对象，并获得了该原型的全部属性和方法。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">p1 = <span class="keyword">new</span> People () <span class="comment">// 等价于 </span></span><br><span class="line">p1 = <span class="built_in">Object</span>.create (People.prototype) <span class="comment">// 用 People 的 prototype 作为原型来创建一个新对象 </span></span><br><span class="line">People.apply (p1, <span class="string">&quot;soda&quot;</span>) <span class="comment">// 执行构造器用来初始化，构造器中的 this 指向 p1</span></span><br></pre></td></tr></table></figure>
-<p><code>p1</code> 的原型是 <code>People.prototype</code>，<code>p1</code> 是 <code>People</code> 构造 (new) 出来的。</p>
-<p>为了让 <code>p1.constructor</code> 能构正确执行 <code>p1</code> 的构造器，一个构造器默认的 <code>prototype</code> 上已经存在 <code>constructor</code> 属性，并且指向构造器本身。</p>
-<p>⚠️ <code>People.prototype</code> 并非 <code>People</code> 的原型，而是 <code>People</code> 构造的对象的原型，即 <code>p1</code> 的原型。<code>People</code> 本身是一个 <code>Function</code> 类型，你可以把它理解为一个 <code>Function</code> 构造出来的对象，它的原型是 <code>Object.getPrototypeOf (People)</code> 或 <code>People.__proto__</code>。 因为 <code>People</code> 是一个函数对象，所有函数都构造自 <code>Function</code>，原型是 <code>Function.prototype</code>。<code>People.prototype</code> 是 <code>People</code> 构造出来的实例的原型，不是 <code>People</code> 的原型。</p>
+<p>ES5中，可以通过<code>Object.getPrototypeOf(obj)</code> 来获取<code>obj</code>对象的原型，在Chrome浏览器中也可以使用非标准的<code>obj.__proto__</code>。</p>
+<p>JS中定义一个类的是通过声明一个函数来实现，这个函数也称为构造器。JS 中的构造器有一个特殊的属性(函数也是对象，所以也有属性) ———— <code>prototype</code>。此 <code>prototype</code> 用来定义通过构造器构造出来的对象的原型，构造器内部的代码用来给对象初始化。如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">People</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(People.prototype); </span><br><span class="line"><span class="comment">//&#123;constructor: People&#125; People.prototype的构造器为People</span></span><br><span class="line">People.prototype.say = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line">People.prototype.sex = <span class="string">&quot;female&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> p1 = <span class="keyword">new</span> People(<span class="string">&quot;soda&quot;</span>);</span><br><span class="line">p1.constructor <span class="comment">//People</span></span><br><span class="line">p1.sex <span class="comment">//female</span></span><br><span class="line">p1.say(); <span class="comment">//soda</span></span><br></pre></td></tr></table></figure>
+<p>我们可以看出<code>p1</code>对象获得了<code>People.prototype</code>的属性和方法。实际上，通过<code>new People()</code>，<code>p1</code>以<code>People</code>的<code>prototype</code>为原型来创建了一个新对象，并获得了该原型的全部属性和方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">p1 = <span class="keyword">new</span> People() <span class="comment">// 等价于</span></span><br><span class="line">p1 = <span class="built_in">Object</span>.create(People.prototype) <span class="comment">// 用 People 的 prototype 作为原型来创建一个新对象</span></span><br><span class="line">People.apply(p1, <span class="string">&quot;soda&quot;</span>) <span class="comment">// 执行构造器用来初始化，构造器中的 this 指向 p1</span></span><br></pre></td></tr></table></figure>
+<p><code>p1</code>的原型是<code>People.prototype</code>，<code>p1</code>是<code>People</code>构造(new)出来的。</p>
+<p>为了让<code>p1.constructor</code>能构正确执行<code>p1</code>的构造器，一个构造器默认的 <code>prototype</code> 上已经存在 <code>constructor</code> 属性，并且指向构造器本身。</p>
+<p>⚠️ <code>People.prototype</code>并非<code>People</code>的原型，而是<code>People</code>构造的对象的原型，即<code>p1</code>的原型。<code>People</code>本身是一个<code>Function</code>类型，你可以把它理解为一个<code>Function</code>构造出来的对象，它的原型是<code>Object.getPrototypeOf(People)</code>或<code>People.__proto__</code>。 因为 <code>People</code> 是一个函数对象，所有函数都构造自 <code>Function</code>，原型是 <code>Function.prototype</code>。<code>People.prototype</code> 是 <code>People</code> 构造出来的实例的原型，不是 <code>People</code> 的原型。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">People.__proto__ === <span class="built_in">Function</span>.prototype</span><br><span class="line"><span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-<h2 id="探究-constructor"><a href="#探究-constructor" class="headerlink" title="探究 constructor"></a>探究 constructor</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> foo = <span class="keyword">new</span> Foo ();</span><br><span class="line">foo.constructor === Foo.prototype.constructor <span class="comment">//true</span></span><br><span class="line">foo.constructor === Foo <span class="comment">//true</span></span><br><span class="line">Foo.constructor === <span class="built_in">Object</span>.constructor <span class="comment">//true</span></span><br><span class="line"><span class="built_in">Object</span>.constructor === <span class="built_in">Function</span>.constructor <span class="comment">//true</span></span><br><span class="line"><span class="built_in">Function</span>.constructor === <span class="built_in">Function</span> <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<h2 id="探究constructor"><a href="#探究constructor" class="headerlink" title="探究constructor"></a>探究constructor</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> foo = <span class="keyword">new</span> Foo();</span><br><span class="line">foo.constructor === Foo.prototype.constructor <span class="comment">//true</span></span><br><span class="line">foo.constructor === Foo <span class="comment">// true</span></span><br><span class="line">Foo.constructor === <span class="built_in">Object</span>.constructor <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Object</span>.constructor === <span class="built_in">Function</span>.constructor <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Function</span>.constructor === <span class="built_in">Function</span> <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
 <p>在这个样例我们可以得知三个信息，</p>
 <ul>
-<li><p><strong> 对于 <code>foo</code> 对象而言，<code>Foo</code> 函数是其构造器，<code>foo</code> 是 <code>Foo</code> 函数构造的对象。</strong></p>
+<li><p><strong>对于<code>foo</code>对象而言，<code>Foo</code>函数是其构造器，<code>foo</code>是<code>Foo</code>函数构造的对象。</strong></p>
 </li>
-<li><p><strong> 对于一切函数 <code>fn</code> 而言，<code>Function</code> 是它们的构造器，<code>fn</code> 是 <code>Function</code> 函数构造的对象，函数也是一种特殊的对象。</strong></p>
+<li><p><strong>对于一切函数<code>fn</code>而言，<code>Function</code>是它们的构造器，<code>fn</code>是<code>Function</code>函数构造的对象，函数也是一种特殊的对象。</strong></p>
 </li>
-<li><p><strong><code>Function</code> 的构造器是 <code>Function</code> 本身。<code>Function</code> 既是对象，又是函数。</strong></p>
+<li><p><strong><code>Function</code>的构造器是<code>Function</code>本身。<code>Function</code>既是对象，又是函数。</strong></p>
 </li>
 </ul>
 <p>那么我们可以推断出什么？</p>
-<p>因为所有的函数都有同一个构造器，所以所有的函数都有同一个原型，这个原型就是 <code>Function</code> 类的原型 <code>Function.prototype</code></p>
-<p>即 <code>Object.getPrototypeOf (fn) === Function.prototype</code>，<strong> 所有的函数都是一个类 </strong>。</p>
-<h2 id="Function-的双重性"><a href="#Function-的双重性" class="headerlink" title="Function 的双重性"></a>Function 的双重性</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.__proto__ === <span class="built_in">Function</span>.prototype <span class="comment">//true</span></span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf (<span class="built_in">Function</span>) === <span class="built_in">Function</span>.prototype <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-<p>等式的左边的 <code>Function</code> 作为对象，求 <code>Function</code> 对象继承的原型</p>
-<p>等式的右边的 <code>Funciton</code> 作为构造器，求 <code>Function</code> 类的原型</p>
+<p>因为所有的函数都有同一个构造器，所以所有的函数都有同一个原型，这个原型就是<code>Function</code>类的原型<code>Function.prototype</code></p>
+<p>即<code>Object.getPrototypeOf(fn) === Function.prototype</code>，<strong>所有的函数都是一个类</strong>。</p>
+<h2 id="Function的双重性"><a href="#Function的双重性" class="headerlink" title="Function的双重性"></a>Function的双重性</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.__proto__ === <span class="built_in">Function</span>.prototype <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf(<span class="built_in">Function</span>) === <span class="built_in">Function</span>.prototype <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>等式的左边的<code>Function</code>作为对象，求<code>Function</code>对象继承的原型</p>
+<p>等式的右边的<code>Funciton</code>作为构造器，求<code>Function</code>类的原型</p>
 <p>而对于一般的函数来说则不能这么比较</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Flower</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> flower = <span class="keyword">new</span> Flower ()</span><br><span class="line">flower.__proto__ === Flower.prototype  <span class="comment">//true</span></span><br><span class="line">Flower.__proto__ === <span class="built_in">Function</span>.prototype <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-<p>所以 <code>Function</code> 是一种特殊的函数，也是一种特殊的对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Flower</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> flower = <span class="keyword">new</span> Flower()</span><br><span class="line">flower.__proto__ === Flower.prototype  <span class="comment">//true</span></span><br><span class="line">Flower.__proto__ === <span class="built_in">Function</span>.prototype <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<p>所以<code>Function</code>是一种特殊的函数，也是一种特殊的对象。</p>
 <ul>
 <li>它的构造器是它的自身。</li>
 <li>它与所有的函数继承同一个原型。</li>
-<li>所有的函数都由 <code>Function</code> 来构造。</li>
+<li>所有的函数都由<code>Function</code>来构造。</li>
 </ul>
-<h2 id="Object-与-Function"><a href="#Object-与-Function" class="headerlink" title="Object 与 Function"></a>Object 与 Function</h2><p>聊完 <code>Function</code> 再来聊聊 <code>Object</code>，JavaScript 原生提供 <code>Object</code> 对象。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> foo = <span class="keyword">new</span> Foo ();</span><br><span class="line"><span class="keyword">let</span> obj = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">foo.__proto__.__proto__ === <span class="built_in">Object</span>.prototype <span class="comment">//true</span></span><br><span class="line">foo.__proto__.__proto__ === obj.__proto__ <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-<p>可以看出，所有的对象都继承自 <code>Object</code> 对象。</p>
-<p><code>Object</code> 是所有 <code>Object</code> 对象的构造器，而根据 <code>Function</code> 的有趣性质，我们可以获得下面的结果</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span> <span class="keyword">instanceof</span> <span class="built_in">Function</span> <span class="comment">//true</span></span><br><span class="line"><span class="built_in">Function</span> <span class="keyword">instanceof</span> <span class="built_in">Object</span> <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-<p>首先，我们需要弄清楚 <code>instanceof</code> 的原理</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">instance <span class="keyword">instanceof</span> People <span class="comment">// 等价于 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">instanceOf</span>(<span class="params">instance, prototype</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> proto = <span class="built_in">Object</span>.getPrototype (instance); <span class="comment">// 取对象原型 </span></span><br><span class="line">    <span class="keyword">if</span>( proto === <span class="literal">null</span>) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// 空 </span></span><br><span class="line">    <span class="keyword">if</span>( proto === prototype) <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// 原型匹配 </span></span><br><span class="line">    <span class="keyword">return</span> instanceOf (proto, prototype); <span class="comment">// 递归检查原型的原型 </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">instance (instance, People.prototype);</span><br></pre></td></tr></table></figure>
-<p>JavaScript 中的继承概念归根到底是原型的继承，那么 <code>instanceof</code> 实际上就是将 <code>instance</code> 的原型与构造器的 <code>prototype</code> 进行递归检查。</p>
-<p><code>Object</code> 是一个构造器，一个函数，而函数也是一个对象，这个对象由 <code>Function</code> 这个构造器构造，所以</p>
+<h2 id="Object-与-Function"><a href="#Object-与-Function" class="headerlink" title="Object 与 Function"></a>Object 与 Function</h2><p>聊完<code>Function</code>再来聊聊<code>Object</code>，JavaScript原生提供<code>Object</code>对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> foo = <span class="keyword">new</span> Foo();</span><br><span class="line"><span class="keyword">let</span> obj = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">foo.__proto__.__proto__ === <span class="built_in">Object</span>.prototype <span class="comment">//true</span></span><br><span class="line">foo.__proto__.__proto__ === obj.__proto__ <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<p>可以看出，所有的对象都继承自<code>Object</code>对象。</p>
+<p><code>Object</code>是所有<code>Object</code>对象的构造器，而根据<code>Function</code>的有趣性质，我们可以获得下面的结果</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span> <span class="keyword">instanceof</span> <span class="built_in">Function</span> <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Function</span> <span class="keyword">instanceof</span> <span class="built_in">Object</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>首先，我们需要弄清楚<code>instanceof</code>的原理</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">instance <span class="keyword">instanceof</span> People <span class="comment">// 等价于</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">instanceOf</span>(<span class="params">instance, prototype</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> proto = <span class="built_in">Object</span>.getPrototype(instance); <span class="comment">// 取对象原型</span></span><br><span class="line">    <span class="keyword">if</span>( proto === <span class="literal">null</span>) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// 空</span></span><br><span class="line">    <span class="keyword">if</span>( proto === prototype) <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// 原型匹配</span></span><br><span class="line">    <span class="keyword">return</span> instanceOf(proto, prototype); <span class="comment">// 递归检查原型的原型</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">instance(instance, People.prototype);</span><br></pre></td></tr></table></figure>
+<p>JavaScript中的继承概念归根到底是原型的继承，那么<code>instanceof</code>实际上就是将<code>instance</code>的原型与构造器的<code>prototype</code>进行递归检查。</p>
+<p><code>Object</code>是一个构造器，一个函数，而函数也是一个对象，这个对象由<code>Function</code>这个构造器构造，所以</p>
 <p><code>Object.__proto__ === Function.prototype</code> 上式成立</p>
-<p> <code>Function</code> 是一个函数，一个对象，而所有的对象都是继承于 <code>Object</code> 对象的原型，</p>
+<p> <code>Function</code>是一个函数，一个对象，而所有的对象都是继承于<code>Object</code>对象的原型，</p>
 <p><code>Function.__proto__ === Object.prototype</code> 下式成立</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li>JavaScript 的继承是通过原型链继承来实现的</li>
-<li>所有的函数都是对象，它们的构造器是 <code>Function</code></li>
-<li><code>Function</code> 是自身的构造器</li>
-<li>所有的对象的最终原型是 <code>Object.prototype</code>，即所有的对象都继承于 <code>Object</code> 对象</li>
+<li>JavaScript的继承是通过原型链继承来实现的</li>
+<li>所有的函数都是对象，它们的构造器是<code>Function</code></li>
+<li><code>Function</code>是自身的构造器</li>
+<li>所有的对象的最终原型是<code>Object.prototype</code>，即所有的对象都继承于<code>Object</code>对象</li>
 </ul>
 
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
 
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/JavaScript/" rel="tag"><i class="fa fa-tag"></i> JavaScript</a>
+          </div>
+
         
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/JavaScript/"># JavaScript</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2017/07/17/javascript/Javascript%E4%B8%AD%E7%9A%84async/">JavaScript 中的 async</a>
-            
-            
-            <a class="next" rel="next" href="/2017/06/08/Redis/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-Redis-vs-Zookeeper/">分布式锁：Redis vs. Zookeeper</a>
-            
-        </section>
 
 
-    </article>
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/06/08/Redis/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-Redis-vs-Zookeeper/" rel="prev" title="分布式锁:Redis vs. Zookeeper">
+      <i class="fa fa-chevron-left"></i> 分布式锁:Redis vs. Zookeeper
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/07/17/javascript/Javascript%E4%B8%AD%E7%9A%84async/" rel="next" title="JavaScript中的async">
+      JavaScript中的async <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript%E7%BB%A7%E6%89%BF"><span class="nav-number">1.</span> <span class="nav-text">JavaScript继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E7%BB%A7%E6%89%BF%E6%9C%BA%E5%88%B6"><span class="nav-number">2.</span> <span class="nav-text">原型继承机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A2%E7%A9%B6constructor"><span class="nav-number">3.</span> <span class="nav-text">探究constructor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Function%E7%9A%84%E5%8F%8C%E9%87%8D%E6%80%A7"><span class="nav-number">4.</span> <span class="nav-text">Function的双重性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Object-%E4%B8%8E-Function"><span class="nav-number">5.</span> <span class="nav-text">Object 与 Function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">110</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
 </div>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
         
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
     </div>
 </body>
 </html>

@@ -1,230 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-<meta name="author" content="maywzh">
-
-
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<title>如何分辨 CLI、Terminal、Console 和 Shell | 0x01 MAYSTORY </title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="CLI 命令行界面、Terminal 终端 、Console 控制台和 Shell，是几个比较容易混淆的概念。 虽然经常在工作中遇到这些概念，但常常处于半知半解的状态，下文通过聊聊计算机发展史的方式初步探讨一下这些术语。  一句话概括 命令行界面 (CLI) &#x3D; 使用文本命令进行交互的用户界面 终端 (Terminal) &#x3D; TTY &#x3D; 文本输入&#x2F;输出环境 控制台 (Console) &#x3D; 一种特殊">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何分辨CLI、Terminal、Console和Shell">
+<meta property="og:url" content="https://io.maywzh.com/2015/09/25/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%88%86%E8%BE%A8CLI%E3%80%81Terminal%E3%80%81Console%E5%92%8CShell/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="CLI 命令行界面、Terminal 终端 、Console 控制台和 Shell，是几个比较容易混淆的概念。 虽然经常在工作中遇到这些概念，但常常处于半知半解的状态，下文通过聊聊计算机发展史的方式初步探讨一下这些术语。  一句话概括 命令行界面 (CLI) &#x3D; 使用文本命令进行交互的用户界面 终端 (Terminal) &#x3D; TTY &#x3D; 文本输入&#x2F;输出环境 控制台 (Console) &#x3D; 一种特殊">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://io.maywzh.com/Users/maywzh/Desktop/Screen%20Shot%202018-09-25%20at%207.16.13%20PM.png">
+<meta property="article:published_time" content="2015-09-25T11:41:53.000Z">
+<meta property="article:modified_time" content="2020-09-11T00:07:32.707Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://io.maywzh.com/Users/maywzh/Desktop/Screen%20Shot%202018-09-25%20at%207.16.13%20PM.png">
+
+<link rel="canonical" href="https://io.maywzh.com/2015/09/25/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%88%86%E8%BE%A8CLI%E3%80%81Terminal%E3%80%81Console%E5%92%8CShell/">
 
 
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
-</header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
 </script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
+
+  <title>如何分辨CLI、Terminal、Console和Shell | Cult I.O.</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
+  </div>
 </div>
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
-</script>
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
 
     
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">如何分辨 CLI、Terminal、Console 和 Shell</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2015/09/25/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%88%86%E8%BE%A8CLI%E3%80%81Terminal%E3%80%81Console%E5%92%8CShell/">
 
-                    
-                        <span class="post-time">
-                        Date: <a href="#">September 25, 2015&nbsp;&nbsp;19:41:53</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/DevOps/">DevOps</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
 
-        <div class="post-content">
-            <p>CLI 命令行界面、Terminal 终端 、Console 控制台和 Shell，是几个比较容易混淆的概念。</p>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何分辨CLI、Terminal、Console和Shell
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2015.09.25 19:41:53" itemprop="dateCreated datePublished" datetime="2015-09-25T19:41:53+08:00">2015.09.25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2015/09/25/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%88%86%E8%BE%A8CLI%E3%80%81Terminal%E3%80%81Console%E5%92%8CShell/" class="post-meta-item leancloud_visitors" data-flag-title="如何分辨CLI、Terminal、Console和Shell" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2015/09/25/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%88%86%E8%BE%A8CLI%E3%80%81Terminal%E3%80%81Console%E5%92%8CShell/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2015/09/25/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%88%86%E8%BE%A8CLI%E3%80%81Terminal%E3%80%81Console%E5%92%8CShell/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>CLI 命令行界面、Terminal 终端 、Console 控制台和 Shell，是几个比较容易混淆的概念。</p>
 <p>虽然经常在工作中遇到这些概念，但常常处于半知半解的状态，下文通过聊聊计算机发展史的方式初步探讨一下这些术语。</p>
 <hr>
 <h2 id="一句话概括"><a href="#一句话概括" class="headerlink" title="一句话概括"></a>一句话概括</h2><ul>
-<li><strong> 命令行界面 </strong> (CLI) = 使用文本命令进行交互的用户界面</li>
-<li><strong> 终端 </strong> (Terminal) = <strong>TTY</strong> = 文本输入 / 输出环境</li>
-<li><strong> 控制台 </strong> (Console) = 一种特殊的终端</li>
+<li><strong>命令行界面</strong> (CLI) = 使用文本命令进行交互的用户界面</li>
+<li><strong>终端</strong> (Terminal) = <strong>TTY</strong> = 文本输入/输出环境</li>
+<li><strong>控制台</strong> (Console) = 一种特殊的终端</li>
 <li><p><strong>Shell</strong> = 命令行解释器，执行用户输入的命令并返回结果</p>
 <a id="more"></a>
 </li>
 </ul>
-<h2 id="命令行界面-CLI"><a href="#命令行界面-CLI" class="headerlink" title="命令行界面 (CLI)"></a>命令行界面 (CLI)</h2><blockquote>
+<h2 id="命令行界面-CLI"><a href="#命令行界面-CLI" class="headerlink" title="命令行界面(CLI)"></a>命令行界面(CLI)</h2><blockquote>
 <p>命令行界面（英语：Command-line Interface，缩写：CLI）是在图形用户界面得到普及之前使用最为广泛的用户界面，它通常不支持鼠标，用户通过键盘输入指令，计算机接收到指令后，予以执行。</p>
 </blockquote>
-<p>命令行界面相对于我们日常使用的图形用户界面 (GUI) 而言，是一种操作效率极高的操作系统管理和控制方式。</p>
+<p>命令行界面相对于我们日常使用的图形用户界面(GUI)而言，是一种操作效率极高的操作系统管理和控制方式。</p>
 <p>▲ <em>命令行界面</em></p>
-<p>▲<em> 图形界面 </em></p>
+<p>▲<em>图形界面</em></p>
 <p>尽管图形界面人机交互更加友好和现代化，但相对于直观的命令行界面来说，其操作效率远远不如，所以现代所有的操作系统都提供了命令行的操作方式。例如 macOS 的 Terminal，Windows 的 Powershell。</p>
-<h2 id="终端-Terminal"><a href="#终端-Terminal" class="headerlink" title="终端 (Terminal)"></a>终端 (Terminal)</h2><p>终端是一种用于与计算机进行交互的输入输出设备，其特征就是，我们在上面输入命令，命令传递给计算机，计算机把处理结果反馈到终端的显示界面上。终端本身不参与计算和处理任务。</p>
+<h2 id="终端-Terminal"><a href="#终端-Terminal" class="headerlink" title="终端(Terminal)"></a>终端(Terminal)</h2><p>终端是一种用于与计算机进行交互的输入输出设备，其特征就是，我们在上面输入命令，命令传递给计算机，计算机把处理结果反馈到终端的显示界面上。终端本身不参与计算和处理任务。</p>
 <h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><p>在大型机和小型机时代，计算机体型相当巨大，往往是安放在单独的计算机室，操作用户则利用另外的终端设备与之交互。而现在常见的键盘和显示器在当时相当昂贵。</p>
 <p>Unix 的创始人 Ken Thompson 和 Dennis Ritchie 想让 Unix 成为一个多用户系统。多用户系统就意味着要给每个用户配置一个终端，每个用户都要有一个显示器、一个键盘。但当时所有的计算机设备都非常昂贵（包括显示器），而且键盘和主机是集成在一起的，根本没有独立的键盘。</p>
 <p>当时有一种电传打字机，其原本用途是在电报线路上首发电报，它有可以作为输入设备的键盘，也有作为输出设备的纸袋打印机，价格也比较低廉。于是完美满足了这一需求。</p>
-<p>▲<em> 电传打字机 </em></p>
+<p>▲<em>电传打字机</em></p>
 <p>于是他们机智地把电传打字机连接到计算机上，每个用户都可以在终端登录并操作主机。看起来是不是十分 geek？</p>
 <h3 id="控制台"><a href="#控制台" class="headerlink" title="控制台"></a>控制台</h3><p>控制台是一种特殊的终端，普通的终端都是以外设的形式连接到计算机，而控制台是计算机自带的的控制面板。</p>
-<p>▲<em> 左边是控制台 右边是终端 </em></p>
+<p>▲<em>左边是控制台 右边是终端</em></p>
 <p>控制台一般是系统管理员操作，有更高的控制权限。</p>
 <p>但随着个人计算机的普及，控制台和终端的概念已经逐渐模糊，我们往往具有对计算机的全部控制权限。目前的输入（键盘等）输出设备（显示器等）既可以充当控制台可以作为终端使用。因此，现在 Console 与 Terminal 基本被看作是同义词。</p>
 <h3 id="终端模拟器"><a href="#终端模拟器" class="headerlink" title="终端模拟器"></a>终端模拟器</h3><p>如今，图形操作界面已经成为了主流。有许多优秀的命令行程序不兼容如今的图形化操作界面，为了在图形界面下与之交互，人们发明了终端模拟器来模拟终端。</p>
@@ -237,16 +312,16 @@
 <li>macOS：Terminal、iTerm2；</li>
 <li>Windows：cmd.exe、ConEmu 等。</li>
 </ul>
-<p><img src="/Users/maywzh/Desktop/Screen Shot 2018-09-25 at 7.16.13 PM.png" alt="Screen Shot 2018-09-25 at 7.16.13 PM"></p>
-<p>▲<em>macOS 下的 Terminal 就是一种终端模拟器 </em></p>
-<h3 id="tty-是啥"><a href="#tty-是啥" class="headerlink" title="tty 是啥"></a>tty 是啥</h3><p>有的时候我们会发现系统进程中有一些名字叫 tty* 的进程，对应于我们的终端程序。</p>
+<p><img data-src="/Users/maywzh/Desktop/Screen Shot 2018-09-25 at 7.16.13 PM.png" alt="Screen Shot 2018-09-25 at 7.16.13 PM"></p>
+<p>▲<em>macOS 下的 Terminal 就是一种终端模拟器</em></p>
+<h3 id="tty-是啥"><a href="#tty-是啥" class="headerlink" title="tty 是啥"></a>tty 是啥</h3><p>有的时候我们会发现系统进程中有一些名字叫 tty*的进程，对应于我们的终端程序。</p>
 <p>这些 tty 是什么呢，实际上，tty 就是电传打字机 (Teletype / Teletypewriter) 的英文缩写，它表示终端的统称。</p>
-<p>在类 UNIX 系统中，硬件设备都被抽象为文件，而当时的作为终端机的电传打字机就对应于操作系统的 /dev/tty* 的设备文件。随着计算机的发展，终端设备已经有很多种，但是 tty 这个名字还是保留了下来。</p>
+<p>在类 UNIX 系统中，硬件设备都被抽象为文件，而当时的作为终端机的电传打字机就对应于操作系统的/dev/tty*的设备文件。随着计算机的发展，终端设备已经有很多种，但是 tty 这个名字还是保留了下来。</p>
 <blockquote>
-<p>实际上 UNIX 系统有许多我们当今看起来十分奇怪的设计，都是早期计算机发展相对不完善的历史遗留问题。例如 /bin 和 /usr/bin 这两个目录。有兴趣的同学可以去查一查。</p>
+<p>实际上 UNIX 系统有许多我们当今看起来十分奇怪的设计，都是早期计算机发展相对不完善的历史遗留问题。例如/bin 和/usr/bin 这两个目录。有兴趣的同学可以去查一查。</p>
 </blockquote>
 <h2 id="Shell"><a href="#Shell" class="headerlink" title="Shell"></a>Shell</h2><p>处于稳定性和安全方面的考虑，我们往往不建议用户直接对操作系统进行操作，而是通过应用程序调用操作系统的 API 进行操作。但生产生活中还是需要直接操作操作系统的，这个时候就需要一个专门的程序，接受用户输入的命令，然后帮我们与内核沟通，最后让内核完成我们的任务。它就是 Shell。它与操作系统的构架如下图。</p>
-<p>Shell 分为命令行 Shell 和图形 Shell，前者提供一个命令行界面 (CLI)，后者则提供一个图形界面 (GUI)。</p>
+<p>Shell 分为命令行 Shell 和图形 Shell，前者提供一个命令行界面(CLI)，后者则提供一个图形界面(GUI)。</p>
 <p>像 macOS 的 Finder 实际上就可以理解为一个图形 Shell。而 Terminal 就是一个命令行 Shell。</p>
 <p>常见或历史上知名的命令行 Shell 有：</p>
 <ul>
@@ -267,50 +342,365 @@
 </li>
 </ul>
 
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
 
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+          </div>
+
         
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/Linux/"># Linux</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2015/10/14/Linux/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8Bps/">Linux 进程管理之 ps</a>
-            
-            
-            <a class="next" rel="next" href="/2015/09/16/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%B8%B8%E8%A7%8132%E4%B8%AA%E7%AE%97%E6%B3%95/">计算机科学中最重要的 32 个算法</a>
-            
-        </section>
 
 
-    </article>
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/09/16/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%B8%B8%E8%A7%8132%E4%B8%AA%E7%AE%97%E6%B3%95/" rel="prev" title="计算机科学中最重要的32个算法">
+      <i class="fa fa-chevron-left"></i> 计算机科学中最重要的32个算法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2015/10/14/Linux/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8Bps/" rel="next" title="Linux进程管理之ps">
+      Linux进程管理之ps <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%A6%82%E6%8B%AC"><span class="nav-number">1.</span> <span class="nav-text">一句话概括</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%95%8C%E9%9D%A2-CLI"><span class="nav-number">2.</span> <span class="nav-text">命令行界面(CLI)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF-Terminal"><span class="nav-number">3.</span> <span class="nav-text">终端(Terminal)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B5%B7%E6%BA%90"><span class="nav-number">3.1.</span> <span class="nav-text">起源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0"><span class="nav-number">3.2.</span> <span class="nav-text">控制台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E6%A8%A1%E6%8B%9F%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">终端模拟器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tty-%E6%98%AF%E5%95%A5"><span class="nav-number">3.4.</span> <span class="nav-text">tty 是啥</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shell"><span class="nav-number">4.</span> <span class="nav-text">Shell</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Shell-%E4%B8%8E%E7%BB%88%E7%AB%AF"><span class="nav-number">4.1.</span> <span class="nav-text">Shell 与终端</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">110</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
 </div>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
         
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
     </div>
 </body>
 </html>

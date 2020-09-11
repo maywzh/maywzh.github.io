@@ -1,286 +1,661 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-<meta name="author" content="maywzh">
-
-
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<title>从同步编程到异步编程 | 0x01 MAYSTORY </title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="虽然我们生活在一个异步的世界里，但对于多数编程初学者来说，异步还是很陌生。学习一门编程语言，通常都是从同步流程开始的，即顺序、分支和循环。而异步流程是什么呢——开始一个异步调用，然后……就没有然后了。异步程序跑哪去了？ 异步程序会以某种异步的形式在运行着，比如多线程、异步IO等，直到处理完成。那如果需要处理结果怎么办？给一个程序入口，让它处理完当前过程之后，把处理结果送到这个入口，然后执行另一段程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从同步编程到异步编程">
+<meta property="og:url" content="https://io.maywzh.com/2016/04/16/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BB%8E%E5%90%8C%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%88%B0%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="虽然我们生活在一个异步的世界里，但对于多数编程初学者来说，异步还是很陌生。学习一门编程语言，通常都是从同步流程开始的，即顺序、分支和循环。而异步流程是什么呢——开始一个异步调用，然后……就没有然后了。异步程序跑哪去了？ 异步程序会以某种异步的形式在运行着，比如多线程、异步IO等，直到处理完成。那如果需要处理结果怎么办？给一个程序入口，让它处理完当前过程之后，把处理结果送到这个入口，然后执行另一段程">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2016-04-15T17:55:36.000Z">
+<meta property="article:modified_time" content="2020-09-11T00:07:32.710Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="异步">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://io.maywzh.com/2016/04/16/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BB%8E%E5%90%8C%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%88%B0%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">
 
 
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
-</header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
 </script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
+
+  <title>从同步编程到异步编程 | Cult I.O.</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
+  </div>
 </div>
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
-</script>
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
 
     
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">从同步编程到异步编程</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/04/16/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BB%8E%E5%90%8C%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%88%B0%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">
 
-                    
-                        <span class="post-time">
-                        Date: <a href="#">April 16, 2016&nbsp;&nbsp;1:55:36</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
 
-        <div class="post-content">
-            <p>虽然我们生活在一个异步的世界里，但对于多数编程初学者来说，异步还是很陌生。学习一门编程语言，通常都是从同步流程开始的，即顺序、分支和循环。而异步流程是什么呢 —— 开始一个异步调用，然后…… 就没有然后了。异步程序跑哪去了？</p>
-<p>异步程序会以某种异步的形式在运行着，比如多线程、异步 IO 等，直到处理完成。那如果需要处理结果怎么办？给一个程序入口，让它处理完当前过程之后，把处理结果送到这个入口，然后执行另一段程序 —— 俗称回调。回调一般使用 <code>callback</code> 这个名称，不过有时候我更喜欢使用 <code>next</code>，因为它代表着下一个处理步骤。</p>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从同步编程到异步编程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.04.16 01:55:36" itemprop="dateCreated datePublished" datetime="2016-04-16T01:55:36+08:00">2016.04.16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/04/16/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BB%8E%E5%90%8C%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%88%B0%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" class="post-meta-item leancloud_visitors" data-flag-title="从同步编程到异步编程" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>虽然我们生活在一个异步的世界里，但对于多数编程初学者来说，异步还是很陌生。学习一门编程语言，通常都是从同步流程开始的，即顺序、分支和循环。而异步流程是什么呢——开始一个异步调用，然后……就没有然后了。异步程序跑哪去了？</p>
+<p>异步程序会以某种异步的形式在运行着，比如多线程、异步IO等，直到处理完成。那如果需要处理结果怎么办？给一个程序入口，让它处理完当前过程之后，把处理结果送到这个入口，然后执行另一段程序——俗称回调。回调一般使用 <code>callback</code> 这个名称，不过有时候我更喜欢使用 <code>next</code>，因为它代表着下一个处理步骤。</p>
 <a id="more"></a>
 <h2 id="同步和异步的概念"><a href="#同步和异步的概念" class="headerlink" title="同步和异步的概念"></a>同步和异步的概念</h2><p>现在我们接触到了一些概念，比如同步和异步，它们是什么？</p>
-<p>这两个概念并不来源于编程语言，而是来源于低层指令，甚至更低层的 —— 电路。它们是基于时序的两个概念，其中，“步” 是指步调，所以同步表示相同的步调，而异步表示不同的步调。当然这两个概念提升到程序这个级别的时候，精确的意思与时钟无关，但所表示的意义仍然未变。</p>
-<h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><p>举个生活中的例子来说明这个问题 —— 排除买票。售票厅开了一个窗口，有一队人在排队依次买票。这个队伍中，前面一个人往前走了一步，后面的人才能往前走一步；前面的人在等待，后面的人就一定在等待。那么在理想的情况下，所有人可以同时向前迈步。OK，大家步伐一致，称为同步。</p>
+<p>这两个概念并不来源于编程语言，而是来源于低层指令，甚至更低层的——电路。它们是基于时序的两个概念，其中，“步”是指步调，所以同步表示相同的步调，而异步表示不同的步调。当然这两个概念提升到程序这个级别的时候，精确的意思与时钟无关，但所表示的意义仍然未变。</p>
+<h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><p>举个生活中的例子来说明这个问题——排除买票。售票厅开了一个窗口，有一队人在排队依次买票。这个队伍中，前面一个人往前走了一步，后面的人才能往前走一步；前面的人在等待，后面的人就一定在等待。那么在理想的情况下，所有人可以同时向前迈步。OK，大家步伐一致，称为同步。</p>
 <p>这里把售票窗口看作是处理器，每个人看作是等待执行的指令，买票这个动作就是在执行指令。它的特点是按步就班，如果一个人买票时间过长（指令执行时间过长），就会造成阻塞。</p>
 <h3 id="异步（多线程）"><a href="#异步（多线程）" class="headerlink" title="异步（多线程）"></a>异步（多线程）</h3><p>现在买票的人渐渐多起来，所以售票厅多开了几个窗口同时售票。每个单独的队伍仍然保持着同步，但不同的队伍之间，步伐不再一致，称为异步。A 队列售票很顺利，队伍在有序快速的前进，但 B 队列的某个顾客似乎在付费时遇到点麻烦，花了很长的时候，造成阻塞，但这对 A 队列并不产生影响。</p>
-<p>这时候的售票厅可以看作是在以多线程的方式运行着异步程序。从这个例子可以看到异步的两个特点：其一，两个异步流程之间相互独立，它们相互不会阻塞（有个前提，不需要等待共享资源的情况下）；其二，<strong> 异步程序内部仍然是同步的 </strong>。</p>
+<p>这时候的售票厅可以看作是在以多线程的方式运行着异步程序。从这个例子可以看到异步的两个特点：其一，两个异步流程之间相互独立，它们相互不会阻塞（有个前提，不需要等待共享资源的情况下）；其二，<strong>异步程序内部仍然是同步的</strong>。</p>
 <h3 id="异步（IO）"><a href="#异步（IO）" class="headerlink" title="异步（IO）"></a>异步（IO）</h3><p>上面的例子比较符合多线程异步的情况。那 IO 异步又是什么样呢？</p>
 <p>年底了，M 在准备年终汇报的资料，这可是个紧张的工作（CPU），要收集不少数据来写好些文案。为了其中一份文案，M 需要车间的生产数据，但跑一趟车间（IO）可需要花不少时间，所以他让 N 去车间收集数据，自己则继续写其它方案，同时等 N 把数据收集回来（启动异步程序）。半天以后，N 带回了数据（插入事件消息），M 继续完成手上的文案（完成当前事件循环），之后使用 N 带回来的数据开始撰写关于车间的报告（新的事件循环）……</p>
 <p>IO 的处理速度比 CPU 慢得多，所以 IO 异步让 CPU 不必闲置着等待 IO 操作完成。当 IO 操作完成之后，CPU 会适地使用 IO 操作结果继续工作。</p>
 <h2 id="同步逻辑和异步逻辑"><a href="#同步逻辑和异步逻辑" class="headerlink" title="同步逻辑和异步逻辑"></a>同步逻辑和异步逻辑</h2><p>回到程序上来，我们以一个函数的处理过程来描述同步和异步的处理方式。</p>
 <h3 id="同步逻辑"><a href="#同步逻辑" class="headerlink" title="同步逻辑"></a>同步逻辑</h3><p>那么，同步处理过程是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> 接受输入 ⇒ 处理 ⇒ 产生输出 </span><br><span class="line"> 复制代码 </span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">接受输入 ⇒ 处理 ⇒ 产生输出</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
 <p>用一段伪代码来描述就是</p>
 <blockquote>
-<p>注：本文中的伪代码比较接近 JavaScript 语法，而有时候为了说明类型，采用了 TypeScript 的类型申明语法。</p>
+<p>注：本文中的伪代码比较接近 JavaScript语法，而有时候为了说明类型，采用了 TypeScript 的类型申明语法。</p>
 </blockquote>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span><span class="params">(input)</span></span> &#123;</span><br><span class="line">    <span class="keyword">do</span> something with <span class="built_in">input</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">output</span></span><br><span class="line">&#125;</span><br><span class="line"> 复制代码 </span><br></pre></td></tr></table></figure>
-<p>这是标准的 IPO (Input-Process-Output) 处理。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span><span class="params">(input)</span></span> &#123;</span><br><span class="line">    <span class="keyword">do</span> something with <span class="built_in">input</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">output</span></span><br><span class="line">&#125;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>这是标准的 IPO(Input-Process-Output) 处理。</p>
 <h3 id="异步逻辑"><a href="#异步逻辑" class="headerlink" title="异步逻辑"></a>异步逻辑</h3><p>而异步呢，是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> 接受输入 ⇒ 处理 ⇒ 启动下一步（如果有）</span><br><span class="line"> 复制代码 </span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">接受输入 ⇒ 处理 ⇒ 启动下一步（如果有）</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
 <p>用伪代码来描述就是：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asyncFunc</span><span class="params">(input, next)</span></span> &#123;</span><br><span class="line">    <span class="keyword">do</span> something with <span class="built_in">input</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">next</span> is a entry) &#123;</span><br><span class="line">        <span class="built_in">next</span>(<span class="built_in">output</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> 复制代码 </span><br></pre></td></tr></table></figure>
-<p>这个过程称为 IPN (Input-Process-Next)。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asyncFunc</span><span class="params">(input, next)</span></span> &#123;</span><br><span class="line">    <span class="keyword">do</span> something with <span class="built_in">input</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">next</span> is a entry) &#123;</span><br><span class="line">        <span class="built_in">next</span>(<span class="built_in">output</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>这个过程称为 IPN(Input-Process-Next)。</p>
 <p>注意到这里的 Next，下一步，只有一步。这一步，囊括了后续的若干步骤。所以这一步，只能是后续若干步骤封装出来一个模块入口，或者说函数。</p>
-<p>因此，<strong> 模块化思想在异步思维中是一个非常关键的思想 </strong>。很多初学者写代码喜欢像记流水账一样一句句往下写，动不动就是成百上千行的函数，这就是一种缺乏模块化思想的表现。模块化思想需要训练，分析代码的相关性，提炼函数，提取对象，在具有一定经验之后还需要掌握模块细化的粒度平衡。这不是一朝一夕之功，不过我推荐看看 “设计模式” 和 “重构” 相关的书籍。</p>
-<h2 id="异步开发工具（SDK-和语法层面的）"><a href="#异步开发工具（SDK-和语法层面的）" class="headerlink" title="异步开发工具（SDK 和语法层面的）"></a>异步开发工具（SDK 和语法层面的）</h2><h3 id="承诺（Promise）"><a href="#承诺（Promise）" class="headerlink" title="承诺（Promise）"></a>承诺（Promise）</h3><p>再想想上面关于年终汇报的例子，M 请 N 去车间收集数据的时候，N 会说：“好的，我很快就把数据带回来”，这是一种承诺。基于这个承诺，M 才能安排后面撰写关于车间的汇报材料。这个过程用伪代码来描述就是</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">collectData</span>(<span class="params"></span>): <span class="title">Promise</span> </span>&#123;</span><br><span class="line">    <span class="comment">// N 去收集数据，产生了一个承诺 </span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">        collect data <span class="keyword">from</span> workshop</span><br><span class="line">        <span class="comment">// 这个承诺最终会带来数据 </span></span><br><span class="line">        resolve (data)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">writeWorkshopReport</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">    write report <span class="keyword">with</span> data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 收集数据的承诺兑现之后，可将这个数据用于写报告 </span></span><br><span class="line">collectData ()</span><br><span class="line">    .then (<span class="function"><span class="params">data</span> =&gt;</span> writeWorkshopReport (data))</span><br><span class="line"> 复制代码 </span><br></pre></td></tr></table></figure>
-<p>以 JavaScript 为代表的一些语言 SDK 中使用了 <code>Promise</code>。不过 C# 中是采用的 <code>Task</code> 和 <code>Task&lt;T&gt;</code>，相应的，使用了 <code>Task.ContinueWith</code> 和 <code>Task&lt;T&gt;.ContinueWith</code> 来代替 <code>Promise.then</code>。</p>
-<h3 id="异步逻辑同步化"><a href="#异步逻辑同步化" class="headerlink" title="异步逻辑同步化"></a>异步逻辑同步化</h3><p>上面提到了同步思维和异步思维在一个处理步骤中的区别。如果跳出一个处理步骤，从更大范围的处理流程来看，异步与同步其实也没多大区别，都是 <code>输入 --&gt; 处理 --&gt; 产生输出 --&gt; 将输出用于下一步骤</code>，唯一要注意的是需要等待异步处理产生的输出，我们可以称之为 <strong> 异步等待 </strong>。由于我们可以一边进行异步等待（async wait，简写 await），一边做别的事情，所以这个等待并不产生阻塞。但是，由于声明了这个等待，编译器 / 解释器会将后面的代码自动放在等待完成之后调用，这让异步代码写起来就像写同步代码一样。</p>
+<p>因此，<strong>模块化思想在异步思维中是一个非常关键的思想</strong>。很多初学者写代码喜欢像记流水账一样一句句往下写，动不动就是成百上千行的函数，这就是一种缺乏模块化思想的表现。模块化思想需要训练，分析代码的相关性，提炼函数，提取对象，在具有一定经验之后还需要掌握模块细化的粒度平衡。这不是一朝一夕之功，不过我推荐看看“设计模式”和“重构”相关的书籍。</p>
+<h2 id="异步开发工具（SDK和语法层面的）"><a href="#异步开发工具（SDK和语法层面的）" class="headerlink" title="异步开发工具（SDK和语法层面的）"></a>异步开发工具（SDK和语法层面的）</h2><h3 id="承诺（Promise）"><a href="#承诺（Promise）" class="headerlink" title="承诺（Promise）"></a>承诺（Promise）</h3><p>再想想上面关于年终汇报的例子，M 请 N 去车间收集数据的时候，N 会说：“好的，我很快就把数据带回来”，这是一种承诺。基于这个承诺，M 才能安排后面撰写关于车间的汇报材料。这个过程用伪代码来描述就是</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">collectData</span>(<span class="params"></span>): <span class="title">Promise</span> </span>&#123;</span><br><span class="line">    <span class="comment">// N 去收集数据，产生了一个承诺</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">        collect data <span class="keyword">from</span> workshop</span><br><span class="line">        <span class="comment">// 这个承诺最终会带来数据</span></span><br><span class="line">        resolve(data)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">writeWorkshopReport</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">    write report <span class="keyword">with</span> data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 收集数据的承诺兑现之后，可将这个数据用于写报告</span></span><br><span class="line">collectData()</span><br><span class="line">    .then(<span class="function"><span class="params">data</span> =&gt;</span> writeWorkshopReport(data))</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>以 JavaScript为代表的一些语言 SDK 中使用了 <code>Promise</code>。不过 C# 中是采用的 <code>Task</code> 和 <code>Task&lt;T&gt;</code>，相应的，使用了 <code>Task.ContinueWith</code> 和 <code>Task&lt;T&gt;.ContinueWith</code> 来代替 <code>Promise.then</code>。</p>
+<h3 id="异步逻辑同步化"><a href="#异步逻辑同步化" class="headerlink" title="异步逻辑同步化"></a>异步逻辑同步化</h3><p>上面提到了同步思维和异步思维在一个处理步骤中的区别。如果跳出一个处理步骤，从更大范围的处理流程来看，异步与同步其实也没多大区别，都是 <code>输入--&gt;处理--&gt;产生输出--&gt;将输出用于下一步骤</code>，唯一要注意的是需要等待异步处理产生的输出，我们可以称之为<strong>异步等待</strong>。由于我们可以一边进行异步等待（async wait，简写 await），一边做别的事情，所以这个等待并不产生阻塞。但是，由于声明了这个等待，编译器/解释器会将后面的代码自动放在等待完成之后调用，这让异步代码写起来就像写同步代码一样。</p>
 <p>上面的例子使用异步等待的伪代码会像这样</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">collectData</span>(<span class="params"></span>): <span class="title">Promise</span> </span>&#123;</span><br><span class="line">    collect data <span class="keyword">from</span> workshop</span><br><span class="line">    <span class="comment">// 多数语言会把 async 函数的返回值封装成 Promise</span></span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">writeWorkshopReport</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">    write report <span class="keyword">with</span> data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//await 只能用于声明为 async 的函数中 </span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    data = <span class="keyword">await</span> collectData ()</span><br><span class="line">    writeWorkshopReport (data)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义了异步 main 函数，一定要记得调用，不然它是不会执行的 </span></span><br><span class="line">main ()</span><br><span class="line"> 复制代码 </span><br></pre></td></tr></table></figure>
-<p>像 C# 和 JavaScript 等语言都从语法层面规定了 <code>await</code> 必须用在声明为 <code>async</code> 的函数中，这就从编译 / 解释的层面限定了 <code>await</code> 的用途，只要使用了 <code>await</code>，那它所处的就一定是一个异步上下文。而 <code>async</code> 也要求编译器 / 解释器对其返回值进行一些自动处理，比如在 JavaScript 中，其返回值如果不是 Promise 对象，它会自动封装成一个 Promise 对象；而在 C# 中，它会自动封装成 <code>Task</code> 或 <code>Task&lt;T&gt;</code>（所以 <code>async</code> 方法的类型需要声明为 <code>Task</code> 或 <code>Task&lt;T&gt;</code>）。</p>
-<h3 id="注意，注意，注意"><a href="#注意，注意，注意" class="headerlink" title="注意，注意，注意"></a>注意，注意，注意</h3><p>尽管语言服务在异步程序同步化方面已经做了很多工作，但是仍然避免不了一些人为错误，比如忘记写 <code>await</code> 关键字。在强类型语言中编译器会检查得严格一些，但如果是在 JavaScript 中，忘记写 <code>await</code> 意味着原本应该取得一个值的语句，会取到一个 Promise。解释器不会对此质疑，但程序运行的结果会不正确。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">collectData</span>(<span class="params"></span>): <span class="title">Promise</span> </span>&#123;</span><br><span class="line">    collect data <span class="keyword">from</span> workshop</span><br><span class="line">    <span class="comment">// 多数语言会把 async 函数的返回值封装成 Promise</span></span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">writeWorkshopReport</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">    write report <span class="keyword">with</span> data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// await 只能用于声明为 async 的函数中</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    data = <span class="keyword">await</span> collectData()</span><br><span class="line">    writeWorkshopReport(data)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义了异步 main 函数，一定要记得调用，不然它是不会执行的</span></span><br><span class="line">main()</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>像 C# 和 JavaScript等语言都从语法层面规定了 <code>await</code> 必须用在声明为 <code>async</code> 的函数中，这就从编译/解释的层面限定了 <code>await</code> 的用途，只要使用了 <code>await</code>，那它所处的就一定是一个异步上下文。而 <code>async</code> 也要求编译器/解释器对其返回值进行一些自动处理，比如在 JavaScript中，其返回值如果不是 Promise 对象，它会自动封装成一个 Promise 对象；而在 C# 中，它会自动封装成 <code>Task</code> 或 <code>Task&lt;T&gt;</code>（所以 <code>async</code> 方法的类型需要声明为 <code>Task</code> 或 <code>Task&lt;T&gt;</code>）。</p>
+<h3 id="注意，注意，注意"><a href="#注意，注意，注意" class="headerlink" title="注意，注意，注意"></a>注意，注意，注意</h3><p>尽管语言服务在异步程序同步化方面已经做了很多工作，但是仍然避免不了一些人为错误，比如忘记写 <code>await</code> 关键字。在强类型语言中编译器会检查得严格一些，但如果是在 JavaScript中，忘记写 <code>await</code> 意味着原本应该取得一个值的语句，会取到一个 Promise。解释器不会对此质疑，但程序运行的结果会不正确。</p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>总的来说，异步编程并不是特别困难的事情。使用 async/await 语言特性甚至可以用类似编写同步代码的方法来编写异步代码。但语法糖终究是糖，要想把异步编程掌握得更好，还是需要去了解和熟悉异步、回调、Promise、模块化、设计模式、重构等概念。</p>
 
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
 
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E5%BC%82%E6%AD%A5/" rel="tag"><i class="fa fa-tag"></i> 异步</a>
+          </div>
+
         
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/%E5%BC%82%E6%AD%A5/"># 异步</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2016/07/18/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B9%8B%E7%89%88%E6%9C%AC%E5%8F%B7/">如何理解版本号</a>
-            
-            
-            <a class="next" rel="next" href="/2016/04/01/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E4%B9%8B%E5%A0%86%E6%8E%92%E5%BA%8F/">排序之堆排序与 JavaScript 实现</a>
-            
-        </section>
 
 
-    </article>
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/04/01/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E4%B9%8B%E5%A0%86%E6%8E%92%E5%BA%8F/" rel="prev" title="排序之堆排序与JavaScript实现">
+      <i class="fa fa-chevron-left"></i> 排序之堆排序与JavaScript实现
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/07/18/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B9%8B%E7%89%88%E6%9C%AC%E5%8F%B7/" rel="next" title="如何理解版本号">
+      如何理解版本号 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E5%92%8C%E5%BC%82%E6%AD%A5%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">同步和异步的概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5"><span class="nav-number">1.1.</span> <span class="nav-text">同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%EF%BC%88%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">异步（多线程）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%EF%BC%88IO%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">异步（IO）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E9%80%BB%E8%BE%91%E5%92%8C%E5%BC%82%E6%AD%A5%E9%80%BB%E8%BE%91"><span class="nav-number">2.</span> <span class="nav-text">同步逻辑和异步逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E9%80%BB%E8%BE%91"><span class="nav-number">2.1.</span> <span class="nav-text">同步逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E9%80%BB%E8%BE%91"><span class="nav-number">2.2.</span> <span class="nav-text">异步逻辑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7%EF%BC%88SDK%E5%92%8C%E8%AF%AD%E6%B3%95%E5%B1%82%E9%9D%A2%E7%9A%84%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">异步开发工具（SDK和语法层面的）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%BF%E8%AF%BA%EF%BC%88Promise%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">承诺（Promise）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E9%80%BB%E8%BE%91%E5%90%8C%E6%AD%A5%E5%8C%96"><span class="nav-number">3.2.</span> <span class="nav-text">异步逻辑同步化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%EF%BC%8C%E6%B3%A8%E6%84%8F%EF%BC%8C%E6%B3%A8%E6%84%8F"><span class="nav-number">3.3.</span> <span class="nav-text">注意，注意，注意</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">110</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
 </div>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
         
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
     </div>
 </body>
 </html>

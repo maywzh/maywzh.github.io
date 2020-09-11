@@ -1,240 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-<meta name="author" content="maywzh">
-
-
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<title>Docker 实践 - 原理和创建镜像 | 0x01 MAYSTORY </title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="你是否遇到过这种问题，在一个开发环境下面运行完全正常的程序，到了生产环境就会出现种种问题。因为生产环境的种种配置、库与环境变量等依赖项都与开发环境不尽相同，所以部署到生产环境之前，必须提前将生产环境配置好，才能保证服务正常运行。 但这样十分麻烦，尤其是要迁移服务器的话，环境配置又要重新来一遍。最理想的状况是，部署到生产环境可以自带环境配置，把运行正常的环境直接复制到生产机器上。Docker为这种需">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker实践 - 原理和创建镜像">
+<meta property="og:url" content="https://io.maywzh.com/2017/02/13/docker/docker%E5%AE%9E%E8%B7%B5%20-%20%E5%8E%9F%E7%90%86%E5%92%8C%E5%88%9B%E5%BB%BA%E9%95%9C%E5%83%8F/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="你是否遇到过这种问题，在一个开发环境下面运行完全正常的程序，到了生产环境就会出现种种问题。因为生产环境的种种配置、库与环境变量等依赖项都与开发环境不尽相同，所以部署到生产环境之前，必须提前将生产环境配置好，才能保证服务正常运行。 但这样十分麻烦，尤其是要迁移服务器的话，环境配置又要重新来一遍。最理想的状况是，部署到生产环境可以自带环境配置，把运行正常的环境直接复制到生产机器上。Docker为这种需">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-02-13T13:04:40.000Z">
+<meta property="article:modified_time" content="2020-09-11T00:07:32.694Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://io.maywzh.com/2017/02/13/docker/docker%E5%AE%9E%E8%B7%B5%20-%20%E5%8E%9F%E7%90%86%E5%92%8C%E5%88%9B%E5%BB%BA%E9%95%9C%E5%83%8F/">
 
 
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
-</header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
 </script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
+
+  <title>Docker实践 - 原理和创建镜像 | Cult I.O.</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
+  </div>
 </div>
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
-</script>
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
 
     
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">Docker 实践 - 原理和创建镜像</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2017/02/13/docker/docker%E5%AE%9E%E8%B7%B5%20-%20%E5%8E%9F%E7%90%86%E5%92%8C%E5%88%9B%E5%BB%BA%E9%95%9C%E5%83%8F/">
 
-                    
-                        <span class="post-time">
-                        Date: <a href="#">February 13, 2017&nbsp;&nbsp;21:04:40</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/DevOps/">DevOps</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
 
-        <div class="post-content">
-            <p>你是否遇到过这种问题，在一个开发环境下面运行完全正常的程序，到了生产环境就会出现种种问题。因为生产环境的种种配置、库与环境变量等依赖项都与开发环境不尽相同，所以部署到生产环境之前，必须提前将生产环境配置好，才能保证服务正常运行。</p>
-<p>但这样十分麻烦，尤其是要迁移服务器的话，环境配置又要重新来一遍。最理想的状况是，部署到生产环境可以自带环境配置，把运行正常的环境直接复制到生产机器上。<a target="_blank" rel="noopener" href="https://www.docker.com/">Docker</a> 为这种需求提供了解决方案。</p>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker实践 - 原理和创建镜像
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017.02.13 21:04:40" itemprop="dateCreated datePublished" datetime="2017-02-13T21:04:40+08:00">2017.02.13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/02/13/docker/docker%E5%AE%9E%E8%B7%B5%20-%20%E5%8E%9F%E7%90%86%E5%92%8C%E5%88%9B%E5%BB%BA%E9%95%9C%E5%83%8F/" class="post-meta-item leancloud_visitors" data-flag-title="Docker实践 - 原理和创建镜像" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2017/02/13/docker/docker%E5%AE%9E%E8%B7%B5%20-%20%E5%8E%9F%E7%90%86%E5%92%8C%E5%88%9B%E5%BB%BA%E9%95%9C%E5%83%8F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/02/13/docker/docker%E5%AE%9E%E8%B7%B5%20-%20%E5%8E%9F%E7%90%86%E5%92%8C%E5%88%9B%E5%BB%BA%E9%95%9C%E5%83%8F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>你是否遇到过这种问题，在一个开发环境下面运行完全正常的程序，到了生产环境就会出现种种问题。因为生产环境的种种配置、库与环境变量等依赖项都与开发环境不尽相同，所以部署到生产环境之前，必须提前将生产环境配置好，才能保证服务正常运行。</p>
+<p>但这样十分麻烦，尤其是要迁移服务器的话，环境配置又要重新来一遍。最理想的状况是，部署到生产环境可以自带环境配置，把运行正常的环境直接复制到生产机器上。<a target="_blank" rel="noopener" href="https://www.docker.com/">Docker</a>为这种需求提供了解决方案。</p>
 <a id="more"></a>
-<h2 id="Docker-是什么"><a href="#Docker-是什么" class="headerlink" title="Docker 是什么"></a>Docker 是什么</h2><p>Docker 是一种 Linux 容器的封装， 由 <a target="_blank" rel="noopener" href="https://www.docker.com/company">Docker Inc.</a> 开发，它把应用程序和依赖打包为一个文件，docker 基于这个文件生成一个虚拟容器，应用程序在这个虚拟容器里面运行，与在真实物理机上运行无异。它解决了环境配置问题。</p>
-<p>Docker 目前提供了企业版 (Docker Enterprise Edition, Docker EE) 和社区版 (Docker Community Edition, Docker CE) 两种版本。</p>
-<h2 id="Docker-安装"><a href="#Docker-安装" class="headerlink" title="Docker 安装"></a>Docker 安装</h2><p>Docker EE 是面向企业的，一般只需要使用 Docker CE 即可，我们选择安装 Docker CE 版本。在此以 Ubuntu18.04 为例：</p>
-<h3 id="卸载老版本的-Docker"><a href="#卸载老版本的-Docker" class="headerlink" title="卸载老版本的 Docker"></a>卸载老版本的 Docker</h3><p>如果安装过老版本的 docker (docker<code>or</code>docker-engine)，要先卸载掉</p>
+<h2 id="Docker是什么"><a href="#Docker是什么" class="headerlink" title="Docker是什么"></a>Docker是什么</h2><p>Docker 是一种Linux容器的封装， 由<a target="_blank" rel="noopener" href="https://www.docker.com/company">Docker Inc.</a>开发，它把应用程序和依赖打包为一个文件，docker基于这个文件生成一个虚拟容器，应用程序在这个虚拟容器里面运行，与在真实物理机上运行无异。它解决了环境配置问题。</p>
+<p>Docker目前提供了企业版(Docker Enterprise Edition, Docker EE)和社区版(Docker Community Edition, Docker CE)两种版本。</p>
+<h2 id="Docker-安装"><a href="#Docker-安装" class="headerlink" title="Docker 安装"></a>Docker 安装</h2><p>Docker EE是面向企业的，一般只需要使用Docker CE即可，我们选择安装Docker CE版本。在此以Ubuntu18.04为例：</p>
+<h3 id="卸载老版本的Docker"><a href="#卸载老版本的Docker" class="headerlink" title="卸载老版本的Docker"></a>卸载老版本的Docker</h3><p>如果安装过老版本的docker(docker<code>or</code>docker-engine)，要先卸载掉</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get remove docker docker-engine docker.io</span><br></pre></td></tr></table></figure>
-<h3 id="安装-Docker"><a href="#安装-Docker" class="headerlink" title="安装 Docker"></a>安装 Docker</h3><p>采用官方推荐的通过 Docker‘s repositories 方式来安装。</p>
-<h4 id="设置-Docker’s-repository"><a href="#设置-Docker’s-repository" class="headerlink" title="设置 Docker’s repository"></a>设置 Docker’s repository</h4><ol>
-<li><p>先更新 apt 索引</p>
+<h3 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h3><p>采用官方推荐的通过Docker‘s repositories方式来安装。</p>
+<h4 id="设置Docker’s-repository"><a href="#设置Docker’s-repository" class="headerlink" title="设置Docker’s repository"></a>设置Docker’s repository</h4><ol>
+<li><p>先更新apt索引</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>安装必要的包，这是为了 apt 能够通过 HTTPS 的方式访问 Docker repositories</p>
+<li><p>安装必要的包，这是为了apt能够通过HTTPS的方式访问Docker repositories</p>
  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install \</span><br><span class="line"> apt-transport-https \</span><br><span class="line"> ca-certificates \</span><br><span class="line"> curl \</span><br><span class="line"> software-properties-common</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>添加 Docker 的官方 GPG key</p>
+<li><p>添加Docker的官方GPG key</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</span><br></pre></td></tr></table></figure>
-<p>确认是否有带有 <code>9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88</code> 指纹的 key。</p>
+<p>确认是否有带有<code>9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88</code>指纹的key。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-key fingerprint 0EBFCD88</span><br><span class="line"></span><br><span class="line">pub   4096R/0EBFCD88 2017-02-22</span><br><span class="line">      Key fingerprint = 9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88</span><br><span class="line">uid                  Docker Release (CE deb) &lt;docker@docker.com&gt;</span><br><span class="line">sub   4096R/F273FCD8 2017-02-22</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>安装 <code>stable</code> 版本的 repository。如果想安装 <code>edge</code> 或 <code>test</code> 版本，在 <code>stable</code> 后面添加 <code>edge</code> 或 <code>test</code>。</p>
+<li><p>安装<code>stable</code>版本的repository。如果想安装<code>edge</code>或<code>test</code>版本，在<code>stable</code>后面添加<code>edge</code>或<code>test</code>。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sudo add-apt-repository \</span><br><span class="line">   <span class="string">&quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu \</span></span><br><span class="line"><span class="string">   <span class="subst">$(lsb_release -cs)</span> \</span></span><br><span class="line"><span class="string">   stable&quot;</span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<h4 id="安装-Docker-CE"><a href="#安装-Docker-CE" class="headerlink" title="安装 Docker CE"></a>安装 Docker CE</h4><ol>
-<li><p>先更新 apt 索引</p>
+<h4 id="安装Docker-CE"><a href="#安装Docker-CE" class="headerlink" title="安装Docker CE"></a>安装Docker CE</h4><ol>
+<li><p>先更新apt索引</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>安装最新版的 Docker CE</p>
+<li><p>安装最新版的Docker CE</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install docker-ce</span><br></pre></td></tr></table></figure>
 </li>
-<li><ul>
-<li>如果想安装特定版本 Docker CE，则可以列出 repo 中可用的版本，选择安装</li>
-</ul>
-<p>a. 列出 repo 中可用版本<br>​    <code>bash
+<li><p>*如果想安装特定版本Docker CE，则可以列出repo中可用的版本，选择安装</p>
+<p>a. 列出repo中可用版本<br>​    <code>bash
 ​    $ apt-cache madison docker-ce
 ​    docker-ce | 18.03.0~ce-0~ubuntu | https://download.docker.com/linux/ubuntu xenial/stable amd64 Packages
 ​</code></p>
@@ -243,125 +314,440 @@
 </li>
 <li><p>确定是否安装成功，下载一个测试镜像并在容器中运行。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker run hello-world</span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took the following steps:</span><br><span class="line"> 1. The Docker client contacted the Docker daemon.</span><br><span class="line"> 2. The Docker daemon pulled the <span class="string">&quot;hello-world&quot;</span> image from the Docker Hub.</span><br><span class="line">    (amd64)</span><br><span class="line"> 3. The Docker daemon created a new container from that image <span class="built_in">which</span> runs the</span><br><span class="line">    executable that produces the output you are currently reading.</span><br><span class="line"> 4. The Docker daemon streamed that output to the Docker client, <span class="built_in">which</span> sent it</span><br><span class="line">    to your terminal.</span><br><span class="line"></span><br><span class="line">To try something more ambitious, you can run an Ubuntu container with:</span><br><span class="line"> $ docker run -it ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, and more with a free Docker ID:</span><br><span class="line"> https://hub.docker.com/</span><br><span class="line"></span><br><span class="line">For more examples and ideas, visit:</span><br><span class="line"> https://docs.docker.com/get-started/</span><br></pre></td></tr></table></figure>
-<p>如果出现如上信息就安装成功了，如果是在 linux 下安装的还需要设置用户权限。</p>
+<p>如果出现如上信息就安装成功了，如果是在linux下安装的还需要设置用户权限。</p>
 </li>
 </ol>
-<h3 id="设置用户权限（linux-安装）"><a href="#设置用户权限（linux-安装）" class="headerlink" title="设置用户权限（linux 安装）"></a>设置用户权限（linux 安装）</h3><p>Docker daemon 进程与 Unix socket 绑定。默认状况下 Unix socket 权限由 <code>root</code> 用户拥有，其他用户必须用 <code>sudo</code> 才可以访问。Docker daemon 必须以 <code>root</code> 用户身份运行。想要省掉输入 <code>sudo</code> 就必须设置当前用户权限。</p>
-<p>我们可以创建一个 <code>docker</code> 用户组并把当前用户加到这个组里面去，Docker daemon 启动时就创建一个可以被 <code>docker</code> 用户组访问的 Unix socket。</p>
+<h3 id="设置用户权限（linux安装）"><a href="#设置用户权限（linux安装）" class="headerlink" title="设置用户权限（linux安装）"></a>设置用户权限（linux安装）</h3><p>Docker daemon进程与Unix socket绑定。默认状况下Unix socket权限由<code>root</code>用户拥有，其他用户必须用<code>sudo</code>才可以访问。Docker daemon必须以<code>root</code>用户身份运行。想要省掉输入<code>sudo</code>就必须设置当前用户权限。</p>
+<p>我们可以创建一个<code>docker</code>用户组并把当前用户加到这个组里面去，Docker daemon启动时就创建一个可以被<code>docker</code>用户组访问的Unix socket。</p>
 <ol>
-<li><p>创建 <code>docker</code> 用户组</p>
+<li><p>创建<code>docker</code>用户组</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo groupadd docker</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>把当前用户加入 <code>docker</code> 用户组</p>
+<li><p>把当前用户加入<code>docker</code>用户组</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo usermod -aG docker <span class="variable">$USER</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>重新登陆当前用户来使用户组生效</p>
 </li>
-<li><p>此时就可以不加 <code>sudo</code> 运行 <code>docker</code> 了</p>
+<li><p>此时就可以不加<code>sudo</code>运行<code>docker</code>了</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run hello-world</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<h3 id="设置-Docker-开机启动"><a href="#设置-Docker-开机启动" class="headerlink" title="设置 Docker 开机启动"></a>设置 Docker 开机启动</h3><p>Ubuntu16.04 开始都用 <code>systemd</code> 来管理开机启动服务。如果 Ubuntu14.10 以下则使用 <code>upstart</code>。</p>
-<h4 id="Ubuntu16-04-及以上-systemd"><a href="#Ubuntu16-04-及以上-systemd" class="headerlink" title="Ubuntu16.04 及以上 - systemd"></a>Ubuntu16.04 及以上 - systemd</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl <span class="built_in">enable</span> docker// 设置 docker 开机启动 </span><br><span class="line">$ sudo systemctl <span class="built_in">disable</span> docker// 取消 docker 开机启动 </span><br></pre></td></tr></table></figure>
-<h4 id="Ubuntu14-10-及以下-upstart"><a href="#Ubuntu14-10-及以下-upstart" class="headerlink" title="Ubuntu14.10 及以下 - upstart"></a>Ubuntu14.10 及以下 - upstart</h4><p>Docker 被 upstart 自动配置为开机启动，取消开机启动则使用下面的命令</p>
+<h3 id="设置Docker开机启动"><a href="#设置Docker开机启动" class="headerlink" title="设置Docker开机启动"></a>设置Docker开机启动</h3><p>Ubuntu16.04开始都用<code>systemd</code>来管理开机启动服务。如果Ubuntu14.10以下则使用<code>upstart</code>。</p>
+<h4 id="Ubuntu16-04及以上-systemd"><a href="#Ubuntu16-04及以上-systemd" class="headerlink" title="Ubuntu16.04及以上 - systemd"></a>Ubuntu16.04及以上 - systemd</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl <span class="built_in">enable</span> docker//设置docker开机启动</span><br><span class="line">$ sudo systemctl <span class="built_in">disable</span> docker//取消docker开机启动</span><br></pre></td></tr></table></figure>
+<h4 id="Ubuntu14-10及以下-upstart"><a href="#Ubuntu14-10及以下-upstart" class="headerlink" title="Ubuntu14.10及以下 - upstart"></a>Ubuntu14.10及以下 - upstart</h4><p>Docker被upstart自动配置为开机启动，取消开机启动则使用下面的命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> manual | sudo tee /etc/init/docker.override</span><br></pre></td></tr></table></figure>
-<h2 id="Docker-image"><a href="#Docker-image" class="headerlink" title="Docker image"></a>Docker image</h2><p>Docker 容器 (container) 是通过运行镜像 (image) 文件来生成的。image 是一个可执行的包，它包含了运行一个应用程序所需要的所有东西 — 运行时、库、环境变量和配置文件。一个 image 可以生成多个同时运行的 container。</p>
-<h2 id="Docker-container"><a href="#Docker-container" class="headerlink" title="Docker container"></a>Docker container</h2><p>Docker 容器是 image 的一个运行时实例。image 被执行并被加载到内存就变成一个 container，也就是一个具有状态的 image 或用户进程。可以通过 <code>docker ps</code> 来查看正在运行的 container 的列表。</p>
-<h2 id="容器与虚拟机的区别"><a href="#容器与虚拟机的区别" class="headerlink" title="容器与虚拟机的区别"></a>容器与虚拟机的区别</h2><p>一个容器在 Linux 上 <strong> 原生 </strong> 运行，并于其他容器共享主机的内核。容器运行轻量级的独立的进程，占据资源相当少。而虚拟机则运行在一个客户操作系统 (Guest OS) 上，它通过虚拟机控制器技术来虚拟访问访问主机的资源，相对其他的进程，虚拟机要占据较多的机器资源。</p>
-<h2 id="Docker-启动服务"><a href="#Docker-启动服务" class="headerlink" title="Docker 启动服务"></a>Docker 启动服务</h2><p>Docker 是 C/S 架构，运行 docker 命令时，相当于把传递指令给监听特定 Unix socket 的 Docker 服务，所以必须启动 Docker 服务。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># service 方式 </span></span><br><span class="line">$ sudo service docker start</span><br><span class="line"></span><br><span class="line"><span class="comment"># systemctl 方式 </span></span><br><span class="line">$ sudo systemctl start docker</span><br></pre></td></tr></table></figure>
-<h2 id="实战-构建一个-app-并创建-docker-镜像。"><a href="#实战-构建一个-app-并创建-docker-镜像。" class="headerlink" title="实战 - 构建一个 app 并创建 docker 镜像。"></a>实战 - 构建一个 app 并创建 docker 镜像。</h2><p>如果我们想要开发一个 python app，第一步就是安装一个 python 的 runtime 到开发机上，而这个配置必须完美契合 app 的配置要求，生产环境也必须这样。</p>
-<p>使用 Docker，就可以把所需 Python runtime 打包为一个镜像 (image)，无需安装。然后在 app 的代码包含这个 image 即可。我们就算把 app 的环境打包好了。</p>
-<h3 id="步骤-1-通过-Dockerfile-来定义容器-container"><a href="#步骤-1-通过-Dockerfile-来定义容器-container" class="headerlink" title="步骤 1: 通过 Dockerfile 来定义容器 (container)"></a>步骤 1: 通过 <code>Dockerfile</code> 来定义容器 (<code>container</code>)</h3><p><code>Dockerfile</code> 定义了 <code>container</code> 内的行为。在 <code>container</code> 环境中，所有对环境资源的访问，例如网络接口和磁盘驱动，都被虚拟化了，并与 <code>container</code> 外的操作系统隔离。因此需要定义到容器外的端口，并确定想要 “拷贝” 到这个环境的文件。做完这个以后，就可以确保在 <code>Dockerfile</code> 中运行的 app 在任何外部环境都能完全相同地运行。</p>
-<h4 id="创建-Dockerfile"><a href="#创建-Dockerfile" class="headerlink" title="创建 Dockerfile"></a>创建 <code>Dockerfile</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/Workspace/dockerdemo</span><br><span class="line">touch Dockerfile</span><br><span class="line">vim Dockerfile</span><br></pre></td></tr></table></figure>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ~/Workspace/dockerdemo/Dockerfile</span></span><br><span class="line"><span class="comment"># 用一个官方的 Python runtime 作为父 image</span></span><br><span class="line"><span class="keyword">FROM</span> python:<span class="number">2.7</span>-slim</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置工作目录为 /app</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /app</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 把当前的目录内容拷贝到 /app 中的容器 </span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> . /app</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 requirements.txt 定义的依赖包 </span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> pip install --trusted-host pypi.python.org -r requirements.txt</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 80 端口对容器外开放 </span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">80</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义环境变量 </span></span><br><span class="line"><span class="keyword">ENV</span> NAME World</span><br><span class="line"></span><br><span class="line"><span class="comment"># 容器启动时运行 app.py</span></span><br><span class="line"><span class="keyword">CMD</span><span class="bash"> [<span class="string">&quot;python&quot;</span>, <span class="string">&quot;app.py&quot;</span>]</span></span><br></pre></td></tr></table></figure>
-<p>当 <code>Dockerfile</code> 被构建为为一个 <code>image</code>，COPY<code>命令把</code>requirements.txt<code>和</code>app.py<code>拷贝到容器内，EXPOSE 命令让</code>app.py` 的输出可以通过 HTTP 来访问。</p>
-<h3 id="步骤-2-构建示例-demo"><a href="#步骤-2-构建示例-demo" class="headerlink" title="步骤 2: 构建示例 demo"></a>步骤 2: 构建示例 demo</h3><h4 id="编写-demo-app-代码"><a href="#编写-demo-app-代码" class="headerlink" title="编写 demo app 代码"></a>编写 demo app 代码</h4><p>编写 <code>requirements.txt</code> 和 <code>app.py</code>，把它们放在 Dockerfile 的同一目录下。</p>
+<h2 id="Docker-image"><a href="#Docker-image" class="headerlink" title="Docker image"></a>Docker image</h2><p>Docker 容器(container)是通过运行镜像(image)文件来生成的。image是一个可执行的包，它包含了运行一个应用程序所需要的所有东西—运行时、库、环境变量和配置文件。一个image可以生成多个同时运行的container。</p>
+<h2 id="Docker-container"><a href="#Docker-container" class="headerlink" title="Docker container"></a>Docker container</h2><p>Docker 容器是image的一个运行时实例。image被执行并被加载到内存就变成一个container，也就是一个具有状态的image或用户进程。可以通过<code>docker ps</code>来查看正在运行的container的列表。</p>
+<h2 id="容器与虚拟机的区别"><a href="#容器与虚拟机的区别" class="headerlink" title="容器与虚拟机的区别"></a>容器与虚拟机的区别</h2><p>一个容器在Linux上<strong>原生</strong>运行，并于其他容器共享主机的内核。容器运行轻量级的独立的进程，占据资源相当少。而虚拟机则运行在一个客户操作系统(Guest OS)上，它通过虚拟机控制器技术来虚拟访问访问主机的资源，相对其他的进程，虚拟机要占据较多的机器资源。</p>
+<h2 id="Docker启动服务"><a href="#Docker启动服务" class="headerlink" title="Docker启动服务"></a>Docker启动服务</h2><p>Docker是C/S架构，运行docker命令时，相当于把传递指令给监听特定Unix socket的Docker服务，所以必须启动Docker服务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># service 方式</span></span><br><span class="line">$ sudo service docker start</span><br><span class="line"></span><br><span class="line"><span class="comment"># systemctl 方式</span></span><br><span class="line">$ sudo systemctl start docker</span><br></pre></td></tr></table></figure>
+<h2 id="实战-构建一个app并创建docker镜像。"><a href="#实战-构建一个app并创建docker镜像。" class="headerlink" title="实战 - 构建一个app并创建docker镜像。"></a>实战 - 构建一个app并创建docker镜像。</h2><p>如果我们想要开发一个python app，第一步就是安装一个python的runtime到开发机上，而这个配置必须完美契合app的配置要求，生产环境也必须这样。</p>
+<p>使用Docker，就可以把所需Python runtime打包为一个镜像(image)，无需安装。然后在app的代码包含这个image即可。我们就算把app的环境打包好了。</p>
+<h3 id="步骤1-通过Dockerfile来定义容器-container"><a href="#步骤1-通过Dockerfile来定义容器-container" class="headerlink" title="步骤1: 通过Dockerfile来定义容器(container)"></a>步骤1: 通过<code>Dockerfile</code>来定义容器(<code>container</code>)</h3><p><code>Dockerfile</code>定义了<code>container</code>内的行为。在<code>container</code>环境中，所有对环境资源的访问，例如网络接口和磁盘驱动，都被虚拟化了，并与<code>container</code>外的操作系统隔离。因此需要定义到容器外的端口，并确定想要“拷贝”到这个环境的文件。做完这个以后，就可以确保在<code>Dockerfile</code>中运行的app在任何外部环境都能完全相同地运行。</p>
+<h4 id="创建Dockerfile"><a href="#创建Dockerfile" class="headerlink" title="创建Dockerfile"></a>创建<code>Dockerfile</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/Workspace/dockerdemo</span><br><span class="line">touch Dockerfile</span><br><span class="line">vim Dockerfile</span><br></pre></td></tr></table></figure>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ~/Workspace/dockerdemo/Dockerfile</span></span><br><span class="line"><span class="comment"># 用一个官方的Python runtime作为父image</span></span><br><span class="line"><span class="keyword">FROM</span> python:<span class="number">2.7</span>-slim</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置工作目录为 /app</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /app</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 把当前的目录内容拷贝到 /app 中的容器</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> . /app</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 requirements.txt 定义的依赖包</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> pip install --trusted-host pypi.python.org -r requirements.txt</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 80 端口对容器外开放</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">80</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义环境变量</span></span><br><span class="line"><span class="keyword">ENV</span> NAME World</span><br><span class="line"></span><br><span class="line"><span class="comment"># 容器启动时运行 app.py</span></span><br><span class="line"><span class="keyword">CMD</span><span class="bash"> [<span class="string">&quot;python&quot;</span>, <span class="string">&quot;app.py&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+<p>当<code>Dockerfile</code>被构建为为一个<code>image</code>，COPY<code>命令把</code>requirements.txt<code>和</code>app.py<code>拷贝到容器内，EXPOSE命令让</code>app.py`的输出可以通过HTTP来访问。</p>
+<h3 id="步骤2-构建示例demo"><a href="#步骤2-构建示例demo" class="headerlink" title="步骤2: 构建示例demo"></a>步骤2: 构建示例demo</h3><h4 id="编写-demo-app代码"><a href="#编写-demo-app代码" class="headerlink" title="编写 demo app代码"></a>编写 demo app代码</h4><p>编写<code>requirements.txt</code>和<code>app.py</code>，把它们放在Dockerfile的同一目录下。</p>
 <p><code>requirements.txt</code></p>
 <figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Flask</span></span><br><span class="line"><span class="attribute">Redis</span></span><br></pre></td></tr></table></figure>
 <p><code>app.py</code></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line"><span class="keyword">from</span> redis <span class="keyword">import</span> Redis, RedisError</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"><span class="comment"># Connect to Redis</span></span><br><span class="line">redis = Redis (host=<span class="string">&quot;redis&quot;</span>, db=<span class="number">0</span>, socket_connect_timeout=<span class="number">2</span>, socket_timeout=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">app = Flask (__name__)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route (&quot;/&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span>():</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        visits = redis.incr (<span class="string">&quot;counter&quot;</span>)</span><br><span class="line">    <span class="keyword">except</span> RedisError:</span><br><span class="line">        visits = <span class="string">&quot;&lt;i&gt;cannot connect to Redis, counter disabled&lt;/i&gt;&quot;</span></span><br><span class="line"></span><br><span class="line">    html = <span class="string">&quot;&lt;h3&gt;Hello &#123;name&#125;!&lt;/h3&gt;&quot;</span> \</span><br><span class="line">           <span class="string">&quot;&lt;b&gt;Hostname:&lt;/b&gt; &#123;hostname&#125;&lt;br/&gt;&quot;</span> \</span><br><span class="line">           <span class="string">&quot;&lt;b&gt;Visits:&lt;/b&gt; &#123;visits&#125;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> html.format (name=os.getenv (<span class="string">&quot;NAME&quot;</span>, <span class="string">&quot;world&quot;</span>), hostname=socket.gethostname (), visits=visits)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    app.run (host=<span class="string">&#x27;0.0.0.0&#x27;</span>, port=<span class="number">80</span>)</span><br></pre></td></tr></table></figure>
-<p>至此 app 就编写完毕了。我们可以看到 <code>pip install -r requirements.txt</code> 这个命令安装了 Flask 和 Redis，而 app 打印了环境变量 <code>NAME</code> 和 <code>socket.gethostname ()</code> 的输出。由于 Redis 安装之后并没有运行，所以预期 app 会运行失败，打印错误信息。</p>
-<h4 id="构建-app"><a href="#构建-app" class="headerlink" title="构建 app"></a>构建 app</h4><p>查看当前目录的文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line"><span class="keyword">from</span> redis <span class="keyword">import</span> Redis, RedisError</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"><span class="comment"># Connect to Redis</span></span><br><span class="line">redis = Redis(host=<span class="string">&quot;redis&quot;</span>, db=<span class="number">0</span>, socket_connect_timeout=<span class="number">2</span>, socket_timeout=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(&quot;/&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span>():</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        visits = redis.incr(<span class="string">&quot;counter&quot;</span>)</span><br><span class="line">    <span class="keyword">except</span> RedisError:</span><br><span class="line">        visits = <span class="string">&quot;&lt;i&gt;cannot connect to Redis, counter disabled&lt;/i&gt;&quot;</span></span><br><span class="line"></span><br><span class="line">    html = <span class="string">&quot;&lt;h3&gt;Hello &#123;name&#125;!&lt;/h3&gt;&quot;</span> \</span><br><span class="line">           <span class="string">&quot;&lt;b&gt;Hostname:&lt;/b&gt; &#123;hostname&#125;&lt;br/&gt;&quot;</span> \</span><br><span class="line">           <span class="string">&quot;&lt;b&gt;Visits:&lt;/b&gt; &#123;visits&#125;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> html.format(name=os.getenv(<span class="string">&quot;NAME&quot;</span>, <span class="string">&quot;world&quot;</span>), hostname=socket.gethostname(), visits=visits)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    app.run(host=<span class="string">&#x27;0.0.0.0&#x27;</span>, port=<span class="number">80</span>)</span><br></pre></td></tr></table></figure>
+<p>至此app就编写完毕了。我们可以看到<code>pip install -r requirements.txt</code>这个命令安装了Flask和Redis，而app打印了环境变量<code>NAME</code>和<code>socket.gethostname()</code>的输出。由于Redis安装之后并没有运行，所以预期app会运行失败，打印错误信息。</p>
+<h4 id="构建app"><a href="#构建app" class="headerlink" title="构建app"></a>构建app</h4><p>查看当前目录的文件</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br><span class="line">Dockerfile		app.py			requirements.txt</span><br></pre></td></tr></table></figure>
-<p>运行 <code>build</code> 命令，建立 Docker image，我们也可以用 <code>-t</code> 选项来为之创建一个标签。</p>
+<p>运行<code>build</code>命令，建立Docker image，我们也可以用<code>-t</code>选项来为之创建一个标签。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t friendlyhello .</span><br></pre></td></tr></table></figure>
-<p>我们可以查看注册的 image</p>
+<p>我们可以查看注册的image</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker image ls</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">friendlyhello       latest              cfb6345425ed        41 seconds ago      132MB</span><br></pre></td></tr></table></figure>
-<h4 id="运行-app"><a href="#运行-app" class="headerlink" title="运行 app"></a>运行 app</h4><p><code>docker run</code> 命令运行 app，<code>-p</code> 选项把机器上的 4000 端口绑定到 container 发布的 80 端口</p>
+<h4 id="运行app"><a href="#运行app" class="headerlink" title="运行app"></a>运行app</h4><p><code>docker run</code> 命令运行app，<code>-p</code>选项把机器上的4000端口绑定到container发布的80端口</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 4000:80 friendlyhello</span><br><span class="line"> * Serving Flask app <span class="string">&quot;app&quot;</span> (lazy loading)</span><br><span class="line"> * Environment: production</span><br><span class="line">   WARNING: Do not use the development server <span class="keyword">in</span> a production environment.</span><br><span class="line">   Use a production WSGI server instead.</span><br><span class="line"> * Debug mode: off</span><br><span class="line"> * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)</span><br></pre></td></tr></table></figure>
-<p>显示信息访问 <code>http://0.0.0.0:80</code>。但实际上，这条信息来自于容器内部，容器内部的 app 并不知道它正运行于容器内部，所以它在实体机上显示虚拟环境的地址 <code>http://0.0.0.0:80</code>，实际上我们已经把容器的 80 端口映射到了物理机的 4000 端口，所以真实地址是 <code>http://localhost:4000</code></p>
-<p>点击 <code>CTRL+C</code> 退出进程。</p>
-<p>也可以添加 <code>-d</code> 选项在后台运行</p>
+<p>显示信息访问<code>http://0.0.0.0:80</code>。但实际上，这条信息来自于容器内部，容器内部的app并不知道它正运行于容器内部，所以它在实体机上显示虚拟环境的地址<code>http://0.0.0.0:80</code>，实际上我们已经把容器的80端口映射到了物理机的4000端口，所以真实地址是<code>http://localhost:4000</code></p>
+<p>点击 <code>CTRL+C</code>退出进程。</p>
+<p>也可以添加<code>-d</code>选项在后台运行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 4000:80 friendlyhello</span><br><span class="line">6b514ac64d134b52a35394c82839da468dcb94b56123109bd33113e5fdb36d7b </span><br></pre></td></tr></table></figure>
-<p>输入该命令后，得到了一个 container ID，例如上面的 <code>6b514ac64d134b52a35394c82839da468dcb94b56123109bd33113e5fdb36d7b</code>，此时我们的 container 在后台运行。也可以通过 <code>docker container ls</code> 来查看 container ID 的缩写。</p>
+<p>输入该命令后，得到了一个container ID，例如上面的<code>6b514ac64d134b52a35394c82839da468dcb94b56123109bd33113e5fdb36d7b</code>，此时我们的container在后台运行。也可以通过<code>docker container ls</code>来查看container ID的缩写。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker container ls</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                  NAMES</span><br><span class="line">6b514ac64d13        friendlyhello       <span class="string">&quot;python app.py&quot;</span>     3 minutes ago       Up 3 minutes        0.0.0.0:4000-&gt;80/tcp   compassionate_shannon</span><br></pre></td></tr></table></figure>
-<p>运行 docker container stop 命令来停止 container 进程。</p>
+<p>运行docker container stop命令来停止container进程。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker container stop 6b514ac64d13</span><br></pre></td></tr></table></figure>
-<h3 id="步骤-3-分享-image"><a href="#步骤-3-分享-image" class="headerlink" title="步骤 3: 分享 image"></a>步骤 3: 分享 image</h3><p>我们想要我们的 image 可以随处运行。我们可以把自己的 image 推送到 Docker 仓库 (repository) 中。Docker 仓库类似于 Github 仓库，只是代码已经被构建好了。可以注册一个 Docker ID 来创建自己的 repository。Docker 命令行默认使用公有仓库。</p>
-<h4 id="登陆-Docker-公有仓库"><a href="#登陆-Docker-公有仓库" class="headerlink" title="登陆 Docker 公有仓库"></a>登陆 Docker 公有仓库</h4><p>我们需要去 <a href="docker.com">Docker 官网</a> 注册一个 Docker ID，在本机输入</p>
+<h3 id="步骤3-分享image"><a href="#步骤3-分享image" class="headerlink" title="步骤3: 分享image"></a>步骤3: 分享image</h3><p>我们想要我们的image可以随处运行。我们可以把自己的image推送到Docker仓库(repository)中。Docker仓库类似于Github仓库，只是代码已经被构建好了。可以注册一个Docker ID来创建自己的repository。Docker命令行默认使用公有仓库。</p>
+<h4 id="登陆Docker公有仓库"><a href="#登陆Docker公有仓库" class="headerlink" title="登陆Docker公有仓库"></a>登陆Docker公有仓库</h4><p>我们需要去<a href="docker.com">Docker官网</a>注册一个Docker ID，在本机输入</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker login</span><br></pre></td></tr></table></figure>
-<p>接着输入 Docker ID 和密码即可登录。</p>
-<h4 id="为-image-添加标签"><a href="#为-image-添加标签" class="headerlink" title="为 image 添加标签"></a>为 image 添加标签</h4><p>一个仓库中的 image 的格式是 <code>username/repository:tag</code>。这个 Tag 是可选的，但一般推荐添加上，因为仓库可以用 tag 来设定 Docker image 版本号。</p>
+<p>接着输入Docker ID和密码即可登录。</p>
+<h4 id="为image添加标签"><a href="#为image添加标签" class="headerlink" title="为image添加标签"></a>为image添加标签</h4><p>一个仓库中的image的格式是<code>username/repository:tag</code>。这个Tag是可选的，但一般推荐添加上，因为仓库可以用tag来设定Docker image版本号。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker tag image user/repository:tag</span><br></pre></td></tr></table></figure>
 <p>例如</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker tag helloworld maywzh/maywzhrepo:part2</span><br></pre></td></tr></table></figure>
-<p>通过 <code>docker image ls</code> 来查看新的添加了标签的 image:</p>
+<p>通过<code>docker image ls</code>来查看新的添加了标签的image:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ docker image ls</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">friendlyhello       latest              cfb6345425ed        2 days ago          132MB</span><br><span class="line">koa-demo            0.0.1               628b71e7fc7d        2 weeks ago         675MB</span><br><span class="line">hello-world         latest              4ab4c602aa5e        3 weeks ago         1.84kB</span><br><span class="line">python              2.7-slim            c9cde4658340        4 weeks ago         120MB</span><br><span class="line">node                8.4                 386940f92d24        13 months ago       673MB</span><br></pre></td></tr></table></figure>
-<h4 id="发布-image"><a href="#发布-image" class="headerlink" title="发布 image"></a>发布 image</h4><p>可以把标签过的 image 发布到仓库中：</p>
+<h4 id="发布image"><a href="#发布image" class="headerlink" title="发布image"></a>发布image</h4><p>可以把标签过的image发布到仓库中：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker push username/repository:tag</span><br></pre></td></tr></table></figure>
-<p>一旦完成，那么上传的东西就可以被可以被公开访问了，也可以上 <a target="_blank" rel="noopener" href="https://hub.docker.com/">Docker Hub</a> 来查看 image 上传的 image。</p>
-<h4 id="从远端仓库拉取-image"><a href="#从远端仓库拉取-image" class="headerlink" title="从远端仓库拉取 image"></a>从远端仓库拉取 image</h4><p>经过之前的步骤，我们可以通过 <code>docker run</code> 在任何机器上来运行我们的 app</p>
+<p>一旦完成，那么上传的东西就可以被可以被公开访问了，也可以上<a target="_blank" rel="noopener" href="https://hub.docker.com/">Docker Hub</a>来查看image上传的image。</p>
+<h4 id="从远端仓库拉取image"><a href="#从远端仓库拉取image" class="headerlink" title="从远端仓库拉取image"></a>从远端仓库拉取image</h4><p>经过之前的步骤，我们可以通过<code>docker run</code> 在任何机器上来运行我们的app</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -p 4000:80 username/repository:tag</span><br></pre></td></tr></table></figure>
-<p>如果 image 在本机不可用，就会把它拉回到本地:</p>
+<p>如果image在本机不可用，就会把它拉回到本地:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -p 4000:40 </span><br></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Docker 提供了一种虚拟化容器的方式来打包 app 以及它的运行环境，该容器 (container) 通过镜像 (image) 创建，而镜像通过编写 <code>dockerfile</code> 的方式来定义。我们也可以把为 docker 镜像添加标签，并推送到 docker 远程仓库中。这样就可以通过远程仓库直接运行镜像。</p>
-<h2 id="附录-所用的所有命令"><a href="#附录-所用的所有命令" class="headerlink" title="附录 所用的所有命令"></a>附录 所用的所有命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">docker build -t friendlyhello .  <span class="comment"># 用 dockerfile 来构建镜像 </span></span><br><span class="line">docker run -p 4000:80 friendlyhello  <span class="comment"># 运行 friendlyhello 把容器端口 80 导航到到运行机端口 4000</span></span><br><span class="line">docker run -d -p 4000:80 friendlyhello         <span class="comment"># 后台运行模式 </span></span><br><span class="line">docker container ls                                <span class="comment"># 列出所有的容器 </span></span><br><span class="line">docker container ls -a             <span class="comment"># 列出所有的容器包括为未运行的 </span></span><br><span class="line">docker container stop &lt;<span class="built_in">hash</span>&gt;           <span class="comment"># 优雅的方式关闭容器 </span></span><br><span class="line">docker container <span class="built_in">kill</span> &lt;<span class="built_in">hash</span>&gt;         <span class="comment"># 强制杀掉容器进程 </span></span><br><span class="line">docker container rm &lt;<span class="built_in">hash</span>&gt;        <span class="comment"># 删除容器 </span></span><br><span class="line">docker container rm $(docker container ls -a -q)         <span class="comment"># 删除所有容器 </span></span><br><span class="line">docker image ls -a                             <span class="comment"># 列出所有的镜像 </span></span><br><span class="line">docker image rm &lt;image id&gt;            <span class="comment"># 删除特定镜像 </span></span><br><span class="line">docker image rm $(docker image ls -a -q)   <span class="comment"># 删除所有镜像 </span></span><br><span class="line">docker login             <span class="comment"># 登陆到 docker CLI session</span></span><br><span class="line">docker tag &lt;image&gt; username/repository:tag  <span class="comment"># 为镜像添加标签来上传到公有库 </span></span><br><span class="line">docker push username/repository:tag            <span class="comment"># 上传镜像到公有库 </span></span><br><span class="line">docker run username/repository:tag                   <span class="comment"># 从仓库运行镜像 </span></span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Docker提供了一种虚拟化容器的方式来打包app以及它的运行环境，该容器(container)通过镜像(image)创建，而镜像通过编写<code>dockerfile</code>的方式来定义。我们也可以把为docker镜像添加标签，并推送到docker远程仓库中。这样就可以通过远程仓库直接运行镜像。</p>
+<h2 id="附录-所用的所有命令"><a href="#附录-所用的所有命令" class="headerlink" title="附录 所用的所有命令"></a>附录 所用的所有命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">docker build -t friendlyhello .  <span class="comment"># 用dockerfile来构建镜像</span></span><br><span class="line">docker run -p 4000:80 friendlyhello  <span class="comment"># 运行friendlyhello 把容器端口80导航到到运行机端口4000</span></span><br><span class="line">docker run -d -p 4000:80 friendlyhello         <span class="comment"># 后台运行模式</span></span><br><span class="line">docker container ls                                <span class="comment"># 列出所有的容器</span></span><br><span class="line">docker container ls -a             <span class="comment"># 列出所有的容器包括为未运行的</span></span><br><span class="line">docker container stop &lt;<span class="built_in">hash</span>&gt;           <span class="comment"># 优雅的方式关闭容器</span></span><br><span class="line">docker container <span class="built_in">kill</span> &lt;<span class="built_in">hash</span>&gt;         <span class="comment"># 强制杀掉容器进程</span></span><br><span class="line">docker container rm &lt;<span class="built_in">hash</span>&gt;        <span class="comment"># 删除容器</span></span><br><span class="line">docker container rm $(docker container ls -a -q)         <span class="comment"># 删除所有容器</span></span><br><span class="line">docker image ls -a                             <span class="comment"># 列出所有的镜像</span></span><br><span class="line">docker image rm &lt;image id&gt;            <span class="comment"># 删除特定镜像</span></span><br><span class="line">docker image rm $(docker image ls -a -q)   <span class="comment"># 删除所有镜像</span></span><br><span class="line">docker login             <span class="comment"># 登陆到docker CLI session</span></span><br><span class="line">docker tag &lt;image&gt; username/repository:tag  <span class="comment"># 为镜像添加标签来上传到公有库</span></span><br><span class="line">docker push username/repository:tag            <span class="comment"># 上传镜像到公有库</span></span><br><span class="line">docker run username/repository:tag                   <span class="comment"># 从仓库运行镜像</span></span><br></pre></td></tr></table></figure>
 
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
 
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
+          </div>
+
         
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/Docker/"># Docker</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2017/02/17/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8B%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/">通过 docker 容器方式搭建 gitlab 服务</a>
-            
-            
-            <a class="next" rel="next" href="/2017/02/10/%E5%AF%86%E7%A0%81%E5%AD%A6/%E4%BB%8EJWT%E8%81%8A%E8%81%8A%E8%AE%A4%E8%AF%81/">从 JWT 聊聊认证</a>
-            
-        </section>
 
 
-    </article>
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/02/10/%E5%AF%86%E7%A0%81%E5%AD%A6/%E4%BB%8EJWT%E8%81%8A%E8%81%8A%E8%AE%A4%E8%AF%81/" rel="prev" title="从JWT聊聊认证">
+      <i class="fa fa-chevron-left"></i> 从JWT聊聊认证
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/02/17/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8B%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/" rel="next" title="通过docker容器方式搭建gitlab服务">
+      通过docker容器方式搭建gitlab服务 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">Docker是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">Docker 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E8%80%81%E7%89%88%E6%9C%AC%E7%9A%84Docker"><span class="nav-number">2.1.</span> <span class="nav-text">卸载老版本的Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Docker"><span class="nav-number">2.2.</span> <span class="nav-text">安装Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEDocker%E2%80%99s-repository"><span class="nav-number">2.2.1.</span> <span class="nav-text">设置Docker’s repository</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Docker-CE"><span class="nav-number">2.2.2.</span> <span class="nav-text">安装Docker CE</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%EF%BC%88linux%E5%AE%89%E8%A3%85%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">设置用户权限（linux安装）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEDocker%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="nav-number">2.4.</span> <span class="nav-text">设置Docker开机启动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Ubuntu16-04%E5%8F%8A%E4%BB%A5%E4%B8%8A-systemd"><span class="nav-number">2.4.1.</span> <span class="nav-text">Ubuntu16.04及以上 - systemd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ubuntu14-10%E5%8F%8A%E4%BB%A5%E4%B8%8B-upstart"><span class="nav-number">2.4.2.</span> <span class="nav-text">Ubuntu14.10及以下 - upstart</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-image"><span class="nav-number">3.</span> <span class="nav-text">Docker image</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-container"><span class="nav-number">4.</span> <span class="nav-text">Docker container</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E4%B8%8E%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">5.</span> <span class="nav-text">容器与虚拟机的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="nav-number">6.</span> <span class="nav-text">Docker启动服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98-%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAapp%E5%B9%B6%E5%88%9B%E5%BB%BAdocker%E9%95%9C%E5%83%8F%E3%80%82"><span class="nav-number">7.</span> <span class="nav-text">实战 - 构建一个app并创建docker镜像。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41-%E9%80%9A%E8%BF%87Dockerfile%E6%9D%A5%E5%AE%9A%E4%B9%89%E5%AE%B9%E5%99%A8-container"><span class="nav-number">7.1.</span> <span class="nav-text">步骤1: 通过Dockerfile来定义容器(container)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BADockerfile"><span class="nav-number">7.1.1.</span> <span class="nav-text">创建Dockerfile</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8Bdemo"><span class="nav-number">7.2.</span> <span class="nav-text">步骤2: 构建示例demo</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E5%86%99-demo-app%E4%BB%A3%E7%A0%81"><span class="nav-number">7.2.1.</span> <span class="nav-text">编写 demo app代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%84%E5%BB%BAapp"><span class="nav-number">7.2.2.</span> <span class="nav-text">构建app</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%A1%8Capp"><span class="nav-number">7.2.3.</span> <span class="nav-text">运行app</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A43-%E5%88%86%E4%BA%ABimage"><span class="nav-number">7.3.</span> <span class="nav-text">步骤3: 分享image</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%99%BB%E9%99%86Docker%E5%85%AC%E6%9C%89%E4%BB%93%E5%BA%93"><span class="nav-number">7.3.1.</span> <span class="nav-text">登陆Docker公有仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BAimage%E6%B7%BB%E5%8A%A0%E6%A0%87%E7%AD%BE"><span class="nav-number">7.3.2.</span> <span class="nav-text">为image添加标签</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%91%E5%B8%83image"><span class="nav-number">7.3.3.</span> <span class="nav-text">发布image</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E%E8%BF%9C%E7%AB%AF%E4%BB%93%E5%BA%93%E6%8B%89%E5%8F%96image"><span class="nav-number">7.3.4.</span> <span class="nav-text">从远端仓库拉取image</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-%E6%89%80%E7%94%A8%E7%9A%84%E6%89%80%E6%9C%89%E5%91%BD%E4%BB%A4"><span class="nav-number">9.</span> <span class="nav-text">附录 所用的所有命令</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">110</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
 </div>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
         
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
     </div>
 </body>
 </html>

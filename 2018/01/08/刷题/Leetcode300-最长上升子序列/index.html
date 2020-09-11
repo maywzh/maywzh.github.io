@@ -1,166 +1,190 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Leetcode300. 最长上升子序列 | Cult Minds</title><meta name="description" content="经典 DP 问题之一 ——LIS。  描述300. 最长上升子序列Difficulty: 中等 给定一个无序的整数数组，找到其中最长上升子序列的长度。 示例: 123 输入: [10,9,2,5,3,7,101,18] 输出: 4  解释：最长的上升子序列是 [2,3,7,101]，它的长度是 4。 说明:  可能会有多种最长上升子序列的组合，你只需要输出对应的长度即可。 你算法的时间复杂度应该为"><meta name="keywords" content="算法,动态规划"><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/bitbug_favicon_128s.ico"><link rel="canonical" href="https://tech.maywzh.com/2018/01/08/%E5%88%B7%E9%A2%98/Leetcode300-%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin="crossorigin"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//pingjs.qq.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="content"/><meta property="og:type" content="article"><meta property="og:title" content="Leetcode300. 最长上升子序列"><meta property="og:url" content="https://tech.maywzh.com/2018/01/08/%E5%88%B7%E9%A2%98/Leetcode300-%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/"><meta property="og:site_name" content="Cult Minds"><meta property="og:description" content="经典 DP 问题之一 ——LIS。  描述300. 最长上升子序列Difficulty: 中等 给定一个无序的整数数组，找到其中最长上升子序列的长度。 示例: 123 输入: [10,9,2,5,3,7,101,18] 输出: 4  解释：最长的上升子序列是 [2,3,7,101]，它的长度是 4。 说明:  可能会有多种最长上升子序列的组合，你只需要输出对应的长度即可。 你算法的时间复杂度应该为"><meta property="og:image" content="https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg"><meta property="article:published_time" content="2018-01-07T17:18:14.000Z"><meta property="article:modified_time" content="2020-09-10T23:41:07.514Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?e5597df0e0a089595ae6b3fce53f24e8";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-5"></script><script>window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'UA-119246999-5');
-</script><script>var _mtac = {};
-(function() {
-    var mta = document.createElement("script");
-    mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
-    mta.setAttribute("name", "MTAH5");
-    mta.setAttribute("sid", "500728859");
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(mta, s);
-})();
-</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
-  root: '/',
-  hexoversion: '5.1.1',
-  algolia: undefined,
-  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
-  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
-  copy: {
-    success: 'Copy successfully',
-    error: 'Copy error',
-    noSupport: 'The browser does not support'
-  },
-  bookmark: {
-    message_prev: 'Press',
-    message_next: 'to bookmark this page'
-  },
-  runtime: '',
-  date_suffix: {"one_hour":"Just","hours":"hours ago","day":"days ago"},
-  copyright: undefined,
-  ClickShowText: undefined,
-  medium_zoom: false,
-  fancybox: true,
-  Snackbar: undefined,
-  justifiedGallery: {
-    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
-  },
-  baiduPush: false,
-  isPhotoFigcaption: false,
-  islazyload: true,
-  isanchor: false
-};
+<!DOCTYPE HTML>
+<html>
 
-var saveToLocal = {
-  set: function setWithExpiry(key, value, ttl) {
-      const now = new Date()
-      const expiryDay = ttl * 86400000
-      const item = {
-        value: value,
-        expiry: now.getTime() + expiryDay,
-      }
-      localStorage.setItem(key, JSON.stringify(item))
-    },
+<head>
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
+
+	    
   
-  get: function getWithExpiry(key) {
-    const itemStr = localStorage.getItem(key)
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
 
-    if (!itemStr) {
-      return undefined
-    }
-    const item = JSON.parse(itemStr)
-    const now = new Date()
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
-    if (now.getTime() > item.expiry) {
-      localStorage.removeItem(key)
-      return undefined
-    }
-    return item.value
-  }
-}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
-  isPost: true,
-  isHome: false,
-  isHighlightShrink: false,
-  isSidebar: true,
-  postUpdate: '2020.09.11 07:41:07'
-}</script><noscript><style type="text/css">
-#nav {
-  opacity: 1
-}
-.justified-gallery img {
-  opacity: 1
-}
-</style></noscript><script>var activateDarkMode = function () {
-  document.documentElement.setAttribute('data-theme', 'dark')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-  }
-}
-var activateLightMode = function () {
-  document.documentElement.setAttribute('data-theme', 'light')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-  }
-}
 
-var autoChangeMode = '1'
-var t = saveToLocal.get('theme')
-if (autoChangeMode === '1') {
-  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
-  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
-  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
-  if (t === undefined) {
-    if (isLightMode) activateLightMode()
-    else if (isDarkMode) activateDarkMode()
-    else if (isNotSpecified || hasNoSupport) {
-      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
-      var now = new Date()
-      var hour = now.getHours()
-      var isNight = hour <= 6 || hour >= 18
-      isNight ? activateDarkMode() : activateLightMode()
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
-      if (saveToLocal.get('theme') === undefined) {
-        e.matches ? activateDarkMode() : activateLightMode()
-      }
-    })
-  } else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else if (autoChangeMode === '2') {
-  now = new Date()
-  hour = now.getHours()
-  isNight = hour <= 6 || hour >= 18
-  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
-  else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else {
-  if (t === 'dark') activateDarkMode()
-  else if (t === 'light') activateLightMode()
-}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" data-lazy-src="/uploads/myavatar.jpg" onerror="onerror=null;src='/img/ripple.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">110</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">48</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">描述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#300-%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97"><span class="toc-number">1.1.</span> <span class="toc-text">300. 最长上升子序列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF-amp-%E9%A2%98%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">思路 &amp; 题解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%8F%E5%85%B8-LIS"><span class="toc-number">2.1.</span> <span class="toc-text">经典 LIS</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF"><span class="toc-number">2.1.1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">2.1.2.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE-%E8%B4%AA%E5%BF%83"><span class="toc-number">2.2.</span> <span class="toc-text">二分查找 + 贪心</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="toc-number">2.2.1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%97%E6%B3%95"><span class="toc-number">2.2.2.</span> <span class="toc-text">算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-number">2.2.3.</span> <span class="toc-text">代码</span></a></li></ol></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Cult Minds</a></span><span class="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">Leetcode300. 最长上升子序列</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">Created</span><time datetime="2018-01-07T17:18:14.000Z" title="undefined 2018.01.08 01:18:14">2018.01.08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">373</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>1min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p>经典 DP 问题之一 ——LIS。</p>
+<!-- Layouts -->
+
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+
+<body class="is-loading">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
+</header>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
+
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
+
+
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
+
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>Leetcode300. 最长上升子序列</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <p>经典 DP 问题之一——LIS。</p>
 <a id="more"></a>
-<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><h3 id="300-最长上升子序列"><a href="#300-最长上升子序列" class="headerlink" title="300. 最长上升子序列"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/longest-increasing-subsequence/">300. 最长上升子序列</a></h3><p>Difficulty: 中等</p>
+<h2><span id="描述">描述</span></h2><h3><span id="300-最长上升子序列"></span></h3><p>Difficulty: 中等</p>
 <p>给定一个无序的整数数组，找到其中最长上升子序列的长度。</p>
 <p>示例:</p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> 输入: [<span class="number">10</span>,<span class="number">9</span>,<span class="number">2</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">7</span>,<span class="number">101</span>,<span class="number">18</span>]</span><br><span class="line"> 输出: <span class="number">4</span> </span><br><span class="line"> 解释：最长的上升子序列是 [<span class="number">2</span>,<span class="number">3</span>,<span class="number">7</span>,<span class="number">101</span>]，它的长度是 <span class="number">4</span>。</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-none"><code class="language-none">输入: [10,9,2,5,3,7,101,18]
+输出: 4 
+解释: 最长的上升子序列是 [2,3,7,101]，它的长度是 4。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>说明:</p>
 <ul>
 <li>可能会有多种最长上升子序列的组合，你只需要输出对应的长度即可。</li>
-<li>你算法的时间复杂度应该为 $O (n^2)$ 。</li>
+<li>你算法的时间复杂度应该为 $O(n^2)$ 。</li>
 </ul>
-<p>进阶：你能将算法的时间复杂度降低到 $O (nlogn)$ 吗？</p>
-<h2 id="思路-amp-题解"><a href="#思路-amp-题解" class="headerlink" title="思路 &amp; 题解"></a>思路 &amp; 题解</h2><h3 id="经典-LIS"><a href="#经典-LIS" class="headerlink" title="经典 LIS"></a>经典 LIS</h3><h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><p>对于所有的 DP 问题，经典四步走：</p>
+<p>进阶: 你能将算法的时间复杂度降低到 $O(nlogn)$ 吗?</p>
+<h2><span id="思路-amp-题解">思路 &amp; 题解 </span></h2><h3><span id="经典-lis"> 经典 LIS</span></h3><h4><span id="思路">思路 </span></h4><p> 对于所有的 DP 问题，经典四步走：</p>
 <ol>
 <li><p>定义状态</p>
-<p>由于一个子序列一定会以一个数结尾，于是将状态定义成：<code>dp [i]</code> 表示以 <code>nums [i]</code> 结尾的「上升子序列」的长度。注意：这个定义中 <code>`nums [i]</code> 必须被选取，且必须是这个子序列的最后一个元素。</p>
+<p>由于一个子序列一定会以一个数结尾，于是将状态定义成：<code>dp[i]</code> 表示以 <code>nums[i]</code> 结尾的「上升子序列」的长度。注意：这个定义中 <code>`nums[i]</code> 必须被选取，且必须是这个子序列的最后一个元素。</p>
 </li>
 <li><p>考虑状态转移方程</p>
-<p>遍历到 <code>nums [i]</code> 时，需要把下标 <code>i</code> 之前的所有的数都看一遍；<br>只要 <code>nums [i]</code> 严格大于在它位置之前的某个数，那么 <code>nums [i]</code> 就可以接在这个数后面形成一个更长的上升子序列；<br>因此，<code>dp [i]</code> 就等于下标 i 之前严格小于 <code>nums [i]</code> 的状态值的最大者 +1。<br>因此我们可以写出下面的状态转移方程：</p>
-<script type="math/tex; mode=display">dp [i]=\max \limits_{0\leq j<i, nums [j]<nums [i]} dp [j]+1</script></li>
+<p>遍历到 <code>nums[i]</code> 时，需要把下标 <code>i</code> 之前的所有的数都看一遍；<br>只要 <code>nums[i]</code> 严格大于在它位置之前的某个数，那么 <code>nums[i]</code> 就可以接在这个数后面形成一个更长的上升子序列；<br>因此，<code>dp[i]</code> 就等于下标 i 之前严格小于 <code>nums[i]</code> 的状态值的最大者 +1。<br> 因此我们可以写出下面的状态转移方程：</p>
+<script type="math/tex; mode=display">dp[i]=\max \limits_{0\leq j<i, nums[j]<nums[i]}dp[j]+1</script></li>
 <li><p>考虑初始化</p>
-<p>dp [i] = 1，每个字符都至少构成长度为 1 的子序列</p>
+<p>dp[i] = 1，每个字符都至少构成长度为 1 的子序列</p>
 </li>
 <li><p>输出</p>
 <p>状态数组 dp 的最大值才是最后要输出的值。</p>
@@ -169,58 +193,156 @@ if (autoChangeMode === '1') {
 <p>遍历到一个新数的时候，之前所有的状态值都得保留，因此无法压缩。</p>
 </li>
 </ol>
-<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Max</span><span class="params">(x, y <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> x &gt; y &#123;</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> y</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">lengthOfLIS</span><span class="params">(nums []<span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    dp := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="built_in">len</span>(nums))</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(nums) == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> i:=<span class="number">0</span>; i&lt; <span class="built_in">len</span>(nums);i++ &#123;</span><br><span class="line">        dp [i] = <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">    ans := <span class="number">1</span></span><br><span class="line">    <span class="comment">// 要注意考虑特殊情况 例如长度为 0 或 1</span></span><br><span class="line">    <span class="keyword">for</span> i:=<span class="number">1</span>; i&lt;<span class="built_in">len</span>(nums); i++ &#123;</span><br><span class="line">        <span class="keyword">for</span> j:=<span class="number">0</span>; j&lt;i; j++ &#123;</span><br><span class="line">            <span class="keyword">if</span> nums [i] &gt; nums [j] &#123;</span><br><span class="line">                dp [i] = Max (dp [i], dp [j]+<span class="number">1</span>)</span><br><span class="line">                ans = Max (dp [i], ans)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="二分查找-贪心"><a href="#二分查找-贪心" class="headerlink" title="二分查找 + 贪心"></a>二分查找 + 贪心</h3><h4 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h4><p>题目中要找 $O (nlogn)$ 的做法，考虑到二分查找的复杂度为 $O (logn)$，所以可以考虑在第二层循环做文章，改成二分查找。</p>
+<h4><span id="代码">代码</span></h4><pre class="line-numbers language-go" data-language="go"><code class="language-go">
+<span class="token keyword">func</span> <span class="token function">Max</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token builtin">int</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> x <span class="token operator">></span> y <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> x
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">return</span> y
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">func</span> <span class="token function">lengthOfLIS</span><span class="token punctuation">(</span>nums <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token builtin">int</span> <span class="token punctuation">&#123;</span>
+    dp <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token function">len</span><span class="token punctuation">(</span>nums<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token function">len</span><span class="token punctuation">(</span>nums<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token number">0</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">for</span> i<span class="token operator">:=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span> <span class="token function">len</span><span class="token punctuation">(</span>nums<span class="token punctuation">)</span><span class="token punctuation">;</span>i<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
+        dp<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span>
+    <span class="token punctuation">&#125;</span>
+    ans <span class="token operator">:=</span> <span class="token number">1</span>
+    <span class="token comment">// 要注意考虑特殊情况 例如长度为 0 或 1</span>
+    <span class="token keyword">for</span> i<span class="token operator">:=</span><span class="token number">1</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span><span class="token function">len</span><span class="token punctuation">(</span>nums<span class="token punctuation">)</span><span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">for</span> j<span class="token operator">:=</span><span class="token number">0</span><span class="token punctuation">;</span> j<span class="token operator">&lt;</span>i<span class="token punctuation">;</span> j<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">if</span> nums<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">></span> nums<span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token punctuation">&#123;</span>
+                dp<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">Max</span><span class="token punctuation">(</span>dp<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> dp<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+                ans <span class="token operator">=</span> <span class="token function">Max</span><span class="token punctuation">(</span>dp<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> ans<span class="token punctuation">)</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">return</span> ans
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3><span id="二分查找-贪心">二分查找 + 贪心 </span></h3><h4><span id="思路"> 思路 </span></h4><p> 题目中要找 $O(nlogn)$ 的做法，考虑到二分查找的复杂度为 $O(logn)$，所以可以考虑在第二层循环做文章，改成二分查找。</p>
 <p>在这里，我们的出发点基于一个贪心的做法：结尾的数尽量小，遍历后接的数就有更大的可能性构成更长的序列。</p>
 <p>我们可以记录长度固定的状况下，结尾最小的元素数值。</p>
 <ol>
 <li><p>定义状态</p>
-<p><code>tail [i]</code> 表示长度为 <code>i+1</code> 的所有上升子序列的结尾最小值。</p>
-<p><code>tail [0]</code> 表示长度为 1 的所有上升子序列中，结尾最小的那个元素的数值，以题目中的示例为例 [10, 9, 2, 5, 3, 7, 101, 18] 中，容易发现长度为 2 的所有上升子序列中，结尾最小的是子序列 [2, 3] ，因此 tail [1] = 3<br>下标和长度有一个 1 的偏差；</p>
+<p><code>tail[i]</code>表示长度为 <code>i+1</code> 的所有上升子序列的结尾最小值。</p>
+<p><code>tail[0]</code> 表示长度为 1 的所有上升子序列中，结尾最小的那个元素的数值，以题目中的示例为例 [10, 9, 2, 5, 3, 7, 101, 18] 中，容易发现长度为 2 的所有上升子序列中，结尾最小的是子序列 [2, 3] ，因此 tail[1] = 3<br>下标和长度有一个 1 的偏差；</p>
 </li>
 <li><p>状态转移方程</p>
 <p>这里可以证明 <code>tail</code> 严格上升。</p>
-<p>证明：对于任意下表 $0 \leq i &lt; j &lt; len$，都有 $tail [i]&lt;tail [j]$</p>
-<p>假设对于任意 $i<j$，存在 `tail [i]>=tail [j]`</p>
-<p>对于 <code>tail [i]</code>，对应一个上升子序列 $[a_0,a_1,…,a_i]$，$tail [i]=a_i$</p>
-<p>对于 <code>tail [j]</code>，对应一个上升子序列 $[b_0,b_1,…,b_j]$，$tail [j]=b_j$</p>
-<p>由于 <code>tail [i]&gt;=tail [j]</code>，$a_i&gt;b_j$。而在 $[b_0,b_1,…,b_j]$ 中，$b_i<b_j$ ，则 $a_i\geq b_j >b_i$，则上升子序列 $[b_0,b_1,…,b_j]$ 是一个长度为 <code>i+1</code> 但结尾更小的数组，与假设矛盾，命题得证。</p>
+<p>证明：对于任意下表 $0 \leq i &lt; j &lt; len$，都有 $tail[i]&lt;tail[j]$</p>
+<p>假设对于任意 $i<j$，存在 `tail[i]>=tail[j]`</j$，存在></p>
+<p>对于<code>tail[i]</code>，对应一个上升子序列 $[a_0,a_1,…,a_i]$，$tail[i]=a_i$</p>
+<p>对于<code>tail[j]</code>，对应一个上升子序列 $[b_0,b_1,…,b_j]$，$tail[j]=b_j$</p>
+<p>由于 <code>tail[i]&gt;=tail[j]</code>，$a_i&gt;b_j$。而在 $[b_0,b_1,…,b_j]$ 中，$b_i<b_j$ ，则 $a_i\geq b_j>b_i$，则上升子序列 $[b_0,b_1,…,b_j]$ 是一个长度为<code>i+1</code> 但结尾更小的数组，与假设矛盾，命题得证。</b_j$></p>
 <p>根据命题，我们维护 <code>tail</code> 即可直接取得最长上升子序列的长度。</p>
 </li>
 </ol>
-<h4 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h4><p>1、设置一个数组 tail，初始时为空；</p>
+<h4><span id="算法">算法</span></h4><p>1、设置一个数组 tail，初始时为空；</p>
 <p>注意：数组 <code>tail</code> 虽然是有序数组，但它不是问题中的「最长上升子序列」（下文还会强调），不能命名为 LIS。有序数组 tail 只是用于求解 LIS 问题的辅助数组。</p>
 <p>2、在遍历数组 <code>nums</code> 的过程中，每来一个新数 num，如果这个数严格大于有序数组 <code>tail</code> 的最后一个元素，就把 num 放在有序数组 <code>tail</code> 的后面，否则进入第 3 点；</p>
 <p>注意：这里的大于是「严格大于」，不包括等于的情况。</p>
 <p>3、在有序数组 <code>tail</code> 中查找第 1 个等于大于 num 的那个数，试图让它变小；</p>
-<p>如果有序数组 <code>tail</code> 中存在等于 num 的元素，什么都不做，因为以 num 结尾的最短的「上升子序列」已经存在；<br>如果有序数组 <code>tail</code> 中存在大于 num 的元素，找到第 1 个，让它变小，这样我们就找到了一个结尾更小的相同长度的上升子序列。<br>说明：我们再看一下数组 <code>tail [i]</code> 的定义：长度为 i + 1 的所有最长上升子序列的结尾的最小值。因此，在遍历的过程中，我们试图让一个大的值变小是合理的。</p>
-<p>这一步可以认为是「贪心算法」，总是做出在当前看来最好的选择，当前「最好的选择」是：当前只让让第 1 个严格大于 <code>nums [i]</code> 的数变小，变成 <code>nums [i]</code>，这一步操作是 “无后效性” 的。</p>
+<p>如果有序数组 <code>tail</code> 中存在等于 num 的元素，什么都不做，因为以 num 结尾的最短的「上升子序列」已经存在；<br>如果有序数组 <code>tail</code> 中存在大于 num 的元素，找到第 1 个，让它变小，这样我们就找到了一个结尾更小的相同长度的上升子序列。<br>说明：我们再看一下数组 <code>tail[i]</code> 的定义：长度为 i + 1 的所有最长上升子序列的结尾的最小值。因此，在遍历的过程中，我们试图让一个大的值变小是合理的。</p>
+<p>这一步可以认为是「贪心算法」，总是做出在当前看来最好的选择，当前「最好的选择」是：当前只让让第 1 个严格大于 <code>nums[i]</code> 的数变小，变成 <code>nums[i]</code>，这一步操作是“无后效性”的。</p>
 <p>由于是在有序数组中的操作，因此可以使用「二分查找算法」。</p>
-<p>4、遍历新的数 num ，先尝试上述第 2 点，第 2 点行不通则执行第 3 点，直到遍历完整个数组 nums，最终有序数组 tail 的长度，就是所求的 “最长上升子序列” 的长度。</p>
-<p>第 3 步：思考初始化<br><code>dp [0] = nums [0]</code>，在只有 1 个元素的情况下，它当然是长度为 1 并且结尾最小的元素。</p>
-<p>第 4 步：思考输出<br>数组 <code>tail</code> 的长度，上文其实也已经说了，还是依据定义，<code>tail [i]</code> 表示长度固定为 i + 1 的所有「上升子序列」的结尾元素中最小的那个，长度最多就是数组 <code>tail</code> 的长度。</p>
-<p>第 5 步：思考状态压缩<br>无法压缩。</p>
+<p>4、遍历新的数 num ，先尝试上述第 2 点，第 2 点行不通则执行第 3 点，直到遍历完整个数组 nums，最终有序数组 tail 的长度，就是所求的“最长上升子序列”的长度。</p>
+<p>第 3 步：思考初始化<br><code>dp[0] = nums[0]</code>，在只有 1 个元素的情况下，它当然是长度为 1 并且结尾最小的元素。</p>
+<p>第 4 步：思考输出 <br> 数组 <code>tail</code> 的长度，上文其实也已经说了，还是依据定义，<code>tail[i]</code> 表示长度固定为 i + 1 的所有「上升子序列」的结尾元素中最小的那个，长度最多就是数组 <code>tail</code> 的长度。</p>
+<p>第 5 步：思考状态压缩 <br> 无法压缩。</p>
 <p>下面看一下这个算法在示例上的的执行流程，以加深体会，我在示例的数组后面加上了 4、8、6、12，依然是先让幻灯片动起来，看思想就好了。</p>
-<h4 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lengthOfLIS</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = nums.length;</span><br><span class="line">        <span class="keyword">if</span> (len &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> len;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//tail 数组的定义：长度为 i + 1 的上升子序列的末尾最小是几 </span></span><br><span class="line">        <span class="keyword">int</span>[] tail = <span class="keyword">new</span> <span class="keyword">int</span>[len];</span><br><span class="line">        <span class="comment">// 遍历第 1 个数，直接放在有序数组 tail 的开头 </span></span><br><span class="line">        tail [<span class="number">0</span>] = nums [<span class="number">0</span>];</span><br><span class="line">        <span class="comment">//end 表示有序数组 tail 的最后一个已经赋值元素的索引 </span></span><br><span class="line">        <span class="keyword">int</span> end = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="comment">// 【逻辑 1】比 tail 数组实际有效的末尾的那个元素还大 </span></span><br><span class="line">            <span class="keyword">if</span> (nums [i] &gt; tail [end]) &#123;</span><br><span class="line">                <span class="comment">// 直接添加在那个元素的后面，所以 end 先加 1</span></span><br><span class="line">                end++;</span><br><span class="line">                tail [end] = nums [i];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 使用二分查找法，在有序数组 tail 中 </span></span><br><span class="line">                <span class="comment">// 找到第 1 个大于等于 nums [i] 的元素，尝试让那个元素更小 </span></span><br><span class="line">                <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">int</span> right = end;</span><br><span class="line">                <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">                    <span class="comment">// 选左中位数不是偶然，而是有原因的，原因请见 LeetCode 第 35 题题解 </span></span><br><span class="line">                    <span class="comment">//int mid = left + (right - left) / 2;</span></span><br><span class="line">                    <span class="keyword">int</span> mid = left + ((right - left) &gt;&gt;&gt; <span class="number">1</span>);</span><br><span class="line">                    <span class="keyword">if</span> (tail [mid] &lt; nums [i]) &#123;</span><br><span class="line">                        <span class="comment">// 中位数肯定不是要找的数，把它写在分支的前面 </span></span><br><span class="line">                        left = mid + <span class="number">1</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        right = mid;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 走到这里是因为 【逻辑 1】 的反面，因此一定能找到第 1 个大于等于 nums [i] 的元素 </span></span><br><span class="line">                <span class="comment">// 因此，无需再单独判断 </span></span><br><span class="line">                tail [left] = nums [i];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 调试方法 </span></span><br><span class="line">            <span class="comment">//printArray (nums [i], tail);</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 此时 end 是有序数组 tail 最后一个元素的索引 </span></span><br><span class="line">        <span class="comment">// 题目要求返回的是长度，因此 +1 后返回 </span></span><br><span class="line">        end++;</span><br><span class="line">        <span class="keyword">return</span> end;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调试方法，以观察是否运行正确 </span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">printArray</span><span class="params">(<span class="keyword">int</span> num, <span class="keyword">int</span>[] tail)</span> </span>&#123;</span><br><span class="line">        System.out.print (<span class="string">&quot; 当前数字：&quot;</span> + num);</span><br><span class="line">        System.out.print (<span class="string">&quot;\t 当前 tail 数组：&quot;</span>);</span><br><span class="line">        <span class="keyword">int</span> len = tail.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (tail [i] == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.print (tail [i] + <span class="string">&quot;, &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println ();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String [] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] nums = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">3</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">19</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">12</span>&#125;;</span><br><span class="line">        Solution solution = <span class="keyword">new</span> Solution8 ();</span><br><span class="line">        <span class="keyword">int</span> lengthOfLIS = solution8.lengthOfLIS (nums);</span><br><span class="line">        System.out.println (<span class="string">&quot; 最长上升子序列的长度：&quot;</span> + lengthOfLIS);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95/">算法</a><a class="post-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2018/01/08/%E5%88%B7%E9%A2%98/Leetcode347-%E5%89%8DK%E4%B8%AA%E9%AB%98%E9%A2%91%E5%85%83%E7%B4%A0/"><img class="prev-cover" data-lazy-src="https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Leetcode347. 前 K 个高频元素</div></div></a></div><div class="next-post pull-right"><a href="/2018/01/05/%E5%88%B7%E9%A2%98/%E5%89%91%E6%8C%87Offer20-%E8%A1%A8%E7%A4%BA%E6%95%B0%E5%80%BC%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2/"><img class="next-cover" data-lazy-src="https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">剑指 Offer20. 表示数值的字符串</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2017/04/04/分布式/分布式系统之一致性哈希算法/" title="简析一致性哈希算法及其实现"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/IpUDYCiftrGVm2N.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2017.04.04</div><div class="relatedPosts_title">简析一致性哈希算法及其实现</div></div></a></div><div class="relatedPosts_item"><a href="/2018/01/08/刷题/Leetcode347-前K个高频元素/" title="Leetcode347. 前 K 个高频元素"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2018.01.08</div><div class="relatedPosts_title">Leetcode347. 前 K 个高频元素</div></div></a></div><div class="relatedPosts_item"><a href="/2017/09/04/刷题/Leetcode分类刷题指南/" title="Leetcode 分类刷题指南"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2017.09.04</div><div class="relatedPosts_title">Leetcode 分类刷题指南</div></div></a></div><div class="relatedPosts_item"><a href="/2018/01/05/刷题/剑指Offer20-表示数值的字符串/" title="剑指 Offer20. 表示数值的字符串"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2018.01.05</div><div class="relatedPosts_title">剑指 Offer20. 表示数值的字符串</div></div></a></div><div class="relatedPosts_item"><a href="/2015/09/16/科普/科普之常见32个算法/" title="计算机科学中最重要的 32 个算法"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/PnZkHxGlfM8Ajpw.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.09.16</div><div class="relatedPosts_title">计算机科学中最重要的 32 个算法</div></div></a></div><div class="relatedPosts_item"><a href="/2017/08/31/算法/算法之主定理计算时间复杂度/" title="主定理计算时间复杂度"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/31/hQ3gWEuUCfmB6LO.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2017.08.31</div><div class="relatedPosts_title">主定理计算时间复杂度</div></div></a></div></div></div></article></main><footer id="footer" style="background-image: url(https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2015 - 2020 By maywzh</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script>function panguFn () {
-  if (typeof pangu === 'object') pangu.spacingElementById('content-inner')
-  else {
-    $.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js', () => {
-      pangu.spacingElementById('content-inner')
-    })
-  }
-}
+<h4><span id="代码">代码</span></h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Solution</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">lengthOfLIS</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> nums<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">int</span> len <span class="token operator">=</span> nums<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>len <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> len<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
 
-function panguInit () {
-  if (false){
-    GLOBAL_CONFIG_SITE.isPost && panguFn()
-  } else {
-    panguFn()
-  }
-}
+        <span class="token comment">// tail 数组的定义：长度为 i + 1 的上升子序列的末尾最小是几</span>
+        <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> tail <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">int</span><span class="token punctuation">[</span>len<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token comment">// 遍历第 1 个数，直接放在有序数组 tail 的开头</span>
+        tail<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> nums<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token comment">// end 表示有序数组 tail 的最后一个已经赋值元素的索引</span>
+        <span class="token keyword">int</span> end <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
-document.addEventListener('DOMContentLoaded', panguFn)</script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
-  document.body.style.overflow = 'auto';
-  document.getElementById('loading-box').classList.add("loaded")
-}
-window.addEventListener('load',endLoading)</script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> len<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token comment">// 【逻辑 1】比 tail 数组实际有效的末尾的那个元素还大</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>nums<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">></span> tail<span class="token punctuation">[</span>end<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token comment">// 直接添加在那个元素的后面，所以 end 先加 1</span>
+                end<span class="token operator">++</span><span class="token punctuation">;</span>
+                tail<span class="token punctuation">[</span>end<span class="token punctuation">]</span> <span class="token operator">=</span> nums<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+                <span class="token comment">// 使用二分查找法，在有序数组 tail 中</span>
+                <span class="token comment">// 找到第 1 个大于等于 nums[i] 的元素，尝试让那个元素更小</span>
+                <span class="token keyword">int</span> left <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+                <span class="token keyword">int</span> right <span class="token operator">=</span> end<span class="token punctuation">;</span>
+                <span class="token keyword">while</span> <span class="token punctuation">(</span>left <span class="token operator">&lt;</span> right<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    <span class="token comment">// 选左中位数不是偶然，而是有原因的，原因请见 LeetCode 第 35 题题解</span>
+                    <span class="token comment">// int mid = left + (right - left) / 2;</span>
+                    <span class="token keyword">int</span> mid <span class="token operator">=</span> left <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>right <span class="token operator">-</span> left<span class="token punctuation">)</span> <span class="token operator">>>></span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token keyword">if</span> <span class="token punctuation">(</span>tail<span class="token punctuation">[</span>mid<span class="token punctuation">]</span> <span class="token operator">&lt;</span> nums<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                        <span class="token comment">// 中位数肯定不是要找的数，把它写在分支的前面</span>
+                        left <span class="token operator">=</span> mid <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+                        right <span class="token operator">=</span> mid<span class="token punctuation">;</span>
+                    <span class="token punctuation">&#125;</span>
+                <span class="token punctuation">&#125;</span>
+                <span class="token comment">// 走到这里是因为 【逻辑 1】 的反面，因此一定能找到第 1 个大于等于 nums[i] 的元素</span>
+                <span class="token comment">// 因此，无需再单独判断</span>
+                tail<span class="token punctuation">[</span>left<span class="token punctuation">]</span> <span class="token operator">=</span> nums<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token comment">// 调试方法</span>
+            <span class="token comment">// printArray(nums[i], tail);</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token comment">// 此时 end 是有序数组 tail 最后一个元素的索引</span>
+        <span class="token comment">// 题目要求返回的是长度，因此 +1 后返回</span>
+        end<span class="token operator">++</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> end<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// 调试方法，以观察是否运行正确</span>
+    <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">printArray</span><span class="token punctuation">(</span><span class="token keyword">int</span> num<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> tail<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"当前数字："</span> <span class="token operator">+</span> num<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"\t 当前 tail 数组："</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> len <span class="token operator">=</span> tail<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> len<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>tail<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span>tail<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> nums <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">&#123;</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">19</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+        <span class="token class-name">Solution</span> solution <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Solution8</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> lengthOfLIS <span class="token operator">=</span> solution8<span class="token punctuation">.</span><span class="token function">lengthOfLIS</span><span class="token punctuation">(</span>nums<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"最长上升子序列的长度："</span> <span class="token operator">+</span> lengthOfLIS<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+            </div>
+            <!-- Post Comments -->
+            
+        </div>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
+</div>
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+
+
+
+
+
+</html>

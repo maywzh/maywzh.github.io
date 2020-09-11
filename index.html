@@ -1,253 +1,384 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cult Minds - Namasday.</title><meta name="description" content="Art of tech."><meta name="keywords" content="Tech Blogs"><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/bitbug_favicon_128s.ico"><link rel="canonical" href="https://tech.maywzh.com/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin="crossorigin"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//pingjs.qq.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="content"/><meta property="og:type" content="website"><meta property="og:title" content="Cult Minds"><meta property="og:url" content="https://tech.maywzh.com/"><meta property="og:site_name" content="Cult Minds"><meta property="og:description" content="Art of tech."><meta property="og:image" content="https://tech.maywzh.com/uploads/myavatar.jpg"><meta property="article:published_time" content="2020-09-11T00:01:08.227Z"><meta property="article:modified_time" content="2020-09-11T00:01:08.227Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?e5597df0e0a089595ae6b3fce53f24e8";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-5"></script><script>window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'UA-119246999-5');
-</script><script>var _mtac = {};
-(function() {
-    var mta = document.createElement("script");
-    mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
-    mta.setAttribute("name", "MTAH5");
-    mta.setAttribute("sid", "500728859");
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(mta, s);
-})();
-</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
-  root: '/',
-  hexoversion: '5.1.1',
-  algolia: undefined,
-  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
-  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
-  copy: {
-    success: 'Copy successfully',
-    error: 'Copy error',
-    noSupport: 'The browser does not support'
-  },
-  bookmark: {
-    message_prev: 'Press',
-    message_next: 'to bookmark this page'
-  },
-  runtime: '',
-  date_suffix: {"one_hour":"Just","hours":"hours ago","day":"days ago"},
-  copyright: undefined,
-  ClickShowText: undefined,
-  medium_zoom: false,
-  fancybox: true,
-  Snackbar: undefined,
-  justifiedGallery: {
-    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
-  },
-  baiduPush: false,
-  isPhotoFigcaption: false,
-  islazyload: true,
-  isanchor: false
-};
+<!DOCTYPE HTML>
+<html>
 
-var saveToLocal = {
-  set: function setWithExpiry(key, value, ttl) {
-      const now = new Date()
-      const expiryDay = ttl * 86400000
-      const item = {
-        value: value,
-        expiry: now.getTime() + expiryDay,
-      }
-      localStorage.setItem(key, JSON.stringify(item))
-    },
+<head>
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
+
+	    
   
-  get: function getWithExpiry(key) {
-    const itemStr = localStorage.getItem(key)
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
 
-    if (!itemStr) {
-      return undefined
-    }
-    const item = JSON.parse(itemStr)
-    const now = new Date()
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
-    if (now.getTime() > item.expiry) {
-      localStorage.removeItem(key)
-      return undefined
-    }
-    return item.value
-  }
-}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
-  isPost: false,
-  isHome: true,
-  isHighlightShrink: false,
-  isSidebar: false,
-  postUpdate: '2020.09.11 08:01:08'
-}</script><noscript><style type="text/css">
-#nav {
-  opacity: 1
-}
-.justified-gallery img {
-  opacity: 1
-}
-</style></noscript><script>var activateDarkMode = function () {
-  document.documentElement.setAttribute('data-theme', 'dark')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-  }
-}
-var activateLightMode = function () {
-  document.documentElement.setAttribute('data-theme', 'light')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-  }
-}
 
-var autoChangeMode = '1'
-var t = saveToLocal.get('theme')
-if (autoChangeMode === '1') {
-  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
-  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
-  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
-  if (t === undefined) {
-    if (isLightMode) activateLightMode()
-    else if (isDarkMode) activateDarkMode()
-    else if (isNotSpecified || hasNoSupport) {
-      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
-      var now = new Date()
-      var hour = now.getHours()
-      var isNight = hour <= 6 || hour >= 18
-      isNight ? activateDarkMode() : activateLightMode()
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
-      if (saveToLocal.get('theme') === undefined) {
-        e.matches ? activateDarkMode() : activateLightMode()
-      }
-    })
-  } else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else if (autoChangeMode === '2') {
-  now = new Date()
-  hour = now.getHours()
-  isNight = hour <= 6 || hour >= 18
-  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
-  else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else {
-  if (t === 'dark') activateDarkMode()
-  else if (t === 'light') activateLightMode()
-}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" data-lazy-src="/uploads/myavatar.jpg" onerror="onerror=null;src='/img/ripple.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">110</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">48</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Cult Minds</a></span><span class="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="site-info"><h1 id="site_title">Cult Minds</h1><div id="site_subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://blog.maywzh.com" target="_blank" title="Blog"><i class="fas fa-blog"></i></a><a class="social-icon" href="https://t.me/unlockedcultoy" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a><a class="social-icon" href="https://twitter.com/maywzh" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a><a class="social-icon" href="http://weibo.com/JupiterMay" target="_blank" title="Weibo"><i class="fab fa-weibo"></i></a><a class="social-icon" href="https://instagram.com/maywzh" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a><a class="social-icon" href="https://500px.com/maywzh" target="_blank" title="500px"><i class="fab fa-500px"></i></a><a class="social-icon" href="mailto:maywzh@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div id="scroll_down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout_page" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/04/06/%E5%88%B7%E9%A2%98/%E7%89%9B%E5%AE%A2%E4%B8%AD%E5%87%A0%E7%A7%8D%E8%AF%AD%E8%A8%80%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%A7%BF%E5%8A%BFmd/" title="牛客中几种语言的输入输出姿势">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/09/06/8ApetyPcsJanqLV.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="牛客中几种语言的输入输出姿势"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/04/06/%E5%88%B7%E9%A2%98/%E7%89%9B%E5%AE%A2%E4%B8%AD%E5%87%A0%E7%A7%8D%E8%AF%AD%E8%A8%80%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%A7%BF%E5%8A%BFmd/" title="牛客中几种语言的输入输出姿势">牛客中几种语言的输入输出姿势</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-04-06T08:24:42.000Z" title="Created 2020.04.06 16:24:42">2020.04.06</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></span></div><div class="content">有些坑爹公司考试居然要自己处理输入输出 ，哎。。。。
-总结一波自己常用的 Python、Java、Golang 的输入输出技巧。
+<body class="is-loading">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in overlay">
+        <!-- Intro 头部显示 s -->
+                <div id="intro">
+            <h1>This is<br />
+                        MAYWZH </h1>
+            <p> A mind needs books like a sword needs a whetstone     -Tyrion Lannister
+            </p>
+            <ul class="actions">
+                <li><a href="#header" class="button icon solo fa-arrow-down scrolly">Continue</a></li>
+            </ul>
+        </div>
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
+</header>
+        <!-- Header 头部logo end -->
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
 
-输入70% Common 输入输出输入两个整数，输入一个矩阵类型
-Go123456789101112131415161718package mainimport &quot;fmt&quot;func main() &#123;	var m, n int	fmt.Scanln (&amp;m, &amp;n)	var hash [][]int = make([][]int, m)	for i := 0; i &lt; m; i++ &#123;		hash [i] = make([]int, n)		for j := 0; j &lt; n; j++ &#123;			fmt.Scan (&amp;hash [i][j])		&#125;	&#125;	fmt.Println (hash)&#125;
-Java12345678910111213141516171819202122232425262728293031import java.util.*;pu ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/" title="Go 语言的上下文与 Context">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的上下文与 Context"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/" title="Go 语言的上下文与 Context">Go 语言的上下文与 Context</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-01-18T16:09:39.000Z" title="Created 2020.01.19 00:09:39">2020.01.19</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="content">上下文 context.Context 是用来设置截止日期、同步信号，传递请求相关值的结构体。上下文与 Goroutine 有比较密切的关系。context.Context 是 Go 语言中独特的设计，在其他编程语言中我们很少见到类似的概念。
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
 
-context.Context 是 Go 语言在 1.7 版本中引入标准库的接口，该接口定义了四个需要实现的方法，其中包括：
 
-Deadline — 返回 context.Context 被取消的时间，也就是完成工作的截止日期；
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
+        <!-- Nav 导航条 end -->
+        <!-- Main 主要部分 start -->
+        
+        <!-- Main-first -->
+            <div id="main">
+    <!-- Main first s-->
+    <article id="me" class="panel">
+        <header style="color: #000000">
+            <h1>Wayne May</h1>
+            <p>Methodologist.</p>
+        </header>
+        <a target="_blank" rel="noopener" href="https://tech.maywzh.com" class="jumplink pic">
+            <span class="arrow icon fa-chevron-right"><span></span></span>
+            <img src="https://i.loli.net/2020/03/02/vo15SuCDBLeyKrO.png" alt="" />
+        </a>
+    </article>
+    <!-- Main first e-->
+</div>
 
-Done — 返回一个 Channel，这个 Channel 会在当前工作完成或者上下文被取消之后关闭，多次调用 Done 方法会返回同一个 Channel；
+        
+        <!-- 文章列表   s -->
+        <div id="main" style="background-color: transparent; padding:0;">
+        <section class="link_container" style="margin-top: 0; background-color: transparent; ">
+            <div class="link_row">
+                <!-- 文章sample  s-->
 
-```Err
-123456789101112131415 — 返回  `context.Context`  结束的原因，它只会在  
-Done
-1234567891011121314151617       返回的 Channel 被关闭时才会返回非空的值；   1. 如果 [`context.Context`](https://github.com/gol ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" title="Go 语言的反射">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的反射"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" title="Go 语言的反射">Go 语言的反射</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-01-17T16:03:35.000Z" title="Created 2020.01.18 00:03:35">2020.01.18</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="content">反射是 Go 语言比较重要的特性。虽然在大多数的应用和服务中并不常见，但是很多框架都依赖 Go 语言的反射机制实现简化代码的逻辑。因为 Go 语言的语法元素很少、设计简单，所以它没有特别强的表达能力，但是 Go 语言的 reflect 包能够弥补它在语法上的一些劣势。
+                
+                <div class="6u 12u(narrower)">
+                    <section class="link_box special">
+                       <a href="/2020/04/06/%E5%88%B7%E9%A2%98/%E7%89%9B%E5%AE%A2%E4%B8%AD%E5%87%A0%E7%A7%8D%E8%AF%AD%E8%A8%80%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%A7%BF%E5%8A%BFmd/">
+                        <div class="page_title" style="background-image: url(https://i.loli.net/2020/09/06/8ApetyPcsJanqLV.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;">
+                            <!--标题-->
+                            <h2 class="page_title_text"> 牛客中几种语言的输入输出姿势 </h2>
+                            <!--段落-->
+                        </div>
+                        </a>
+                        <div class="home-post-info">
+                            <!-- Author Avatar -->
+                            <div class="home-post-info-author-avatar">
+                                <h6><span class="home-post-info-data">2020-04-06</span></h6>
+                                <div class="home-post-info-Category">
+                                    <!-- Category -->
+                                    <span>
+                            <h6>
+                            <a class="post_category-link" target="_blank" rel="noopener" href="http://localhost:4000/categories/Algorithm/">
+                                <a class="post_category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></a>
+                            </h6>
+                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <!-- 文章sample  e-->
+            
+                <div class="6u 12u(narrower)">
+                    <section class="link_box special">
+                       <a href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/">
+                        <div class="page_title" style="background-image: url(https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;">
+                            <!--标题-->
+                            <h2 class="page_title_text"> Go 语言的上下文与 Context </h2>
+                            <!--段落-->
+                        </div>
+                        </a>
+                        <div class="home-post-info">
+                            <!-- Author Avatar -->
+                            <div class="home-post-info-author-avatar">
+                                <h6><span class="home-post-info-data">2020-01-19</span></h6>
+                                <div class="home-post-info-Category">
+                                    <!-- Category -->
+                                    <span>
+                            <h6>
+                            <a class="post_category-link" target="_blank" rel="noopener" href="http://localhost:4000/categories/Algorithm/">
+                                <a class="post_category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></a>
+                            </h6>
+                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <!-- 文章sample  e-->
+            
+                <div class="6u 12u(narrower)">
+                    <section class="link_box special">
+                       <a href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/">
+                        <div class="page_title" style="background-image: url(https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;">
+                            <!--标题-->
+                            <h2 class="page_title_text"> Go 语言的反射 </h2>
+                            <!--段落-->
+                        </div>
+                        </a>
+                        <div class="home-post-info">
+                            <!-- Author Avatar -->
+                            <div class="home-post-info-author-avatar">
+                                <h6><span class="home-post-info-data">2020-01-18</span></h6>
+                                <div class="home-post-info-Category">
+                                    <!-- Category -->
+                                    <span>
+                            <h6>
+                            <a class="post_category-link" target="_blank" rel="noopener" href="http://localhost:4000/categories/Algorithm/">
+                                <a class="post_category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></a>
+                            </h6>
+                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <!-- 文章sample  e-->
+            
+                <div class="6u 12u(narrower)">
+                    <section class="link_box special">
+                       <a href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/">
+                        <div class="page_title" style="background-image: url(https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;">
+                            <!--标题-->
+                            <h2 class="page_title_text"> Go 语言的 select </h2>
+                            <!--段落-->
+                        </div>
+                        </a>
+                        <div class="home-post-info">
+                            <!-- Author Avatar -->
+                            <div class="home-post-info-author-avatar">
+                                <h6><span class="home-post-info-data">2020-01-17</span></h6>
+                                <div class="home-post-info-Category">
+                                    <!-- Category -->
+                                    <span>
+                            <h6>
+                            <a class="post_category-link" target="_blank" rel="noopener" href="http://localhost:4000/categories/Algorithm/">
+                                <a class="post_category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></a>
+                            </h6>
+                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <!-- 文章sample  e-->
+            
+                <div class="6u 12u(narrower)">
+                    <section class="link_box special">
+                       <a href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/">
+                        <div class="page_title" style="background-image: url(https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;">
+                            <!--标题-->
+                            <h2 class="page_title_text"> Go 语言的并发原理 </h2>
+                            <!--段落-->
+                        </div>
+                        </a>
+                        <div class="home-post-info">
+                            <!-- Author Avatar -->
+                            <div class="home-post-info-author-avatar">
+                                <h6><span class="home-post-info-data">2020-01-16</span></h6>
+                                <div class="home-post-info-Category">
+                                    <!-- Category -->
+                                    <span>
+                            <h6>
+                            <a class="post_category-link" target="_blank" rel="noopener" href="http://localhost:4000/categories/Algorithm/">
+                                <a class="post_category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></a>
+                            </h6>
+                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <!-- 文章sample  e-->
+            
+                <div class="6u 12u(narrower)">
+                    <section class="link_box special">
+                       <a href="/2020/01/13/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8/">
+                        <div class="page_title" style="background-image: url(https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;">
+                            <!--标题-->
+                            <h2 class="page_title_text"> Go 语言的哈希表 </h2>
+                            <!--段落-->
+                        </div>
+                        </a>
+                        <div class="home-post-info">
+                            <!-- Author Avatar -->
+                            <div class="home-post-info-author-avatar">
+                                <h6><span class="home-post-info-data">2020-01-13</span></h6>
+                                <div class="home-post-info-Category">
+                                    <!-- Category -->
+                                    <span>
+                            <h6>
+                            <a class="post_category-link" target="_blank" rel="noopener" href="http://localhost:4000/categories/Algorithm/">
+                                <a class="post_category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></a>
+                            </h6>
+                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <!-- 文章sample  e-->
+            
+            </div>
+        </section>
+        </div>
+        <!-- 文章列表   end -->
+        <!-- Main 主要部分 end -->
+        <!-- footer  页码 start-->
+        <footer style="text-align: center; padding-top: 2em;">
+    
+    <div class="pagination">
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/2/">nex</a>
+    </div>
+    
+</footer>
 
-reflect 实现了运行时的反射能力，能够让程序操作不同类型的对象。反射包中有两对非常重要的函数和类型，reflect.TypeOf 能获取类型信息，reflect.ValueOf 能获取数据的运行时表示，另外两个类型是 Type 和 Value，它们与函数是一一对应的关系：
+        <!-- footer  页码 end-->
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
+</div>
+        <!-- Copyright 版权 end -->
+    </div>
+    <!-- Wrapper 外包 e-->
+    <!-- Scripts --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
 
-类型 Type 是反射包定义的一个接口，我们可以使用 reflect.TypeOf 函数获取任意变量的的类型，Type 接口中定义了一些有趣的方法，MethodByName 可以获取当前类型对应方法的引用、Implements 可以判断当前类型是否实现了某个接口：
-12345678910type Type interface &#123;        Align () int        FieldAlign () int         ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" title="Go 语言的 select">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的 select"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" title="Go 语言的 select">Go 语言的 select</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-01-16T16:07:40.000Z" title="Created 2020.01.17 00:07:40">2020.01.17</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="content">很多 C 语言或者 Unix 开发者听到 select 想到的都是系统调用，而谈到 I/O 模型时最终大都会提到基于 select、poll 和 epoll 等函数构建的 IO 多路复用模型。Go 语言的 select 与 C 语言中的 select 有着比较相似的功能。本节会介绍 Go 语言 select 常见的现象、数据结构以及四种不同情况下的实现原理。
 
-C 语言中的 select 关键字可以同时监听多个文件描述符的可读或者可写的状态，Go 语言中的 select 关键字也能够让 Goroutine 同时等待多个 Channel 的可读或者可写，在多个文件或者 Channel 发生状态改变之前，select 会一直阻塞当前线程或者 Goroutine。
 
- 图 5-5 Select 和 Channels
-select 是一种与 switch 相似的控制结构，与 switch 不同的是，select 中虽然也有多个 case，但是这些 case 中的表达式必须都是 Channel 的收发操作。下面的代码就展示了一个包含 Channel 收发操作的 select 结构：
-123456 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" title="Go 语言的并发原理">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的并发原理"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" title="Go 语言的并发原理">Go 语言的并发原理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-01-15T23:55:17.000Z" title="Created 2020.01.16 07:55:17">2020.01.16</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="content">Go 语言是为并发而生的语言，Go 语言是为数不多的在语言层面实现并发的语言；也正是 Go 语言的并发特性，吸引了全球无数的开发者。
-
-并发和并行 并发 (concurrency)：两个或两个以上的任务在一段时间内被执行。我们不必 care 这些任务在某一个时间点是否是同时执行，可能同时执行，也可能不是，我们只关心在一段时间内，哪怕是很短的时间（一秒或者两秒）是否执行解决了两个或两个以上任务。
- 并行 (parallellism)： 两个或两个以上的任务在同一时刻被同时执行。
-并发说的是逻辑上的概念，而并行，强调的是物理运行状态。并发 “包含” 并行。
-（详情请见：Rob Pike 的 PPT）
-Go 的 CSP 并发模型Go 实现了两种并发形式。第一种是大家普遍认知的：多线程共享内存。其实就是 Java 或者 C++ 等语言中的多线程开发。另外一种是 Go 语言特有的，也是 Go 语言推荐的：CSP（communicating sequential processes）并发模型。
-CSP 并发模型是在 1970 年左右提出的概念，属于比较新的概念，不同于传统的多线程通过共享内存来通信 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/01/13/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8/" title="Go 语言的哈希表">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的哈希表"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/01/13/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8/" title="Go 语言的哈希表">Go 语言的哈希表</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-01-13T09:47:37.000Z" title="Created 2020.01.13 17:47:37">2020.01.13</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="content">很多编程语言都实现了哈希表这种 数据结构，例如 Java 的 Map，Python 的 Set，Java 的 Object 等等。但他们的底层原理都有所不同。哈希表是一种以空间换时间的数据结构，它的查找的时间复杂度为 O (n)。它根据键直接访问内存存储位置。我们结合哈希表的原理探索一下 Go 中的哈希 ——Map。
-
-哈希原理哈希表是计算机科学中的最重要数据结构之一，这不仅因为它 O (1) 的读写性能非常优秀，还因为它提供了键值之间的映射。想要实现一个性能优异的哈希表，需要注意两个关键点 —— 哈希函数和冲突解决方法。
-实现哈希表的关键点在于如何选择哈希函数，哈希函数的选择在很大程度上能够决定哈希表的读写性能，在理想情况下，哈希函数应该能够将不同键映射到不同的索引上，这要求  哈希函数输出范围大于输入范围 ，但是由于键的数量会远远大于映射的范围，所以在实际使用时，这个理想的结果是不可能实现的。
-
-比较实际的方式是让哈希函数的结果能够尽可能的均匀分布，然后通过工程上的手段解决哈希碰撞的问题，但是哈希的结果一定要尽可能均匀，结果不均匀的哈希函数会造成更多的冲突并导致更差的读写性能。
-
- ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/01/11/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%8E%A5%E5%8F%A3/" title="Go 语言的接口">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的接口"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/01/11/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%8E%A5%E5%8F%A3/" title="Go 语言的接口">Go 语言的接口</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-01-11T04:27:58.000Z" title="Created 2020.01.11 12:27:58">2020.01.11</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="content">Go 语言中的接口就是一组方法的签名，它是 Go 语言的重要组成部分。使用接口能够让我们更好地组织并写出易于测试的代码，然而很多工程师对 Go 的接口了解都非常有限，也不清楚其底层的实现原理，这成为了开发高性能服务的最大阻碍。
-本节会介绍使用接口时遇到的一些常见问题以及它的设计与实现，包括接口的类型转换、类型断言以及动态派发机制，帮助各位读者更好地理解接口类型。
-
-概述在计算机科学中，接口是计算机系统中多个组件共享的边界，不同的组件能够在边界上交换信息。接口的本质就是引入一个新的中间层，调用方可以通过接口与具体实现分离，解除上下游的耦合，上层的模块不再需要依赖下层的具体模块，只需要依赖一个约定好的接口。
-
-这种面向接口的编程方式有着非常强大的生命力，无论是在框架还是操作系统中我们都能够找到接口的身影。可移植操作系统接口（Portable Operating System Interface，POSIX) 就是一个典型的例子，它定义了应用程序接口和命令行等标准，为计算机软件带来了可移植性 — 只要操作系统实现了 POSIX，计算机软件就可以直接在不同操作系统上运行。
-除了解耦有依赖关系的 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/01/10/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E8%B0%83%E5%BA%A6%E6%9C%BA%E5%88%B6/" title="Go 语言的调度器">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的调度器"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/01/10/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E8%B0%83%E5%BA%A6%E6%9C%BA%E5%88%B6/" title="Go 语言的调度器">Go 语言的调度器</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-01-09T16:11:19.000Z" title="Created 2020.01.10 00:11:19">2020.01.10</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="content">Go 语言在并发编程方面有强大的能力，这离不开语言层面对并发编程的支持。本节会介绍 Go 语言运行时调度器的实现原理，其中包含调度器的设计与实现原理、演变过程以及与运行时调度相关的数据结构。
-
-谈到 Go 语言调度器，我们绕不开的是操作系统、进程与线程这些概念，线程是操作系统调度时的最基本单元，而 Linux 在调度器并不区分进程和线程的调度，它们在不同操作系统上也有不同的实现，但是在大多数的实现中线程都属于进程：
-
-多个线程可以属于同一个进程并共享内存空间。因为多线程不需要创建新的虚拟内存空间，所以它们也不需要内存管理单元处理上下文的切换，线程之间的通信也正是基于共享的内存进行的，与重量级的进程相比，线程显得比较轻量。
-虽然线程比较轻量，但是在调度时也有比较大的额外开销。每个线程会都占用 1 兆以上的内存空间，在对线程进行切换时不止会消耗较多的内存，恢复寄存器中的内容还需要向操作系统申请或者销毁对应的资源，每一次线程上下文的切换都需要消耗～1us 左右的时间，但是 Go 调度器对 Goroutine 的上下文切换约为～0.2us，减少了 80% 的额外开销。
-
-Go 语言的调度器通过 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/01/08/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" title="Go 语言的函数调用">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的函数调用"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/01/08/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" title="Go 语言的函数调用">Go 语言的函数调用</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-01-08T10:14:08.000Z" title="Created 2020.01.08 18:14:08">2020.01.08</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="content">函数是 Go 语言中的一等公民，理解和掌握函数的调用过程是我们深入学习 Go 无法跳过的，本节将从函数的调用惯例和参数的传递方法两个方面分别介绍函数的执行过程。
-
-调用惯例无论是系统级编程语言 C 和 Go，还是脚本语言 Ruby 和 Python，这些编程语言在调用函数时往往都使用相同的语法：
-1somefunction (arg0, arg1)
-虽然它们调用函数的语法很相似，但是它们的调用惯例却可能大不相同。调用惯例是调用方和被调用方对于参数和返回值传递的约定，我们将在这里为各位读者分别介绍 C 和 Go 语言的调用惯例。
-C 语言我们先来研究 C 语言的调用惯例，使用 GCC 和 Clang 编译器将 C 语言编译成汇编代码是分析它调用惯例的最好方法，从汇编语言中可以一窥函数调用的具体过程。
-GCC 和 Clang 编译相同 C 语言代码可能会生成不同的汇编指令，不过生成的代码在结构上不会有太大的区别，所以对只想理解调用惯例的人来说没有太多影响。作者在本节中选择使用 GCC 编译器来编译 C 语言：
-12345$ gcc --versiongcc (Ubuntu 9.3.0-10 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/01/06/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2/" title="Go 语言的字符串">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的字符串"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/01/06/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2/" title="Go 语言的字符串">Go 语言的字符串</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-01-06T10:03:03.000Z" title="Created 2020.01.06 18:03:03">2020.01.06</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="content">字符串是 Go 语言中最常用的基础数据类型之一，虽然字符串往往被看做一个整体，但是实际上字符串是一片连续的内存空间，我们也可以将它理解成一个由字符组成的数组，本文就会详细介绍字符串的实现原理、相关转换过程以及常见操作的实现。
-
-字符串虽然在 Go 语言中是基本类型 string，但是它实际上是由字符组成的数组，C 语言中的字符串就使用字符数组 char [] 表示，作为数组会占用一片连续的内存空间，这片内存空间存储了的字节共同组成了字符串，Go 语言中的字符串其实是一个只读的字节数组，下图展示了 &quot;hello&quot; 字符串在内存中的存储方式：
-
-如果是代码中存在的字符串，会在编译期间被标记成只读数据 SRODATA 符号，假设我们有以下的一段代码，其中包含了一个字符串，当我们将这段代码编译成汇编语言时，就能够看到 hello 字符串有一个 SRODATA 的标记：
-12345678910111213$ cat main.gopackage mainfunc main() &#123;	str := &quot;hello&quot;	println ([] byte ( ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/2/"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" data-lazy-src="/uploads/myavatar.jpg" onerror="this.onerror=null;this.src='/img/ripple.gif'" alt="avatar"/><div class="author-info__name">maywzh</div><div class="author-info__description">Art of tech.</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">110</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">48</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/maywzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://blog.maywzh.com" target="_blank" title="Blog"><i class="fas fa-blog"></i></a><a class="social-icon" href="https://t.me/unlockedcultoy" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a><a class="social-icon" href="https://twitter.com/maywzh" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a><a class="social-icon" href="http://weibo.com/JupiterMay" target="_blank" title="Weibo"><i class="fab fa-weibo"></i></a><a class="social-icon" href="https://instagram.com/maywzh" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a><a class="social-icon" href="https://500px.com/maywzh" target="_blank" title="500px"><i class="fab fa-500px"></i></a><a class="social-icon" href="mailto:maywzh@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div></div><div class="sticky_layout"><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">一期一会。</div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/04/06/%E5%88%B7%E9%A2%98/%E7%89%9B%E5%AE%A2%E4%B8%AD%E5%87%A0%E7%A7%8D%E8%AF%AD%E8%A8%80%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%A7%BF%E5%8A%BFmd/" title="牛客中几种语言的输入输出姿势"><img data-lazy-src="https://i.loli.net/2020/09/06/8ApetyPcsJanqLV.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="牛客中几种语言的输入输出姿势"/></a><div class="content"><a class="title" href="/2020/04/06/%E5%88%B7%E9%A2%98/%E7%89%9B%E5%AE%A2%E4%B8%AD%E5%87%A0%E7%A7%8D%E8%AF%AD%E8%A8%80%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%A7%BF%E5%8A%BFmd/" title="牛客中几种语言的输入输出姿势">牛客中几种语言的输入输出姿势</a><time datetime="2020-04-06T08:24:42.000Z" title="Created 2020.04.06 16:24:42">2020.04.06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/" title="Go 语言的上下文与 Context"><img data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的上下文与 Context"/></a><div class="content"><a class="title" href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/" title="Go 语言的上下文与 Context">Go 语言的上下文与 Context</a><time datetime="2020-01-18T16:09:39.000Z" title="Created 2020.01.19 00:09:39">2020.01.19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" title="Go 语言的反射"><img data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的反射"/></a><div class="content"><a class="title" href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" title="Go 语言的反射">Go 语言的反射</a><time datetime="2020-01-17T16:03:35.000Z" title="Created 2020.01.18 00:03:35">2020.01.18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" title="Go 语言的 select"><img data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的 select"/></a><div class="content"><a class="title" href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" title="Go 语言的 select">Go 语言的 select</a><time datetime="2020-01-16T16:07:40.000Z" title="Created 2020.01.17 00:07:40">2020.01.17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" title="Go 语言的并发原理"><img data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的并发原理"/></a><div class="content"><a class="title" href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" title="Go 语言的并发原理">Go 语言的并发原理</a><time datetime="2020-01-15T23:55:17.000Z" title="Created 2020.01.16 07:55:17">2020.01.16</time></div></div></div></div></div><div class="card-widget card-categories"><div class="card-content"><div class="item-headline"><i class="fas fa-folder-open"></i><span>Categories</span></div><ul class="card-category-list">
-            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/DevOps/"><span class="card-category-list-name">DevOps</span><span class="card-category-list-count">28</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/"><span class="card-category-list-name">分布式</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%88%B7%E9%A2%98/"><span class="card-category-list-name">刷题</span><span class="card-category-list-count">6</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%9D%91/"><span class="card-category-list-name">坑</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/"><span class="card-category-list-name">密码学</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/"><span class="card-category-list-name">工具</span><span class="card-category-list-count">6</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="card-category-list-name">操作系统</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"><span class="card-category-list-name">数据库</span><span class="card-category-list-count">8</span></a></li>
-            <li class="card-category-list-item more is-center"><a class="card-category-list-link-more" href="/categories">
-                <span>More</span><i class="fas fa-angle-right"></i></a></li>
-            </ul></div></div><div class="card-widget card-tags"><div class="card-content"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href='/tags/C-C/' style='font-size:1.27em; color:rgb(195, 113, 37)'>C/C++</a><a href='/tags/CDN/' style='font-size:1.31em; color:rgb(4, 117, 186)'>CDN</a><a href='/tags/CPU/' style='font-size:1.33em; color:rgb(38, 105, 188)'>CPU</a><a href='/tags/DevOps/' style='font-size:1.30em; color:rgb(29, 131, 9)'>DevOps</a><a href='/tags/Docker/' style='font-size:1.47em; color:rgb(196, 170, 150)'>Docker</a><a href='/tags/Go/' style='font-size:1.26em; color:rgb(30, 131, 81)'>Go</a><a href='/tags/HTTP-HTTPS/' style='font-size:1.20em; color:rgb(96, 64, 32)'>HTTP/HTTPS</a><a href='/tags/I-O/' style='font-size:1.32em; color:rgb(84, 56, 47)'>I/O</a><a href='/tags/Java/' style='font-size:1.49em; color:rgb(54, 133, 96)'>Java</a><a href='/tags/JavaScript/' style='font-size:1.43em; color:rgb(13, 64, 199)'>JavaScript</a><a href='/tags/Linux/' style='font-size:1.40em; color:rgb(75, 177, 61)'>Linux</a><a href='/tags/Nginx/' style='font-size:1.32em; color:rgb(122, 2, 144)'>Nginx</a><a href='/tags/Python/' style='font-size:1.25em; color:rgb(105, 194, 170)'>Python</a><a href='/tags/Redis/' style='font-size:1.46em; color:rgb(22, 181, 19)'>Redis</a><a href='/tags/TCP-IP/' style='font-size:1.12em; color:rgb(94, 143, 145)'>TCP/IP</a><a href='/tags/Terminal/' style='font-size:1.46em; color:rgb(41, 6, 103)'>Terminal</a><a href='/tags/Web/' style='font-size:1.37em; color:rgb(73, 86, 125)'>Web</a><a href='/tags/ZooKeeper/' style='font-size:1.21em; color:rgb(138, 178, 133)'>ZooKeeper</a><a href='/tags/bugfix/' style='font-size:1.46em; color:rgb(115, 151, 176)'>bugfix</a><a href='/tags/git/' style='font-size:1.33em; color:rgb(64, 19, 129)'>git</a><a href='/tags/mysql/' style='font-size:1.45em; color:rgb(119, 185, 50)'>mysql</a><a href='/tags/zsh/' style='font-size:1.33em; color:rgb(39, 80, 92)'>zsh</a><a href='/tags/%E5%86%85%E5%AD%98/' style='font-size:1.26em; color:rgb(172, 196, 0)'>内存</a><a href='/tags/%E5%88%86%E5%B8%83%E5%BC%8F/' style='font-size:1.16em; color:rgb(168, 48, 44)'>分布式</a><a href='/tags/%E5%8A%A0%E5%AF%86/' style='font-size:1.16em; color:rgb(149, 169, 146)'>加密</a><a href='/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/' style='font-size:1.41em; color:rgb(59, 119, 14)'>动态规划</a><a href='/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/' style='font-size:1.23em; color:rgb(65, 90, 80)'>哈希表</a><a href='/tags/%E5%A0%86/' style='font-size:1.27em; color:rgb(137, 91, 186)'>堆</a><a href='/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/' style='font-size:1.32em; color:rgb(194, 83, 169)'>多线程</a><a href='/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/' style='font-size:1.14em; color:rgb(142, 102, 176)'>密码学</a><a href='/tags/%E5%B7%A5%E5%85%B7/' style='font-size:1.40em; color:rgb(119, 70, 4)'>工具</a><a href='/tags/%E5%B9%B6%E5%8F%91/' style='font-size:1.19em; color:rgb(140, 112, 82)'>并发</a><a href='/tags/%E5%BC%82%E6%AD%A5/' style='font-size:1.33em; color:rgb(117, 197, 165)'>异步</a><a href='/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/' style='font-size:1.23em; color:rgb(58, 11, 67)'>操作系统</a><a href='/tags/%E6%95%B0%E5%AD%A6/' style='font-size:1.45em; color:rgb(0, 113, 184)'>数学</a><a href='/tags/%E6%96%B9%E6%B3%95%E8%AE%BA/' style='font-size:1.11em; color:rgb(67, 118, 52)'>方法论</a><a href='/tags/%E6%97%B6%E9%97%B4%E7%AE%A1%E7%90%86/' style='font-size:1.22em; color:rgb(27, 95, 130)'>时间管理</a><a href='/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/' style='font-size:1.26em; color:rgb(92, 188, 179)'>机器学习</a><a href='/tags/%E7%90%86%E8%AE%BA/' style='font-size:1.15em; color:rgb(129, 96, 93)'>理论</a><a href='/tags/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/' style='font-size:1.33em; color:rgb(117, 167, 165)'>知识管理</a></div></div></div><div class="card-widget card-archives"><div class="card-content"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/04/"><span class="card-archive-list-date">April 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/01/"><span class="card-archive-list-date">January 2020</span><span class="card-archive-list-count">11</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2019/11/"><span class="card-archive-list-date">November 2019</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2019/10/"><span class="card-archive-list-date">October 2019</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/09/"><span class="card-archive-list-date">September 2018</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/03/"><span class="card-archive-list-date">March 2018</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/02/"><span class="card-archive-list-date">February 2018</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/01/"><span class="card-archive-list-date">January 2018</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item more is-center"><a class="card-archive-list-link-more" href="/archives">
-              <span>More</span><i class="fas fa-angle-right"  ></i></a></li></ul></div></div><div class="card-widget card-webinfo"><div class="card-content"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">110</div></div><div class="webinfo-item"><div class="item-name">Total Count :</div><div class="item-count">332k</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">Last Push :</div><div class="item-count" id="last-push-date" data-lastPushDate="2020-09-11T00:01:07.312Z"></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2015 - 2020 By maywzh</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script>function panguFn () {
-  if (typeof pangu === 'object') pangu.spacingElementById('content-inner')
-  else {
-    $.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js', () => {
-      pangu.spacingElementById('content-inner')
-    })
-  }
-}
-
-function panguInit () {
-  if (false){
-    GLOBAL_CONFIG_SITE.isPost && panguFn()
-  } else {
-    panguFn()
-  }
-}
-
-document.addEventListener('DOMContentLoaded', panguFn)</script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
-  document.body.style.overflow = 'auto';
-  document.getElementById('loading-box').classList.add("loaded")
-}
-window.addEventListener('load',endLoading)</script><div class="js-pjax"><script>function subtitleType () {
-  if (true) { 
-    var typed = new Typed("#subtitle", {
-      strings: "Talk is cheap, show me the code.,The fastest IO is no IO.,The First Rule of Program Optimization, Don't do it.,The Second Rule of Program Optimization - For experts only. Don't do it yet.".split(","),
-      startDelay: 300,
-      typeSpeed: 150,
-      loop: true,
-      backSpeed: 50
-    })
-  } else {
-    document.getElementById("subtitle").innerHTML = 'Talk is cheap, show me the code.'
-  }
-}
-
-if (true) {
-  if (typeof Typed === 'function') subtitleType()
-  else $.getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js', subtitleType)
-} else {
-  subtitleType()
-}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
+</html>

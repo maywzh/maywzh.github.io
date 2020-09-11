@@ -1,197 +1,161 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>Linux 内存分析工具 - free | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>Linux 内存分析工具 - free</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>free 工具用来查看系统可用内存</p>
-<a id="more"></a>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/opt/app/tdev1 $ <span class="token function">free</span>
-             total       used       <span class="token function">free</span>     shared    buffers     cached
-Mem:       <span class="token number">8175320</span>    <span class="token number">6159248</span>    <span class="token number">2016072</span>          <span class="token number">0</span>     <span class="token number">310208</span>    <span class="token number">5243680</span>
--/+ buffers/cache:     <span class="token number">605360</span>    <span class="token number">7569960</span>
-Swap:      <span class="token number">6881272</span>      <span class="token number">16196</span>    <span class="token number">6865076</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>解释一下 Linux 上 free 命令的输出。</p>
-<p>ree 的输出看成一个二维数组<code>FO(Free Output)</code>。例如:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">FO<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">24677460</span>
-FO<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">10321516</span>
+        </div>
+    </nav>
 
-                   <span class="token number">1</span>          <span class="token number">2</span>          <span class="token number">3</span>          <span class="token number">4</span>          <span class="token number">5</span>          <span class="token number">6</span>
-<span class="token number">1</span>              total       used       <span class="token function">free</span>     shared    buffers     cached
-<span class="token number">2</span> Mem:      <span class="token number">24677460</span>   <span class="token number">23276064</span>    <span class="token number">1401396</span>          <span class="token number">0</span>     <span class="token number">870540</span>   <span class="token number">12084008</span>
-<span class="token number">3</span> -/+ buffers/cache:   <span class="token number">10321516</span>   <span class="token number">14355944</span>
-<span class="token number">4</span> Swap:     <span class="token number">25151484</span>     <span class="token number">224188</span>   <span class="token number">24927296</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Linux 内存分析工具 - free</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 21, 2015&nbsp;&nbsp;21:04:01</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/DevOps/">DevOps</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>free 工具用来查看系统可用内存</p>
+<a id="more"></a>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/opt/app/tdev1 $ free</span><br><span class="line">             total       used       free     shared    buffers     cached</span><br><span class="line">Mem:       8175320    6159248    2016072          0     310208    5243680</span><br><span class="line">-/+ buffers/cache:     605360    7569960</span><br><span class="line">Swap:      6881272      16196    6865076</span><br></pre></td></tr></table></figure>
+<p>解释一下 Linux 上 free 命令的输出。</p>
+<p>ree 的输出看成一个二维数组 <code>FO (Free Output)</code>。例如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FO [2][1] = 24677460</span><br><span class="line">FO [3][2] = 10321516</span><br><span class="line"></span><br><span class="line">                   1          2          3          4          5          6</span><br><span class="line">1              total       used       free     shared    buffers     cached</span><br><span class="line">2 Mem:      24677460   23276064    1401396          0     870540   12084008</span><br><span class="line">3 -/+ buffers/cache:   10321516   14355944</span><br><span class="line">4 Swap:     25151484     224188   24927296</span><br></pre></td></tr></table></figure>
 <p>free 的输出一共有四行，第四行为交换区的信息，分别是交换的总量（total），使用量（used）和有多少空闲的交换区（free），这个比较清楚，不说太多。</p>
 <p>free 输出地第二行和第三行是比较让人迷惑的。这两行都是说明内存使用情况的。第一列是总量（total），第二列是使用量（used），第三列是可用量（free）。</p>
 <p>　　第一行的输出时从操作系统（OS）来看的。也就是说，从 OS 的角度来看，计算机上一共有:</p>
-<p>24677460KB（缺省时 free 的单位为 KB）物理内存，即<code>FO[2][1]</code>； 在这些物理内存中有 23276064KB（即<code>FO[2][2]</code>）被使用了； 还用 1401396KB（即 FO[2][3]）是可用的；</p>
+<p>24677460KB（缺省时 free 的单位为 KB）物理内存，即 <code>FO [2][1]</code>； 在这些物理内存中有 23276064KB（即 <code>FO [2][2]</code>）被使用了； 还用 1401396KB（即 FO [2][3]）是可用的；</p>
 <p>这里得到第一个等式：</p>
-<p><code>FO[2][1] = FO[2][2] + FO[2][3]</code></p>
-<p><code>FO[2][4]</code>表示被几个进程共享的内存的，现在已经 deprecated，其值总是 0（当然在一些系统上也可能不是 0，主要取决于 free 命令是怎么实现的）。</p>
-<p><code>FO[2][5]</code>表示被 OS buffer 住的内存。<code>FO[2][6]</code>表示被 OS cache 的内存。在有些时候 buffer 和 cache 这两个词经常混用。不过在一些比较低层的软件里是要区分这两个词的，看老外的洋文:</p>
-<pre class="line-numbers language-pseudocode" data-language="pseudocode"><code class="language-pseudocode">A buffer is something that has yet to be &quot;written&quot; to disk.
-A cache is something that has been &quot;read&quot; from the disk and stored for later use.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><code>FO [2][1] = FO [2][2] + FO [2][3]</code></p>
+<p><code>FO [2][4]</code> 表示被几个进程共享的内存的，现在已经 deprecated，其值总是 0（当然在一些系统上也可能不是 0，主要取决于 free 命令是怎么实现的）。</p>
+<p><code>FO [2][5]</code> 表示被 OS buffer 住的内存。<code>FO [2][6]</code> 表示被 OS cache 的内存。在有些时候 buffer 和 cache 这两个词经常混用。不过在一些比较低层的软件里是要区分这两个词的，看老外的洋文:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A buffer is something that has yet to be &quot;written&quot; to disk.</span><br><span class="line">A cache is something that has been &quot;read&quot; from the disk and stored for later use.</span><br></pre></td></tr></table></figure>
 <p>也就是说 buffer 是用于存放要输出到 disk（块设备）的数据的，而 cache 是存放从 disk 上读出的数据。这二者是为了提高 IO 性能的，并由 OS 管理。</p>
-<p>Linux 和其他成熟的操作系统（例如 windows），为了提高 IO read 的性能，总是要多 cache 一些数据，这也就是为什么 <code>FO[2][6]</code>（cached memory）比较大，而 FO[2][3] 比较小的原因。我们可以做一个简单的测试:</p>
+<p>Linux 和其他成熟的操作系统（例如 windows），为了提高 IO read 的性能，总是要多 cache 一些数据，这也就是为什么 <code>FO [2][6]</code>（cached memory）比较大，而 FO [2][3] 比较小的原因。我们可以做一个简单的测试:</p>
 <p>释放掉被系统 cache 占用的数据:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">echo</span> <span class="token operator"><span class="token file-descriptor important">3</span>></span>/proc/sys/vm/drop_caches<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 3&gt;/proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
 <ol>
 <li>读一个大文件，并记录时间；</li>
 <li>关闭该文件；</li>
@@ -200,37 +164,62 @@ A cache is something that has been &quot;read&quot; from the disk and stored for
 <p>第二次读应该比第一次快很多。原来我做过一个 BerkeleyDB 的读操作，大概要读 5G 的文件，几千万条记录。在我的环境上，第二次读比第一次大概可以快 9 倍左右。</p>
 <p>free 输出的第二行是从一个应用程序的角度看系统内存的使用情况。</p>
 <ul>
-<li>对于<code>FO[3][2]</code>，即<code>-buffers/cache</code>，表示一个应用程序认为系统被用掉多少内存；</li>
-<li>对于<code>FO[3][3]</code>，即<code>+buffers/cache</code>，表示一个应用程序认为系统还有多少内存；</li>
+<li>对于 <code>FO [3][2]</code>，即 <code>-buffers/cache</code>，表示一个应用程序认为系统被用掉多少内存；</li>
+<li>对于 <code>FO [3][3]</code>，即 <code>+buffers/cache</code>，表示一个应用程序认为系统还有多少内存；</li>
 </ul>
-<p>因为被系统 cache 和 buffer 占用的内存可以被快速回收，所以通常 FO[3][3]比 FO[2][3]会大很多。</p>
+<p>因为被系统 cache 和 buffer 占用的内存可以被快速回收，所以通常 FO [3][3] 比 FO [2][3] 会大很多。</p>
 <p>这里还用两个等式:</p>
-<pre class="line-numbers language-pseudocode" data-language="pseudocode"><code class="language-pseudocode">FO[3][2] &#x3D; FO[2][2] - FO[2][5] - FO[2][6]
-FO[3][3] &#x3D; FO[2][3] + FO[2][5] + FO[2][6]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FO [3][2] &#x3D; FO [2][2] - FO [2][5] - FO [2][6]</span><br><span class="line">FO [3][3] &#x3D; FO [2][3] + FO [2][5] + FO [2][6]</span><br></pre></td></tr></table></figure>
 <p>这二者都不难理解。</p>
 <p>free 命令由 <code>procps.*.rpm</code> 提供（在 Redhat 系列的 OS 上）。free 命令的所有输出值都是从 <code>/proc/meminfo</code> 中读出的。</p>
-<p>在系统上可能有 <code>meminfo(2)</code> 这个函数，它就是为了解析 <code>/proc/meminfo</code> 的。procps 这个包自己实现了 <code>meminfo()</code> 这个函数。可以下载一个 procps 的 tar 包看看具体实现，现在最新版式 3.2.8。</p>
+<p>在系统上可能有 <code>meminfo (2)</code> 这个函数，它就是为了解析 <code>/proc/meminfo</code> 的。procps 这个包自己实现了 <code>meminfo ()</code> 这个函数。可以下载一个 procps 的 tar 包看看具体实现，现在最新版式 3.2.8。</p>
 
-            </div>
-            <!-- Post Comments -->
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Linux/"># Linux</a>
+                    
+                        <a href="/tags/Terminal/"># Terminal</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2015/08/26/Linux/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%20-%20sar/">Linux 性能分析工具 - sar</a>
+            
+            
+            <a class="next" rel="next" href="/2015/08/15/git/git%E7%AC%94%E8%AE%B0%E4%B9%8Brm/">git 笔记之 rm</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

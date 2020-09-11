@@ -1,453 +1,222 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>牛客中几种语言的输入输出姿势 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/06/8ApetyPcsJanqLV.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>牛客中几种语言的输入输出姿势</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>有些坑爹公司考试居然要自己处理输入输出 ，哎。。。。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">牛客中几种语言的输入输出姿势</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 6, 2020&nbsp;&nbsp;16:24:42</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%88%B7%E9%A2%98/">刷题</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>有些坑爹公司考试居然要自己处理输入输出 ，哎。。。。</p>
 <p>总结一波自己常用的 Python、Java、Golang 的输入输出技巧。</p>
 <a id="more"></a>
-<h2><span id="输入">输入 </span></h2><h3><span id="70-common-输入输出">70% Common 输入输出</span></h3><p> 输入两个整数，输入一个矩阵类型</p>
-<h4><span id="go">Go</span></h4><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
-
-<span class="token keyword">import</span> <span class="token string">"fmt"</span>
-
-<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">var</span> m<span class="token punctuation">,</span> n <span class="token builtin">int</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Scanln</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>m<span class="token punctuation">,</span> <span class="token operator">&amp;</span>n<span class="token punctuation">)</span>
-	<span class="token keyword">var</span> hash <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span> <span class="token operator">=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">,</span> m<span class="token punctuation">)</span>
-	<span class="token keyword">for</span> i <span class="token operator">:=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> m<span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
-		hash<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">,</span> n<span class="token punctuation">)</span>
-		<span class="token keyword">for</span> j <span class="token operator">:=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> j<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
-			fmt<span class="token punctuation">.</span><span class="token function">Scan</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>hash<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span>
-		<span class="token punctuation">&#125;</span>
-	<span class="token punctuation">&#125;</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>hash<span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4><span id="java">Java</span></h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token operator">*</span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">IODemo</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-        <span class="token class-name">Scanner</span> sc <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Scanner</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>in<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">int</span> m <span class="token operator">=</span> sc<span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> n <span class="token operator">=</span> sc<span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">int</span> m1 <span class="token operator">=</span> sc<span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> n1 <span class="token operator">=</span> sc<span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      	<span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">int</span><span class="token punctuation">[</span>m<span class="token punctuation">]</span><span class="token punctuation">[</span>n<span class="token punctuation">]</span><span class="token punctuation">;</span>
-      	<span class="token keyword">float</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> fmap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">float</span><span class="token punctuation">[</span>m<span class="token punctuation">]</span><span class="token punctuation">[</span>n<span class="token punctuation">]</span><span class="token punctuation">;</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> m<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> j<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                map<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">=</span> sc<span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-      	<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> m<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> j<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                fmap<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">=</span> sc<span class="token punctuation">.</span><span class="token function">nextFloat</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-        sc<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> m<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> j<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>map<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4><span id="python">Python</span></h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">m<span class="token punctuation">,</span> n <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-dray <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">*</span>n<span class="token punctuation">]</span><span class="token operator">*</span>n
-<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    dray<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h2><h3 id="70-Common-输入输出"><a href="#70-Common-输入输出" class="headerlink" title="70% Common 输入输出"></a>70% Common 输入输出</h3><p>输入两个整数，输入一个矩阵类型</p>
+<h4 id="Go"><a href="#Go" class="headerlink" title="Go"></a>Go</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> m, n <span class="keyword">int</span></span><br><span class="line">	fmt.Scanln (&amp;m, &amp;n)</span><br><span class="line">	<span class="keyword">var</span> hash [][]<span class="keyword">int</span> = <span class="built_in">make</span>([][]<span class="keyword">int</span>, m)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; m; i++ &#123;</span><br><span class="line">		hash [i] = <span class="built_in">make</span>([]<span class="keyword">int</span>, n)</span><br><span class="line">		<span class="keyword">for</span> j := <span class="number">0</span>; j &lt; n; j++ &#123;</span><br><span class="line">			fmt.Scan (&amp;hash [i][j])</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println (hash)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IODemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String [] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner (System.in);</span><br><span class="line">        <span class="keyword">int</span> m = sc.nextInt (), n = sc.nextInt ();</span><br><span class="line">        <span class="keyword">int</span> m1 = sc.nextInt (), n1 = sc.nextInt ();</span><br><span class="line">      	<span class="keyword">int</span>[][] map = <span class="keyword">new</span> <span class="keyword">int</span>[m][n];</span><br><span class="line">      	<span class="keyword">float</span>[][] fmap = <span class="keyword">new</span> <span class="keyword">float</span>[m][n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">                map [i][j] = sc.nextInt ();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">                fmap [i][j] = sc.nextFloat ();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        sc.close ();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">                System.out.println (map [i][j]);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println ();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">m, n = map (int, input ().strip ().split ())</span><br><span class="line">dray = [[<span class="number">0</span>]*n]*n</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range (m):</span><br><span class="line">    dray [i] = map (int, input ().strip ().split ())</span><br></pre></td></tr></table></figure>
 <p>看看人家 Python 处理的多舒服，除了要暴力计算的时候，一般首选 Python。😁</p>
-<h3><span id="90-common-字符串转整数">90% Common 字符串转整数 </span></h3><p> 输入的数据以某个字符分割, 并转化为整数 or 小数</p>
-<h4><span id="go">Go</span></h4><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
- 
-<span class="token keyword">import</span> <span class="token punctuation">(</span>
-    <span class="token string">"bufio"</span>
-    <span class="token string">"fmt"</span>
-    <span class="token string">"os"</span>
-    <span class="token string">"strconv"</span>
-    <span class="token string">"strings"</span>
-<span class="token punctuation">)</span>
- 
-<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    input <span class="token operator">:=</span> bufio<span class="token punctuation">.</span><span class="token function">NewScanner</span><span class="token punctuation">(</span>os<span class="token punctuation">.</span>Stdin<span class="token punctuation">)</span>
-    <span class="token keyword">for</span> input<span class="token punctuation">.</span><span class="token function">Scan</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        a <span class="token operator">:=</span> strings<span class="token punctuation">.</span><span class="token function">Split</span><span class="token punctuation">(</span>input<span class="token punctuation">.</span><span class="token function">Text</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">","</span><span class="token punctuation">)</span>
-        a0<span class="token punctuation">,</span> <span class="token boolean">_</span> <span class="token operator">:=</span> strconv<span class="token punctuation">.</span><span class="token function">Atoi</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-        a1<span class="token punctuation">,</span> <span class="token boolean">_</span> <span class="token operator">:=</span> strconv<span class="token punctuation">.</span><span class="token function">Atoi</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-        fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>a0 <span class="token operator">+</span> a1<span class="token punctuation">)</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4><span id="java">Java</span></h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token operator">*</span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> IO2 <span class="token punctuation">&#123;</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span> args<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">Scanner</span> sc <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Scanner</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>in<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">String</span> s <span class="token operator">=</span> sc<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> ss <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">int</span> sum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> ss<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            <span class="token keyword">int</span> thenum <span class="token operator">=</span> <span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">parseInt</span><span class="token punctuation">(</span>ss<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>thenum<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            sum <span class="token operator">+=</span> thenum<span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>sum<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        sc<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4><span id="python">Python</span></h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">st <span class="token operator">=</span> intput<span class="token punctuation">(</span><span class="token punctuation">)</span>
-ist <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span>st<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<h2><span id="输出">输出</span></h2><h3><span id="go">Go</span></h3><pre class="line-numbers language-reStructuredText" data-language="reStructuredText"><code class="language-reStructuredText">%v     值的默认格式。
-%+v   类似 %v，但输出结构体时会添加字段名
-%#v　 相应值的 Go 语法表示 
-%T    相应值的类型的 Go 语法表示 
-%%    百分号, 字面上的 %, 非占位符含义
-%b     二进制表示 
-%c     相应 Unicode 码点所表示的字符 
-%d     十进制表示 
-%o     八进制表示 
-%q     单引号围绕的字符字面值，由 Go 语法安全地转义 
-%x     十六进制表示，字母形式为小写 a-f 
-%X     十六进制表示，字母形式为大写 A-F 
-%U     Unicode 格式：123，等同于 &quot;U+007B&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
-
-<span class="token keyword">import</span> <span class="token string">"fmt"</span>
-
-<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token comment">// 旗标、宽度、精度、索引</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"|%0+- #[1]*.[2]*[3]d|%0+- #[1]*.[2]*[4]d|\n"</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">32</span><span class="token punctuation">,</span> <span class="token number">64</span><span class="token punctuation">)</span>
-
-	<span class="token comment">// 浮点型精度</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"|%f|%8.4f|%8.f|%.4f|%.f|\n"</span><span class="token punctuation">,</span> <span class="token number">3.2</span><span class="token punctuation">,</span> <span class="token number">3.2</span><span class="token punctuation">,</span> <span class="token number">3.2</span><span class="token punctuation">,</span> <span class="token number">3.2</span><span class="token punctuation">,</span> <span class="token number">3.2</span><span class="token punctuation">)</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"|%.3f|%.3g|\n"</span><span class="token punctuation">,</span> <span class="token number">12.345678</span><span class="token punctuation">,</span> <span class="token number">12.345678</span><span class="token punctuation">)</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"|%.2f|\n"</span><span class="token punctuation">,</span> <span class="token number">12.345678</span><span class="token operator">+</span><span class="token number">12.345678i</span><span class="token punctuation">)</span>
-
-	<span class="token comment">// 字符串精度</span>
-	s <span class="token operator">:=</span> <span class="token string">"你好世界！"</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"|%s|%8.2s|%8.s|%.2s|%.s|\n"</span><span class="token punctuation">,</span> s<span class="token punctuation">,</span> s<span class="token punctuation">,</span> s<span class="token punctuation">,</span> s<span class="token punctuation">,</span> s<span class="token punctuation">)</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"|%x|%8.2x|%8.x|%.2x|%.x|\n"</span><span class="token punctuation">,</span> s<span class="token punctuation">,</span> s<span class="token punctuation">,</span> s<span class="token punctuation">,</span> s<span class="token punctuation">,</span> s<span class="token punctuation">)</span>
-
-	<span class="token comment">// 带引号字符串</span>
-	s1 <span class="token operator">:=</span> <span class="token string">"Hello 世界!"</span>       <span class="token comment">// CanBackquote</span>
-	s2 <span class="token operator">:=</span> <span class="token string">"Hello\n 世界!"</span>      <span class="token comment">// !CanBackquote</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%q\n"</span><span class="token punctuation">,</span> s1<span class="token punctuation">)</span>  <span class="token comment">// 双引号</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#q\n"</span><span class="token punctuation">,</span> s1<span class="token punctuation">)</span> <span class="token comment">// 反引号成功</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#q\n"</span><span class="token punctuation">,</span> s2<span class="token punctuation">)</span> <span class="token comment">// 反引号失败</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%+q\n"</span><span class="token punctuation">,</span> s2<span class="token punctuation">)</span> <span class="token comment">// 仅包含 ASCII 字符</span>
-
-	<span class="token comment">// Unicode 码点</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%U, %#U\n"</span><span class="token punctuation">,</span> <span class="token string">'好'</span><span class="token punctuation">,</span> <span class="token string">'好'</span><span class="token punctuation">)</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%U, %#U\n"</span><span class="token punctuation">,</span> <span class="token string">'\n'</span><span class="token punctuation">,</span> <span class="token string">'\n'</span><span class="token punctuation">)</span>
-
-	<span class="token comment">// 接口类型将输出其内部包含的值</span>
-	<span class="token keyword">var</span> i <span class="token keyword">interface</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span>
-		name <span class="token builtin">string</span>
-		age  <span class="token builtin">int</span>
-	<span class="token punctuation">&#125;</span><span class="token punctuation">&#123;</span><span class="token string">"AAA"</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">&#125;</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%v\n"</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span>  <span class="token comment">// 只输出字段值</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%+v\n"</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span> <span class="token comment">// 同时输出字段名</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#v\n"</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span> <span class="token comment">// Go 语法格式</span>
-
-	<span class="token comment">// 输出类型</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%T\n"</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<pre class="line-numbers language-reStructuredText" data-language="reStructuredText"><code class="language-reStructuredText">|+0032   |+0064   |
-|3.200000|  3.2000|       3|3.2000|3|
-|12.346|12.3|
-|(12.35+12.35i)|
-| 你好世界！|      你好 |        | 你好 ||
-|e4bda0e5a5bde4b896e7958cefbc81|    e4bd|        |e4bd||
-&quot;Hello 世界!&quot;
-&#96;Hello 世界!&#96;
-&quot;Hello\n 世界!&quot;
-&quot;Hello\n\u4e16\u754c!&quot;
-U+597D, U+597D &#39; 好 &#39;
-U+000A, U+000A
-&#123;AAA 20&#125;
-&#123;name:AAA age:20&#125;
-struct &#123; name string; age int &#125;&#123;name:&quot;AAA&quot;, age:20&#125;
-struct &#123; name string; age int &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="java">Java</span></h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token operator">*</span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> IO3 <span class="token punctuation">&#123;</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token comment">/*** 输出字符串 ***/</span>
-        <span class="token comment">// %s 表示输出字符串，也就是将后面的字符串替换模式中的 %s</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s"</span><span class="token punctuation">,</span> <span class="token number">1212</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %n 表示换行</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s%n"</span><span class="token punctuation">,</span> <span class="token string">"end line"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// 还可以支持多个参数</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s = %s%n"</span><span class="token punctuation">,</span> <span class="token string">"Name"</span><span class="token punctuation">,</span> <span class="token string">"Zhangsan"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %S 将字符串以大写形式输出</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%S = %s%n"</span><span class="token punctuation">,</span> <span class="token string">"Name"</span><span class="token punctuation">,</span> <span class="token string">"Zhangsan"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// 支持多个参数时，可以在 %s 之间插入变量编号，1$ 表示第一个字符串，3$ 表示第 3 个字符串</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$s = %3$s %2$s%n"</span><span class="token punctuation">,</span> <span class="token string">"Name"</span><span class="token punctuation">,</span> <span class="token string">"san"</span><span class="token punctuation">,</span> <span class="token string">"Zhang"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token comment">/*** 输出 boolean 类型 ***/</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"true = %b; false ="</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%b%n"</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token comment">/*** 输出整数类型 ***/</span>
-        <span class="token class-name">Integer</span> iObj <span class="token operator">=</span> <span class="token number">342</span><span class="token punctuation">;</span>
-        <span class="token comment">// %d 表示将整数格式化为 10 进制整数</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d; %d; %d%n"</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">500</span><span class="token punctuation">,</span> <span class="token number">2343L</span><span class="token punctuation">,</span> iObj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %o 表示将整数格式化为 8 进制整数</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%o; %o; %o%n"</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">500</span><span class="token punctuation">,</span> <span class="token number">2343L</span><span class="token punctuation">,</span> iObj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %x 表示将整数格式化为 16 进制整数</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%x; %x; %x%n"</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">500</span><span class="token punctuation">,</span> <span class="token number">2343L</span><span class="token punctuation">,</span> iObj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %X 表示将整数格式化为 16 进制整数，并且字母变成大写形式</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%X; %X; %X%n"</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">500</span><span class="token punctuation">,</span> <span class="token number">2343L</span><span class="token punctuation">,</span> iObj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token comment">/*** 输出浮点类型 ***/</span>
-        <span class="token class-name">Double</span> dObj <span class="token operator">=</span> <span class="token number">45.6d</span><span class="token punctuation">;</span>
-        <span class="token comment">// %e 表示以科学技术法输出浮点数</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%e; %e; %e%n"</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">756.403f</span><span class="token punctuation">,</span> <span class="token number">7464.232641d</span><span class="token punctuation">,</span> dObj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %E 表示以科学技术法输出浮点数，并且为大写形式</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%E; %E; %E%n"</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">756.403f</span><span class="token punctuation">,</span> <span class="token number">7464.232641d</span><span class="token punctuation">,</span> dObj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %f 表示以十进制格式化输出浮点数</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%f; %f; %f%n"</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">756.403f</span><span class="token punctuation">,</span> <span class="token number">7464.232641d</span><span class="token punctuation">,</span> dObj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// 还可以限制小数点后的位数</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%.1f; %.3f; %f%n"</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">756.403f</span><span class="token punctuation">,</span> <span class="token number">7464.232641d</span><span class="token punctuation">,</span> dObj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token comment">/*** 输出日期类型 ***/</span>
-        <span class="token comment">// %t 表示格式化日期时间类型，%T 是时间日期的大写形式，在 %t 之后用特定的字母表示不同的输出格式</span>
-        <span class="token class-name">Date</span> date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">long</span> dataL <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// 格式化年月日</span>
-        <span class="token comment">// %t 之后用 y 表示输出日期的年份（2 位数的年，如 99）</span>
-        <span class="token comment">// %t 之后用 m 表示输出日期的月份，%t 之后用 d 表示输出日期的日号</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$ty-%1$tm-%1$td; %2$ty-%2$tm-%2$td%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">,</span> dataL<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %t 之后用 Y 表示输出日期的年份（4 位数的年），</span>
-        <span class="token comment">// %t 之后用 B 表示输出日期的月份的完整名， %t 之后用 b 表示输出日期的月份的简称</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$tY-%1$tB-%1$td; %2$tY-%2$tb-%2$td%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">,</span> dataL<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token comment">// 以下是常见的日期组合</span>
-        <span class="token comment">// %t 之后用 D 表示以 "%tm/%td/%ty" 格式化日期</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$tD%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %t 之后用 F 表示以 "%tY-%tm-%td" 格式化日期</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$tF%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token comment">/*** 输出时间类型 ***/</span>
-        <span class="token comment">// 输出时分秒</span>
-        <span class="token comment">// %t 之后用 H 表示输出时间的时（24 进制），%t 之后用 I 表示输出时间的时（12 进制），</span>
-        <span class="token comment">// %t 之后用 M 表示输出时间的分，%t 之后用 S 表示输出时间的秒</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$tH:%1$tM:%1$tS; %2$tI:%2$tM:%2$tS%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">,</span> dataL<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %t 之后用 L 表示输出时间的秒中的毫秒</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$tH:%1$tM:%1$tS %1$tL%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %t 之后 p 表示输出时间的上午或下午信息</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$tH:%1$tM:%1$tS %1$tL %1$tp%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token comment">// 以下是常见的时间组合</span>
-        <span class="token comment">// %t 之后用 R 表示以 "%tH:%tM" 格式化时间</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$tR%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %t 之后用 T 表示以 "%tH:%tM:%tS" 格式化时间</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$tT%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %t 之后用 r 表示以 "%tI:%tM:%tS %Tp" 格式化时间</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$tr%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token comment">/*** 输出星期 ***/</span>
-        <span class="token comment">// %t 之后用 A 表示得到星期几的全称</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$tF %1$tA%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// %t 之后用 a 表示得到星期几的简称</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$tF %1$ta%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token comment">// 输出时间日期的完整信息</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%1$tc%n"</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<pre class="line-numbers language-reStructuredText" data-language="reStructuredText"><code class="language-reStructuredText">1212end line
-Name &#x3D; Zhangsan
-NAME &#x3D; Zhangsan
-Name &#x3D; Zhang san
-true &#x3D; true; false &#x3D; false
--500; 2343; 342
-37777777014; 4447; 526
-fffffe0c; 927; 156
-FFFFFE0C; 927; 156
--7.564030e+02; 7.464233e+03; 4.560000e+01
--7.564030E+02; 7.464233E+03; 4.560000E+01
--756.403015; 7464.232641; 45.600000
--756.4; 7464.233; 45.600000
-20-09-06; 20-09-06
-2020-September-06; 2020-Sep-06
-09&#x2F;06&#x2F;20
-2020-09-06
-18:03:51; 06:03:51
-18:03:51 273
-18:03:51 273 pm
-18:03
-18:03:51
-06:03:51 PM
-2020-09-06 Sunday
-2020-09-06 Sun
-Sun Sep 06 18:03:51 CST 2020<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="python">Python</span></h3><div class="table-container">
+<h3 id="90-Common-字符串转整数"><a href="#90-Common-字符串转整数" class="headerlink" title="90% Common 字符串转整数"></a>90% Common 字符串转整数</h3><p>输入的数据以某个字符分割，并转化为整数 or 小数</p>
+<h4 id="Go-1"><a href="#Go-1" class="headerlink" title="Go"></a>Go</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;bufio&quot;</span></span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">    <span class="string">&quot;os&quot;</span></span><br><span class="line">    <span class="string">&quot;strconv&quot;</span></span><br><span class="line">    <span class="string">&quot;strings&quot;</span></span><br><span class="line">)</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    input := bufio.NewScanner (os.Stdin)</span><br><span class="line">    <span class="keyword">for</span> input.Scan () &#123;</span><br><span class="line">        a := strings.Split (input.Text (), <span class="string">&quot;,&quot;</span>)</span><br><span class="line">        a0, _ := strconv.Atoi (a [<span class="number">0</span>])</span><br><span class="line">        a1, _ := strconv.Atoi (a [<span class="number">1</span>])</span><br><span class="line">        fmt.Println (a0 + a1)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Java-1"><a href="#Java-1" class="headerlink" title="Java"></a>Java</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IO2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args [])</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner (System.in);</span><br><span class="line">        String s = sc.next ();</span><br><span class="line">        String [] ss = s.split (<span class="string">&quot;,&quot;</span>);</span><br><span class="line">        <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ss.length; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> thenum = Integer.parseInt (ss [i]);</span><br><span class="line">            System.out.println (thenum);</span><br><span class="line">            sum += thenum;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println (sum);</span><br><span class="line">        sc.close ();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="Python-1"><a href="#Python-1" class="headerlink" title="Python"></a>Python</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">st = intput ()</span><br><span class="line">ist = int (st)</span><br></pre></td></tr></table></figure>
+<h2 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h2><h3 id="Go-2"><a href="#Go-2" class="headerlink" title="Go"></a>Go</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">% v     值的默认格式。</span><br><span class="line">%+v   类似 % v，但输出结构体时会添加字段名 </span><br><span class="line">%#v　 相应值的 Go 语法表示 </span><br><span class="line">% T    相应值的类型的 Go 语法表示 </span><br><span class="line">%%    百分号，字面上的 %, 非占位符含义 </span><br><span class="line">% b     二进制表示 </span><br><span class="line">% c     相应 Unicode 码点所表示的字符 </span><br><span class="line">% d     十进制表示 </span><br><span class="line">% o     八进制表示 </span><br><span class="line">% q     单引号围绕的字符字面值，由 Go 语法安全地转义 </span><br><span class="line">% x     十六进制表示，字母形式为小写 a-f </span><br><span class="line">% X     十六进制表示，字母形式为大写 A-F </span><br><span class="line">% U     Unicode 格式：123，等同于 &quot;U+007B&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 旗标、宽度、精度、索引 </span></span><br><span class="line">	fmt.Printf (<span class="string">&quot;|%0+- #[1]*.[2]*[3] d|%0+- #[1]*.[2]*[4] d|\n&quot;</span>, <span class="number">8</span>, <span class="number">4</span>, <span class="number">32</span>, <span class="number">64</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 浮点型精度 </span></span><br><span class="line">	fmt.Printf (<span class="string">&quot;|% f|%8.4f|%8.f|%.4f|%.f|\n&quot;</span>, <span class="number">3.2</span>, <span class="number">3.2</span>, <span class="number">3.2</span>, <span class="number">3.2</span>, <span class="number">3.2</span>)</span><br><span class="line">	fmt.Printf (<span class="string">&quot;|%.3f|%.3g|\n&quot;</span>, <span class="number">12.345678</span>, <span class="number">12.345678</span>)</span><br><span class="line">	fmt.Printf (<span class="string">&quot;|%.2f|\n&quot;</span>, <span class="number">12.345678</span>+<span class="number">12.345678i</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 字符串精度 </span></span><br><span class="line">	s := <span class="string">&quot; 你好世界！&quot;</span></span><br><span class="line">	fmt.Printf (<span class="string">&quot;|% s|%8.2s|%8.s|%.2s|%.s|\n&quot;</span>, s, s, s, s, s)</span><br><span class="line">	fmt.Printf (<span class="string">&quot;|% x|%8.2x|%8.x|%.2x|%.x|\n&quot;</span>, s, s, s, s, s)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 带引号字符串 </span></span><br><span class="line">	s1 := <span class="string">&quot;Hello 世界！&quot;</span>       <span class="comment">// CanBackquote</span></span><br><span class="line">	s2 := <span class="string">&quot;Hello\n 世界！&quot;</span>      <span class="comment">// !CanBackquote</span></span><br><span class="line">	fmt.Printf (<span class="string">&quot;% q\n&quot;</span>, s1)  <span class="comment">// 双引号 </span></span><br><span class="line">	fmt.Printf (<span class="string">&quot;%#q\n&quot;</span>, s1) <span class="comment">// 反引号成功 </span></span><br><span class="line">	fmt.Printf (<span class="string">&quot;%#q\n&quot;</span>, s2) <span class="comment">// 反引号失败 </span></span><br><span class="line">	fmt.Printf (<span class="string">&quot;%+q\n&quot;</span>, s2) <span class="comment">// 仅包含 ASCII 字符 </span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// Unicode 码点 </span></span><br><span class="line">	fmt.Printf (<span class="string">&quot;% U, %#U\n&quot;</span>, <span class="string">&#x27; 好 &#x27;</span>, <span class="string">&#x27; 好 &#x27;</span>)</span><br><span class="line">	fmt.Printf (<span class="string">&quot;% U, %#U\n&quot;</span>, <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 接口类型将输出其内部包含的值 </span></span><br><span class="line">	<span class="keyword">var</span> i <span class="keyword">interface</span>&#123;&#125; = <span class="keyword">struct</span> &#123;</span><br><span class="line">		name <span class="keyword">string</span></span><br><span class="line">		age  <span class="keyword">int</span></span><br><span class="line">	&#125;&#123;<span class="string">&quot;AAA&quot;</span>, <span class="number">20</span>&#125;</span><br><span class="line">	fmt.Printf (<span class="string">&quot;% v\n&quot;</span>, i)  <span class="comment">// 只输出字段值 </span></span><br><span class="line">	fmt.Printf (<span class="string">&quot;%+v\n&quot;</span>, i) <span class="comment">// 同时输出字段名 </span></span><br><span class="line">	fmt.Printf (<span class="string">&quot;%#v\n&quot;</span>, i) <span class="comment">// Go 语法格式 </span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 输出类型 </span></span><br><span class="line">	fmt.Printf (<span class="string">&quot;% T\n&quot;</span>, i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">|+0032   |+0064   |</span><br><span class="line">|3.200000|  3.2000|       3|3.2000|3|</span><br><span class="line">|12.346|12.3|</span><br><span class="line">|(12.35+12.35i)|</span><br><span class="line">| 你好世界！|      你好 |        | 你好 ||</span><br><span class="line">|e4bda0e5a5bde4b896e7958cefbc81|    e4bd|        |e4bd||</span><br><span class="line">&quot;Hello 世界！&quot;</span><br><span class="line">&#96;Hello 世界！&#96;</span><br><span class="line">&quot;Hello\n 世界！&quot;</span><br><span class="line">&quot;Hello\n\u4e16\u754c!&quot;</span><br><span class="line">U+597D, U+597D &#39; 好 &#39;</span><br><span class="line">U+000A, U+000A</span><br><span class="line">&#123;AAA 20&#125;</span><br><span class="line">&#123;name:AAA age:20&#125;</span><br><span class="line">struct &#123; name string; age int &#125;&#123;name:&quot;AAA&quot;, age:20&#125;</span><br><span class="line">struct &#123; name string; age int &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Java-2"><a href="#Java-2" class="headerlink" title="Java"></a>Java</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IO3</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String [] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">/*** 输出字符串 ***/</span></span><br><span class="line">        <span class="comment">// % s 表示输出字符串，也就是将后面的字符串替换模式中的 % s</span></span><br><span class="line">        System.out.printf (<span class="string">&quot;% s&quot;</span>, <span class="number">1212</span>);</span><br><span class="line">        <span class="comment">// % n 表示换行 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;% s% n&quot;</span>, <span class="string">&quot;end line&quot;</span>);</span><br><span class="line">        <span class="comment">// 还可以支持多个参数 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;% s = % s% n&quot;</span>, <span class="string">&quot;Name&quot;</span>, <span class="string">&quot;Zhangsan&quot;</span>);</span><br><span class="line">        <span class="comment">// % S 将字符串以大写形式输出 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;% S = % s% n&quot;</span>, <span class="string">&quot;Name&quot;</span>, <span class="string">&quot;Zhangsan&quot;</span>);</span><br><span class="line">        <span class="comment">// 支持多个参数时，可以在 % s 之间插入变量编号，1$ 表示第一个字符串，3$ 表示第 3 个字符串 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$s = %3$s %2$s% n&quot;</span>, <span class="string">&quot;Name&quot;</span>, <span class="string">&quot;san&quot;</span>, <span class="string">&quot;Zhang&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*** 输出 boolean 类型 ***/</span></span><br><span class="line">        System.out.printf (<span class="string">&quot;true = % b; false = &quot;</span>, <span class="keyword">true</span>);</span><br><span class="line">        System.out.printf (<span class="string">&quot;% b% n&quot;</span>, <span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*** 输出整数类型 ***/</span></span><br><span class="line">        Integer iObj = <span class="number">342</span>;</span><br><span class="line">        <span class="comment">// % d 表示将整数格式化为 10 进制整数 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;% d; % d; % d% n&quot;</span>, -<span class="number">500</span>, <span class="number">2343L</span>, iObj);</span><br><span class="line">        <span class="comment">// % o 表示将整数格式化为 8 进制整数 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;% o; % o; % o% n&quot;</span>, -<span class="number">500</span>, <span class="number">2343L</span>, iObj);</span><br><span class="line">        <span class="comment">// % x 表示将整数格式化为 16 进制整数 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;% x; % x; % x% n&quot;</span>, -<span class="number">500</span>, <span class="number">2343L</span>, iObj);</span><br><span class="line">        <span class="comment">// % X 表示将整数格式化为 16 进制整数，并且字母变成大写形式 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;% X; % X; % X% n&quot;</span>, -<span class="number">500</span>, <span class="number">2343L</span>, iObj);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*** 输出浮点类型 ***/</span></span><br><span class="line">        Double dObj = <span class="number">45.6d</span>;</span><br><span class="line">        <span class="comment">// % e 表示以科学技术法输出浮点数 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;% e; % e; % e% n&quot;</span>, -<span class="number">756.403f</span>, <span class="number">7464.232641d</span>, dObj);</span><br><span class="line">        <span class="comment">// % E 表示以科学技术法输出浮点数，并且为大写形式 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;% E; % E; % E% n&quot;</span>, -<span class="number">756.403f</span>, <span class="number">7464.232641d</span>, dObj);</span><br><span class="line">        <span class="comment">// % f 表示以十进制格式化输出浮点数 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;% f; % f; % f% n&quot;</span>, -<span class="number">756.403f</span>, <span class="number">7464.232641d</span>, dObj);</span><br><span class="line">        <span class="comment">// 还可以限制小数点后的位数 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%.1f; %.3f; % f% n&quot;</span>, -<span class="number">756.403f</span>, <span class="number">7464.232641d</span>, dObj);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*** 输出日期类型 ***/</span></span><br><span class="line">        <span class="comment">// % t 表示格式化日期时间类型，% T 是时间日期的大写形式，在 % t 之后用特定的字母表示不同的输出格式 </span></span><br><span class="line">        Date date = <span class="keyword">new</span> Date ();</span><br><span class="line">        <span class="keyword">long</span> dataL = date.getTime ();</span><br><span class="line">        <span class="comment">// 格式化年月日 </span></span><br><span class="line">        <span class="comment">// % t 之后用 y 表示输出日期的年份（2 位数的年，如 99）</span></span><br><span class="line">        <span class="comment">// % t 之后用 m 表示输出日期的月份，% t 之后用 d 表示输出日期的日号 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$ty-%1$tm-%1$td; %2$ty-%2$tm-%2$td% n&quot;</span>, date, dataL);</span><br><span class="line">        <span class="comment">// % t 之后用 Y 表示输出日期的年份（4 位数的年），</span></span><br><span class="line">        <span class="comment">// % t 之后用 B 表示输出日期的月份的完整名， % t 之后用 b 表示输出日期的月份的简称 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$tY-%1$tB-%1$td; %2$tY-%2$tb-%2$td% n&quot;</span>, date, dataL);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 以下是常见的日期组合 </span></span><br><span class="line">        <span class="comment">// % t 之后用 D 表示以 &quot;% tm/% td/% ty&quot; 格式化日期 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$tD% n&quot;</span>, date);</span><br><span class="line">        <span class="comment">// % t 之后用 F 表示以 & quot;% tY-% tm-% td&quot; 格式化日期 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$tF% n&quot;</span>, date);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*** 输出时间类型 ***/</span></span><br><span class="line">        <span class="comment">// 输出时分秒 </span></span><br><span class="line">        <span class="comment">// % t 之后用 H 表示输出时间的时（24 进制），% t 之后用 I 表示输出时间的时（12 进制），</span></span><br><span class="line">        <span class="comment">// % t 之后用 M 表示输出时间的分，% t 之后用 S 表示输出时间的秒 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$tH:%1$tM:%1$tS; %2$tI:%2$tM:%2$tS% n&quot;</span>, date, dataL);</span><br><span class="line">        <span class="comment">// % t 之后用 L 表示输出时间的秒中的毫秒 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$tH:%1$tM:%1$tS %1$tL% n&quot;</span>, date);</span><br><span class="line">        <span class="comment">// % t 之后 p 表示输出时间的上午或下午信息 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$tH:%1$tM:%1$tS %1$tL %1$tp% n&quot;</span>, date);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 以下是常见的时间组合 </span></span><br><span class="line">        <span class="comment">// % t 之后用 R 表示以 & quot;% tH:% tM&quot; 格式化时间 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$tR% n&quot;</span>, date);</span><br><span class="line">        <span class="comment">// % t 之后用 T 表示以 & quot;% tH:% tM:% tS&quot; 格式化时间 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$tT% n&quot;</span>, date);</span><br><span class="line">        <span class="comment">// % t 之后用 r 表示以 & quot;% tI:% tM:% tS % Tp&quot; 格式化时间 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$tr% n&quot;</span>, date);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*** 输出星期 ***/</span></span><br><span class="line">        <span class="comment">// % t 之后用 A 表示得到星期几的全称 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$tF %1$tA% n&quot;</span>, date);</span><br><span class="line">        <span class="comment">// % t 之后用 a 表示得到星期几的简称 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$tF %1$ta% n&quot;</span>, date);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 输出时间日期的完整信息 </span></span><br><span class="line">        System.out.printf (<span class="string">&quot;%1$tc% n&quot;</span>, date);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">1212end line</span><br><span class="line">Name &#x3D; Zhangsan</span><br><span class="line">NAME &#x3D; Zhangsan</span><br><span class="line">Name &#x3D; Zhang san</span><br><span class="line">true &#x3D; true; false &#x3D; false</span><br><span class="line">-500; 2343; 342</span><br><span class="line">37777777014; 4447; 526</span><br><span class="line">fffffe0c; 927; 156</span><br><span class="line">FFFFFE0C; 927; 156</span><br><span class="line">-7.564030e+02; 7.464233e+03; 4.560000e+01</span><br><span class="line">-7.564030E+02; 7.464233E+03; 4.560000E+01</span><br><span class="line">-756.403015; 7464.232641; 45.600000</span><br><span class="line">-756.4; 7464.233; 45.600000</span><br><span class="line">20-09-06; 20-09-06</span><br><span class="line">2020-September-06; 2020-Sep-06</span><br><span class="line">09&#x2F;06&#x2F;20</span><br><span class="line">2020-09-06</span><br><span class="line">18:03:51; 06:03:51</span><br><span class="line">18:03:51 273</span><br><span class="line">18:03:51 273 pm</span><br><span class="line">18:03</span><br><span class="line">18:03:51</span><br><span class="line">06:03:51 PM</span><br><span class="line">2020-09-06 Sunday</span><br><span class="line">2020-09-06 Sun</span><br><span class="line">Sun Sep 06 18:03:51 CST 2020</span><br></pre></td></tr></table></figure>
+<h3 id="Python-2"><a href="#Python-2" class="headerlink" title="Python"></a>Python</h3><div class="table-container">
 <table>
 <thead>
 <tr>
@@ -457,108 +226,100 @@ Sun Sep 06 18:03:51 CST 2020<span aria-hidden="true" class="line-numbers-rows"><
 </thead>
 <tbody>
 <tr>
-<td>%d、%i</td>
+<td>% d、% i</td>
 <td>转换为带符号的十进制整数</td>
 </tr>
 <tr>
-<td>%o</td>
+<td>% o</td>
 <td>转换为带符号的八进制整数</td>
 </tr>
 <tr>
-<td>%x、%X</td>
+<td>% x、% X</td>
 <td>转换为带符号的十六进制整数</td>
 </tr>
 <tr>
-<td>%e</td>
+<td>% e</td>
 <td>转化为科学计数法表示的浮点数（e 小写）</td>
 </tr>
 <tr>
-<td>%E</td>
+<td>% E</td>
 <td>转化为科学计数法表示的浮点数（E 大写）</td>
 </tr>
 <tr>
-<td>%f、%F</td>
+<td>% f、% F</td>
 <td>转化为十进制浮点数</td>
 </tr>
 <tr>
-<td>%g</td>
-<td>智能选择使用 %f 或 %e 格式</td>
+<td>% g</td>
+<td>智能选择使用 % f 或 % e 格式</td>
 </tr>
 <tr>
-<td>%G</td>
-<td>智能选择使用 %F 或 %E 格式</td>
+<td>% G</td>
+<td>智能选择使用 % F 或 % E 格式</td>
 </tr>
 <tr>
-<td>%c</td>
+<td>% c</td>
 <td>格式化字符及其 ASCII 码</td>
 </tr>
 <tr>
-<td>%r</td>
-<td>使用 repr() 函数将表达式转换为字符串</td>
+<td>% r</td>
+<td>使用 repr () 函数将表达式转换为字符串</td>
 </tr>
 <tr>
-<td>%s</td>
-<td>使用 str() 函数将表达式转换为字符串</td>
+<td>% s</td>
+<td>使用 str () 函数将表达式转换为字符串</td>
 </tr>
 </tbody>
 </table>
 </div>
-<pre class="line-numbers language-reStructuredText" data-language="reStructuredText"><code class="language-reStructuredText"># 占位符
-name &#x3D; &quot;maywzh 的网站 &quot;
-age &#x3D; 8
-url &#x3D; &quot;https:&#x2F;&#x2F;maywzh.com&quot;
-print(&quot;%s 已经 %d 岁了，它的网址是 %s。&quot; % (name, age, url))
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"># 占位符 </span><br><span class="line">name &#x3D; &quot;maywzh 的网站 & quot;</span><br><span class="line">age &#x3D; 8</span><br><span class="line">url &#x3D; &quot;https:&#x2F;&#x2F;maywzh.com&quot;</span><br><span class="line">print (&quot;% s 已经 % d 岁了，它的网址是 % s。&quot; % (name, age, url))</span><br><span class="line"></span><br><span class="line"># 指定宽度 </span><br><span class="line">n &#x3D; 1234567</span><br><span class="line">print (&quot;n (10):%10d.&quot; % n)</span><br><span class="line">print (&quot;n (5):%5d.&quot; % n)</span><br><span class="line">url &#x3D; &quot;http:&#x2F;&#x2F;c.biancheng.net&#x2F;python&#x2F;&quot;</span><br><span class="line">print (&quot;url (35):%35s.&quot; % url)</span><br><span class="line">print (&quot;url (20):%20s.&quot; % url)</span><br><span class="line"></span><br><span class="line"># 对齐方式 </span><br><span class="line">n &#x3D; 123456</span><br><span class="line"># %09d 表示最小宽度为 9，左边补 0</span><br><span class="line">print (&quot;n (09):%09d&quot; % n)</span><br><span class="line"># %+9d 表示最小宽度为 9，带上符号 </span><br><span class="line">print (&quot;n (+9):%+9d&quot; % n)</span><br><span class="line">f &#x3D; 140.5</span><br><span class="line"># %-+010f 表示最小宽度为 10，左对齐，带上符号 </span><br><span class="line">print (&quot;f (-+0):%-+010f&quot; % f)</span><br><span class="line">s &#x3D; &quot;Hello&quot;</span><br><span class="line"># %-10s 表示最小宽度为 10，左对齐 </span><br><span class="line">print (&quot;s (-10):%-10s.&quot; % s)</span><br><span class="line"></span><br><span class="line"># 指定小数精度 </span><br><span class="line">f &#x3D; 3.141592653</span><br><span class="line"># 最小宽度为 8，小数点后保留 3 位 </span><br><span class="line">print (&quot;%8.3f&quot; % f)</span><br><span class="line"># 最小宽度为 8，小数点后保留 3 位，左边补 0</span><br><span class="line">print (&quot;%08.3f&quot; % f)</span><br><span class="line"># 最小宽度为 8，小数点后保留 3 位，左边补 0，带符号 </span><br><span class="line">print (&quot;%+08.3f&quot; % f)</span><br></pre></td></tr></table></figure>
 
-# 指定宽度
-n &#x3D; 1234567
-print(&quot;n(10):%10d.&quot; % n)
-print(&quot;n(5):%5d.&quot; % n)
-url &#x3D; &quot;http:&#x2F;&#x2F;c.biancheng.net&#x2F;python&#x2F;&quot;
-print(&quot;url(35):%35s.&quot; % url)
-print(&quot;url(20):%20s.&quot; % url)
-
-#对齐方式
-n &#x3D; 123456
-# %09d 表示最小宽度为 9，左边补 0
-print(&quot;n(09):%09d&quot; % n)
-# %+9d 表示最小宽度为 9，带上符号
-print(&quot;n(+9):%+9d&quot; % n)
-f &#x3D; 140.5
-# %-+010f 表示最小宽度为 10，左对齐，带上符号
-print(&quot;f(-+0):%-+010f&quot; % f)
-s &#x3D; &quot;Hello&quot;
-# %-10s 表示最小宽度为 10，左对齐
-print(&quot;s(-10):%-10s.&quot; % s)
-
-# 指定小数精度
-f &#x3D; 3.141592653
-# 最小宽度为 8，小数点后保留 3 位
-print(&quot;%8.3f&quot; % f)
-# 最小宽度为 8，小数点后保留 3 位，左边补 0
-print(&quot;%08.3f&quot; % f)
-# 最小宽度为 8，小数点后保留 3 位，左边补 0，带符号
-print(&quot;%+08.3f&quot; % f)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-            </div>
-            <!-- Post Comments -->
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Python/"># Python</a>
+                    
+                        <a href="/tags/Go/"># Go</a>
+                    
+                        <a href="/tags/Java/"># Java</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/">Go 语言的上下文与 Context</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

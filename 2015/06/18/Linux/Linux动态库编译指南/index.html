@@ -1,167 +1,205 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>Linux 动态库编译指南 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/23/nY4dAxoE2TrsZgR.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>Linux 动态库编译指南</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>Linux 下动态库文件的文件名形如 <code>libxxx.so</code>，其中 so 是 Shared Object 的缩写，即可以共享的目标文件。</p>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Linux 动态库编译指南</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">June 18, 2015&nbsp;&nbsp;20:07:31</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/DevOps/">DevOps</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>Linux 下动态库文件的文件名形如 <code>libxxx.so</code>，其中 so 是 Shared Object 的缩写，即可以共享的目标文件。</p>
 <p>在链接动态库生成可执行文件时，并不会把动态库的代码复制到执行文件中，而是在执行文件中记录对动态库的引用。</p>
 <p>程序执行时，再去加载动态库文件。如果动态库已经加载，则不必重复加载，从而能节省内存空间。</p>
 <p>Linux 下生成和使用动态库的步骤如下：</p>
@@ -172,85 +210,72 @@
 <li>把 libxxx.so 放入链接库的标准路径，或指定 <code>LD_LIBRARY_PATH</code>，才能运行链接了 libxxx.so 的程序。</li>
 </ol>
 <a id="more"></a>
-<h2><span id="源文件">源文件 </span></h2><p> 样例 </p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">//max.c</span>
-<span class="token keyword">int</span> <span class="token function">max</span><span class="token punctuation">(</span><span class="token keyword">int</span> n1<span class="token punctuation">,</span> <span class="token keyword">int</span> n2<span class="token punctuation">,</span> <span class="token keyword">int</span> n3<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> max_num <span class="token operator">=</span> n1<span class="token punctuation">;</span>
-    max_num <span class="token operator">=</span> max_num <span class="token operator">&lt;</span> n2<span class="token operator">?</span> n2<span class="token operator">:</span> max_num<span class="token punctuation">;</span>
-    max_num <span class="token operator">=</span> max_num <span class="token operator">&lt;</span> n3<span class="token operator">?</span> n3<span class="token operator">:</span> max_num<span class="token punctuation">;</span>
-    <span class="token keyword">return</span> max_num<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2><span id="共享库">共享库 </span></h2><p> 编译生成共享库：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ gcc -fPIC -shared -o libmax.so max.c<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p> <code>-fPIC</code>是编译选项，PIC 是 Position Independent Code 的缩写，表示要生成位置无关的代码，这是动态库需要的特性； </p>
-<p><code>-shared</code>是链接选项，告诉 gcc 生成动态库而不是可执行文件。</p>
-<h2><span id="编写头文件">编写头文件 </span></h2><p> 为了让用户知道我们的动态库中有哪些接口可用，我们需要编写对应的头文件。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">//max.h</span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">ifndef</span> <span class="token expression">__MAX_H__</span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token expression">__MAX_H__</span></span>
-
-<span class="token keyword">int</span> <span class="token function">max</span><span class="token punctuation">(</span><span class="token keyword">int</span> n1<span class="token punctuation">,</span> <span class="token keyword">int</span> n2<span class="token punctuation">,</span> <span class="token keyword">int</span> n3<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">endif</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2><span id="测试">测试 </span></h2><p> 编写一个测试程序 test.c 引用编译好的 libmax.so</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">//test.c</span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">"max.h"</span></span>
-
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span>argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">,</span> c <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">;</span>
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"max among 10, -2 and 100 is %d.\n"</span><span class="token punctuation">,</span> <span class="token function">max</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>编译命令<br><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ gcc test.c -L. -lmax -o <span class="token builtin class-name">test</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></p>
-<p><code>-lmax</code>表示要链接<code>libmax.so</code></p>
-<p><code>-L.</code>表示搜索要链接的库文件时包含当前路径</p>
-<h2><span id="运行">运行</span></h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ ./test
-max among <span class="token number">10</span>, -2 and <span class="token number">100</span> is <span class="token number">100</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<h2><span id="自动化编译">自动化编译 </span></h2><p> 利用 make 来进行自动化编译</p>
-<pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile"><span class="token builtin">.PHONY</span><span class="token punctuation">:</span> build test clean
-
-<span class="token symbol">build</span><span class="token punctuation">:</span> libmax.so
-
-<span class="token symbol">libmax.so</span><span class="token punctuation">:</span> max.o
-	gcc -o <span class="token variable">$@</span>  -shared <span class="token variable">$&lt;</span>
-
-<span class="token symbol">max.o</span><span class="token punctuation">:</span> max.c
-	gcc -c -fPIC <span class="token variable">$&lt;</span>
-
-<span class="token symbol">test</span><span class="token punctuation">:</span> test.c libmax.so
-	gcc test.c -L. -lmax -o test
-	
-<span class="token symbol">clean</span><span class="token punctuation">:</span>
-	rm -f *.o *.so a.out<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>用法<br><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">make</span> build <span class="token comment"># 编译动态库 libmax.so</span>
-$ <span class="token function">make</span> <span class="token builtin class-name">test</span> <span class="token comment"># 生成 test 可执行程序</span>
-$ <span class="token function">make</span> clean <span class="token comment"># 清理编译和测试结果</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></p>
-<h2><span id="附录">附录 </span></h2><p> 例程见我的<a target="_blank" rel="noopener" href="https://github.com/maywzh/Lab_dylibcompiler">Github</a></p>
+<h2 id="源文件"><a href="#源文件" class="headerlink" title="源文件"></a>源文件</h2><p>样例 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//max.c</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">max</span><span class="params">(<span class="keyword">int</span> n1, <span class="keyword">int</span> n2, <span class="keyword">int</span> n3)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> max_num = n1;</span><br><span class="line">    max_num = max_num &lt; n2? n2: max_num;</span><br><span class="line">    max_num = max_num &lt; n3? n3: max_num;</span><br><span class="line">    <span class="keyword">return</span> max_num;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="共享库"><a href="#共享库" class="headerlink" title="共享库"></a>共享库</h2><p>编译生成共享库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -fPIC -shared -o libmax.so max.c</span><br></pre></td></tr></table></figure>
+<p> <code>-fPIC</code> 是编译选项，PIC 是 Position Independent Code 的缩写，表示要生成位置无关的代码，这是动态库需要的特性； </p>
+<p><code>-shared</code> 是链接选项，告诉 gcc 生成动态库而不是可执行文件。</p>
+<h2 id="编写头文件"><a href="#编写头文件" class="headerlink" title="编写头文件"></a>编写头文件</h2><p>为了让用户知道我们的动态库中有哪些接口可用，我们需要编写对应的头文件。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//max.h</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __MAX_H__</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __MAX_H__</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">max</span><span class="params">(<span class="keyword">int</span> n1, <span class="keyword">int</span> n2, <span class="keyword">int</span> n3)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>编写一个测试程序 test.c 引用编译好的 libmax.so</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//test.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;max.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv [])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">10</span>, b = <span class="number">-2</span>, c = <span class="number">100</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;max among 10, -2 and 100 is % d.\n&quot;</span>, max (a, b, c));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc test.c -L. -lmax -o <span class="built_in">test</span></span><br></pre></td></tr></table></figure></p>
+<p><code>-lmax</code> 表示要链接 <code>libmax.so</code></p>
+<p><code>-L.</code> 表示搜索要链接的库文件时包含当前路径</p>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ./<span class="built_in">test</span></span><br><span class="line">max among 10, -2 and 100 is 100.</span><br></pre></td></tr></table></figure>
+<h2 id="自动化编译"><a href="#自动化编译" class="headerlink" title="自动化编译"></a>自动化编译</h2><p>利用 make 来进行自动化编译</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: build test clean</span></span><br><span class="line"></span><br><span class="line"><span class="section">build: libmax.so</span></span><br><span class="line"></span><br><span class="line"><span class="section">libmax.so: max.o</span></span><br><span class="line">	gcc -o <span class="variable">$@</span>  -shared <span class="variable">$&lt;</span></span><br><span class="line"></span><br><span class="line"><span class="section">max.o: max.c</span></span><br><span class="line">	gcc -c -fPIC <span class="variable">$&lt;</span></span><br><span class="line"></span><br><span class="line"><span class="section">test: test.c libmax.so</span></span><br><span class="line">	gcc test.c -L. -lmax -o test</span><br><span class="line">	</span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm -f *.o *.so a.out</span><br></pre></td></tr></table></figure>
+<p>用法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ make build <span class="comment"># 编译动态库 libmax.so</span></span><br><span class="line">$ make <span class="built_in">test</span> <span class="comment"># 生成 test 可执行程序 </span></span><br><span class="line">$ make clean <span class="comment"># 清理编译和测试结果 </span></span><br></pre></td></tr></table></figure></p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p>例程见我的 <a target="_blank" rel="noopener" href="https://github.com/maywzh/Lab_dylibcompiler">Github</a></p>
 <p>相关博文 <a href="/Linux 静态库编译指南 /">Linux 静态库编译指南</a>。</p>
 
-            </div>
-            <!-- Post Comments -->
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Linux/"># Linux</a>
+                    
+                        <a href="/tags/%E7%BC%96%E8%AF%91/"># 编译</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2015/06/21/Linux/Linux%E4%B8%AD%E7%9A%84wget/">Linux 中的 wget</a>
+            
+            
+            <a class="next" rel="next" href="/2015/05/12/Linux/Linux%E5%B8%B8%E7%94%A8%E7%BD%91%E7%BB%9C%E5%B7%A5%E5%85%B7/">Linux 常用网络工具</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>计算机科学中最重要的 32 个算法 | 0x01 MAYSTORY </title>
+
+
+    
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
+
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">计算机科学中最重要的 32 个算法</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 16, 2015&nbsp;&nbsp;2:01:29</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p> 奥地利符号计算研究所（Research Institute for Symbolic Computation，简称 RISC）的 Christoph Koutschan 博士在自己的页面上发布了 <a target="_blank" rel="noopener" href="http://www.risc.jku.at/people/ckoutsch/stuff/e_algorithms.html">一篇文章</a>，提到他做了一个调查，参与者大多数是计算机科学家，他请这些科学家投票选出最重要的算法，以下是这次调查的结果，按照英文名称字母顺序排序。</p>
+<a id="more"></a>
+<ol>
+<li><p>A<em> 搜索算法 —— 图形搜索算法，从给定起点到给定终点计算出路径。其中使用了一种启发式的估算，为每个节点估算通过该节点的最佳路径，并以之为各个地点排定次序。算法以得到的次序访问这些节点。因此，A </em> 搜索算法是最佳优先搜索的范例。</p>
+</li>
+<li><p>集束搜索（又名定向搜索，Beam Search）—— 最佳优先搜索算法的优化。使用启发式函数评估它检查的每个节点的能力。不过，集束搜索只能在每个深度中发现最前面的 m 个最符合条件的节点，m 是固定数字 —— 集束的宽度。</p>
+</li>
+<li><p>二分查找（Binary Search）—— 在线性数组中找特定值的算法，每个步骤去掉一半不符合要求的数据。</p>
+</li>
+<li><p>分支界定算法（Branch and Bound）—— 在多种最优化问题中寻找特定最优化解决方案的算法，特别是针对离散、组合的最优化。</p>
+</li>
+<li><p>Buchberger 算法 —— 一种数学算法，可将其视为针对单变量最大公约数求解的欧几里得算法和线性系统中高斯消元法的泛化。</p>
+</li>
+<li><p>数据压缩 —— 采取特定编码方案，使用更少的字节数（或是其他信息承载单元）对信息编码的过程，又叫来源编码。</p>
+</li>
+<li><p>Diffie-Hellman 密钥交换算法 —— 一种加密协议，允许双方在事先不了解对方的情况下，在不安全的通信信道中，共同建立共享密钥。该密钥以后可与一个对称密码一起，加密后续通讯。</p>
+</li>
+<li><p>Dijkstra 算法 —— 针对没有负值权重边的有向图，计算其中的单一起点最短算法。</p>
+</li>
+<li><p>离散微分算法（Discrete differentiation）</p>
+</li>
+<li><p>动态规划算法（Dynamic Programming）—— 展示互相覆盖的子问题和最优子架构算法</p>
+</li>
+<li><p>欧几里得算法（Euclidean algorithm）—— 计算两个整数的最大公约数。最古老的算法之一，出现在公元前 300 前欧几里得的《几何原本》。</p>
+</li>
+<li><p>期望 - 最大算法（Expectation-maximization algorithm，又名 EM-Training）—— 在统计计算中，期望 - 最大算法在概率模型中寻找可能性最大的参数估算值，其中模型依赖于未发现的潜在变量。EM 在两个步骤中交替计算，第一步是计算期望，利用对隐藏变量的现有估计值，计算其最大可能估计值；第二步是最大化，最大化在第一步上求得的最大可能值来计算参数的值。</p>
+</li>
+<li><p>快速傅里叶变换（Fast Fourier transform，FFT）—— 计算离散的傅里叶变换（DFT）及其反转。该算法应用范围很广，从数字信号处理到解决偏微分方程，到快速计算大整数乘积。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://www.infoq.com/32-most-important-algorithms/zh.wikipedia.org/wiki/% E6% A2% AF% E5% BA% A6% E4% B8%8B% E9%99%8D">梯度下降</a>（Gradient descent）—— 一种数学上的最优化算法。</p>
+</li>
+<li><p>哈希算法（Hashing）</p>
+</li>
+<li><p>堆排序（Heaps）</p>
+</li>
+<li><p>Karatsuba 乘法 —— 需要完成上千位整数的乘法的系统中使用，比如计算机代数系统和大数程序库，如果使用长乘法，速度太慢。该算法发现于 1962 年。</p>
+</li>
+<li><p>LLL 算法（Lenstra-Lenstra-Lovasz  lattice reduction）—— 以格规约（lattice）基数为输入，输出短正交向量基数。LLL 算法在以下公共密钥加密方法中有大量使用：背包加密系统（knapsack）、有特定设置的 RSA 加密等等。</p>
+</li>
+<li><p>最大流量算法（Maximum flow）—— 该算法试图从一个流量网络中找到最大的流。它优势被定义为找到这样一个流的值。最大流问题可以看作更复杂的网络流问题的特定情况。最大流与网络中的界面有关，这就是最大流 - 最小截定理（Max-flow min-cut theorem）。Ford-Fulkerson 能找到一个流网络中的最大流。</p>
+</li>
+<li><p>合并排序（Merge Sort）</p>
+</li>
+<li><p>牛顿法（Newton’s method）—— 求非线性方程（组）零点的一种重要的迭代法。</p>
+</li>
+<li><p>Q-learning 学习算法 —— 这是一种通过学习动作值函数（action-value function）完成的强化学习算法，函数采取在给定状态的给定动作，并计算出期望的效用价值，在此后遵循固定的策略。Q-leanring 的优势是，在不需要环境模型的情况下，可以对比可采纳行动的期望效用。</p>
+</li>
+<li><p>两次筛法（Quadratic Sieve）—— 现代整数因子分解算法，在实践中，是目前已知第二快的此类算法（仅次于数域筛法 Number Field Sieve）。对于 110 位以下的十位整数，它仍是最快的，而且都认为它比数域筛法更简单。</p>
+</li>
+<li><p>RANSAC—— 是 “RANdom SAmple Consensus” 的缩写。该算法根据一系列观察得到的数据，数据中包含异常值，估算一个数学模型的参数值。其基本假设是：数据包含非异化值，也就是能够通过某些模型参数解释的值，异化值就是那些不符合模型的数据点。</p>
+</li>
+<li><p>RSA—— 公钥加密算法。首个适用于以签名作为加密的算法。RSA 在电商行业中仍大规模使用，大家也相信它有足够安全长度的公钥。</p>
+</li>
+<li><p>Schönhage-Strassen 算法 —— 在数学中，Schönhage-Strassen 算法是用来完成大整数的乘法的快速渐近算法。其算法复杂度为：O (N log (N) log (log (N)))，该算法使用了傅里叶变换。</p>
+</li>
+<li><p>单纯型算法（Simplex Algorithm）—— 在数学的优化理论中，单纯型算法是常用的技术，用来找到线性规划问题的数值解。线性规划问题包括在一组实变量上的一系列线性不等式组，以及一个等待最大化（或最小化）的固定线性函数。</p>
+</li>
+<li><p>奇异值分解（Singular value decomposition，简称 SVD）—— 在线性代数中，SVD 是重要的实数或复数矩阵的分解方法，在信号处理和统计中有多种应用，比如计算矩阵的伪逆矩阵（以求解最小二乘法问题）、解决超定线性系统（overdetermined linear systems）、矩阵逼近、数值天气预报等等。</p>
+</li>
+<li><p>求解线性方程组（Solving a system of linear equations）—— 线性方程组是数学中最古老的问题，它们有很多应用，比如在数字信号处理、线性规划中的估算和预测、数值分析中的非线性问题逼近等等。求解线性方程组，可以使用高斯 — 约当消去法（Gauss-Jordan elimination），或是柯列斯基分解（ Cholesky decomposition）。</p>
+</li>
+<li><p>Strukturtensor 算法 —— 应用于模式识别领域，为所有像素找出一种计算方法，看看该像素是否处于同质区域（ homogenous region），看看它是否属于边缘，还是是一个顶点。</p>
+</li>
+<li><p>合并查找算法（Union-find）—— 给定一组元素，该算法常常用来把这些元素分为多个分离的、彼此不重合的组。不相交集（disjoint-set）的数据结构可以跟踪这样的切分方法。合并查找算法可以在此种数据结构上完成两个有用的操作：</p>
+<ul>
+<li><ul>
+<li>查找：判断某特定元素属于哪个组。</li>
+<li>合并：联合或合并两个组为一个组。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>维特比算法（Viterbi algorithm）—— 寻找隐藏状态最有可能序列的动态规划算法，这种序列被称为维特比路径，其结果是一系列可以观察到的事件，特别是在隐藏的 Markov 模型中。</p>
+</li>
+</ol>
+
+        </div>
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2015/09/25/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%88%86%E8%BE%A8CLI%E3%80%81Terminal%E3%80%81Console%E5%92%8CShell/">如何分辨 CLI、Terminal、Console 和 Shell</a>
+            
+            
+            <a class="next" rel="next" href="/2015/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/IP%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB/">IP 地址分类</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

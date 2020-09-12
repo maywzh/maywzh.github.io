@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>操作系统中的 select、poll、epoll 机制 | 0x01 MAYSTORY </title>
+
+
+    
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
+
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">操作系统中的 select、poll、epoll 机制</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 29, 2018&nbsp;&nbsp;0:19:46</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>IO 多路复用是指内核一旦发现进程指定的一个或者多个 IO 条件准备读取，它就通知该进程。与多进程和多线程技术相比，I/O 多路复用技术的最大优势是系统开销小，系统不必创建进程 / 线程，也不必维护这些进程 / 线程，从而大大减小了系统的开销。</p>
+<p>目前支持 I/O 多路复用的系统调用有 select，pselect，poll，epoll，I/O 多路复用就是通过一种机制，一个进程可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作，但 select，pselect，poll，epoll 本质上都是同步 I/O，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的，而异步 I/O 则无需自己负责进行读写，异步 I/O 的实现会负责把数据从内核拷贝到用户空间。</p>
+<a id="more"></a>
+<p>IO 多路复用适用如下场合：</p>
+<ol>
+<li>当客户处理多个描述符时（一般是交互式输入和网络套接口），必须使用 I/O 复用。</li>
+<li>当一个客户同时处理多个套接口时，而这种情况是可能的，但很少出现。</li>
+<li>如果一个 TCP 服务器既要处理监听套接口，又要处理已连接套接口，一般也要用到 I/O 复用。</li>
+<li>如果一个服务器即要处理 TCP，又要处理 UDP，一般要使用 I/O 复用。</li>
+<li>如果一个服务器要处理多个服务或多个协议，一般要使用 I/O 复用。</li>
+</ol>
+<h2 id="从-C10k-引述-select、poll、epoll"><a href="#从-C10k-引述-select、poll、epoll" class="headerlink" title="从 C10k 引述 select、poll、epoll"></a>从 C10k 引述 select、poll、epoll</h2><h3 id="C10k-问题"><a href="#C10k-问题" class="headerlink" title="C10k 问题"></a>C10k 问题</h3><p>随着互联网的普及，应用的用户群体几何倍增长，此时服务器性能问题就出现。最初的服务器是基于进程 / 线程模型。新到来一个 TCP 连接，就需要分配一个进程。假如有 C10K，就需要创建 1W 个进程，可想而知单机是无法承受的。那么如何突破单机性能是高性能网络编程必须要面对的问题，进而这些局限和问题就统称为 C10K 问题，最早是由 Dan Kegel 进行归纳和总结的，并且他也系统的分析和提出解决方案。</p>
+<p>C10K 问题的本质上是操作系统的问题。对于 Web 1.0/2.0 时代的操作系统，传统的同步阻塞 I/O 模型处理方式都是 requests per second。当创建的进程或线程多了，数据拷贝频繁（缓存 I/O、内核将数据拷贝到用户进程空间、阻塞，进程 / 线程上下文切换消耗大， 导致操作系统崩溃，这就是 C10K 问题的本质。</p>
+<p>可见，解决 C10K 问题的关键就是尽可能减少这些 CPU 资源消耗。</p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>从网络编程技术的角度来说，主要思路：</p>
+<ol>
+<li>每个连接分配一个独立的线程 / 进程</li>
+<li>同一个线程 / 进程同时处理多个连接</li>
+</ol>
+<h4 id="每个进程-线程处理一个连接"><a href="#每个进程-线程处理一个连接" class="headerlink" title="每个进程 / 线程处理一个连接"></a>每个进程 / 线程处理一个连接</h4><p>该思路最为直接，但是申请进程 / 线程是需要系统资源的，且系统需要管理这些进程 / 线程，所以会使资源占用过多，可扩展性差</p>
+<h4 id="每个进程-线程同时处理-多个连接-I-O-多路复用"><a href="#每个进程-线程同时处理-多个连接-I-O-多路复用" class="headerlink" title="每个进程 / 线程同时处理 多个连接 (I/O 多路复用)"></a>每个进程 / 线程同时处理 多个连接 (I/O 多路复用)</h4><ol>
+<li><strong>select 方式 </strong>：使用 fd_set 结构体告诉内核同时监控那些文件句柄，使用逐个排查方式去检查是否有文件句柄就绪或者超时。该方式有以下缺点：文件句柄数量是有上线的，逐个检查吞吐量低，每次调用都要重复初始化 fd_set。</li>
+<li><strong>poll 方式 </strong>：该方式主要解决了 select 方式的 2 个缺点，文件句柄上限问题 (链表方式存储) 以及重复初始化问题 (不同字段标注关注事件和发生事件)，但是逐个去检查文件句柄是否就绪的问题仍然没有解决。</li>
+<li><strong>epoll 方式 </strong>：该方式可以说是 C10K 问题的 killer，他不去轮询监听所有文件句柄是否已经就绪。epoll 只对发生变化的文件句柄感兴趣。其工作机制是，使用 “事件” 的就绪通知方式，通过 epoll_ctl 注册文件描述符 fd，一旦该 fd 就绪，内核就会采用类似 callback 的回调机制来激活该 fd, epoll_wait 便可以收到通知，并通知应用程序。而且 epoll 使用一个文件描述符管理多个描述符，将用户进程的文件描述符的事件存放到内核的一个事件表中，这样数据只需要从内核缓存空间拷贝一次到用户进程地址空间。而且 epoll 是通过内核与用户空间共享内存方式来实现事件就绪消息传递的，其效率非常高。但是 epoll 是依赖系统的 (Linux)。</li>
+<li><strong> 异步 I/O</strong> 以及 Windows，该方式在 windows 上支持很好。</li>
+</ol>
+<h4 id="传统思路"><a href="#传统思路" class="headerlink" title="传统思路"></a>传统思路</h4><p>最简单的方法是循环挨个处理各个连接，每个连接对应一个 socket，当所有 socket 都有数据的时候，这种方法是可行的。</p>
+<p>但是当应用读取某个 socket 的文件数据不 ready 的时候，整个应用会阻塞在这里等待该文件句柄，即使别的文件句柄 ready，也无法往下处理。</p>
+<p><strong> 思路 </strong>：直接循环处理多个连接。</p>
+<p><strong> 问题 </strong>：任一文件句柄的不成功会阻塞住整个应用。</p>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p>要解决上面阻塞的问题，思路很简单，如果我在读取文件句柄之前，先查下它的状态，ready 了就进行处理，不 ready 就不进行处理，这不就解决了这个问题了嘛？</p>
+<p>于是有了 select 方案。用一个 fd_set 结构体来告诉内核同时监控多个文件句柄，当其中有文件句柄的状态发生指定变化（例如某句柄由不可用变为可用）或超时，则调用返回。之后应用可以使用 <code>FD_ISSET</code> 来逐个查看是哪个文件句柄的状态发生了变化。</p>
+<p>这样做，小规模的连接问题不大，但当连接数很多（文件句柄个数很多）的时候，逐个检查状态就很慢了。因此，select 往往存在管理的句柄上限（<code>FD_SETSIZE</code>）。同时，在使用上，因为只有一个字段记录关注和发生事件，每次调用之前要重新初始化 <code>fd_set</code> 结构体。</p>
+<blockquote>
+<p>select 函数监视的文件描述符分 3 类，分别是 writefds、readfds、和 exceptfds。调用后 select 函数会阻塞，直到有描述符就绪（有数据 可读、可写、或者有 except），或者超时（timeout 指定等待时间，如果立即返回设为 null 即可），函数返回。当 select 函数返回后，可以通过遍历 fdset，来找到就绪的描述符。</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/08/29/ubzW8CDimwPQrA4.png" alt="21155028_QOj2"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">select</span><span class="params">(<span class="keyword">int</span> nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><strong> 思路 </strong>：有连接请求抵达了再检查处理。</p>
+<p><strong> 问题 </strong>：句柄上限 + 重复初始化 + 逐个排查所有文件句柄状态效率不高。</p>
+<h4 id="工作过程"><a href="#工作过程" class="headerlink" title="工作过程"></a>工作过程</h4><p>一个典型的用户应用调用 select 机制请求数据过程：</p>
+<ol>
+<li><p>使用 <code>copy_from_user</code> 从用户空间拷贝 fd_set 到内核空间</p>
+</li>
+<li><p>注册回调函数 <code>__pollwait</code></p>
+</li>
+<li><p>遍历所有 fd，调用其对应的 poll 方法（对于 socket，这个 poll 方法是 <code>sock_poll</code>，<code>sock_poll</code> 根据情况会调用到 <code>tcp_poll</code>,<code>udp_poll</code> 或者 <code>datagram_poll</code>）</p>
+</li>
+<li><p>以 <code>tcp_poll</code> 为例，其核心实现就是 <code>__pollwait</code>，也就是上面注册的回调函数。</p>
+</li>
+<li><p><code>__pollwait</code> 的主要工作就是把 current（当前进程）挂到设备的等待队列中，不同的设备有不同的等待队列，对于 tcp_poll 来说，其等待队列是 sk-&gt;sk_sleep（注意把进程挂到等待队列中并不代表进程已经睡眠了）。在设备收到一条消息（网络设备）或填写完文件数据（磁盘设备）后，会唤醒设备等待队列上睡眠的进程，这时 current 便被唤醒了。</p>
+</li>
+<li><p><code>poll</code> 方法返回时会返回一个描述读写操作是否就绪的 mask 掩码，根据这个 mask 掩码给 fd_set 赋值。</p>
+</li>
+<li><p>如果遍历完所有的 fd，还没有返回一个可读写的 mask 掩码，则会调用 schedule_timeout 是调用 select 的进程（也就是 current）进入睡眠。当设备驱动发生自身资源可读写后，会唤醒其等待队列上睡眠的进程。如果超过一定的超时时间（<code>schedule_timeout</code> 指定），还是没人唤醒，则调用 select 的进程会重新被唤醒获得 CPU，进而重新遍历 fd，判断有没有就绪的 fd。</p>
+</li>
+<li><p>把 <code>fd_set</code> 从内核空间拷贝到用户空间。</p>
+</li>
+</ol>
+<p><img src="https://i.loli.net/2020/08/29/JWBwCQ1XHP8mpld.png" alt="137084-20180611142415772-1018872947"></p>
+<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><p>poll 主要解决 select 的前两个问题：通过一个 pollfd 数组向内核传递需要关注的事件消除文件句柄上限，同时使用不同字段分别标注关注事件和发生事件，来避免重复初始化。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">poll</span><span class="params">(struct pollfd *fds, <span class="keyword">nfds_t</span> nfds, <span class="keyword">int</span> timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><strong> 思路 </strong>：设计新的数据结构提供使用效率。</p>
+<p><strong> 问题 </strong>：逐个排查所有文件句柄状态效率不高。</p>
+<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p>既然逐个排查所有文件句柄状态效率不高，很自然的，如果调用返回的时候只给应用提供发生了状态变化（很可能是数据 ready）的文件句柄，进行排查的效率不就高多了么。</p>
+<p>epoll 采用了这种设计，适用于大规模的应用场景。</p>
+<p>实验表明，当文件句柄数目超过 10 之后，epoll 性能将优于 select 和 poll；当文件句柄数目达到 10K 的时候，epoll 已经超过 select 和 poll 两个数量级。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_wait</span><span class="params">(<span class="keyword">int</span> epfd, struct epoll_event *events, <span class="keyword">int</span> maxevents, <span class="keyword">int</span> timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><strong> 思路 </strong>：只返回状态变化的文件句柄。</p>
+<p><strong> 问题 </strong>：依赖特定平台（Linux）。</p>
+<p>因为 Linux 是互联网企业中使用率最高的操作系统，epoll 就成为 C10K killer、高并发、高性能、异步非阻塞这些技术的代名词了。FreeBSD 推出了 <code>kqueue</code>，Linux 推出了 <code>epoll</code>，Windows 推出了 <code>IOCP</code>，Solaris 推出了 <code>/dev/poll</code>。这些操作系统提供的功能就是为了解决 C10K 问题。epoll 技术的编程模型就是异步非阻塞回调，也可以叫做 <code>Reactor</code>，事件驱动，事件轮循（EventLoop）。Nginx，libevent，node.js 这些就是 Epoll 时代的产物。</p>
+<h3 id="libevent"><a href="#libevent" class="headerlink" title="libevent"></a>libevent</h3><p>由于 epoll, kqueue, IOCP 每个接口都有自己的特点，程序移植非常困难，于是需要对这些接口进行封装，以让它们易于使用和移植，其中 libevent 库就是其中之一。跨平台，封装底层平台的调用，提供统一的 API，但底层在不同平台上自动选择合适的调用。</p>
+<p>按照 libevent 的官方网站，libevent 库提供了以下功能：当一个文件描述符的特定事件（如可读，可写或出错）发生了，或一个定时事件发生了，libevent 就会自动执行用户指定的回调函数，来处理事件。目前，libevent 已支持以下接口 /dev/poll, kqueue, event ports, select, poll 和 epoll。Libevent 的内部事件机制完全是基于所使用的接口的。因此 libevent 非常容易移植，也使它的扩展性非常容易。目前，libevent 已在以下操作系统中编译通过：Linux，BSD，Mac OS X，Solaris 和 Windows。</p>
+<p>使用 libevent 库进行开发非常简单，也很容易在各种 unix 平台上移植。一个简单的使用 libevent 库的程序如下：</p>
+
+        </div>
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Linux/"># Linux</a>
+                    
+                        <a href="/tags/I-O/"># I/O</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2018/02/01/%E6%96%B9%E6%B3%95%E8%AE%BA/%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E9%AB%98%E6%95%88%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">如何建立高效知识笔记管理系统</a>
+            
+            
+            <a class="next" rel="next" href="/2018/01/28/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">编程之并发编程</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

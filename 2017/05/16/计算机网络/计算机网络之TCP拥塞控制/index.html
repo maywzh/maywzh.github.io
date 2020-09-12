@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>了解 tcp 拥塞控制 | 0x01 MAYSTORY </title>
+
+
+    
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
+
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">了解 tcp 拥塞控制</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">May 16, 2017&nbsp;&nbsp;1:56:58</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="什么是拥塞"><a href="#什么是拥塞" class="headerlink" title="什么是拥塞"></a>什么是拥塞</h2><p>我们都知道计算机网络中的资源是有限的。某段时间内网络中对资源的需求超过了网络中的可用部分，而导致网络性能下降的情况就是 <strong> 拥塞 </strong>。</p>
+<p>通俗点说就是发送的数据包太多网络中的设备处理不过来，而导致网络性能下降的情况。</p>
+<h2 id="TCP-为什么要进行拥塞控制"><a href="#TCP-为什么要进行拥塞控制" class="headerlink" title="TCP 为什么要进行拥塞控制"></a>TCP 为什么要进行拥塞控制</h2><p>网络中的路由器会有一个数据包处理队列，当路由器接收到的数据包太多而一下子处理不过来时，就会导致数据包处理队列过长。此时，路由器就会无条件的丢弃新接收到的数据封包。</p>
+<p>这就会导致上层的 TCP 协议以为数据包在网络中丢失，进而重传这些数据包，而路由器又会丢弃这些重传的数据包，如此以往，就会导致网络性能急剧下降，引起网络瘫痪。</p>
+<p>因此，TCP 需要控制数据包发送的数量来避免网络性能的下降。</p>
+<h2 id="拥塞控制与流量控制的区别"><a href="#拥塞控制与流量控制的区别" class="headerlink" title="拥塞控制与流量控制的区别"></a>拥塞控制与流量控制的区别</h2><p>引用书上的答案：</p>
+<blockquote>
+<ul>
+<li><strong> 拥塞控制 </strong> 就是防止过多的数据注入到网络中，这样可以防止网络中的路由器或链路不致过载。拥塞控制所要做的都有一个前提，就是网络能够承受现有的网络负荷。拥塞控制是一个全局性的过程，涉及到所有的主机、所有的路由器，以及与降低网络传输性能有关的所有因素。</li>
+<li><strong> 流量控制 </strong> 往往指点对点通信量的控制，是个端到端的问题。流量控制所要做的就是抑制发送端发送数据的速率，以便使接收端来得及接收。</li>
+</ul>
+</blockquote>
+<h1 id="拥塞控制的方法"><a href="#拥塞控制的方法" class="headerlink" title="拥塞控制的方法"></a>拥塞控制的方法</h1><h2 id="慢开始"><a href="#慢开始" class="headerlink" title="慢开始"></a>慢开始</h2><h3 id="拥塞窗口"><a href="#拥塞窗口" class="headerlink" title="拥塞窗口"></a>拥塞窗口</h3><p>拥塞窗口（cwnd）是指发送方维护的一个根据网络状况动态变化的窗口。一般来说，发送方会让自己的发送窗口等于拥塞窗口的大小。</p>
+<blockquote>
+<p>如果考虑到流量控制的话，发送窗口也有可能小于拥塞窗口的大小。</p>
+</blockquote>
+<h3 id="传输轮次"><a href="#传输轮次" class="headerlink" title="传输轮次"></a>传输轮次</h3><p>一个传输轮次是指发送方把自己的发送窗口内的数据全部发送出去并收到对最后一个字节的确认。</p>
+<p>例如，A 将自己的发送窗口内的数据全部连续发送给了 B，而 B 收到这些数据后向 A 发送了对这些数据的确认，A 收到这个确认后，一个传输轮次就算是完成了。</p>
+<h3 id="慢开始算法"><a href="#慢开始算法" class="headerlink" title="慢开始算法"></a>慢开始算法</h3><p>慢开始算法中的主要方法就是有小到大逐渐增大发送窗口。</p>
+<p>那么，具体是怎么增大的呢？</p>
+<p>简单来说就是每个传输轮次后将 cwnd 大小加倍。</p>
+<p>举个例子：</p>
+<p>首先，发送方设置 cwnd=1（为方便理解，这里用报文段的个数作为窗口大小的单位），在收到接收方发来的确认后（也就是下个传输轮次），设置 cwnd=2，然后将发送窗口的数据发送出去。在一次收到接收方发来的确认后，发送方设置 cwnd=4，再讲发送窗口中的数据发送出去。然后再重复上面的过程。</p>
+<p>这里就应该清楚，<strong> 慢开始 </strong> 算法中的 <strong> 慢 </strong> 不是说 cwnd 增长的 <strong> 慢 </strong>，而是相对一下子发送大量数据而言，这种一次先发送少量的数据包的方式要 <strong> 慢 </strong> 许多。</p>
+<p>当然，cwnd 的大小肯定不可能一直以这种指数的方式增长下去，要不然很快就会增长到引起网络瘫痪的程度了。</p>
+<p>所以，经过一定时间或条件，我们就要换成 <strong> 拥塞避免 </strong> 算法来发送数据。</p>
+<h2 id="拥塞避免"><a href="#拥塞避免" class="headerlink" title="拥塞避免"></a>拥塞避免</h2><h3 id="慢开始门限-ssthresh"><a href="#慢开始门限-ssthresh" class="headerlink" title="慢开始门限 ssthresh"></a>慢开始门限 ssthresh</h3><p>像上面所说，不能任由慢开始算法中的 cwnd 任意增长，所以我们引入一个 <strong> 慢开始门限（ssthresh）</strong> 的阈值来控制 cwnd 的增长。</p>
+<p>具体作用如下：</p>
+<ul>
+<li>cwnd &lt; ssthresh ，使用慢开始算法</li>
+<li>cwnd = ssthresh , 使用慢开始算法或拥塞避免算法都可以</li>
+<li>cwnd &gt; ssthresh , 使用拥塞避免算法呢</li>
+</ul>
+<p>还有一个问题就是这个 ssthresh 是怎么设置的呢？</p>
+<p>TCP/IP 中规定无论是在慢开始阶段还是在拥塞避免阶段，只要发现网络中出现拥塞（没有按时收到确认），就要把 ssthresh 设置为此时发送窗口的一半大小（不能小于 2）。</p>
+<h3 id="拥塞避免过程"><a href="#拥塞避免过程" class="headerlink" title="拥塞避免过程"></a>拥塞避免过程</h3><p><strong> 拥塞避免 </strong> 算法也是逐渐的增大 cwnd 的大小，只是采用的是线性增长而不是像 <strong> 慢开始 </strong> 算法那样的指数增长。</p>
+<p>具体来说就是每个传输轮次后将 cwnd 的大小加一（加法增大），如果发现出现网络拥塞的话就按照上面的方法重新设置 <strong>ssthresh</strong> 的大小（乘法减小）并从 cwnd=1 开始重新执行 <strong> 慢开始 </strong> 算法。</p>
+<p>如下面的图片所示：</p>
+<p><img src="http://static.zybuluo.com/lxyzk/zxxuqcjbsq9gzyotfbfjwjrn/% E6%8B% A5% E5% A1%9E% E9%81% BF% E5%85%8D% E7% AE%97% E6% B3%95% E5%9B% BE% E8% A7% A3" alt="拥塞避免算法图解"></p>
+<p>（图片来源于网络）</p>
+<h2 id="快重传"><a href="#快重传" class="headerlink" title="快重传"></a>快重传</h2><p>前面复习到过，TCP 的可靠传输的原理就是 <strong> 超时重传 </strong> 机制。配合上面的 <strong> 慢开始 </strong> 和 <strong> 拥塞避免 </strong> 使用就是发送发发送完数据后设置一个定时器，如果在定时器时间内没有收到对接收方发来的确认的话就去执行上述的 <strong> 乘法减小 </strong> 过程并重新开始 <strong> 慢开始 </strong> 算法。</p>
+<p>而 <strong> 快重传 </strong> 则是允许发送方再连续收到 3 个重复的确认后就可以开始执行 <strong> 乘法减小 </strong> 过程而不必再等待所设置的重传计时器到时。</p>
+<p>这就需要接收方没收到一个 <strong> 失序的报文段 </strong> 就立即发出重复确认以让发送发及早知道有报文段丢失，而不是等待自己发送数据的时候进行捎带确认。</p>
+<h2 id="快恢复"><a href="#快恢复" class="headerlink" title="快恢复"></a>快恢复</h2><p><strong> 快恢复算法 </strong> 是与 <strong> 快重传算法 </strong> 配合使用的一个算法。</p>
+<p>使用了 <strong> 快恢复算法 </strong> 后与原来不同的一点是当发现网络出现拥塞并执行了 <strong> 乘法减小 </strong> 过程后，并不是设置 cwnd=1 并重新开始执行 <strong> 慢开始 </strong> 算法，而是让 cwnd=<strong> 乘法减小 </strong> 后的 <strong>ssthresh</strong> 并开始执行 <strong> 拥塞避免 </strong> 算法。</p>
+<p>因为此时发送发能连续接收到三个重复的确认就可以认为此时网络很可能没有发生拥塞。</p>
+<p>使用了 <strong> 快重传 </strong> 和 <strong> 快恢复 </strong> 的拥塞避免过程如下：</p>
+<p><img src="http://static.zybuluo.com/lxyzk/i6zrad1hw97f0a4okjxke7c4/% E5% BF% AB% E9%87%8D% E4% BC% A0% E5% BF% AB% E6%81% A2% E5% A4%8D" alt="快重传快恢复"></p>
+<p>（图片来源于网络）</p>
+<h2 id="TCP-的发送窗口到底是多大"><a href="#TCP-的发送窗口到底是多大" class="headerlink" title="TCP 的发送窗口到底是多大"></a>TCP 的发送窗口到底是多大</h2><p>发送窗口的上限值 = Min {rwnd, cwnd}</p>
+<p>rwnd：接收方接收窗口<br>cwnd：发送方拥塞窗口</p>
+<a id="more"></a>
+<h1 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h1>
+        </div>
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/TCP-IP/"># TCP/IP</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2017/06/03/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%AD%A6%E4%B9%8B%E8%AF%81%E4%B9%A6/">数字签名和数字证书</a>
+            
+            
+            <a class="next" rel="next" href="/2017/05/04/Redis/Redis%E8%AF%A6%E8%A7%A3%E4%B9%8B%E2%80%94%E2%80%94%E4%B8%8EMemcached%E5%AF%B9%E6%AF%94/">如何比较 Redis 与 Memcached</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>JavaScript 词法分析 | 0x01 MAYSTORY </title>
+
+
+    
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
+
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">JavaScript 词法分析</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 23, 2017&nbsp;&nbsp;8:00:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>JavaScript 引擎在代码执行前会进行词法分析，词法分析主要有三个步骤：</p>
+<p>分析参数 -&gt; 分析变量的声明 -&gt; 分析函数声明</p>
+<h2 id="词法分析过程"><a href="#词法分析过程" class="headerlink" title="词法分析过程"></a>词法分析过程</h2><p>JavaScript 函数在运行的瞬间，会生成一个活动对象 AO（Active Object），举个例子</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> name = <span class="string">&#x27;mary&#x27;</span>;</span><br><span class="line">    <span class="built_in">console</span>.log (name);</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">name</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">    <span class="built_in">console</span>.log (name);</span><br><span class="line">&#125;</span><br><span class="line">f1 (<span class="string">&quot;abc&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p><strong> 第一步：分析参数：</strong></p>
+<ol>
+<li>函数接收形式参数，添加到 AO 的属性，并且这个时候值为 <code>undefined</code>, 即 <code>AO.name=undefined</code></li>
+<li>接收实参 <code>&quot;abc&quot;</code>，添加到 AO 的属性，覆盖之前的 <code>undefined</code>，即 <code>AO.name=&#39;abc&#39;</code></li>
+</ol>
+<p><strong> 第二步：分析变量声明：</strong> 如 <code>var name;</code> 或 <code>var name=&#39;mary&#39;</code>;</p>
+<ol>
+<li>如果上一步分析参数中 AO 还没有 name 属性，则添加 AO 属性为 <code>undefined</code>，即 <code>AO.name=undefined</code></li>
+<li>如果 AO 上面已经有 name 属性了，则不作任何修改，此时 <code>AO.name===&#39;mary&#39;</code></li>
+</ol>
+<p><strong> 第三步：分析函数的声明：</strong></p>
+<p>如果有 <code>function name ()&#123;&#125;</code> 把函数赋给 <code>AO.name</code> , 覆盖上一步分析的值</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>分析下面这个栗子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params">a</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log (a);           <span class="comment">//function a ()&#123;&#125;</span></span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">20</span>;</span><br><span class="line">    <span class="built_in">console</span>.log (a);            <span class="comment">//20</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">a</span> (<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">    <span class="built_in">console</span>.log (a);            <span class="comment">//20</span></span><br><span class="line">&#125;</span><br><span class="line">test (<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+<p>第一步，分析函数参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AO.a &#x3D; undefined &#x2F;&#x2F; 形式参数 </span><br><span class="line">AO.a &#x3D; 100 &#x2F;&#x2F; 接收实参 </span><br></pre></td></tr></table></figure>
+<p>第二步，分析局部变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> 第 4 行代码有 var a, 但是此时已有 AO.a &#x3D; 100, 所以不做任何修改，即 AO.a &#x3D; 100</span><br></pre></td></tr></table></figure>
+<p>第三步，分析函数声明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> 第 6 行代码有函数 a, 则将 function a ()&#123;&#125; 赋给 AO.a, 即 AO.a &#x3D; function a ()&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>执行代码时：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> 第 3 行代码运行时拿到的 a 时词法分析后的 AO.a，即 AO.a &#x3D; function a ()&#123;&#125;；</span><br><span class="line"> 第 4 行代码：将 20 赋值给 a, 此时 a&#x3D;20;</span><br><span class="line"> 第 5 行代码运行时 a 已经被赋值为 20, 结果 20；</span><br><span class="line"> 第 6 行代码是一个函数表达式，所以不做任何操作；</span><br><span class="line"> 第 7 行代码运行时仍是 20；</span><br></pre></td></tr></table></figure>
+<p>ps:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span><span class="keyword">var</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="number">2.</span><span class="keyword">function</span> test (a)&#123;</span><br><span class="line"><span class="number">3.</span>    <span class="keyword">var</span> a;               <span class="comment">// 证明词法分析第二步。</span></span><br><span class="line"><span class="number">4.</span>    alert (a);           <span class="comment">//100</span></span><br><span class="line"><span class="number">5.</span>    a = <span class="number">20</span>;</span><br><span class="line"><span class="number">6.</span>    alert (a);           <span class="comment">//20</span></span><br><span class="line"><span class="number">7.</span>&#125;</span><br><span class="line"><span class="number">7.</span>test (<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+<p>ps:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params">a</span>)</span>&#123;</span><br><span class="line">    alert (a);         <span class="comment">//100</span></span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">20</span>;</span><br><span class="line">    alert (a);         <span class="comment">//20</span></span><br><span class="line">    a = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;        <span class="comment">// 是赋值，只有在执行时才有效 </span></span><br><span class="line">    alert (a);         <span class="comment">//function ()&#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line">test (<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+<p>ps:(执行结果同上)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params">a</span>)</span>&#123;</span><br><span class="line">    alert (a);                <span class="comment">//100</span></span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">20</span>;</span><br><span class="line">    alert (a);                <span class="comment">//20</span></span><br><span class="line">    <span class="keyword">var</span> a = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;        <span class="comment">// 是赋值，只有在执行时才有效 </span></span><br><span class="line">    alert (a);                <span class="comment">//function ()&#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line">test (<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+<p><strong> 补充说明：函数声明与函数表达式 </strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数声明 </span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 函数表达式 </span></span><br><span class="line"><span class="keyword">var</span> b = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>a 和 b 在词法分析时，区别：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a 在词法分析时，就发挥作用；</span><br><span class="line">b 只有在执行阶段，才发挥作用。</span><br></pre></td></tr></table></figure>
+<h2 id="词法作用域"><a href="#词法作用域" class="headerlink" title="词法作用域"></a>词法作用域</h2><p>词法作用域的意思是，作用域为在定义时 (词法分析时) 就确定下来的，而并非在执行时确定。即在函数未执行前，函数执行的顺序已经被确定，而不是类似 JAVA 一样，是在执行前根本不知道执行顺序。</p>
+
+        </div>
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/JavaScript/"># JavaScript</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2017/01/27/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%AD%A6%E4%B9%8B%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E5%92%8C%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/">对称加密和非对称加密</a>
+            
+            
+            <a class="next" rel="next" href="/2017/01/09/Linux/%E5%B7%A5%E5%85%B7%E4%B9%8B%E7%AE%80%E6%98%8Etmux%E7%8E%A9%E6%B3%95%E6%95%99%E7%A8%8B/">简明 tmux 玩法教程</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

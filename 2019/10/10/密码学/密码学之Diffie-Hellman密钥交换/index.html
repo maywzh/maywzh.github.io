@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>密码学之 Diffie-Hellman 密钥交换 | 0x01 MAYSTORY </title>
+
+
+    
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
+
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">密码学之 Diffie-Hellman 密钥交换</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 10, 2019&nbsp;&nbsp;1:00:25</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Diffie–Hellman_key_exchange">Deffie-Hellman</a>(简称 DH) 密钥交换是最早的密钥交换算法之一，它使得通信的双方能在非安全的信道中安全的交换密钥，用于加密后续的通信消息。 Whitfield Diffie 和 Martin Hellman 于 1976 提出该算法，之后被应用于安全领域，比如 Https 协议的 TSL (<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Transport_Layer_Security">Transport Layer Security</a>) 和 IPsec 协议的 IKE (<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Internet_Key_Exchange">Internet Key Exchange</a>) 均以 DH 算法作为密钥交换算法。</p>
+<a id="more"></a>
+<h2 id="数论基础"><a href="#数论基础" class="headerlink" title="数论基础"></a>数论基础</h2><p>理解 DH 算法前，先介绍一些必要的数论领域知识，分别是离散对数问题和一个求模公式。</p>
+<h3 id="离散对数问题"><a href="#离散对数问题" class="headerlink" title="离散对数问题"></a>离散对数问题</h3><p>假定 a, p 均是素数，下面两个集合相等，证明过程请参考 <a target="_blank" rel="noopener" href="http://www.amazon.com/Cryptography-Network-Security-Principles-Practice/dp/0133354695">Cryptography and Network Security</a> 第八章：</p>
+<script type="math/tex; mode=display">{a^1 (mod\ p), a^2 (mod\ p), ... a^{p-1}(mod\ p)} = {1,2,...,p-1}</script><p>上述式子可概括成以下三点，对于 1 &lt;= x,y &lt;= p - 1，有：</p>
+<ul>
+<li>$a^x (mod\ p)$ 一定属于 {1, 2, …, p -1 }</li>
+<li>$\forall x != y, a^x (mod\ p) \neq a^y (mod\ p)$</li>
+<li>$1 \leq b \leq p - 1$，一定存在唯一的 $1 \leq x \leq p-1$，使得 $b = a^x (mod\ p)$</li>
+</ul>
+<blockquote>
+<p>✨ 出于方便，我们在下面的推导中 $=$ 两边默认省略 $(mod\ p)$</p>
+</blockquote>
+<p>第三点在求解上有这么一个特点：已知 x 求 b 非常容易，已知 b 求 x 非常困难，那么这便是一个困难问题，特别当 p 很大时，求解的复杂度非常高，所以它又被称为离散对数问题 (<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Discrete_logarithm">Discrete logarithm</a>)，它是 DH 算法能够安全交换密钥的基础</p>
+<h3 id="求模公式"><a href="#求模公式" class="headerlink" title="求模公式"></a>求模公式</h3><p>假设 q 为素数，对于正整数 a,x,y，有：</p>
+<script type="math/tex; mode=display">(a^x)^y = a^{xy}</script><p>证明如下：</p>
+<blockquote>
+<p>令 $ a^x = mp + n$， 其中 m, n 为自然数，$ 0 \leq n &lt; p$，则有</p>
+</blockquote>
+<script type="math/tex; mode=display">\begin {equation} \begin {split} C &= (a^x)^y \\
+  &= (mp + n)^y \\
+  &= n^y \\
+  &= (mp +n)^y \\
+  &= a^{xy} \end {split} \end {equation}</script><h2 id="Deffie-Hellman-算法原理"><a href="#Deffie-Hellman-算法原理" class="headerlink" title="Deffie-Hellman 算法原理"></a>Deffie-Hellman 算法原理</h2><p>本文参考 <a target="_blank" rel="noopener" href="http://www.amazon.com/Cryptography-Network-Security-Principles-Practice/dp/0133354695">Cryptography and Network Security</a> 一书，介绍 DH 算法原理，在掌握上节数论知识的基础上，理解 DH 算法原理非常容易。</p>
+<p>假设 A, B 两方进行通信前需要交换密钥，首先 A, B 共同选取 p 和 a 两个素数，其中 p 和 a 均公开。之后 A 选择一个自然数 Xa，计算出 Ya，Xa 保密，Ya 公开；同理，B 选择 Xb 并计算出 Yb，其中 Xb 保密，Yb 公开。之后 A 用 Yb 和 Xa 计算出密钥 K，而 B 用 Ya 和 Xb 计算密钥 K，流程如下：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">+-------------------------------------------------------------------+</span><br><span class="line">|                    Global Pulic Elements                          |</span><br><span class="line">|                                                                   |</span><br><span class="line">|       p                               prime number                |</span><br><span class="line">|       a                               prime number, a &lt; p         |</span><br><span class="line">+-------------------------------------------------------------------+</span><br><span class="line">+-------------------------------------------------------------------+</span><br><span class="line">|                   <span class="built_in"> User </span>A Key Generation                          |</span><br><span class="line">|                                                                   |</span><br><span class="line">|       Select private Xa               Xa &lt; p                      |</span><br><span class="line">|       Calculate public Ya             Ya = a^Xa mod p             |</span><br><span class="line">+-------------------------------------------------------------------+</span><br><span class="line">+-------------------------------------------------------------------+</span><br><span class="line">|                   <span class="built_in"> User </span>B Key Generation                          |</span><br><span class="line">|                                                                   |</span><br><span class="line">|       Select private Xb               Xb &lt; p                      |</span><br><span class="line">|       Calculate public Yb             Yb = a^Xb mod p             |</span><br><span class="line">+-------------------------------------------------------------------+</span><br><span class="line">+-------------------------------------------------------------------+</span><br><span class="line">|               Calculation of<span class="built_in"> Secret </span>Key by<span class="built_in"> User </span>A                 |</span><br><span class="line">|                                                                   |</span><br><span class="line">|      <span class="built_in"> Secret </span>Key K                    K = Yb^Xa mod p             |</span><br><span class="line">+-------------------------------------------------------------------+</span><br><span class="line">+-------------------------------------------------------------------+</span><br><span class="line">|               Calculation of<span class="built_in"> Secret </span>Key by<span class="built_in"> User </span>B                 |</span><br><span class="line">|                                                                   |</span><br><span class="line">|      <span class="built_in"> Secret </span>Key K                    K = Ya^Xb mod p             |</span><br><span class="line">+-------------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+<p>下面证明，A 和 B 计算出来的密钥 K 相同。</p>
+<blockquote>
+<script type="math/tex; mode=display">\begin {equation}\begin {split} K = Yb^{Xa}
+  = (a^{Xb})^{Xa}
+  = a^{Xa \cdot Xb}          
+  = (a^{Xa} )^{Xb} 
+  = Ya^{Xb}\end {split} \end {equation}</script></blockquote>
+<p>上面一共出现了 $a, p, Xa, Ya, Xb, Yb, K$ 共 7 个数，其中：</p>
+<ul>
+<li>公开的数：$a, p, Ya, Yb$</li>
+<li>非公开数：$Xa, Xb, K$</li>
+</ul>
+<p>通常情况下，a 一般为 2 或 5，而 $p$ 的取值非常大，至少几百位，Xa 和 Xb 的取值也非常大，其复杂度至少为 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Pollard&#39;s_rho_algorithm_for_logarithms">$O (p^{0.5})$</a>。对于攻击者来说，已知 $Ya，Xa$ 的求解非常困难，同理 Xb 的求解也很困难，所以攻击者难以求出 K，所以 DH 能够保证通信双方在透明的信道中安全的交换密钥。<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Diffie–Hellman_key_exchange#/media/File:Diffie-Hellman_Key_Exchange.svg">下图</a> 非常形象的描述密钥交换流程：</p>
+<p>​                        <img src="https://i.loli.net/2020/09/11/j7te34ZRPH59fYz.png" alt="DH key exchange"></p>
+
+        </div>
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/"># 密码学</a>
+                    
+                        <a href="/tags/%E6%95%B0%E5%AD%A6/"># 数学</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/11/05/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%AD%A6%E4%B9%8B%E6%A4%AD%E5%9C%86%E6%9B%B2%E7%BA%BF/">密码学之椭圆曲线</a>
+            
+            
+            <a class="next" rel="next" href="/2018/09/08/Python/Python%E7%9A%84%E5%85%A8%E5%B1%80%E8%A7%A3%E9%87%8A%E5%99%A8%E9%94%81%E6%98%AF%E4%BB%80%E4%B9%88/">Python 的全局解释器锁是什么</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>探秘 http 响应报文结构 | 0x01 MAYSTORY </title>
+
+
+    
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
+
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">探秘 http 响应报文结构</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 16, 2015&nbsp;&nbsp;15:52:39</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>HTTP 响应报文通过通信双方建立的 TCP 连接传送，传送完成后根据 HTTP 协议中的 Connection 字段确定是否要继续保持 TCP 连接。HTTP 响应报文由状态行、响应头部 和 响应包体 3 个部分组成，如下图所示：</p>
+<a id="more"></a>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><p>以访问 www.baidu.com 为例，我们可以 &lt; kbd&gt;⌥&lt;/kbd&gt; +<kbd>⌘</kbd> +<kbd>j&lt;/kbd &gt; 打开 Chrome Dev Tools 来看一个实例。</p>
+<p>、</p>
+<p>展开 Response Headers 选项，我们得到了响应报文。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Bdpagetype</span>: 2</span><br><span class="line"><span class="attribute">Bdqid</span>: 0xb8a2e3a70000a2ab</span><br><span class="line"><span class="attribute">Cache-Control</span>: private</span><br><span class="line"><span class="attribute">Connection</span>: Keep-Alive</span><br><span class="line"><span class="attribute">Content-Encoding</span>: gzip</span><br><span class="line"><span class="attribute">Content-Type</span>: text/html;charset=utf-8</span><br><span class="line"><span class="attribute">Date</span>: Mon, 01 Oct 2018 08:11:18 GMT</span><br><span class="line"><span class="attribute">Expires</span>: Mon, 01 Oct 2018 08:11:17 GMT</span><br><span class="line"><span class="attribute">Server</span>: BWS/1.1</span><br><span class="line"><span class="attribute">Set-Cookie</span>: BDSVRTM=171; path=/</span><br><span class="line"><span class="attribute">Set-Cookie</span>: BD_HOME=1; path=/</span><br><span class="line"><span class="attribute">Set-Cookie</span>: H_PS_PSSID=xxxxxxxx; path=/; domain=.baidu.com</span><br><span class="line"><span class="attribute">Strict-Transport-Security</span>: max-age=172800</span><br><span class="line"><span class="attribute">X-Ua-Compatible</span>: IE=Edge,chrome=1</span><br><span class="line"><span class="attribute">Transfer-Encoding</span>: chunked</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">...</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>从上而下分别是有三个部分：状态行，响应头部和响应包体。</p>
+<h3 id="HTTP-响应状态行"><a href="#HTTP-响应状态行" class="headerlink" title="HTTP 响应状态行"></a>HTTP 响应状态行</h3><p>状态行由协议版本 响应码 和响应描述组成</p>
+<h4 id="响应码"><a href="#响应码" class="headerlink" title="响应码"></a>响应码</h4><p>根据客户端的 HTTP 请求，会产生不同的 HTTP 响应状态，这些状态用状态码来表示。</p>
+<p>按照分类，响应大概分为以下几大类：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>响应类别</th>
+<th>原因短语</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1XX</td>
+<td>信息性状态码（Informational）</td>
+<td>服务器正在处理请求</td>
+</tr>
+<tr>
+<td>2XX</td>
+<td>成功状态码（Success）</td>
+<td>请求已正常处理完毕</td>
+</tr>
+<tr>
+<td>3XX</td>
+<td>重定向状态码（Redirection）</td>
+<td>需要进行额外操作以完成请求</td>
+</tr>
+<tr>
+<td>4XX</td>
+<td>客户端错误状态码（Client Error）</td>
+<td>客户端原因导致服务器无法处理请求</td>
+</tr>
+<tr>
+<td>5XX</td>
+<td>服务器错误状态码（Server Error）</td>
+<td>服务器原因导致处理请求出错</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>常用的状态码有 200，204，207，301，302，303，304，307，400，401，403，404，500，503 这些</p>
+<ul>
+<li>200 OK 表示请求被服务器正常处理</li>
+<li>204 No Content 表示请求已成功处理，但是没有内容返回</li>
+<li>206 Partial Content 表示服务器已经完成了部分 GET 请求</li>
+<li>301 Moved Permanently 永久重定向，表示请求的资源已经永久的搬到了其他位置</li>
+<li>302 Found 临时重定向，表示请求的资源临时搬到了其他位置</li>
+<li>303 See Other 表示请求资源存在另一个 URI，应使用 GET 定向获取请求资源</li>
+<li>304 Not Modified 表示客户端发送附带条件的请求（GET 方法请求报文中的 IF…）时，条件不满足</li>
+<li>307 Temporary Redirect 临时重定向，和 302 有着相同含义</li>
+<li>400 Bad Request 表示请求报文存在语法错误或参数错误，服务器不理解</li>
+<li>401 Unauthorized 表示发送的请求需要有 HTTP 认证信息或者是认证失败了</li>
+<li>403 Forbidden 表示对请求资源的访问被服务器拒绝了</li>
+<li>404 Not Found 表示服务器找不到请求的资源</li>
+<li>500 Internal Server Error 表示服务器执行请求的时候出错了</li>
+<li>503 Service Unavailable 表示服务器超负载或正停机维护，无法处理请求</li>
+</ul>
+<h3 id="HTTP-响应头部"><a href="#HTTP-响应头部" class="headerlink" title="HTTP 响应头部"></a>HTTP 响应头部</h3><p>响应头部由若干响应头部字段组成，这些字段类似于键值对形式，每个字段占据一行。</p>
+<h4 id="常用标准响应头字段"><a href="#常用标准响应头字段" class="headerlink" title="常用标准响应头字段"></a>常用标准响应头字段</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Access-Control-Allow-Origin</strong></td>
+<td>指定哪些站点可以参与跨站资源共享</td>
+<td>Access-Control-Allow-Origin: *</td>
+</tr>
+<tr>
+<td><strong>Accept-Patch</strong></td>
+<td>指定服务器支持的补丁文档格式，适用于 http 的 patch 方法</td>
+<td>Accept-Patch: text/example;charset=utf-8</td>
+</tr>
+<tr>
+<td><strong>Accept-Ranges</strong></td>
+<td>服务器通过 byte serving 支持的部分内容范围类型</td>
+<td>Accept-Ranges: bytes</td>
+</tr>
+<tr>
+<td><strong>Age</strong></td>
+<td>对象在代理缓存中暂存的秒数</td>
+<td>Age: 1200</td>
+</tr>
+<tr>
+<td><strong>Allow</strong></td>
+<td>设置特定资源的有效行为，适用方法不被允许的 http 405 错误</td>
+<td>Allow: GET, HEAD</td>
+</tr>
+<tr>
+<td><strong>Alt-Svc</strong></td>
+<td>服务器使用 “Alt-Svc”（Alternative Servicesde 的缩写）头标识资源可以通过不同的网络位置或者不同的网络协议获取</td>
+<td>Alt-Svc: h2=”http2.example.com:443”; ma=7200</td>
+</tr>
+<tr>
+<td><strong>Cache-Control</strong></td>
+<td>告诉服务端到客户端所有的缓存机制是否可以缓存这个对象，单位是秒</td>
+<td>Cache-Control: max-age=3600</td>
+</tr>
+<tr>
+<td><strong>Connection</strong></td>
+<td>设置当前连接和 hop-by-hop 协议请求字段列表的控制选项</td>
+<td>Connection: close</td>
+</tr>
+<tr>
+<td><strong>Content-Disposition</strong></td>
+<td>告诉客户端弹出一个文件下载框，并且可以指定下载文件名</td>
+<td>Content-Disposition: attachment; filename=”fname.ext”</td>
+</tr>
+<tr>
+<td><strong>Content-Encoding</strong></td>
+<td>设置数据使用的编码类型</td>
+<td>Content-Encoding: gzip</td>
+</tr>
+<tr>
+<td><strong>Content-Language</strong></td>
+<td>为封闭内容设置自然语言或者目标用户语言</td>
+<td>Content-Language: en</td>
+</tr>
+<tr>
+<td><strong>Content-Length</strong></td>
+<td>响应体的字节长度</td>
+<td>Content-Length: 348</td>
+</tr>
+<tr>
+<td><strong>Content-Location</strong></td>
+<td>设置返回数据的另一个位置</td>
+<td>Content-Location: /index.htm</td>
+</tr>
+<tr>
+<td><strong>Content-MD5</strong></td>
+<td>设置基于 MD5 算法对响应体内容进行 Base64 二进制编码</td>
+<td>Content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==</td>
+</tr>
+<tr>
+<td><strong>Content-Range</strong></td>
+<td>标识响应体内容属于完整消息体中的那一部分</td>
+<td>Content-Range: bytes 21010-47021/47022</td>
+</tr>
+<tr>
+<td><strong>Content-Type</strong></td>
+<td>设置响应体的 MIME 类型</td>
+<td>Content-Type: text/html; charset=utf-8</td>
+</tr>
+<tr>
+<td><strong>Date</strong></td>
+<td>设置消息发送的日期和时间</td>
+<td>Date: Tue, 15 Nov 1996 08:12:31 GMT</td>
+</tr>
+<tr>
+<td><strong>ETag</strong></td>
+<td>特定版本资源的标识符，通常是消息摘要</td>
+<td>ETag: “737060cd8c284d8af7ad3082f209582d”</td>
+</tr>
+<tr>
+<td><strong>Expires</strong></td>
+<td>设置响应体的过期时间</td>
+<td>Expires: Thu, 01 Dec 1996 16:00:00 GMT</td>
+</tr>
+<tr>
+<td><strong>Last-Modified</strong></td>
+<td>设置请求对象最后一次的修改日期</td>
+<td>Last-Modified: Tue, 15 Nov 1994 12:45:26 GMT</td>
+</tr>
+<tr>
+<td><strong>Link</strong></td>
+<td>设置与其他资源的类型关系</td>
+<td>Link: &lt;/feed&gt;; rel=”alternate”</td>
+</tr>
+<tr>
+<td><strong>Location</strong></td>
+<td>在重定向中或者创建新资源时使用</td>
+<td>Location: <code>http://www.w3.org/pub/WWW/People.html</code></td>
+</tr>
+<tr>
+<td><strong>P3P</strong></td>
+<td>以 P3P:CP=”your_compact_policy” 的格式设置支持 P3P (Platform for Privacy Preferences Project) 策略，<br /> 大部分浏览器没有完全支持 P3P 策略，许多站点设置假的策略内容欺骗支持 P3P 策略的浏览器以获取第三方 cookie 的授权</td>
+<td>P3P: CP=”This is not a P3P policy! See<code>http://www.google.com/support/accounts/bin/answer.py?hl=en&amp;answer=151657</code>for more info.”</td>
+</tr>
+<tr>
+<td><strong>Pragma</strong></td>
+<td>设置特殊实现字段，可能会对请求响应链有多种影响</td>
+<td>Pragma: no-cache</td>
+</tr>
+<tr>
+<td><strong>Proxy-Authenticate</strong></td>
+<td>设置访问代理的请求权限</td>
+<td>Proxy-Authenticate: Basic</td>
+</tr>
+<tr>
+<td><strong>Public-Key-Pins</strong></td>
+<td>设置站点的授权 TLS 证书</td>
+<td>Public-Key-Pins: max-age=2592000; pin-sha256=”E9CZ9INDbd+2eRQozYqqbQ2yXLVKB9+xcprMF+44U1g=”;</td>
+</tr>
+<tr>
+<td><strong>Refresh</strong></td>
+<td>重定向或者新资源创建时使用，在页面的头部有个扩展可以实现相似的功能，并且大部分浏览器都支持 &lt; br /&gt;<meta http-equiv="refresh" content="5; url=http://example.com/"></td>
+<td>Refresh: 5; url=<code>http://www.w3.org/pub/WWW/People.html</code></td>
+</tr>
+<tr>
+<td><strong>Retry-After</strong></td>
+<td>如果实体暂时不可用，可以设置这个值让客户端重试，可以使用时间段（单位是秒）或者 HTTP 时间</td>
+<td>Retry-After: 120<br /> Retry-After: Fri, 07 Nov 2014 23:59:59 GMT</td>
+</tr>
+<tr>
+<td><strong>Server</strong></td>
+<td>服务器名称</td>
+<td>Server: nginx/1.14.0 (Ubuntu)</td>
+</tr>
+<tr>
+<td><strong>Set-Cookie</strong></td>
+<td>设置 HTTP Cookie</td>
+<td>Set-Cookie: UserID=Andy; Max-Age=3600; Version=1</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>设置 HTTP 响应状态</td>
+<td>Status: 200 OK</td>
+</tr>
+<tr>
+<td><strong>Strict-Transport-Security</strong></td>
+<td>一种 HSTS 策略通知 HTTP 客户端缓存 HTTPS 策略多长时间以及是否应用到子域</td>
+<td>Strict-Transport-Security: max-age=16070400; includeSubDomains</td>
+</tr>
+<tr>
+<td><strong>Trailer</strong></td>
+<td>标识给定的 header 字段将展示在后续的 chunked 编码的消息中</td>
+<td>Trailer: Max-Forwards</td>
+</tr>
+<tr>
+<td><strong>TSV</strong></td>
+<td>在响应中设置给 DNT (do-not-track), 可能的取值</td>
+<td>TSV: N</td>
+</tr>
+<tr>
+<td><strong>Upgrade</strong></td>
+<td>请求客户端升级协议</td>
+<td>Upgrade: HTTP/2.0, HTTPS/1.3, IRC/6.9, RTA/x11, websocket</td>
+</tr>
+<tr>
+<td><strong>Vary</strong></td>
+<td>通知下级代理如何匹配未来的请求头已让其决定缓存的响应是否可用而不是重新从源主机请求新的</td>
+<td>Vary: Accept-Language</td>
+</tr>
+<tr>
+<td><strong>Warning</strong></td>
+<td>实体可能会发生的问题的通用警告</td>
+<td>Warning: 199 Miscellaneous warning</td>
+</tr>
+<tr>
+<td><strong>WWW-Authenticate</strong></td>
+<td>标识访问请求实体的身份验证方案</td>
+<td>WWW-Authenticate: Basic</td>
+</tr>
+<tr>
+<td><strong>X-Frame-Options</strong></td>
+<td>点击劫持保护：<br />deny 不渲染 &lt; br /&gt;sameorigin <strong> 如果源不匹配不渲染 </strong><br />allow-from 允许指定位置访问 &lt; br /&gt;allowall 不标准，允许任意位置访问</td>
+<td>X-Frame-Options: deny</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="常用非标准响应头字段"><a href="#常用非标准响应头字段" class="headerlink" title="常用非标准响应头字段"></a>常用非标准响应头字段</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>X-XSS-Protection</strong></td>
+<td>过滤跨站脚本</td>
+<td>X-XSS-Protection: 1; mode=block</td>
+</tr>
+<tr>
+<td><strong>Content-Security-Policy</strong></td>
+<td>定义内容安全策略</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>X-Content-Security-Policy</strong></td>
+<td>定义内容安全策略</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>X-WebKit-CSP</strong></td>
+<td>定义内容安全策略</td>
+<td>X-WebKit-CSP: default-src’self’</td>
+</tr>
+<tr>
+<td><strong>X-Content-Type-Options</strong></td>
+<td>唯一的取值是 “”, 阻止 IE 在响应中嗅探定义的内容格式以外的其他 MIME 格式</td>
+<td>X-Content-Type-Options: nosniff</td>
+</tr>
+<tr>
+<td><strong>X-Powered-By</strong></td>
+<td>指定支持 web 应用的技术</td>
+<td>X-Powered-By: PHP/5.4.0</td>
+</tr>
+<tr>
+<td><strong>X-UA-Compatible</strong></td>
+<td>推荐首选的渲染引擎来展示内容，通常向后兼容，也用于激活 IE 中内嵌 chrome 框架插件 &lt; br /&gt;<meta http-equiv="X-UA-Compatible" content="chrome=1" /></td>
+<td>X-UA-Compatible: IE=EmulateIE7<br/> X-UA-Compatible: IE=edge</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p> X-UA-Compatible: Chrome=1 |<br>| <strong>X-Content-Duration</strong>            | 提供音视频的持续时间，单位是秒，只有 Gecko 内核浏览器支持      | X-Content-Duration: 42.666                                   |<br>| <strong>Upgrade-Insecure-Requests</strong>     | 标识服务器是否可以处理 HTTPS 协议                              | Upgrade-Insecure-Requests: 1                                 |<br>| <strong>X-Request-ID,X-Correlation-ID</strong> | 标识一个客户端和服务端的请求                                 | X-Request-ID: f058ebd6-02f7-4d3f-942e-904344e8cde5           |</p>
+<h3 id="HTTP-响应包体"><a href="#HTTP-响应包体" class="headerlink" title="HTTP 响应包体"></a>HTTP 响应包体</h3><p>响应包体包含 HTTP 响应所返回的数据，其数据类型由响应头部中的 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Type">Content-Type 字段</a> 指定。</p>
+<p>例如响应一个 js 资源</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Access-Control-Allow-Origin</span>: *</span><br><span class="line"><span class="attribute">cache-control</span>: no-cache</span><br><span class="line"><span class="attribute">Content-Security-Policy</span>: script-src &#x27;self&#x27; blob: filesystem: chrome-extension-resource:; object-src &#x27;self&#x27; blob: filesystem:;</span><br><span class="line"><span class="attribute">Content-Type</span>: text/javascript</span><br><span class="line"><span class="attribute">ETag</span>: &quot;xx+STUs6bw=&quot;</span><br><span class="line"></span><br><span class="line">define ([&quot;core/Logger&quot;],function (t)&#123;var i,n=&#123;settings:[300,60,10],NOTIFICATION_TTL:5e3,initAPI:function (t)&#123;i=t,i.mixin (&quot;Notification&quot;,&#123;get:this.get.bind (this),saveSettings:this.saveSettings.bind (this)&#125;)&#125;,init:function (t)&#123;this.loadSettings (),&quot;function&quot;==typeof t&amp;&amp;t ()&#125;,get:function ()&#123;return this.settings&#125;,show:function (t)&#123;var n=&quot;&quot;,e=&quot;&quot;,o=0,s=this;&quot;nuclear&quot;===t?(o=i.NuclearOption.getSecondsUntilActive (),n=&quot;common/img/eye_48x48_nuclear.png&quot;,e=i.Chrome.Translation.get (&quot;nuclearNotification&quot;)||&quot;The Nuclear Option will start blocking sites in&quot;):&quot;block&quot;===t&amp;&amp;(o=i.StayFocusd.getTotalSecondsRemaining (),n=&quot;common/img/eye_48x48_red.png&quot;,e=i.Chrome.Translation.get (&quot;blockNotification&quot;)||&quot;StayFocusd will start blocking your Blocked Sites in&quot;),e+=o&gt;60?&quot; &quot;+i.Date.secondsToMinsAndSecs (o):&quot; &quot;+o+&quot; seconds&quot;;var c=&#123;type:&quot;basic&quot;,title:&quot;StayFocusd&quot;,iconUrl:n,message:e&#125;;i.Chrome.Notification.create (&quot;&quot;,c,function (t)&#123;setTimeout (function ()&#123;i.Chrome.Notification.clear (t,function ()&#123;&#125;)&#125;,s.NOTIFICATION_TTL)&#125;)&#125;,isset:function (t)&#123;return this.settings.inArray (t)&#125;,saveSettings:function (t)&#123;this.settings=t,i.Settings.set (&#123;notificationSettings:t&#125;)&#125;,loadSettings:function ()&#123;var t=i.Settings.get (&quot;notificationSettings&quot;);t&amp;&amp;(this.settings=t)&#125;&#125;;return n&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>HTTP 响应报文的控制信息保存在 HTTP 响应状态行和响应头部，数据则被保存在包体中。</p>
+
+        </div>
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Web/"># Web</a>
+                    
+                        <a href="/tags/HTTP-HTTPS/"># HTTP/HTTPS</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2015/11/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8B%E6%8E%A2%E7%A7%98http%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87%E7%BB%93%E6%9E%84/">探秘 http 请求报文结构</a>
+            
+            
+            <a class="next" rel="next" href="/2015/11/01/MySQL/%E8%B8%A9%E5%9D%91%E8%AE%B0%E4%B9%8BMysql%E8%AE%BF%E9%97%AE%E6%8B%92%E7%BB%9D/">踩坑记之 Mysql 访问拒绝故障</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

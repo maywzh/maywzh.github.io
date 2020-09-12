@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>JavaScript 的变量提升 | 0x01 MAYSTORY </title>
+
+
+    
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
+
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">JavaScript 的变量提升</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">July 20, 2017&nbsp;&nbsp;3:35:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>JavaScript 的设计不同于传统编程语言，它自成一派，有很多的奇妙特性。</p>
+<p>今天就来聊聊变量提升。</p>
+<h2 id="变量提升是什么"><a href="#变量提升是什么" class="headerlink" title="变量提升是什么"></a>变量提升是什么</h2><p>ES5 之前，JavaScript 实际上并不存在块级作用域。JavaScript 引擎对 JavaScript 中 <code>var</code> 类型变量的声明的处理方式是：</p>
+<ul>
+<li>如果变量在函数外部声明，那么该变量会被提到全局作用域顶端</li>
+<li>如果变量在函数内部声明，那么该变量会被提到函数作用域顶端<a id="more"></a>
+</li>
+</ul>
+<h3 id="函数外部作用域"><a href="#函数外部作用域" class="headerlink" title="函数外部作用域"></a>函数外部作用域</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log (shape); <span class="comment">// OUTPUT : undefined</span></span><br><span class="line"><span class="keyword">var</span> shape = <span class="string">&quot;square&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log (shape); <span class="comment">// OUTPUT : square</span></span><br></pre></td></tr></table></figure>
+<p>如果按照 C 语言的逻辑，第 1 行的 <code>console.log</code> 引用了未声明的变量，应该发生错误。但实际上却输出 <code>undefined</code>，也就是说实际上这里 <code>shape</code> 已经被声明了，只是没有初始化赋值而已。</p>
+<p>这就是变量提升。实际上上面的代码会被 JS 引擎识别为这样</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> shape;</span><br><span class="line"><span class="built_in">console</span>.log (shape); <span class="comment">// OUTPUT : undefined</span></span><br><span class="line">shape = <span class="string">&quot;square&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log (shape); <span class="comment">// OUTPUT : square</span></span><br></pre></td></tr></table></figure>
+<h3 id="函数内部作用域"><a href="#函数内部作用域" class="headerlink" title="函数内部作用域"></a>函数内部作用域</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">function</span> <span class="title">getShape</span>(<span class="params">condition</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log (shape);    <span class="comment">// OUTPUT : undefined</span></span><br><span class="line">    <span class="keyword">if</span> (condition) &#123;</span><br><span class="line">        <span class="keyword">var</span> shape = square;</span><br><span class="line">        <span class="keyword">return</span> shape;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里，JS 没有块级作用域，所以与 C 语言不同，在 <code>if</code> 语句中声明的 <code>shape</code> 变量会由于变量提升，而被提到 <code>getShape</code> 的顶端。变成下面这样</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">function</span> <span class="title">getShape</span>(<span class="params">condition</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> shape;</span><br><span class="line">     <span class="built_in">console</span>.log (shape);    <span class="comment">// OUTPUT : undefined</span></span><br><span class="line">    <span class="keyword">if</span> (condition) &#123;</span><br><span class="line">        shape = square;</span><br><span class="line">        <span class="keyword">return</span> shape;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="ES6-块级作用域"><a href="#ES6-块级作用域" class="headerlink" title="ES6 块级作用域"></a>ES6 块级作用域</h2><p>ES6 引入了块级作用域，这让开发者对变量有了更多的控制，且让变量有灵活的生命周期。<br>块级声明在块级 / 词法作用域里面声明，他们在 “<code>&#123;&#125;</code>” 中被创建。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getShape</span>(<span class="params">condition</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//shape doesn&#x27;t exist here</span></span><br><span class="line">  <span class="comment">//console.log (shape); ReferenceError: shape is not defined</span></span><br><span class="line">  <span class="keyword">if</span> (condition) &#123;</span><br><span class="line">    <span class="keyword">let</span> shape = square;</span><br><span class="line">    <span class="comment">//some other code</span></span><br><span class="line">    <span class="keyword">return</span> shape;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">//shape doesn&#x27;t exist here as well</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里我们不用 <code>var</code> 而用 <code>let</code> 来声明我们的变量，<code>let</code> 就更类似于传统编程语言中的变量声明，它具有块级作用域。</p>
+<blockquote>
+<p>在同一个作用域内，如果已经使用 var 标识符声明了变量，同时又用 let 标识符声明同名变量时会抛出错误。但是，如果在 let 声明的变量作用域外，声明同名变量是不会报错的。（这种情况也同样适用于我们即将谈论的 const 声明。）</p>
+</blockquote>
+<p>这其实可以用局部作用域来理解，<code>let</code> 只在它声明的那个块级作用域有效，这与 C/C++ 这类传统编程语言中的局部作用域的特性很类似。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> shape = <span class="string">&quot;square&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> shape = <span class="string">&quot;rectangle&quot;</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> shape = <span class="string">&quot;square&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (condition) &#123;</span><br><span class="line">  <span class="comment">//doesn&#x27;t throw an error</span></span><br><span class="line">  <span class="keyword">let</span> shape = <span class="string">&quot;rectangle&quot;</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// No error</span></span><br></pre></td></tr></table></figure>
+<h2 id="const"><a href="#const" class="headerlink" title="const"></a>const</h2><p><code>const</code> 声明语法与 <code>let</code> 和 <code>var</code> 相似，生命周期与 <code>let</code> 相同，但你还要注意一些规则。<br>用 <code>const</code> 声明的变量将像 <strong> 常量 </strong> 看待，因此 <strong> 它们的值在定义后是不可以修改的 </strong>。由于这样，每个 <code>const</code> 变量都 <strong> 必须在声明的同时进行初始化 </strong>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> shape = <span class="string">&quot;triangle&quot;</span>;<span class="comment">//valid </span></span><br><span class="line"><span class="keyword">const</span> color; <span class="comment">//syntax error: missing initialization</span></span><br><span class="line">shape = <span class="string">&quot;square&quot;</span>; <span class="comment">// TypeError: Assignment to constant variable</span></span><br></pre></td></tr></table></figure>
+<p>但在声明对象时，对象的属性可以被修改。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">const</span> shape = &#123;</span><br><span class="line">    name: <span class="string">&quot;triangle&quot;</span>,</span><br><span class="line">    sides: <span class="number">3</span></span><br><span class="line">&#125;</span><br><span class="line">shape.name = <span class="string">&quot;square&quot;</span>; <span class="comment">//ok </span></span><br><span class="line">shape.sides = <span class="number">4</span>;</span><br><span class="line">shape = &#123;</span><br><span class="line">    name: hexagon,</span><br><span class="line">    sides: <span class="number">6</span></span><br><span class="line">&#125; <span class="comment">// SyntaxError: Invalid shorthand property initializer</span></span><br></pre></td></tr></table></figure>
+<p>所以 <code>const</code> 可以防止整个绑定的修改，而不是绑定的值。</p>
+<h2 id="暂时性死区"><a href="#暂时性死区" class="headerlink" title="暂时性死区"></a>暂时性死区</h2><p><strong> 使用 <code>let</code> 或 <code>const</code> 声明的时候，它们并不会变量提升 </strong>，所以在它们被声明之前，使用它们会抛出 <code>ReferenceError</code> 错误。</p>
+<p>在进入作用域和不能访问的这段时间，我们称为暂时性死区。<br>提示：“暂时性死区” 不是 ECMAScript 规范里的正式定义，它只是在程序员中广为流行而已。</p>
+<h2 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h2><p>如果你对 <code>var</code> 的特性十分了解，那么可以在项目中使用它，但不推荐，因为不利于维护。</p>
+<p><code>let</code> 和 <code>const</code> 已经完全可以代替 <code>var</code> 的使用，这是更加符合程序员认知的用法。</p>
+
+        </div>
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/JavaScript/"># JavaScript</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2017/07/26/javascript/JavaScript%E4%B8%AD%E7%9A%84Promise/">实现 JavaScript 中的 Promise</a>
+            
+            
+            <a class="next" rel="next" href="/2017/07/17/javascript/Javascript%E4%B8%AD%E7%9A%84async/">JavaScript 中的 async</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

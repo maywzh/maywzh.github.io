@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>Leetcode 分类刷题指南 | 0x01 MAYSTORY </title>
+
+
+    
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
+
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Leetcode 分类刷题指南</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 4, 2017&nbsp;&nbsp;16:18:41</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%88%B7%E9%A2%98/">刷题</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>一些常见的题型，刷题事半功倍。</p>
+<a id="more"></a>
+<h2 id="1-Pattern-Sliding-window，滑动窗口类型"><a href="#1-Pattern-Sliding-window，滑动窗口类型" class="headerlink" title="1. Pattern: Sliding window，滑动窗口类型"></a>1. Pattern: Sliding window，滑动窗口类型</h2><p>经典题目：</p>
+<p>Maximum Sum Subarray of Size K (easy)</p>
+<p>Smallest Subarray with a given sum (easy)</p>
+<p>Longest Substring with K Distinct Characters (medium)</p>
+<p>Fruits into Baskets (medium)</p>
+<p>No-repeat Substring (hard)</p>
+<p>Longest Substring with Same Letters after Replacement (hard)</p>
+<p>Longest Subarray with Ones after Replacement (hard)</p>
+<h2 id="2-Pattern-two-points-双指针类型"><a href="#2-Pattern-two-points-双指针类型" class="headerlink" title="2. Pattern: two points, 双指针类型"></a>2. Pattern: two points, 双指针类型</h2><p>经典题目：</p>
+<p>Pair with Target Sum (easy)</p>
+<p>Remove Duplicates (easy)</p>
+<p>Squaring a Sorted Array (easy)</p>
+<p>Triplet Sum to Zero (medium)</p>
+<p>Triplet Sum Close to Target (medium)</p>
+<p>Triplets with Smaller Sum (medium)</p>
+<p>Subarrays with Product Less than a Target (medium)</p>
+<p>Dutch National Flag Problem (medium)</p>
+<h2 id="3-Pattern-Fast-amp-Slow-pointers-快慢指针类型"><a href="#3-Pattern-Fast-amp-Slow-pointers-快慢指针类型" class="headerlink" title="3. Pattern: Fast &amp; Slow pointers, 快慢指针类型"></a>3. Pattern: Fast &amp; Slow pointers, 快慢指针类型</h2><p>经典题目：</p>
+<p>LinkedList Cycle (easy)</p>
+<p>Start of LinkedList Cycle (medium)</p>
+<p>Happy Number (medium)</p>
+<p>Middle of the LinkedList (easy)</p>
+<h2 id="4-Pattern-Merge-Intervals，区间合并类型"><a href="#4-Pattern-Merge-Intervals，区间合并类型" class="headerlink" title="4. Pattern: Merge Intervals，区间合并类型"></a>4. Pattern: Merge Intervals，区间合并类型</h2><p>经典题目：</p>
+<p>Merge Intervals (medium)</p>
+<p>Insert Interval (medium)</p>
+<p>Intervals Intersection (medium)</p>
+<p>Conflicting Appointments (medium)</p>
+<h2 id="5-Pattern-Cyclic-Sort，循环排序"><a href="#5-Pattern-Cyclic-Sort，循环排序" class="headerlink" title="5. Pattern: Cyclic Sort，循环排序"></a>5. Pattern: Cyclic Sort，循环排序</h2><p>经典题目：</p>
+<p>Cyclic Sort (easy)</p>
+<p>Find the Missing Number (easy)</p>
+<p>Find all Missing Numbers (easy)</p>
+<p>Find the Duplicate Number (easy)</p>
+<p>Find all Duplicate Numbers (easy)</p>
+<h2 id="6-Pattern-In-place-Reversal-of-a-LinkedList，链表翻转"><a href="#6-Pattern-In-place-Reversal-of-a-LinkedList，链表翻转" class="headerlink" title="6. Pattern: In-place Reversal of a LinkedList，链表翻转"></a>6. Pattern: In-place Reversal of a LinkedList，链表翻转</h2><p>经典题目：</p>
+<p>Reverse a LinkedList (easy)</p>
+<p>Reverse a Sub-list (medium)</p>
+<p>Reverse every K-element Sub-list (medium)</p>
+<h2 id="7-Pattern-Tree-Breadth-First-Search，树上的-BFS"><a href="#7-Pattern-Tree-Breadth-First-Search，树上的-BFS" class="headerlink" title="7. Pattern: Tree Breadth First Search，树上的 BFS**"></a>7. Pattern: Tree Breadth First Search，树上的 BFS**</h2><p>经典题目：</p>
+<p>Binary Tree Level Order Traversal (easy)</p>
+<p>Reverse Level Order Traversal (easy)</p>
+<p>Zigzag Traversal (medium)</p>
+<p>Level Averages in a Binary Tree (easy)</p>
+<p>Minimum Depth of a Binary Tree (easy)</p>
+<p>Level Order Successor (easy)</p>
+<p>Connect Level Order Siblings (medium)</p>
+<h2 id="8-Pattern-Tree-Depth-First-Search，树上的-DFS"><a href="#8-Pattern-Tree-Depth-First-Search，树上的-DFS" class="headerlink" title="8. Pattern: Tree Depth First Search，树上的 DFS**"></a>8. Pattern: Tree Depth First Search，树上的 DFS**</h2><p>经典题目：</p>
+<p>Binary Tree Path Sum (easy)</p>
+<p>All Paths for a Sum (medium)</p>
+<p>Sum of Path Numbers (medium)</p>
+<p>Path With Given Sequence (medium)</p>
+<p>Count Paths for a Sum (medium)</p>
+<h2 id="9-Pattern-Two-Heaps，双堆类型"><a href="#9-Pattern-Two-Heaps，双堆类型" class="headerlink" title="9. Pattern: Two Heaps，双堆类型"></a>9. Pattern: Two Heaps，双堆类型</h2><p>经典题目：</p>
+<p>Find the Median of a Number Stream (medium)</p>
+<p>Sliding Window Median (hard)</p>
+<p>Maximize Capital (hard)</p>
+<h2 id="10-Pattern-Subsets，子集类型，一般都是使用多重-DFS"><a href="#10-Pattern-Subsets，子集类型，一般都是使用多重-DFS" class="headerlink" title="10. Pattern: Subsets，子集类型，一般都是使用多重 DFS**"></a>10. Pattern: Subsets，子集类型，一般都是使用多重 DFS**</h2><p>经典题目：</p>
+<p>Subsets (easy)</p>
+<p>Subsets With Duplicates (easy)</p>
+<p>Permutations (medium)</p>
+<p>String Permutations by changing case (medium)</p>
+<p>Balanced Parentheses (hard)</p>
+<p>Unique Generalized Abbreviations (hard)</p>
+<h2 id="11-Pattern-Modified-Binary-Search，改造过的二分"><a href="#11-Pattern-Modified-Binary-Search，改造过的二分" class="headerlink" title="11. Pattern: Modified Binary Search，改造过的二分"></a>11. Pattern: Modified Binary Search，改造过的二分</h2><p>经典题目：</p>
+<p>Order-agnostic Binary Search (easy)</p>
+<p>Ceiling of a Number (medium)</p>
+<p>Next Letter (medium)</p>
+<p>Number Range (medium)</p>
+<p>Search in a Sorted Infinite Array (medium)</p>
+<p>Minimum Difference Element (medium)</p>
+<p>Bitonic Array Maximum (easy)</p>
+<h2 id="12-Pattern-Top-‘K’-Elements，前-K-个系列"><a href="#12-Pattern-Top-‘K’-Elements，前-K-个系列" class="headerlink" title="12. Pattern: Top ‘K’ Elements，前 K 个系列"></a>12. Pattern: Top ‘K’ Elements，前 K 个系列</h2><p>经典题目：</p>
+<p>Top ‘K’ Numbers (easy)</p>
+<p>Kth Smallest Number (easy)</p>
+<p>‘K’ Closest Points to the Origin (easy)</p>
+<p>Connect Ropes (easy)</p>
+<p>Top ‘K’ Frequent Numbers (medium)</p>
+<p>Frequency Sort (medium)</p>
+<p>Kth Largest Number in a Stream (medium)</p>
+<p>‘K’ Closest Numbers (medium)</p>
+<p>Maximum Distinct Elements (medium)</p>
+<p>Sum of Elements (medium)</p>
+<p>Rearrange String (hard)</p>
+<h2 id="13-Pattern-K-way-merge，多路归并"><a href="#13-Pattern-K-way-merge，多路归并" class="headerlink" title="13. Pattern: K-way merge，多路归并"></a>13. Pattern: K-way merge，多路归并</h2><p>经典题目：</p>
+<p>Merge K Sorted Lists (medium)</p>
+<p>Kth Smallest Number in M Sorted Lists (Medium)</p>
+<p>Kth Smallest Number in a Sorted Matrix (Hard)</p>
+<p>Smallest Number Range (Hard)</p>
+<h2 id="14-Pattern-0-1-Knapsack-Dynamic-Programming-，0-1-背包类型"><a href="#14-Pattern-0-1-Knapsack-Dynamic-Programming-，0-1-背包类型" class="headerlink" title="14. Pattern: 0/1 Knapsack (Dynamic Programming)，0/1 背包类型"></a>14. Pattern: 0/1 Knapsack (Dynamic Programming)，0/1 背包类型</h2><p>经典题目：</p>
+<p>0/1 Knapsack (medium)</p>
+<p>Equal Subset Sum Partition (medium)</p>
+<p>Subset Sum (medium)</p>
+<p>Minimum Subset Sum Difference (hard)</p>
+<h2 id="15-Pattern-Topological-Sort-Graph-，拓扑排序类型"><a href="#15-Pattern-Topological-Sort-Graph-，拓扑排序类型" class="headerlink" title="15. Pattern: Topological Sort (Graph)，拓扑排序类型"></a>15. Pattern: Topological Sort (Graph)，拓扑排序类型</h2><p>经典题目：</p>
+<p>Topological Sort (medium)</p>
+<p>Tasks Scheduling (medium)</p>
+<p>Tasks Scheduling Order (medium)</p>
+<p>All Tasks Scheduling Orders (hard)</p>
+<p>Alien Dictionary (hard)</p>
+<p>大家好好练练这些题目，面试中遇到的题目，应该就能回答得不错了。</p>
+<p>祝面试好运！</p>
+
+        </div>
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2017/09/08/docker/Docker%E7%AE%A1%E7%90%86%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Docker 管理常用命令</a>
+            
+            
+            <a class="next" rel="next" href="/2017/09/01/Linux/Linux%E4%B9%8B%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AE%A1%E7%90%86/">Linux 之进程调度管理</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

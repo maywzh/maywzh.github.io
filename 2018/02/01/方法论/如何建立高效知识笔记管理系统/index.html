@@ -1,212 +1,152 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>如何建立高效知识笔记管理系统 | Cult Minds</title><meta name="description" content="转载自：如何建立知识笔记管理系统？ 人脑的工作其实很大程度上与计算机的工作机制相似，人脑的思维区是 CPU 处理思考任务 ，人脑的工作记忆区是 CPU 缓存处理工作瞬时记忆，人脑的短期记忆区是内存处理短期记忆，人脑的建立的神经突触则是数据库。但是人脑的容量毕竟有限，一种更经济的做法是，把关键的知识节点存储在大脑中，作为领域知识的索引，而大量细节问题存储于各种数字化存储设备。这便是个人知识管理系统。"><meta name="keywords" content="方法论,知识管理"><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/bitbug_favicon_128s.ico"><link rel="canonical" href="https://tech.maywzh.com/2018/02/01/%E6%96%B9%E6%B3%95%E8%AE%BA/%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E9%AB%98%E6%95%88%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin="crossorigin"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//pingjs.qq.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="content"/><meta property="og:type" content="article"><meta property="og:title" content="如何建立高效知识笔记管理系统"><meta property="og:url" content="https://tech.maywzh.com/2018/02/01/%E6%96%B9%E6%B3%95%E8%AE%BA/%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E9%AB%98%E6%95%88%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><meta property="og:site_name" content="Cult Minds"><meta property="og:description" content="转载自：如何建立知识笔记管理系统？ 人脑的工作其实很大程度上与计算机的工作机制相似，人脑的思维区是 CPU 处理思考任务 ，人脑的工作记忆区是 CPU 缓存处理工作瞬时记忆，人脑的短期记忆区是内存处理短期记忆，人脑的建立的神经突触则是数据库。但是人脑的容量毕竟有限，一种更经济的做法是，把关键的知识节点存储在大脑中，作为领域知识的索引，而大量细节问题存储于各种数字化存储设备。这便是个人知识管理系统。"><meta property="og:image" content="https://i.loli.net/2020/08/26/mRnQfvixCgdHDew.png"><meta property="article:published_time" content="2018-02-01T09:49:46.000Z"><meta property="article:modified_time" content="2020-09-12T15:47:22.903Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e5597df0e0a089595ae6b3fce53f24e8";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-5"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-119246999-5');
+</script><script>var _mtac = {};
+(function() {
+    var mta = document.createElement("script");
+    mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+    mta.setAttribute("name", "MTAH5");
+    mta.setAttribute("sid", "500728859");
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(mta, s);
+})();
+</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.1.1',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime: '',
+  date_suffix: {"one_hour":"Just","hours":"hours ago","day":"days ago"},
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false
+};
 
-<meta name="author" content="maywzh">
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+      const now = new Date()
+      const expiryDay = ttl * 86400000
+      const item = {
+        value: value,
+        expiry: now.getTime() + expiryDay,
+      }
+      localStorage.setItem(key, JSON.stringify(item))
+    },
+  
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
 
-
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
-
-
-<title>如何建立高效知识笔记管理系统 | 0x01 MAYSTORY </title>
-
-
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
-</header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
+    if (!itemStr) {
+      return undefined
     }
-</script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
+    const item = JSON.parse(itemStr)
+    const now = new Date()
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
-
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
     }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2020.09.12 23:47:22'
+}</script><noscript><style type="text/css">
+#nav {
+  opacity: 1
+}
+.justified-gallery img {
+  opacity: 1
+}
+</style></noscript><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+  }
+}
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
+var autoChangeMode = '1'
+var t = saveToLocal.get('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
     }
-
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-</script>
-    
-
-    
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">如何建立高效知识笔记管理系统</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
-
-                    
-                        <span class="post-time">
-                        Date: <a href="#">February 1, 2018&nbsp;&nbsp;17:49:46</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
-
-        <div class="post-content">
-            <p>转载自：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/191519306">如何建立知识笔记管理系统？</a></p>
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (saveToLocal.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" data-lazy-src="/uploads/myavatar.jpg" onerror="onerror=null;src='/img/ripple.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">110</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">48</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text"> 什么是知识管理系统？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%A0%E5%BF%85%E9%A1%BB%E8%A6%81%E5%BB%BA%E7%AB%8B%E5%A4%96%E8%84%91%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text"> 为什么你必须要建立外脑？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E5%A4%96%E8%84%91%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">如何建立外脑？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%EF%BC%9A%E9%80%89%E6%8B%A9%E5%A4%96%E8%84%91%E8%BD%BD%E4%BD%93"><span class="toc-number">3.1.</span> <span class="toc-text">一：选择外脑载体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%EF%BC%9A%E9%83%A8%E7%BD%B2-GTD-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.2.</span> <span class="toc-text">二：部署 GTD 操作系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%EF%BC%9A%E8%A7%84%E5%88%99%E5%8C%96%E4%BF%A1%E6%81%AF-%E2%80%94%E2%80%94-%E7%BB%99%E5%A4%96%E8%84%91%E7%AB%8B%E7%BB%93%E6%9E%84%E3%80%81%E7%BB%99%E7%AC%94%E8%AE%B0%E7%AB%8B%E8%A7%84%E7%9F%A9%E3%80%82"><span class="toc-number">3.3.</span> <span class="toc-text">三：规则化信息 —— 给外脑立结构、给笔记立规矩。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%EF%BC%9A%E9%83%A8%E7%BD%B2%E7%B4%A2%E5%BC%95%E4%BD%93%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.4.</span> <span class="toc-text">四：部署索引体系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%82%A8%E5%AD%98%E4%BD%93%E5%92%8C%E7%B4%A2%E5%BC%95%E4%BD%93%E7%B3%BB%E7%BB%9F%EF%BC%9F"><span class="toc-number">3.4.1.</span> <span class="toc-text">什么是储存体和索引体系统？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%93%E9%80%A0%E5%AE%8C%E6%AF%95%E5%90%8E%E6%9C%80%E9%87%8D%E8%A6%81%E7%9A%84%E4%BA%8B%E6%83%85%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">3.4.2.</span> <span class="toc-text">打造完毕后最重要的事情是什么？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/08/26/mRnQfvixCgdHDew.png)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Cult Minds</a></span><span class="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">如何建立高效知识笔记管理系统</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">Created</span><time datetime="2018-02-01T09:49:46.000Z" title="undefined 2018.02.01 17:49:46">2018.02.01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">8.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>25min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p>转载自：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/191519306">如何建立知识笔记管理系统？</a></p>
 <p>人脑的工作其实很大程度上与计算机的工作机制相似，人脑的思维区是 CPU 处理思考任务 ，人脑的工作记忆区是 CPU 缓存处理工作瞬时记忆，人脑的短期记忆区是内存处理短期记忆，人脑的建立的神经突触则是数据库。但是人脑的容量毕竟有限，一种更经济的做法是，把关键的知识节点存储在大脑中，作为领域知识的索引，而大量细节问题存储于各种数字化存储设备。这便是个人知识管理系统。</p>
 <a id="more"></a>
 <h2 id="什么是知识管理系统？"><a href="#什么是知识管理系统？" class="headerlink" title=" 什么是知识管理系统？"></a><strong> 什么是知识管理系统？</strong></h2><p>假设有一个场景，床头有 10 本书，要在其中找到一本书，你会怎么找？一本本翻找。</p>
 <p>但假如在美国国会图书馆中，藏书超 2.1 亿本，在里边找到某一本书，请问你如何找？</p>
 <p>仅凭人脑是没有办法处理这么大的信息量的。那么图书馆的管理人员，是如何解决这些问题的？</p>
 <p>当让是靠着一套管理系统，让一切规律化，规则化，系统化，把人解放出来。</p>
-<p><img src="https://i.loli.net/2020/08/24/MIpzQ8NPBhdAw5a.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/MIpzQ8NPBhdAw5a.jpg" alt=""></p>
 <p>同理，我们的知识管理系统就相当于这个图书管理系统，而知识就如同这一本本图书，当有了套系统去管理它们以后，我们就相当于拥有了另外的一个大脑，如此就可以把我们大脑不擅长的东西，全部扔给这个外脑，让它帮助我们记忆，整理等等。</p>
 <h2 id="为什么你必须要建立外脑？"><a href="#为什么你必须要建立外脑？" class="headerlink" title=" 为什么你必须要建立外脑？"></a><strong> 为什么你必须要建立外脑？</strong></h2><p><strong>1. 大脑是用来思考的，不是用来记忆的。</strong></p>
 <p>记忆，尤其是死记硬背，是最反人性的，进化论告诉我们，大脑只会记住最能帮助我们生存的信息，至于无关紧要的，它为了节省脑力资源会尽可能的忘记它们，同样的大脑也只能处理眼下的小部分信息，而面对大量信息处理的时候，大脑就会罢工。</p>
@@ -216,7 +156,7 @@
 <p><strong> 前面说了我们大脑不擅长的记忆和大规模信息管理，但这却是我们外脑所擅长的。我们的大脑会遗忘，但是外脑它永远也不会忘的，你建立的这个外脑就会和你的大脑形成互补，各发挥其所长。</strong></p>
 <p>正如上面的图书管理案例，我们不需要记住每本书的信息，我们想要的时候，只要知道怎么从图书管理系统中找到它们即可。</p>
 <p><strong> 所以想发挥大脑真正的威力，就把它从记忆中解放出来，让它去思考，而不是让它去记忆。</strong></p>
-<p><img src="https://i.loli.net/2020/08/24/HkrCVtuxdainy2X.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/HkrCVtuxdainy2X.jpg" alt=""></p>
 <p><strong> 有同学看到这里可能会抬杠：有必要弄这么一个外脑吗，我大脑就够用了啊。</strong></p>
 <p>当你只想做个 “撸瑟” 的时候，觉得这辈子能搬个砖，扛个水泥就够了，那么你就可以离开了，因为你确实没有这个需求。</p>
 <p>但是你想获得不断成长，要获得更强的能力，想要在社会的激烈竞争中有足够的竞争力，你的知识储备必然需要被扩大，这种情况下，你要靠脑子记忆吗？回想你上学的生涯就知道了，那是多么痛的领悟～</p>
@@ -237,29 +177,29 @@
 <p>很多人抱怨，学过的东西用不出来，反思一下，从小到大，你调用你知识储备的时候是不是都像是上面想水果一样，想到哪是哪。</p>
 <p>你整理过你的知识吗？你的知识是成结构的吗？你脑中有这么一张庞大的知识结构网吗？</p>
 <p>而把知识打入外脑的过程就是在编织你这张网，所以 <strong> 建立外脑的本质就是体系化你知识的过程！！！</strong></p>
-<p><img src="https://i.loli.net/2020/08/24/7TditOLD8hZF3ES.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/7TditOLD8hZF3ES.jpg" alt=""></p>
 <h2 id="如何建立外脑？"><a href="#如何建立外脑？" class="headerlink" title="如何建立外脑？"></a>如何建立外脑？</h2><p><strong> 整个外脑是由两个系统构成。</strong></p>
 <blockquote>
 <p>第一个是储存笔记的系统。<br>第二个则是索引笔记的系统。</p>
 </blockquote>
 <p>你可以理解成一个放，一个拿，这里知道有这么个东西即可，后文会展开介绍。</p>
-<p><img src="https://i.loli.net/2020/08/24/navSjTKx6VoIMzm.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/navSjTKx6VoIMzm.jpg" alt=""></p>
 <p><strong> 而整个外脑的搭建可以归纳为三步走～</strong></p>
 <blockquote>
 <p>第一步：把收集知识有序的装进去<br>第二步：把知识整理好，设立规则，以供随时提用。<br>第三步：用的时候可以迅速的把需要的知识拿出来。</p>
 </blockquote>
 <p><strong> 整篇文章的核心下面一张图就概括了，但是为了让你彻底搞定这件事，我会掰开了揉碎了，一步步手把手带你搭出你的知识管理系统。</strong></p>
-<p><img src="https://i.loli.net/2020/08/24/uQ7hqe8rLIDkFiH.png" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/uQ7hqe8rLIDkFiH.png" alt=""></p>
 <p><strong> 下面我们先从搭建储存体入手，从零开始搭建整个外脑系统～</strong></p>
 <h3 id="一：选择外脑载体"><a href="#一：选择外脑载体" class="headerlink" title="一：选择外脑载体"></a>一：选择外脑载体</h3><p>一台能正常跑的电脑系统，前提就是主机，显示屏这些硬件载体，你操作系统再牛逼，没有主机你也跑不起来。</p>
 <p>同理，我们的外脑的搭建也是如此，所以建立外脑的第一步，就是找到外脑的载体，即存放我们知识的工具。</p>
 <p>那么市面上提供给我们现成的外脑载体都有哪些呢？</p>
-<p><img src="https://i.loli.net/2020/08/24/oZnYvQfGDe91u7J.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/oZnYvQfGDe91u7J.jpg" alt=""></p>
 <p>太多太多了，主流的有道云笔记、印象笔记、onenote 等，都可以作为我们外脑的载体，它们各有优缺点，想详细了解的同学请自行了解，我这里就不展开了，大家凭借喜好选择，总之，都是现成的，任君选择～</p>
 <p>我本人的外脑载体为有道云笔记，下文演示，均以此笔记做案例，其他载体同理～</p>
 <p><strong> 当我们确定了大脑的载体以后呢？</strong></p>
 <p>建立几个文件夹后，就开始一顿操作猛如虎，类似下面这样的吗？</p>
-<p><img src="https://i.loli.net/2020/08/24/PbwXspTIK2k67hg.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/PbwXspTIK2k67hg.jpg" alt=""></p>
 <p><strong> 这样的外脑系统有什么问题呢？</strong></p>
 <blockquote>
 <p><strong>① 层次结构混乱：</strong> 这样长长的列下来，我不知道你头大没有，别说提取了，我单单看到这一串，头就先大一圈了。<br>因为这样混乱的结构，含糊其辞的目录，会让你翻看这些东西的时候，对这种凌乱有一种厌恶感。<br><strong>② 提取困难：</strong> 混乱的内容，会让真正用的时候找不到，所有的笔记，如果用的时候找不到，或者需要很大的功夫才能找到，那这个外脑系统就没多大意义了，当你笔记内容少的时候，你还能记得那是哪，但是当大到一定量级了呢，你的外脑一定会崩溃。<br><strong>③ 知识碎片化 </strong>：以上所建立的文件夹，之间都是割裂的，笔记与笔记间连接不起来。<br>我们在文章开始的时候就说了，外脑的作用除了帮我们承担记忆的负担，还有一项职能就是辅助我们大脑为我们建立起知识体系，如果你的笔记之间都是一个个散乱的点，那么外脑的意义就要被砍掉一半。</p>
@@ -269,7 +209,7 @@
 <blockquote>
 <p><strong>1. 知识结构体系化：</strong> 笔记与笔记间的知识点不分散，不是乱七八糟的，不是碎片化的。<br><strong>2. 方便管理：</strong> 看到不头大，结构清晰，一目了然。<br><strong>3. 提取方便，高效：</strong> 最好高效到如同探囊取物，想到就能秒拿到。如果这一点满足不了，找一个想要的信息要半天，那么这套系统就没有多少意义。</p>
 </blockquote>
-<p><img src="https://i.loli.net/2020/08/24/S2w4osnQHAK3rvk.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/S2w4osnQHAK3rvk.jpg" alt=""></p>
 <p>好了，到了这里你知道了，一个好的外脑的标准，随着而来的一个问题就是，如何才能让你的外脑达成以上标准。</p>
 <p><strong> 那么如何让外脑满足以上条件呢？</strong></p>
 <p>正如电脑的 windows 系统一样，装上了，我们就无需用乱七八糟反人性的 dos 命令去让计算机工作，所有的一切都有序的跑在这套清爽的图形化系统之上。</p>
@@ -279,34 +219,34 @@
 <p>GTD 的英文全称是：Getting Things Done</p>
 <p>这是由著名的时间管理人戴维・艾伦在他的著作《尽管去做》里提出的一套移动硬盘式的任务管理方法，它的核心精髓是把所有待办任务都从大脑里移出去，清空大脑，用外部的工具去管理任务，让大脑的全部资源都用来思考，而又不会遗漏任何一件事。</p>
 <p>部署了 GTD 系统在笔记本上，我们就可以借助 GTD 的工作流，不仅拥有了知识管理系统，而且还把我们的日程管理系统也都囊括其中了，极大幅度的解放了我们的大脑。</p>
-<p><img src="https://i.loli.net/2020/08/24/Z26TjanLCMIP8gQ.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/Z26TjanLCMIP8gQ.jpg" alt=""></p>
 <p><strong>② 如何部署 GTD 系统到笔记本上？</strong></p>
 <p>GTD 工作流总共有 5 个步骤：收集、厘清、整理、归档、回顾。</p>
 <p>而把它用到我们的外脑上就变成了信息管理流，同样也是五个步骤：</p>
 <p>GTD 信息流：收集箱、等待处理、将来可能、归档资料、专题研究。</p>
-<p><img src="https://i.loli.net/2020/08/24/PYXr54Wy1tTxd3Q.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/PYXr54Wy1tTxd3Q.jpg" alt=""></p>
 <p>下面分别介绍一下，我们设置的这五个文件夹可以干什么。</p>
 <p><strong>1. 收集箱 </strong></p>
 <p>这个就相当于你在各大平台点的收藏，比如我们拿手机刷到好文了（比如这篇文章哈～），我们就可以把各大平台的好文，一键集中扔到这个收集箱中。</p>
 <p>这个东西的作用就是负责收集，你不必操心该放到那个分类，所有的好东西，一股脑扔进去就 OK 了，这样就可以大幅度的解放我们分类归类的时间，等到了一个固定的时间，比如晚上统一处理，这样既不打断我们当前手头的事情，同时又确保了收藏的文件不会乱七八糟，又能让你认真的评估和精读这篇文章，确保进入你笔记的都是精品。</p>
-<p><img src="https://i.loli.net/2020/08/24/HfBtsrGiSpFnjLT.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/HfBtsrGiSpFnjLT.jpg" alt=""></p>
 <p><strong>2. 等待处理 </strong></p>
 <p>这个文件夹承载我们当天的日程，备忘录，记事本，沉思录、日记本等等。</p>
 <p>你应该有体会，大脑凭记忆力处理这些事情有多坑爹，我们就可以把这些事情交给外脑处理，把日程，待办事项等全部移到这个文件夹里，把这些事情全部从大脑中清理出去，想知道接下来要做什么事情直接来翻这个文件夹，效率高的飞起。</p>
-<p><img src="https://i.loli.net/2020/08/24/C7KdH45qMBcOV3X.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/C7KdH45qMBcOV3X.jpg" alt=""></p>
 <p><strong>3. 将来可能 </strong></p>
 <p>这里主要承载计划、规划、想法、点子类的东西。</p>
 <p>比如你看到了一个点子，发现了一个项目，你就可以先把它扔到这里，作为你的灵感库。</p>
-<p><img src="https://i.loli.net/2020/08/24/Prpod8FtVSux5si.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/Prpod8FtVSux5si.jpg" alt=""></p>
 <p><strong>4. 归档资料 </strong></p>
 <p>这个是我们的知识的大本营，最终所有的信息和笔记都会被归入到这个文件夹中，我们收集到的信息通过整理完毕以后，就放入这里，以供随手复习和使用的时候随时调取。</p>
-<p><img src="https://i.loli.net/2020/08/24/En5uQeaCl1x6ZUG.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/En5uQeaCl1x6ZUG.jpg" alt=""></p>
 <p><strong>5. 专题研究 </strong></p>
 <p>比如我最近对唱歌比较感兴趣，那么我就可以单独这专题这里建立一个文件夹，专门服务于唱歌，当研究出成果了，再把它归入到归档资料中。</p>
-<p><img src="https://i.loli.net/2020/08/24/Any4i5R3JcVpIg1.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/Any4i5R3JcVpIg1.jpg" alt=""></p>
 <p>当你在你的笔记本上，创建了这个 5 个文件夹后，你的 GTD 系统就部署完成了。</p>
 <p>你看，部署了 GTD，通过 GTD 来处理信息后，你的外脑是不是特别有层次感，是不是感觉外脑像是有了灵魂一样～，而不是类似于上面那四个笔记长长的一串。</p>
-<p><img src="https://i.loli.net/2020/08/24/H8uaZgQ1wy756l2.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/H8uaZgQ1wy756l2.jpg" alt=""></p>
 <p>那么部署完 GTD 系统后就完了吗？当然不是。</p>
 <p>完成了最底层系统的搭建，我们就要开始去处理输入进来的笔记了，前面说了，<strong> 最终所有的笔记都会被汇总归档到『归档资料』这个文件夹之中，所以我们管理笔记的核心就在此文件夹中 </strong>，但是那么多的笔记，怎么去管理啊，还是像上面图中那四个案例一样，列出长长的一串文件夹吗？</p>
 <p>下面我们进入本文的第三个模块，来解决以上问题。</p>
@@ -320,17 +260,17 @@
 <p>当然是找一个可以把所有东西都包括进来的维度，它符合之前文章提到的 MECE 原则，既涵盖了所有笔记特性，又不遗漏，同时又不冗长。</p>
 <p>我这里就提供给你一个这样的维度，以笔记的 “用处” 这一个维度进行划分，即：『学习』『工作』『生活』。</p>
 <p>你可以随便想，从用处来论，任何笔记都不会逃过这个三个分类的，所以它是符合 MECE 的，我们就以它作为划分知识的标准，作为『归档资料』的打底文件夹，这样我们就实现了最简层。</p>
-<p><img src="https://i.loli.net/2020/08/24/hfjAVnl4GDOXC7r.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/hfjAVnl4GDOXC7r.jpg" alt=""></p>
 <p>打底文件夹有了，我们就需要根据自己的需求对文件夹做一些进一步细分，但如果你还是建立一串文件夹，整个笔记体系必然会乱，那么如何管理下一级的文件夹呢？</p>
 <p>这就用到了让你笔记规矩的第二个原则！！！</p>
 <p><strong>② 目录编码原则 </strong></p>
 <p><strong> 什么是目录编码原则？</strong></p>
 <p>你可以先思考下这个问题，一本书有那么多的知识点，它是怎么排版才让内容清晰一目了然的？</p>
 <p>当然是把图书知识结构整理成目录按照层次编码啊，如下图，这样你看起来结构就会非常清晰，一目了然，同理，我们对文件夹的层级管理，同样采用这种方式，让文件夹的层级与层级之间建立起逻辑关系。</p>
-<p><img src="https://i.loli.net/2020/08/24/cQxRyXtFm3PdEIr.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/cQxRyXtFm3PdEIr.jpg" alt=""></p>
 <p><strong> 那如何目录编码呢？</strong></p>
 <p>这里不进行赘述，我给你做了一张图，扫一眼估计你就会了。</p>
-<p><img src="https://i.loli.net/2020/08/24/AsFWJrC8PnVfHOw.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/AsFWJrC8PnVfHOw.jpg" alt=""></p>
 <p><strong> 除了建立起清晰的逻辑层次外，为什么你一定要用目录编码？</strong></p>
 <p>因为有了目录编码后，笔记就能实现自动排序！！  </p>
 <p>笔记本一般都是按照名称排序的，比如，数字 1 在数字 2 前面，字母 A 在字母 B 前面，如此就会非常有序，可参考微信好友目录哈～</p>
@@ -340,7 +280,7 @@
 <p><strong>③ 统一命名原则 </strong></p>
 <p><strong> 什么是统一命名的原则？</strong></p>
 <p>即：<strong> 无论是文件夹还是笔记本身，都要遵循一套标准的命名原则 </strong>，只有这样你的笔记才不会乱，切记把笔记命名成这样的无格式笔记，一旦养成这样的习惯，后期会让你有一种想锤死你自己的感觉，相信我～</p>
-<p><img src="https://i.loli.net/2020/08/24/c1WHEDpQyoViwnY.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/c1WHEDpQyoViwnY.jpg" alt=""></p>
 <p><strong> 那么用什么标准命名呢？怎么命名？</strong></p>
 <p>下面我给出三个方法，让你解决这个问题。</p>
 <p><strong>1. 用黄金圈法则命名文件夹 </strong></p>
@@ -355,32 +295,32 @@
 </blockquote>
 <p>当你创建了这个三个文件夹后，你就可以把演讲相关的所有知识点按照黄金圈分出的三个文件夹分别归属，如此每个文件夹对应啥内容，一眼望穿～</p>
 <p>你看，三个文件夹解决一切，而且看起来是那么的清晰，那么的一目了然～～</p>
-<p><img src="https://i.loli.net/2020/08/24/5pBFYTOg6ynuZWw.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/5pBFYTOg6ynuZWw.jpg" alt=""></p>
 <p><strong>2. 笔记文件规范化命名 </strong></p>
 <p>上面讲的是文件夹的命名方法，这里则是具体到的某个笔记文件命名。</p>
 <p>这里也没有太多可讲的，我给你做了一张图，提供了一个公式，你看一眼就秒懂了。</p>
-<p><img src="https://i.loli.net/2020/08/24/WhfLvAFT8E2t6GU.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/WhfLvAFT8E2t6GU.jpg" alt=""></p>
 <p><strong> 规则化命名，效果示范～～</strong></p>
 <p>你看，这样的笔记标题命名和上图的两小人那张笔记标题命名，那个看起来让人爽？</p>
-<p><img src="https://i.loli.net/2020/08/24/cM9JvKWDPp3sNAL.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/cM9JvKWDPp3sNAL.jpg" alt=""></p>
 <p><strong>3. 意义不明的层，坚决不要。</strong></p>
 <p>还有很多同学会建一个『其他』的文件夹，请问，你这个『其他』是什么？</p>
 <p>你之所以建这个『其他』就是因为，你也搞不通某个笔记文件属于那个类别了，不好分类的所幸一股脑的扔到这里边。</p>
 <p>我告诉你，你在用的时候是根本不会去翻『其他』这个分类的，因为它在你脑中就没有啥概念，你都不知道你放了些啥，应该放些啥，又怎么能指望提取的时候找到呢？</p>
 <p>所以，这种意义不明的层，坚决不要。</p>
-<p><img src="https://i.loli.net/2020/08/24/DNhV4jMyrcdHuW2.png" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/DNhV4jMyrcdHuW2.png" alt=""></p>
 <p>到了这里，你知道了让笔记规矩的三个原则，但是仅仅知道以上三个原则，还不能让它们很规矩，想要他们更规矩一些，你还需要第四个原则。</p>
 <p><strong>④ 标签化原则 </strong></p>
 <p>什么是标签化原则？以及为什么要用标签去管理我们的笔记？</p>
 <p>我先不回答这个问题，给你出道小题～</p>
 <p>假如让你给伟人归类，你会把毛爷爷归到哪一类？</p>
-<p><img src="https://i.loli.net/2020/08/24/P54UKve7nYoxaF9.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/P54UKve7nYoxaF9.jpg" alt=""></p>
 <p>你会把毛爷爷归到政治家？思想家？军事家？…… 抱歉，这些头衔毛爷爷都占了～</p>
-<p><img src="https://i.loli.net/2020/08/24/wjNF4pAlCiGRLde.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/wjNF4pAlCiGRLde.jpg" alt=""></p>
 <p>你看，你是没有办法把他按单一的维度归类的。</p>
 <p>如果你单一的把毛爷爷归到一个分类中，比如 “诗人”，那么搜索其他分类，就找不到毛爷爷了，那你就把毛爷爷给定住在某个分类中了，这样做就是有漏的，同理，我们再来看个案例～</p>
 <p>你会把前两年大火的《战狼 2》归到什么分类中？你能对它进行单一归类吗？</p>
-<p><img src="https://i.loli.net/2020/08/24/hJG4QNmktdIuPzf.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/hJG4QNmktdIuPzf.jpg" alt=""></p>
 <p>我们之前的文章中讲维度的时候就已经说了，<strong> 任何一件事物都可以有很多个维度。</strong> 如果你把某事物按照一个维度归类，你就相当于把它给定死了，同理我们的知识依旧如此。</p>
 <p><strong> 你笔记里的知识，大部分都被你给定死了。</strong></p>
 <p>很多人的笔记之所以没有效率，用的时候找不到，很大的原因就是你把知识给限定死了。</p>
@@ -394,20 +334,20 @@
 <blockquote>
 <p>比如：『记忆』这个标签，当你想要这个标签的内容的时候，云笔记就会帮助你，把所有这个被你标记过这个标签的文章给找出来，无论它是你过去的读书笔记，或者是电视剧看到的，演讲听到的，课程中学到的，总之，只要包含这个标签的，一股脑的都会给你抓出来，供你调遣使用……</p>
 </blockquote>
-<p><img src="https://i.loli.net/2020/08/24/N6neIJh19QYZzLl.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/N6neIJh19QYZzLl.jpg" alt=""></p>
 <p>下面给你展示一下，<strong> 我是如何给一个课程打标签的！！！</strong></p>
-<p><img src="https://i.loli.net/2020/08/24/pqxOFNe8ETknfJZ.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/pqxOFNe8ETknfJZ.jpg" alt=""></p>
 <p>好了 ，看到这里你可能会说，完成以上部署，笔记的整体效率是高了很多，知识也给盘活了，但是以上知识之间仍然是割裂的，笔记与笔记间仍然形成不了体系，而且笔记量和标签一多，标签本身也就乱了，都不知道标签那个是哪个了，那如何解决这一系列问题呢？</p>
 <p>下面，我们就进入本文的最后一个模块，部署索引体，让你的外脑的效率彻底飞起来～～</p>
 <h3 id="四：部署索引体系统"><a href="#四：部署索引体系统" class="headerlink" title="四：部署索引体系统"></a>四：部署索引体系统</h3><h4 id="什么是储存体和索引体系统？"><a href="#什么是储存体和索引体系统？" class="headerlink" title="什么是储存体和索引体系统？"></a>什么是储存体和索引体系统？</h4><p>储存体就是我们以上忙活的，那都是在部署储存体的系统，即在文件夹里的那一套。</p>
 <p>我们前面说了，我们通过标签调取笔记或信息，而索引体系统，就是 <strong> 把标签与标签之间也建立起逻辑关系，形成体系和结构，最后内化成我们的知识体系。</strong>  </p>
 <p>一句话解释，储存体用于管理 “文件夹的系统”，而索引体则用于管理 “标签的系统”。</p>
 <p>为了让两者更有辨识度，文件夹系统作为储存体识别符号『C』，标签系统作为索引体，识别符『S』。</p>
-<p><img src="https://i.loli.net/2020/08/24/G1RjTF2hEZAovYB.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/G1RjTF2hEZAovYB.jpg" alt=""></p>
 <p><strong>2. 如何搭建索引体？</strong></p>
 <p><strong>① 底层系统搭建 </strong>  </p>
 <p>储存体有 GTD 作为底层操作系统，那么索引体同样也应该有操作系统作为分类。索引体的分类规则就是我们前文说的『学习』、『工作』、『生活』三个分类，因为你笔记上所有的东西都逃不过这三点，它是符合 MECE 的。</p>
-<p><img src="https://i.loli.net/2020/08/24/q4WVghOablC6TLP.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/q4WVghOablC6TLP.jpg" alt=""></p>
 <p>工作和生活的分类我这里不多介绍，因为这个体系不体系无所谓，大家按照自己的喜好打标签即可。这里主要介绍的是『学习』，因为这才是承载我们知识标签的大本营，我们所有的知识标签都以这个分类为底。  </p>
 <p>那么在『学习』这个分类底下，应该怎么去构建知识架构呢？</p>
 <p><strong>② 一个维度分类所有知识标签 </strong>  </p>
@@ -416,10 +356,10 @@
 <p>我本人按照和参考了 “儒家的最高理想” 把一个人的一生所有的知识分成了四类：</p>
 <p>即：修身的知识、齐家的知识、治国的知识、平天下的知识～</p>
 <p>哈哈，比较中二，不过我看着很顺眼，这个分类仅供参考，如果你也觉得这个维度不错，可以直接拿去用～</p>
-<p><img src="https://i.loli.net/2020/08/24/YHBgFJ3pS2Pi4Ia.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/YHBgFJ3pS2Pi4Ia.jpg" alt=""></p>
 <p>好了，有了这个维度，你就可以把你在储存体里打上的标签，按照这四个维度，分门别类的整理在这里边即可，我截取一段我『索引体』系统中的整理效果，供大家参考～</p>
 <p>你可以看出来，当『索引体』逐渐完善以后，它就是一套完整，清晰的知识体系～～</p>
-<p><img src="https://i.loli.net/2020/08/24/oakgDsqN6xcyCHm.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/oakgDsqN6xcyCHm.jpg" alt=""></p>
 <p><strong>③ 区别符号 </strong>  </p>
 <p>你可能看到索引体中每个对象的前面都有个符号，有的符号是『 # 』有的符号是『 - 』，这是什么意思呢？</p>
 <p>这两个符号是区别符号，前面有『 # 』的，说明它是标签。  </p>
@@ -434,7 +374,7 @@
 <p>有的，<strong> 解决方案就是在笔记文件内处处打标签 </strong>，如此可以瞬间找到我们想要的内容。</p>
 <p>比如下图，我就在这个笔记的某一处的知识点，打上了三个标签，当我需要找这三个标签任意一个的时候，云笔记会迅速帮我找到它所在的位置，并且打上高亮，这样整篇文章都变成了我标签系统中的一个个知识点，它不再属于原作者，而是属于我体系中的一部分。</p>
 <p>这就回答了上面所说的为什么要在标签上加一个 #，原因就在这，如果你不加这个识别符号，搜索到的东西就会乱七八糟，异常痛苦啊，这是坑，我已经替你们踩过了～</p>
-<p><img src="https://i.loli.net/2020/08/24/8kRTrF2aMSJ1xof.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/8kRTrF2aMSJ1xof.jpg" alt=""></p>
 <p>好了，到了这里，整篇文章也到了结尾了，这个剩下的你只需要在不断的学习过程中去完善和填充这个骨架，最终它就会形成一张庞大的知识结构网，到时候你就神功大成，就可以任意纵横了。</p>
 <h4 id="打造完毕后最重要的事情是什么？"><a href="#打造完毕后最重要的事情是什么？" class="headerlink" title="打造完毕后最重要的事情是什么？"></a>打造完毕后最重要的事情是什么？</h4><p><strong>1. 把笔记软件本身玩熟 </strong></p>
 <p>因为这篇文章不是介绍软件功能的，所以几乎没有提到软件本身提供给我们的功能，包括日程模板、思维导图、ORC 等等太多太多了，你要是懂得笔记软件提供给我们的各种功能，那么你一定可以玩的非常 6，这个大家请自行了解，网上有的是介绍的，我这里不进行赘述了。</p>
@@ -448,7 +388,7 @@
 <p><strong>3. 迭代内容，删掉过时的东西，填充空白的内容。</strong></p>
 <p>刚开始建立起你的外脑的时候，不可能一下子就建成类似我外脑那样的丰富，肯定会有很多需要完善的地方，不断迭代，更新，这才是你的外脑能持续运转，并且越用越顺手的核心。</p>
 <p>最后提醒一句：<strong> 外脑要时常翻阅，只有你时常翻阅它，它才会内化到你的大脑中。</strong></p>
-<p><img src="https://i.loli.net/2020/08/24/MAxE1tm9bngfN3d.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/MAxE1tm9bngfN3d.jpg" alt=""></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong> 一：什么是知识管理系统？</strong></p>
 <blockquote>
 <p>知识管理系统就是我们的外脑。</p>
@@ -486,58 +426,62 @@
 <li>不断的填充完善，迭代更新笔记。</li>
 </ol>
 </blockquote>
-<p><img src="https://i.loli.net/2020/08/24/T41gLqIiX9AoDrC.jpg" alt=""></p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/24/T41gLqIiX9AoDrC.jpg" alt=""></p>
 <hr>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="[https://xueshu.baidu.com/usercenter/paper/show?paperid=2d66dce9a805fe0fce1ef025d30889b1&amp;site=xueshu\_se">文献分类法</a></p>
 <p><a href="https://link.zhihu.com/?target=https%3A//wenku.baidu.com/view/a533c6906bec0975f465e272.html">美国国会图书馆分类法简表</a></p>
 <p><a href="https://link.zhihu.com/?target=https%3A//www.ixueshu.com/document/c2f1afb362c2fded3ba5746287489d5d318947a18e7f9386.html">美国国会图书馆的计算机应用系统</a></p>
+</div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a><a class="post-meta__tags" href="/tags/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/">知识管理</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/08/26/mRnQfvixCgdHDew.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2018/02/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BTCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91/"><img class="prev-cover" data-lazy-src="https://i.loli.net/2020/09/03/zIdFU6ZPQ5xtDLr.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">TCP 三次握手的底层逻辑</div></div></a></div><div class="next-post pull-right"><a href="/2018/01/29/OS/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8Bselect%E3%80%81poll%E3%80%81epoll%E6%9C%BA%E5%88%B6/"><img class="next-cover" data-lazy-src="https://i.loli.net/2020/08/29/ZrVGm1ju6eQApMO.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">操作系统中的 select、poll、epoll 机制</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></article></main><footer id="footer" style="background-image: url(https://i.loli.net/2020/08/26/mRnQfvixCgdHDew.png)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2015 - 2020 By maywzh</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.spacingElementById('content-inner')
+  else {
+    $.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js', () => {
+      pangu.spacingElementById('content-inner')
+    })
+  }
+}
 
-        </div>
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
 
-        
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/%E6%96%B9%E6%B3%95%E8%AE%BA/"># 方法论</a>
-                    
-                        <a href="/tags/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/"># 知识管理</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2018/02/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BTCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91/">TCP 三次握手的底层逻辑</a>
-            
-            
-            <a class="next" rel="next" href="/2018/01/29/OS/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8Bselect%E3%80%81poll%E3%80%81epoll%E6%9C%BA%E5%88%B6/">操作系统中的 select、poll、epoll 机制</a>
-            
-        </section>
+document.addEventListener('DOMContentLoaded', panguFn)</script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
+  document.body.style.overflow = 'auto';
+  document.getElementById('loading-box').classList.add("loaded")
+}
+window.addEventListener('load',endLoading)</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    window.valine = new Valine({
+      el: '#vcomment',
+      appId: '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey: 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: 'Please leave your footprints',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'en',
+      recordIP: true,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: true,
+      path: window.location.pathname,
+    });
+    if ('nick,mail') { valine.config.requiredFields= 'nick,mail'.split(',') }
+  }
 
+  if (typeof Valine === 'function') initValine() 
+  else $.getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js', initValine)
+}
 
-    </article>
-</div>
-
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
-        
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
-    </div>
-</body>
-</html>
+if ('Valine' === 'Valine' || !true) {
+  if (true) loadComment(document.querySelector('#vcomment'),loadValine)
+  else setTimeout(() => loadValine(), 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

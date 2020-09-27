@@ -1,409 +1,677 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
-    
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-	    
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一直是使用samba服务作为NAS，移动硬盘插在mac上作为TimeMachine备份盘，但这样还是太笨拙了。 为了实现无线备份，一种方法是购买Apple TimeCapsule，另一种则是利用Linux设备来搭建Netatalk服务器。正好又一台闲置的Ubuntu机器，于是就决定采用这种方式。 Netatalk是一个开源的AppleTalk通信协议的实现，可以通过在Linux系统上搭建Netat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在Ubuntu上搭建TimeCapsule服务">
+<meta property="og:url" content="https://io.maywzh.com/2016/03/30/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8BUbuntu%E6%90%AD%E5%BB%BAAFP%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ETimeMachine%E6%9C%8D%E5%8A%A1/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="一直是使用samba服务作为NAS，移动硬盘插在mac上作为TimeMachine备份盘，但这样还是太笨拙了。 为了实现无线备份，一种方法是购买Apple TimeCapsule，另一种则是利用Linux设备来搭建Netatalk服务器。正好又一台闲置的Ubuntu机器，于是就决定采用这种方式。 Netatalk是一个开源的AppleTalk通信协议的实现，可以通过在Linux系统上搭建Netat">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2016-03-30T06:42:35.000Z">
+<meta property="article:modified_time" content="2020-09-27T07:48:52.154Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://io.maywzh.com/2016/03/30/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8BUbuntu%E6%90%AD%E5%BB%BAAFP%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ETimeMachine%E6%9C%8D%E5%8A%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>如何在Ubuntu上搭建TimeCapsule服务 | Cult I.O.</title>
   
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
     </script>
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
 
 
 
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/uncategorized/">uncategorized</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
 
 
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
 </nav>
 
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/23/vFzuXG6ESdpcTAq.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>如何在 Ubuntu 上搭建 TimeCapsule 服务</h2>
-                </a>
-            </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>一直是使用 samba 服务作为 NAS，移动硬盘插在 mac 上作为 TimeMachine 备份盘，但这样还是太笨拙了。</p>
-<p>为了实现无线备份，一种方法是购买 Apple TimeCapsule，另一种则是利用 Linux 设备来搭建 <a target="_blank" rel="noopener" href="http://netatalk.sourceforge.net/">Netatalk</a> 服务器。正好又一台闲置的 Ubuntu 机器，于是就决定采用这种方式。</p>
-<p><a target="_blank" rel="noopener" href="http://netatalk.sourceforge.net/">Netatalk</a>是一个开源的 AppleTalk 通信协议的实现，可以通过在 Linux 系统上搭建 Netatalk 服务来作为 macOS 设备的 AFP 服务器、AppleTalk 路由等等。结合 <a target="_blank" rel="noopener" href="https://github.com/lathiat/avahi">avahi</a> 服务，可以达到 Apple 原生设备的效果。</p>
-<p>本文基于 Ubuntu 18.04 环境搭建，其他环境配置类似。</p>
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/03/30/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8BUbuntu%E6%90%AD%E5%BB%BAAFP%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ETimeMachine%E6%9C%8D%E5%8A%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何在Ubuntu上搭建TimeCapsule服务
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.03.30 14:42:35" itemprop="dateCreated datePublished" datetime="2016-03-30T14:42:35+08:00">2016.03.30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/03/30/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8BUbuntu%E6%90%AD%E5%BB%BAAFP%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ETimeMachine%E6%9C%8D%E5%8A%A1/" class="post-meta-item leancloud_visitors" data-flag-title="如何在Ubuntu上搭建TimeCapsule服务" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>一直是使用samba服务作为NAS，移动硬盘插在mac上作为TimeMachine备份盘，但这样还是太笨拙了。</p>
+<p>为了实现无线备份，一种方法是购买Apple TimeCapsule，另一种则是利用Linux设备来搭建<a target="_blank" rel="noopener" href="http://netatalk.sourceforge.net/">Netatalk</a>服务器。正好又一台闲置的Ubuntu机器，于是就决定采用这种方式。</p>
+<p><a target="_blank" rel="noopener" href="http://netatalk.sourceforge.net/">Netatalk</a>是一个开源的AppleTalk通信协议的实现，可以通过在Linux系统上搭建Netatalk服务来作为macOS设备的AFP服务器、AppleTalk路由等等。结合<a target="_blank" rel="noopener" href="https://github.com/lathiat/avahi">avahi</a>服务，可以达到Apple原生设备的效果。</p>
+<p>本文基于Ubuntu 18.04环境搭建，其他环境配置类似。</p>
 <a id="more"></a>
-<h2><span id="硬盘挂载与配置">硬盘挂载与配置 </span></h2><h3><span id="查看已连接的硬盘"> 查看已连接的硬盘</span></h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">fdisk</span> -l   								<span class="token comment"># 查看系统连接的磁盘信息</span>
-<span class="token punctuation">..</span>.
-/dev/sdb3  <span class="token number">649940992</span> <span class="token number">976773119</span> <span class="token number">326832128</span> <span class="token number">155</span>.9G Apple HFS/HFS+  
-											<span class="token comment"># 显示需要挂载的 HFS+ 分区在 /dev/sdb3</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="hfs-分区关闭-journal">HFS+ 分区关闭 journal</span></h3><p>Mac 的 HFS+ 分区一般都默认开启 journal 功能，因为 Linux 不支持读写 journaled HFS+，所以必须关闭这个功能。</p>
-<p>可以把硬盘连接到 mac 操作</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 关闭 Journal</span>
-$ diskutil disableJournal disk0s2       <span class="token comment"># 假设 disk0s2 为需要挂载到 linux 上的磁盘分区</span>
-Journaling has been disabled on disk0s2
- 
-<span class="token comment"># 打开 Journal  </span>
-$ diskutil enableJournal disk0s2
-Journaling has been enabled on disk0s2<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>或者直接在 linux 上操作，通过下载 <code>journalling_off.c</code> 源码编译运行来关闭</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> /tmp
-$ <span class="token function">curl</span> https://pastebin.com/raw/W8pfgHRe -o journalling_off.c
-$ gcc journalling_off.c -o journalling_off
-$ <span class="token function">sudo</span> ./journalling_off /dev/sdb3   	<span class="token comment"># 根据 fdisk 的结果 /dev/sdb3 为对应 HFS+ 分区</span>
-<span class="token operator">&lt;</span>/code<span class="token operator">></span>sudo ./journalling_off /dev/sdb3
-attributes <span class="token operator">=</span> 0x80002100 
-journal has been disabled.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="硬盘挂载与配置"><a href="#硬盘挂载与配置" class="headerlink" title="硬盘挂载与配置"></a>硬盘挂载与配置</h2><h3 id="查看已连接的硬盘"><a href="#查看已连接的硬盘" class="headerlink" title="查看已连接的硬盘"></a>查看已连接的硬盘</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ fdisk -l   								<span class="comment">#查看系统连接的磁盘信息</span></span><br><span class="line">...</span><br><span class="line">/dev/sdb3  649940992 976773119 326832128 155.9G Apple HFS/HFS+  </span><br><span class="line">											<span class="comment">#显示需要挂载的HFS+分区在 /dev/sdb3</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="HFS-分区关闭journal"><a href="#HFS-分区关闭journal" class="headerlink" title="HFS+分区关闭journal"></a>HFS+分区关闭journal</h3><p>Mac的HFS+分区一般都默认开启journal功能，因为Linux不支持读写journaled HFS+，所以必须关闭这个功能。</p>
+<p>可以把硬盘连接到mac操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#关闭Journal</span></span><br><span class="line">$ diskutil disableJournal disk0s2       <span class="comment">#假设disk0s2为需要挂载到linux上的磁盘分区</span></span><br><span class="line">Journaling has been disabled on disk0s2</span><br><span class="line"> </span><br><span class="line"><span class="comment">#打开Journal  </span></span><br><span class="line">$ diskutil enableJournal disk0s2</span><br><span class="line">Journaling has been enabled on disk0s2</span><br></pre></td></tr></table></figure>
+<p>或者直接在linux上操作，通过下载<code>journalling_off.c</code>源码编译运行来关闭</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /tmp</span><br><span class="line">$ curl https://pastebin.com/raw/W8pfgHRe -o journalling_off.c</span><br><span class="line">$ gcc journalling_off.c -o journalling_off</span><br><span class="line">$ sudo ./journalling_off /dev/sdb3   	<span class="comment">#根据fdisk的结果 /dev/sdb3 为对应HFS+分区</span></span><br><span class="line">&lt;/code&gt;sudo ./journalling_off /dev/sdb3</span><br><span class="line">attributes = 0x80002100 </span><br><span class="line">journal has been disabled.</span><br></pre></td></tr></table></figure>
 <p>如果网速不好，源码如下</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">// journalling_off.c</span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;sys/types.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;sys/mman.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;fcntl.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;byteswap.h></span></span>
- 
- 
- 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span>argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-        <span class="token keyword">int</span> fd <span class="token operator">=</span> <span class="token function">open</span><span class="token punctuation">(</span>argv<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> O_RDWR<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>fd <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                <span class="token function">perror</span><span class="token punctuation">(</span><span class="token string">"open"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-       
-        <span class="token keyword">unsigned</span> <span class="token keyword">char</span> <span class="token operator">*</span>buffer <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">mmap</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token number">2048</span><span class="token punctuation">,</span> PROT_READ<span class="token operator">|</span>PROT_WRITE<span class="token punctuation">,</span> MAP_SHARED<span class="token punctuation">,</span> fd<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>buffer <span class="token operator">==</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">char</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token number">0xffffffff</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                <span class="token function">perror</span><span class="token punctuation">(</span><span class="token string">"mmap"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-       
-        <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span>buffer<span class="token punctuation">[</span><span class="token number">1024</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token string">'H'</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>buffer<span class="token punctuation">[</span><span class="token number">1025</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token string">'+'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                <span class="token function">fprintf</span><span class="token punctuation">(</span><span class="token constant">stderr</span><span class="token punctuation">,</span> <span class="token string">"%s: HFS+ signature not found -- aborting.\n"</span><span class="token punctuation">,</span> argv<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-       
-        <span class="token keyword">unsigned</span> <span class="token keyword">long</span> attributes <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">long</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>buffer<span class="token punctuation">[</span><span class="token number">1028</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        attributes <span class="token operator">=</span> <span class="token function">bswap_32</span><span class="token punctuation">(</span>attributes<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"attributes = 0x%8.8lx\n"</span><span class="token punctuation">,</span> attributes<span class="token punctuation">)</span><span class="token punctuation">;</span>
-       
-        <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>attributes <span class="token operator">&amp;</span> <span class="token number">0x00002000</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"kHFSVolumeJournaledBit not currently set in the volume attributes field.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-       
-        attributes <span class="token operator">&amp;=</span> <span class="token number">0xffffdfff</span><span class="token punctuation">;</span>
-        attributes <span class="token operator">=</span> <span class="token function">bswap_32</span><span class="token punctuation">(</span>attributes<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token operator">*</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">long</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>buffer<span class="token punctuation">[</span><span class="token number">1028</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">=</span> attributes<span class="token punctuation">;</span>
-       
-        buffer<span class="token punctuation">[</span><span class="token number">1032</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'1'</span><span class="token punctuation">;</span>
-        buffer<span class="token punctuation">[</span><span class="token number">1033</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'0'</span><span class="token punctuation">;</span>
-        buffer<span class="token punctuation">[</span><span class="token number">1034</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'.'</span><span class="token punctuation">;</span>
-        buffer<span class="token punctuation">[</span><span class="token number">1035</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'0'</span><span class="token punctuation">;</span>
-       
-        buffer<span class="token punctuation">[</span><span class="token number">1036</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-        buffer<span class="token punctuation">[</span><span class="token number">1037</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-        buffer<span class="token punctuation">[</span><span class="token number">1038</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-        buffer<span class="token punctuation">[</span><span class="token number">1039</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-       
-        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"journal has been disabled.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="挂载">挂载</span></h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">mkdir</span> /mnt/timemachine					<span class="token comment"># 创建挂载点</span>
-$ <span class="token function">sudo</span> <span class="token function">mount</span>  -t hfsplus -o force,rw /dev/sdb3 /mnt/timemachine   		
-												<span class="token comment"># 挂载点设置为 /mnt/timemachine</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<h2><span id="netatalk-编译安装与配置">Netatalk 编译安装与配置 </span></h2><p> 由于 apt 上的 Netatalk 的版本太老，所以选择编译安装。 </p>
-<h3><span id="编译">编译 </span></h3><p> 安装依赖库</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> -y <span class="token punctuation">\</span>
-build-essential <span class="token punctuation">\</span>
-libevent-dev <span class="token punctuation">\</span>
-libssl-dev <span class="token punctuation">\</span>
-libgcrypt-dev <span class="token punctuation">\</span>
-libkrb5-dev <span class="token punctuation">\</span>
-libpam0g-dev <span class="token punctuation">\</span>
-libwrap0-dev <span class="token punctuation">\</span>
-libdb-dev <span class="token punctuation">\</span>
-libtdb-dev <span class="token punctuation">\</span>
-avahi-daemon <span class="token punctuation">\</span>
-libavahi-client-dev <span class="token punctuation">\</span>
-libacl1-dev <span class="token punctuation">\</span>
-libldap2-dev <span class="token punctuation">\</span>
-libcrack2-dev <span class="token punctuation">\</span>
-libdbus-1-dev <span class="token punctuation">\</span>
-libdbus-glib-1-dev <span class="token punctuation">\</span>
-libglib2.0-dev<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// journalling_off.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/mman.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;byteswap.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> fd = open(argv[<span class="number">1</span>], O_RDWR);</span><br><span class="line">        <span class="keyword">if</span>(fd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                perror(<span class="string">&quot;open&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">       </span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">char</span> *buffer = (<span class="keyword">unsigned</span> <span class="keyword">char</span> *)mmap(<span class="literal">NULL</span>, <span class="number">2048</span>, PROT_READ|PROT_WRITE, MAP_SHARED, fd, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span>(buffer == (<span class="keyword">unsigned</span> <span class="keyword">char</span>*)<span class="number">0xffffffff</span>) &#123;</span><br><span class="line">                perror(<span class="string">&quot;mmap&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">       </span><br><span class="line">        <span class="keyword">if</span>((buffer[<span class="number">1024</span>] != <span class="string">&#x27;H&#x27;</span>) &amp;&amp; (buffer[<span class="number">1025</span>] != <span class="string">&#x27;+&#x27;</span>)) &#123;</span><br><span class="line">                <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;%s: HFS+ signature not found -- aborting.\n&quot;</span>, argv[<span class="number">0</span>]);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">       </span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">long</span> attributes = *(<span class="keyword">unsigned</span> <span class="keyword">long</span> *)(&amp;buffer[<span class="number">1028</span>]);</span><br><span class="line">        attributes = bswap_32(attributes);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;attributes = 0x%8.8lx\n&quot;</span>, attributes);</span><br><span class="line">       </span><br><span class="line">        <span class="keyword">if</span>(!(attributes &amp; <span class="number">0x00002000</span>)) &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;kHFSVolumeJournaledBit not currently set in the volume attributes field.\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">       </span><br><span class="line">        attributes &amp;= <span class="number">0xffffdfff</span>;</span><br><span class="line">        attributes = bswap_32(attributes);</span><br><span class="line">        *(<span class="keyword">unsigned</span> <span class="keyword">long</span> *)(&amp;buffer[<span class="number">1028</span>]) = attributes;</span><br><span class="line">       </span><br><span class="line">        buffer[<span class="number">1032</span>] = <span class="string">&#x27;1&#x27;</span>;</span><br><span class="line">        buffer[<span class="number">1033</span>] = <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">        buffer[<span class="number">1034</span>] = <span class="string">&#x27;.&#x27;</span>;</span><br><span class="line">        buffer[<span class="number">1035</span>] = <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">       </span><br><span class="line">        buffer[<span class="number">1036</span>] = <span class="number">0</span>;</span><br><span class="line">        buffer[<span class="number">1037</span>] = <span class="number">0</span>;</span><br><span class="line">        buffer[<span class="number">1038</span>] = <span class="number">0</span>;</span><br><span class="line">        buffer[<span class="number">1039</span>] = <span class="number">0</span>;</span><br><span class="line">       </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;journal has been disabled.\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="挂载"><a href="#挂载" class="headerlink" title="挂载"></a>挂载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkdir /mnt/timemachine					<span class="comment">#创建挂载点</span></span><br><span class="line">$ sudo mount  -t hfsplus -o force,rw /dev/sdb3 /mnt/timemachine   		</span><br><span class="line">												<span class="comment">#挂载点设置为/mnt/timemachine</span></span><br></pre></td></tr></table></figure>
+<h2 id="Netatalk编译安装与配置"><a href="#Netatalk编译安装与配置" class="headerlink" title="Netatalk编译安装与配置"></a>Netatalk编译安装与配置</h2><p>由于apt上的Netatalk的版本太老，所以选择编译安装。 </p>
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>安装依赖库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install -y \</span><br><span class="line">build-essential \</span><br><span class="line">libevent-dev \</span><br><span class="line">libssl-dev \</span><br><span class="line">libgcrypt-dev \</span><br><span class="line">libkrb5-dev \</span><br><span class="line">libpam0g-dev \</span><br><span class="line">libwrap0-dev \</span><br><span class="line">libdb-dev \</span><br><span class="line">libtdb-dev \</span><br><span class="line">avahi-daemon \</span><br><span class="line">libavahi-client-dev \</span><br><span class="line">libacl1-dev \</span><br><span class="line">libldap2-dev \</span><br><span class="line">libcrack2-dev \</span><br><span class="line">libdbus-1-dev \</span><br><span class="line">libdbus-glib-1-dev \</span><br><span class="line">libglib2.0-dev</span><br></pre></td></tr></table></figure>
 <p>安装<a target="_blank" rel="noopener" href="https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/checkinstall_1.6.2-4ubuntu2_amd64.deb.html">checkinstall</a></p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> --yes checkinstall<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>也可以通过 <a target="_blank" rel="noopener" href="https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/checkinstall_1.6.2-4ubuntu2_amd64.deb.html"> 下载 deb 包 </a> 来安装</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> /tmp <span class="token operator">&amp;&amp;</span> <span class="token function">curl</span> http://archive.ubuntu.com/ubuntu/pool/universe/c/checkinstall/checkinstall_1.6.2-4ubuntu2_amd64.deb
-$ <span class="token function">sudo</span> dpkg -i checkinstall_1.6.2-4ubuntu2_amd64.deb<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install --yes checkinstall</span><br></pre></td></tr></table></figure>
+<p>也可以通过<a target="_blank" rel="noopener" href="https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/checkinstall_1.6.2-4ubuntu2_amd64.deb.html">下载deb包</a>来安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /tmp &amp;&amp; curl http://archive.ubuntu.com/ubuntu/pool/universe/c/checkinstall/checkinstall_1.6.2-4ubuntu2_amd64.deb</span><br><span class="line">$ sudo dpkg -i checkinstall_1.6.2-4ubuntu2_amd64.deb</span><br></pre></td></tr></table></figure>
 <p>设置环境变量</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token assign-left variable">NETATALK_VERSION</span><span class="token operator">=</span><span class="token string">'3.1.11'</span>
-$ <span class="token assign-left variable">MAINTAINER</span><span class="token operator">=</span><span class="token string">'maywzh \&lt;maywzh@gamil.com\>'</span> <span class="token comment"># 这里换成 自己的名字和邮箱</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>下载 netatalk 源码</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">wget</span> http://prdownloads.sourceforge.net/netatalk/netatalk-<span class="token variable">$&#123;NETATALK_VERSION&#125;</span>.tar.gz -P /tmp
-<span class="token function">tar</span> -xzf /tmp/netatalk-<span class="token variable">$&#123;NETATALK_VERSION&#125;</span>.tar.gz -C /tmp
-$ <span class="token builtin class-name">cd</span> /tmp/netatalk-<span class="token variable">$&#123;NETATALK_VERSION&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ NETATALK_VERSION=<span class="string">&#x27;3.1.11&#x27;</span></span><br><span class="line">$ MAINTAINER=<span class="string">&#x27;maywzh \&lt;maywzh@gamil.com\&gt;&#x27;</span> <span class="comment"># 这里换成 自己的名字和邮箱</span></span><br></pre></td></tr></table></figure>
+<p>下载netatalk源码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ wget http://prdownloads.sourceforge.net/netatalk/netatalk-<span class="variable">$&#123;NETATALK_VERSION&#125;</span>.tar.gz -P /tmp</span><br><span class="line">tar -xzf /tmp/netatalk-<span class="variable">$&#123;NETATALK_VERSION&#125;</span>.tar.gz -C /tmp</span><br><span class="line">$ <span class="built_in">cd</span> /tmp/netatalk-<span class="variable">$&#123;NETATALK_VERSION&#125;</span></span><br></pre></td></tr></table></figure>
 <p>编译</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ ./configure <span class="token punctuation">\</span>
---with-init-style<span class="token operator">=</span>debian-systemd <span class="token punctuation">\</span>
---without-libevent <span class="token punctuation">\</span>
---with-cracklib <span class="token punctuation">\</span>
---enable-krbV-uam <span class="token punctuation">\</span>
---with-pam-confdir<span class="token operator">=</span>/etc/pam.d <span class="token punctuation">\</span>
---with-dbus-daemon<span class="token operator">=</span>/usr/bin/dbus-daemon <span class="token punctuation">\</span>
---with-dbus-sysconf-dir<span class="token operator">=</span>/etc/dbus-1/system.d
-$ <span class="token function">make</span>
-$ <span class="token function">sudo</span> checkinstall -D <span class="token punctuation">\</span>
---pkgname<span class="token operator">=</span><span class="token string">'netatalk'</span> <span class="token punctuation">\</span>
---pkgversion<span class="token operator">=</span><span class="token string">"<span class="token variable">$&#123;NETATALK_VERSION&#125;</span>"</span> <span class="token punctuation">\</span>
---maintainer<span class="token operator">=</span><span class="token string">"<span class="token variable">$&#123;MAINTAINER&#125;</span>"</span> <span class="token punctuation">\</span>
-$ <span class="token function">make</span> <span class="token function">install</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="安装">安装 </span></h3><p> 安装依赖</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> -y <span class="token punctuation">\</span>
-avahi-daemon <span class="token punctuation">\</span>
-cracklib-runtime <span class="token punctuation">\</span>
-db-util <span class="token punctuation">\</span>
-db5.3-util <span class="token punctuation">\</span>
-libtdb1 <span class="token punctuation">\</span>
-libavahi-client3 <span class="token punctuation">\</span>
-libcrack2 <span class="token punctuation">\</span>
-libcups2 <span class="token punctuation">\</span>
-libpam-cracklib <span class="token punctuation">\</span>
-libdbus-glib-1-2<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ ./configure \</span><br><span class="line">--with-init-style=debian-systemd \</span><br><span class="line">--without-libevent \</span><br><span class="line">--with-cracklib \</span><br><span class="line">--<span class="built_in">enable</span>-krbV-uam \</span><br><span class="line">--with-pam-confdir=/etc/pam.d \</span><br><span class="line">--with-dbus-daemon=/usr/bin/dbus-daemon \</span><br><span class="line">--with-dbus-sysconf-dir=/etc/dbus-1/system.d</span><br><span class="line">$ make</span><br><span class="line">$ sudo checkinstall -D \</span><br><span class="line">--pkgname=<span class="string">&#x27;netatalk&#x27;</span> \</span><br><span class="line">--pkgversion=<span class="string">&quot;<span class="variable">$&#123;NETATALK_VERSION&#125;</span>&quot;</span> \</span><br><span class="line">--maintainer=<span class="string">&quot;<span class="variable">$&#123;MAINTAINER&#125;</span>&quot;</span> \</span><br><span class="line">$ make install</span><br></pre></td></tr></table></figure>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>安装依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install -y \</span><br><span class="line">avahi-daemon \</span><br><span class="line">cracklib-runtime \</span><br><span class="line">db-util \</span><br><span class="line">db5.3-util \</span><br><span class="line">libtdb1 \</span><br><span class="line">libavahi-client3 \</span><br><span class="line">libcrack2 \</span><br><span class="line">libcups2 \</span><br><span class="line">libpam-cracklib \</span><br><span class="line">libdbus-glib-1-2</span><br></pre></td></tr></table></figure>
 <p>安装编译包</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> dpkg -i netatalk_3.1.11-1_amd64.deb
-$ <span class="token function">sudo</span> ldconfig<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo dpkg -i netatalk_3.1.11-1_amd64.deb</span><br><span class="line">$ sudo ldconfig</span><br></pre></td></tr></table></figure>
 <p>检查安装</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ netatalk -v
-netatalk <span class="token number">3.1</span>.11 - Netatalk AFP server <span class="token function">service</span> controller daemon
-
-This program is <span class="token function">free</span> software<span class="token punctuation">;</span> you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation<span class="token punctuation">;</span> either version <span class="token number">2</span> of the License, or <span class="token punctuation">(</span>at your option<span class="token punctuation">)</span> any later
-version. Please see the <span class="token function">file</span> COPYING <span class="token keyword">for</span> further information and details.
-
-netatalk has been compiled with support <span class="token keyword">for</span> these features:
-
-      Zeroconf support:	Avahi
-     Spotlight support:	No
-
-                  afpd:	/usr/local/sbin/afpd
-            cnid_metad:	/usr/local/sbin/cnid_metad
-              afp.conf:	/usr/local/etc/afp.conf
-    netatalk lock file:	/var/lock/netatalk<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3><span id="配置">配置 </span></h3><h4><span id="配置文件"> 配置文件</span></h4><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">vim</span> /usr/local/etc/afp.conf  <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>想深入了解配置请参考 <a target="_blank" rel="noopener" href="http://netatalk.sourceforge.net/3.1/htmldocs/afp.conf.5.html"> 官方文档</a>。</p>
-<pre class="line-numbers language-config" data-language="config"><code class="language-config">[Global]  
-mimic model &#x3D; AirPort               #指定在 macOS 的 Finder 显示的图标  
-log level &#x3D; default:warn  
-log file &#x3D; &#x2F;var&#x2F;log&#x2F;afpd.log  
-hosts allow &#x3D; 192.168.50.0&#x2F;24       #子网 允许访问的主机地址, 根据需要自行修改  
-hostname &#x3D; M-AFP             		#主机名 随意设置
-uam list &#x3D; uams_dhx.so uams_dhx2.so #默认认证方式 用户名密码登录 参看官方文档  
-
-[Homes]  
-basedir regex &#x3D; &#x2F;home               #用户的 Home 目录  
-
-[TimeMachine]  
-path &#x3D; &#x2F;mnt&#x2F;TimeMachine             #数据目录  
-time machine &#x3D; yes                  #yes 才支持 TimeMachine  
-spotlight &#x3D; no                      #关闭 spotlight 索引  
-vol size limit &#x3D; 155000             #限制 TimeMachine 存储容量，单位为 MB
-
-;[Files]  							# ; 注释
-;path &#x3D; &#x2F;mnt&#x2F;files                  #设置普通 afp 目录
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4><span id="权限设置">权限设置 </span></h4><p> 创建一个新用户，用于访问 AFP 服务</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">useradd</span> afp    <span class="token comment"># 创建新用户 afp  </span>
-$ paaswd afp     <span class="token comment"># 修改 afp 用户密码</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<h2><span id="avahi-配置安装">Avahi 配置安装</span></h2><p>Avahi 是一个开源项目，用于让 mac 在局域网自动发现 Linux AFP 服务器，具体可参看项目地址<a target="_blank" rel="noopener" href="https://github.com/lathiat/avahi。">https://github.com/lathiat/avahi。</a></p>
-<h3><span id="安装">安装 </span></h3><p> 这个简单，直接 yum 就行</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> avahi -y  <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h3><span id="配置">配置 </span></h3><p> 配置文件位置在 <code>/etc/avahi/services/afpd.service</code></p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">vim</span> /etc/avahi/services/afpd.service<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ netatalk -v</span><br><span class="line">netatalk 3.1.11 - Netatalk AFP server service controller daemon</span><br><span class="line"></span><br><span class="line">This program is free software; you can redistribute it and/or modify it under</span><br><span class="line">the terms of the GNU General Public License as published by the Free Software</span><br><span class="line">Foundation; either version 2 of the License, or (at your option) any later</span><br><span class="line">version. Please see the file COPYING <span class="keyword">for</span> further information and details.</span><br><span class="line"></span><br><span class="line">netatalk has been compiled with support <span class="keyword">for</span> these features:</span><br><span class="line"></span><br><span class="line">      Zeroconf support:	Avahi</span><br><span class="line">     Spotlight support:	No</span><br><span class="line"></span><br><span class="line">                  afpd:	/usr/<span class="built_in">local</span>/sbin/afpd</span><br><span class="line">            cnid_metad:	/usr/<span class="built_in">local</span>/sbin/cnid_metad</span><br><span class="line">              afp.conf:	/usr/<span class="built_in">local</span>/etc/afp.conf</span><br><span class="line">    netatalk lock file:	/var/lock/netatalk</span><br></pre></td></tr></table></figure>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim /usr/<span class="built_in">local</span>/etc/afp.conf  </span><br></pre></td></tr></table></figure>
+<p>想深入了解配置请参考<a target="_blank" rel="noopener" href="http://netatalk.sourceforge.net/3.1/htmldocs/afp.conf.5.html">官方文档</a>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[Global]  </span><br><span class="line">mimic model &#x3D; AirPort               #指定在macOS的Finder显示的图标  </span><br><span class="line">log level &#x3D; default:warn  </span><br><span class="line">log file &#x3D; &#x2F;var&#x2F;log&#x2F;afpd.log  </span><br><span class="line">hosts allow &#x3D; 192.168.50.0&#x2F;24       #子网 允许访问的主机地址,根据需要自行修改  </span><br><span class="line">hostname &#x3D; M-AFP             		#主机名 随意设置</span><br><span class="line">uam list &#x3D; uams_dhx.so uams_dhx2.so #默认认证方式 用户名密码登录 参看官方文档  </span><br><span class="line"></span><br><span class="line">[Homes]  </span><br><span class="line">basedir regex &#x3D; &#x2F;home               #用户的Home目录  </span><br><span class="line"></span><br><span class="line">[TimeMachine]  </span><br><span class="line">path &#x3D; &#x2F;mnt&#x2F;TimeMachine             #数据目录  </span><br><span class="line">time machine &#x3D; yes                  #yes才支持TimeMachine  </span><br><span class="line">spotlight &#x3D; no                      #关闭spotlight索引  </span><br><span class="line">vol size limit &#x3D; 155000             #限制TimeMachine存储容量，单位为MB</span><br><span class="line"></span><br><span class="line">;[Files]  							# ;注释</span><br><span class="line">;path &#x3D; &#x2F;mnt&#x2F;files                  #设置普通afp目录</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="权限设置"><a href="#权限设置" class="headerlink" title="权限设置"></a>权限设置</h4><p>创建一个新用户，用于访问 AFP 服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ useradd afp    <span class="comment">#创建新用户afp  </span></span><br><span class="line">$ paaswd afp     <span class="comment">#修改afp用户密码</span></span><br></pre></td></tr></table></figure>
+<h2 id="Avahi-配置安装"><a href="#Avahi-配置安装" class="headerlink" title="Avahi 配置安装"></a>Avahi 配置安装</h2><p>Avahi是一个开源项目，用于让mac在局域网自动发现Linux AFP服务器，具体可参看项目地址<a target="_blank" rel="noopener" href="https://github.com/lathiat/avahi。">https://github.com/lathiat/avahi。</a></p>
+<h3 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h3><p>这个简单，直接 yum 就行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install avahi -y  </span><br></pre></td></tr></table></figure>
+<h3 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h3><p>配置文件位置在 <code>/etc/avahi/services/afpd.service</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/avahi/services/afpd.service</span><br></pre></td></tr></table></figure>
 <p>修改为以下内容</p>
-<pre class="line-numbers language-xml" data-language="xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" standalone='no'?></span>   
-<span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">service-group</span> <span class="token name">SYSTEM</span> <span class="token string">"avahi-service.dtd"</span><span class="token punctuation">></span></span>   
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>service-group</span><span class="token punctuation">></span></span>   
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span> <span class="token attr-name">replace-wildcards</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>yes<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>DUKE-NAS-AFP<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>  
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>service</span><span class="token punctuation">></span></span>   
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>type</span><span class="token punctuation">></span></span>_afpovertcp._tcp<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>type</span><span class="token punctuation">></span></span>   
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>port</span><span class="token punctuation">></span></span>548<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>port</span><span class="token punctuation">></span></span>   
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>service</span><span class="token punctuation">></span></span>   
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>service</span><span class="token punctuation">></span></span>   
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>type</span><span class="token punctuation">></span></span>_device-info._tcp<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>type</span><span class="token punctuation">></span></span>   
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>port</span><span class="token punctuation">></span></span>0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>port</span><span class="token punctuation">></span></span>   
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>txt-record</span><span class="token punctuation">></span></span>model=Xserve<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>txt-record</span><span class="token punctuation">></span></span>   
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>service</span><span class="token punctuation">></span></span>   
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>service-group</span><span class="token punctuation">></span></span>  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2><span id="服务启动">服务启动</span></h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> systemctl start avahi-daemon  
-$ <span class="token function">sudo</span> systemctl start netatalk  
-$ <span class="token function">sudo</span> systemctl <span class="token builtin class-name">enable</span> avahi-daemon  
-$ <span class="token function">sudo</span> systemctl <span class="token builtin class-name">enable</span> netatalk  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-<p>查看 netatalk 和 avahi 端口是否启动监听, afp 监听 548 端口 <br> 请注意 Linux 防火墙问题，将对应端口放行</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">netstat</span> -tulpn<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>至此， netatalk 部署完成。</p>
-<h2><span id="参考">参考</span></h2><ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; standalone=&#x27;no&#x27;?&gt;</span>   </span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">service-group</span> <span class="meta-keyword">SYSTEM</span> <span class="meta-string">&quot;avahi-service.dtd&quot;</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;<span class="name">service-group</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;<span class="name">name</span> <span class="attr">replace-wildcards</span>=<span class="string">&quot;yes&quot;</span>&gt;</span>DUKE-NAS-AFP<span class="tag">&lt;/<span class="name">name</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;<span class="name">service</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;<span class="name">type</span>&gt;</span>_afpovertcp._tcp<span class="tag">&lt;/<span class="name">type</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;<span class="name">port</span>&gt;</span>548<span class="tag">&lt;/<span class="name">port</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;/<span class="name">service</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;<span class="name">service</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;<span class="name">type</span>&gt;</span>_device-info._tcp<span class="tag">&lt;/<span class="name">type</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;<span class="name">port</span>&gt;</span>0<span class="tag">&lt;/<span class="name">port</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>model=Xserve<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;/<span class="name">service</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;/<span class="name">service-group</span>&gt;</span>  </span><br></pre></td></tr></table></figure>
+<h2 id="服务启动"><a href="#服务启动" class="headerlink" title="服务启动"></a>服务启动</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl start avahi-daemon  </span><br><span class="line">$ sudo systemctl start netatalk  </span><br><span class="line">$ sudo systemctl <span class="built_in">enable</span> avahi-daemon  </span><br><span class="line">$ sudo systemctl <span class="built_in">enable</span> netatalk  </span><br></pre></td></tr></table></figure>
+<p>查看 netatalk 和 avahi 端口是否启动监听, afp 监听 548 端口<br>请注意 Linux 防火墙问题，将对应端口放行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ netstat -tulpn</span><br></pre></td></tr></table></figure>
+<p>至此， netatalk部署完成。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
 <li><a target="_blank" rel="noopener" href="http://netatalk.sourceforge.net/wiki/index.php/Install_Netatalk_3.1.11_on_Ubuntu_18.04_Bionic">Install Netatalk 3.1.11 on Ubuntu 18.04 Bionic</a></li>
 <li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Zero-configuration_networking">Zero-configuration networking</a></li>
 </ol>
 
-            </div>
-            <!-- Post Comments -->
-            
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/01/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BTCP%E5%8D%8F%E8%AE%AE/" rel="prev" title="计算机网络之TCP协议">
+      <i class="fa fa-chevron-left"></i> 计算机网络之TCP协议
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/04/01/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E4%B9%8B%E5%A0%86%E6%8E%92%E5%BA%8F/" rel="next" title="排序之堆排序与JavaScript实现">
+      排序之堆排序与JavaScript实现 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
     
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AC%E7%9B%98%E6%8C%82%E8%BD%BD%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">硬盘挂载与配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%B7%B2%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%A1%AC%E7%9B%98"><span class="nav-number">1.1.</span> <span class="nav-text">查看已连接的硬盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HFS-%E5%88%86%E5%8C%BA%E5%85%B3%E9%97%ADjournal"><span class="nav-number">1.2.</span> <span class="nav-text">HFS+分区关闭journal</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD"><span class="nav-number">1.3.</span> <span class="nav-text">挂载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Netatalk%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">Netatalk编译安装与配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91"><span class="nav-number">2.1.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">2.3.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">2.3.1.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.3.2.</span> <span class="nav-text">权限设置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Avahi-%E9%85%8D%E7%BD%AE%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">Avahi 配置安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-1"><span class="nav-number">3.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-1"><span class="nav-number">3.2.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8"><span class="nav-number">4.</span> <span class="nav-text">服务启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
 </body>
-
-
-
-
-
 </html>

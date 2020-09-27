@@ -1,260 +1,322 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
-    
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-	    
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Go 语言中的接口就是一组方法的签名，它是 Go 语言的重要组成部分。使用接口能够让我们更好地组织并写出易于测试的代码，然而很多工程师对 Go 的接口了解都非常有限，也不清楚其底层的实现原理，这成为了开发高性能服务的最大阻碍。 本节会介绍使用接口时遇到的一些常见问题以及它的设计与实现，包括接口的类型转换、类型断言以及动态派发机制，帮助各位读者更好地理解接口类型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语言的接口">
+<meta property="og:url" content="https://io.maywzh.com/2020/01/11/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%8E%A5%E5%8F%A3/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="Go 语言中的接口就是一组方法的签名，它是 Go 语言的重要组成部分。使用接口能够让我们更好地组织并写出易于测试的代码，然而很多工程师对 Go 的接口了解都非常有限，也不清楚其底层的实现原理，这成为了开发高性能服务的最大阻碍。 本节会介绍使用接口时遇到的一些常见问题以及它的设计与实现，包括接口的类型转换、类型断言以及动态派发机制，帮助各位读者更好地理解接口类型。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/09/04/3T9UIE5lVObWHPA.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/04/m4MfiP7ypZVzA1n.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/04/9myUgL3BKMN4hnw.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/04/5PDUBJtxu28VZlO.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/04/4dSzOu7GJYiXxfP.png">
+<meta property="og:image" content="https://img.draveness.me/golang-new-struct-pointer.png">
+<meta property="og:image" content="https://img.draveness.me/golang-struct-pointer-to-iface.png">
+<meta property="og:image" content="https://img.draveness.me/golang-struct-to-iface.png">
+<meta property="og:image" content="https://img.draveness.me/golang-interface-to-struct.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/04/KWUkzZ8r4b2CH3p.png">
+<meta property="article:published_time" content="2020-01-11T04:27:58.000Z">
+<meta property="article:modified_time" content="2020-09-27T07:48:52.160Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Go">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/09/04/3T9UIE5lVObWHPA.png">
+
+<link rel="canonical" href="https://io.maywzh.com/2020/01/11/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%8E%A5%E5%8F%A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Go语言的接口 | Cult I.O.</title>
   
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
     </script>
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
 
 
 
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/uncategorized/">uncategorized</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
 
 
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
 </nav>
 
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>Go 语言的接口</h2>
-                </a>
-            </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>Go 语言中的接口就是一组方法的签名，它是 Go 语言的重要组成部分。使用接口能够让我们更好地组织并写出易于测试的代码，然而很多工程师对 Go 的接口了解都非常有限，也不清楚其底层的实现原理，这成为了开发高性能服务的最大阻碍。</p>
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2020/01/11/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%8E%A5%E5%8F%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Go语言的接口
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020.01.11 12:27:58" itemprop="dateCreated datePublished" datetime="2020-01-11T12:27:58+08:00">2020.01.11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/01/11/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%8E%A5%E5%8F%A3/" class="post-meta-item leancloud_visitors" data-flag-title="Go语言的接口" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Go 语言中的接口就是一组方法的签名，它是 Go 语言的重要组成部分。使用接口能够让我们更好地组织并写出易于测试的代码，然而很多工程师对 Go 的接口了解都非常有限，也不清楚其底层的实现原理，这成为了开发高性能服务的最大阻碍。</p>
 <p>本节会介绍使用接口时遇到的一些常见问题以及它的设计与实现，包括接口的类型转换、类型断言以及动态派发机制，帮助各位读者更好地理解接口类型。</p>
 <a id="more"></a>
-<h2><span id="概述">概述 </span></h2><p> 在计算机科学中，接口是计算机系统中多个组件共享的边界，不同的组件能够在边界上交换信息。接口的本质就是引入一个新的中间层，调用方可以通过接口与具体实现分离，解除上下游的耦合，上层的模块不再需要依赖下层的具体模块，只需要依赖一个约定好的接口。</p>
-<p><img src="https://i.loli.net/2020/09/04/3T9UIE5lVObWHPA.png" alt="golang-interface"></p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在计算机科学中，接口是计算机系统中多个组件共享的边界，不同的组件能够在边界上交换信息。接口的本质就是引入一个新的中间层，调用方可以通过接口与具体实现分离，解除上下游的耦合，上层的模块不再需要依赖下层的具体模块，只需要依赖一个约定好的接口。</p>
+<p><img data-src="https://i.loli.net/2020/09/04/3T9UIE5lVObWHPA.png" alt="golang-interface"></p>
 <p>这种面向接口的编程方式有着非常强大的生命力，无论是在框架还是操作系统中我们都能够找到接口的身影。可移植操作系统接口（Portable Operating System Interface，POSIX)就是一个典型的例子，它定义了应用程序接口和命令行等标准，为计算机软件带来了可移植性 — 只要操作系统实现了 POSIX，计算机软件就可以直接在不同操作系统上运行。</p>
 <p>除了解耦有依赖关系的上下游，接口还能够帮助我们隐藏底层实现，减少关注点。《SICP》中有这么一句话：</p>
 <blockquote>
 <p>代码必须能够被人阅读，只是机器恰好可以执行。</p>
 </blockquote>
 <p>人能够同时处理的信息非常有限，定义良好的接口能够隔离底层的实现，让我们将重点放在当前的代码片段中。SQL 就是接口的一个例子，当我们使用 SQL 语句查询数据时，其实不需要关心底层数据库的具体实现，我们只在乎 SQL 返回的结果是否符合预期。</p>
-<p><img src="https://i.loli.net/2020/09/04/m4MfiP7ypZVzA1n.png" alt="sql-and-databases"></p>
+<p><img data-src="https://i.loli.net/2020/09/04/m4MfiP7ypZVzA1n.png" alt="sql-and-databases"></p>
 <p>计算机科学中的接口是一个比较抽象的概念，但是编程语言中接口的概念就更加具体。Go 语言中的接口是一种内置的类型，它定义了一组方法的签名，这一小节会先介绍 Go 语言接口的几个基本概念以及常见问题，为之后介绍实现原理做一些铺垫。</p>
-<h3><span id="隐式接口">隐式接口 </span></h3><p> 很多面向对象语言都有接口这一概念，例如 Java 和 C#。Java 的接口不仅可以定义方法签名，还可以定义变量，这些定义的变量可以直接在实现接口的类中使用：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">MyInterface</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">public</span> <span class="token class-name">String</span> hello <span class="token operator">=</span> <span class="token string">"Hello"</span><span class="token punctuation">;</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="隐式接口"><a href="#隐式接口" class="headerlink" title="隐式接口"></a>隐式接口</h3><p>很多面向对象语言都有接口这一概念，例如 Java 和 C#。Java 的接口不仅可以定义方法签名，还可以定义变量，这些定义的变量可以直接在实现接口的类中使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyInterface</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String hello = <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上述代码定义了一个必须实现的方法 <code>sayHello</code> 和一个会注入到实现类的变量 <code>hello</code>。在下面的代码中，<code>MyInterfaceImpl</code> 就实现了 <code>MyInterface</code> 接口：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyInterfaceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">MyInterface</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">MyInterface</span><span class="token punctuation">.</span>hello<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyInterfaceImpl</span> <span class="keyword">implements</span> <span class="title">MyInterface</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(MyInterface.hello);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Java 中的类必须通过上述方式显式地声明实现的接口，但是在 Go 语言中实现接口就不需要使用类似的方式。首先，我们简单了解一下在 Go 语言中如何定义接口。定义接口需要使用 <code>interface</code> 关键字，在接口中我们只能定义方法签名，不能包含成员变量，一个常见的 Go 语言接口是这样的：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> <span class="token builtin">error</span> <span class="token keyword">interface</span> <span class="token punctuation">&#123;</span>
-	<span class="token function">Error</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token builtin">string</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> error <span class="keyword">interface</span> &#123;</span><br><span class="line">	Error() <span class="keyword">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果一个类型需要实现 <code>error</code> 接口，那么它只需要实现 <code>Error() string</code> 方法，下面的 <code>RPCError</code> 结构体就是 <code>error</code> 接口的一个实现：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> RPCError <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span>
-	Code    <span class="token builtin">int64</span>
-	Message <span class="token builtin">string</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token punctuation">(</span>e <span class="token operator">*</span>RPCError<span class="token punctuation">)</span> <span class="token function">Error</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token builtin">string</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">return</span> fmt<span class="token punctuation">.</span><span class="token function">Sprintf</span><span class="token punctuation">(</span><span class="token string">"%s, code=%d"</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span>Message<span class="token punctuation">,</span> e<span class="token punctuation">.</span>Code<span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>细心的读者可能会发现上述代码根本就没有 <code>error</code> 接口的影子，这是为什么呢？Go 语言中 <strong> 接口的实现都是隐式的</strong>，我们只需要实现 <code>Error() string</code> 方法实现了 <code>error</code> 接口。Go 语言实现接口的方式与 Java 完全不同：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> RPCError <span class="keyword">struct</span> &#123;</span><br><span class="line">	Code    <span class="keyword">int64</span></span><br><span class="line">	Message <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e *RPCError)</span> <span class="title">Error</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> fmt.Sprintf(<span class="string">&quot;%s, code=%d&quot;</span>, e.Message, e.Code)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>细心的读者可能会发现上述代码根本就没有 <code>error</code> 接口的影子，这是为什么呢？Go 语言中<strong>接口的实现都是隐式的</strong>，我们只需要实现 <code>Error() string</code> 方法实现了 <code>error</code> 接口。Go 语言实现接口的方式与 Java 完全不同：</p>
 <ul>
 <li>在 Java 中：实现接口需要显式的声明接口并实现所有方法；</li>
 <li>在 Go 中：实现接口的所有方法就隐式的实现了接口；</li>
 </ul>
 <p>我们使用上述 <code>RPCError</code> 结构体时并不关心它实现了哪些接口，Go 语言只会在传递参数、返回参数以及变量赋值时才会对某个类型是否实现接口进行检查，这里举几个例子来演示发生接口类型检查的时机：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">var</span> rpcErr <span class="token builtin">error</span> <span class="token operator">=</span> <span class="token function">NewRPCError</span><span class="token punctuation">(</span><span class="token number">400</span><span class="token punctuation">,</span> <span class="token string">"unknown err"</span><span class="token punctuation">)</span> <span class="token comment">// typecheck1</span>
-	err <span class="token operator">:=</span> <span class="token function">AsErr</span><span class="token punctuation">(</span>rpcErr<span class="token punctuation">)</span> <span class="token comment">// typecheck2</span>
-	<span class="token function">println</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span> 
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">NewRPCError</span><span class="token punctuation">(</span>code <span class="token builtin">int64</span><span class="token punctuation">,</span> msg <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token builtin">error</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">return</span> <span class="token operator">&amp;</span>RPCError<span class="token punctuation">&#123;</span> <span class="token comment">// typecheck3</span>
-		Code<span class="token punctuation">:</span>    code<span class="token punctuation">,</span>
-		Message<span class="token punctuation">:</span> msg<span class="token punctuation">,</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">AsErr</span><span class="token punctuation">(</span>err <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token builtin">error</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">return</span> err
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>Go 语言会 <a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/"> 编译期间 </a> 对代码进行类型检查，上述代码总共触发了三次类型检查：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> rpcErr error = NewRPCError(<span class="number">400</span>, <span class="string">&quot;unknown err&quot;</span>) <span class="comment">// typecheck1</span></span><br><span class="line">	err := AsErr(rpcErr) <span class="comment">// typecheck2</span></span><br><span class="line">	<span class="built_in">println</span>(err) </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewRPCError</span><span class="params">(code <span class="keyword">int64</span>, msg <span class="keyword">string</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;RPCError&#123; <span class="comment">// typecheck3</span></span><br><span class="line">		Code:    code,</span><br><span class="line">		Message: msg,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">AsErr</span><span class="params">(err error)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Go 语言会<a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/">编译期间</a>对代码进行类型检查，上述代码总共触发了三次类型检查：</p>
 <ol>
 <li>将 <code>*RPCError</code> 类型的变量赋值给 <code>error</code> 类型的变量 <code>rpcErr</code>；</li>
 <li>将 <code>*RPCError</code> 类型的变量 <code>rpcErr</code> 传递给签名中参数类型为 <code>error</code> 的 <code>AsErr</code> 函数；</li>
 <li>将 <code>*RPCError</code> 类型的变量从函数签名的返回值类型为 <code>error</code> 的 <code>NewRPCError</code> 函数中返回；</li>
 </ol>
 <p>从类型检查的过程来看，编译器仅在需要时才对类型进行检查，类型实现接口时只需要实现接口中的全部方法，不需要像 Java 等编程语言中一样显式声明。</p>
-<h3><span id="类型">类型 </span></h3><p> 接口也是 Go 语言中的一种类型，它能够出现在变量的定义、函数的入参和返回值中并对它们进行约束，不过 Go 语言中有两种略微不同的接口，一种是带有一组方法的接口，另一种是不带任何方法的 <code>interface&#123;&#125;</code>：</p>
-<p><img src="https://i.loli.net/2020/09/04/9myUgL3BKMN4hnw.png" alt="golang-different-interface"></p>
+<h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><p>接口也是 Go 语言中的一种类型，它能够出现在变量的定义、函数的入参和返回值中并对它们进行约束，不过 Go 语言中有两种略微不同的接口，一种是带有一组方法的接口，另一种是不带任何方法的 <code>interface&#123;&#125;</code>：</p>
+<p><img data-src="https://i.loli.net/2020/09/04/9myUgL3BKMN4hnw.png" alt="golang-different-interface"></p>
 <p>Go 语言使用 <code>iface</code> 结构体表示第一种接口，使用 <code>eface</code> 结构体表示第二种空接口，两种接口虽然都使用 <code>interface</code> 声明，但是由于后者在 Go 语言中非常常见，所以在实现时使用了特殊的类型。</p>
-<p>需要注意的是，与 C 语言中的 <code>void *</code> 不同，<code>interface&#123;&#125;</code> 类型 <strong> 不是任意类型</strong>，如果我们将类型转换成了 <code>interface&#123;&#125;</code> 类型，这边变量在运行期间的类型也发生了变化，获取变量类型时就会得到 <code>interface&#123;&#125;</code>。</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
-
-<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">type</span> Test <span class="token keyword">struct</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-	v <span class="token operator">:=</span> Test<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-	<span class="token function">Print</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">Print</span><span class="token punctuation">(</span>v <span class="token keyword">interface</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token function">println</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>需要注意的是，与 C 语言中的 <code>void *</code> 不同，<code>interface&#123;&#125;</code> 类型<strong>不是任意类型</strong>，如果我们将类型转换成了 <code>interface&#123;&#125;</code> 类型，这边变量在运行期间的类型也发生了变化，获取变量类型时就会得到 <code>interface&#123;&#125;</code>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">type</span> Test <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">	v := Test&#123;&#125;</span><br><span class="line">	Print(v)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Print</span><span class="params">(v <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	<span class="built_in">println</span>(v)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上述函数不接受任意类型的参数，只接受 <code>interface&#123;&#125;</code> 类型的值，在调用 <code>Print</code> 函数时会对参数 <code>v</code> 进行类型转换，将原来的 <code>Test</code> 类型转换成 <code>interface&#123;&#125;</code> 类型，我们会在本节后面介绍类型转换的过程和原理。</p>
-<h3><span id="指针和接口">指针和接口 </span></h3><p> 在 Go 语言中同时使用指针和接口时会发生一些让人困惑的问题，接口在定义一组方法时没有对实现的接收者做限制，所以我们会看到『一个类型』实现接口的两种方式：</p>
-<p><img src="https://i.loli.net/2020/09/04/5PDUBJtxu28VZlO.png" alt="golang-interface-and-pointer"></p>
+<h3 id="指针和接口"><a href="#指针和接口" class="headerlink" title="指针和接口"></a>指针和接口</h3><p>在 Go 语言中同时使用指针和接口时会发生一些让人困惑的问题，接口在定义一组方法时没有对实现的接收者做限制，所以我们会看到『一个类型』实现接口的两种方式：</p>
+<p><img data-src="https://i.loli.net/2020/09/04/5PDUBJtxu28VZlO.png" alt="golang-interface-and-pointer"></p>
 <p>这是因为结构体类型和指针类型是完全不同的，就像我们不能向一个接受指针的函数传递结构体，在实现接口时这两种类型也不能划等号。但是上图中的两种实现不可以同时存在，Go 语言的编译器会在结构体类型和指针类型都实现一个方法时报错 —— <code>method redeclared</code>。</p>
 <p>对 <code>Cat</code> 结构体来说，它在实现接口时可以选择接受者的类型，即结构体或者结构体指针，在初始化时也可以初始化成结构体或者指针。下面的代码总结了如何使用结构体、结构体指针实现接口，以及如何使用结构体、结构体指针初始化变量。</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> Cat <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-<span class="token keyword">type</span> Duck <span class="token keyword">interface</span> <span class="token punctuation">&#123;</span> <span class="token operator">...</span> <span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token punctuation">(</span>c  Cat<span class="token punctuation">)</span> Quack <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>  <span class="token comment">// 使用结构体实现接口</span>
-<span class="token keyword">func</span> <span class="token punctuation">(</span>c <span class="token operator">*</span>Cat<span class="token punctuation">)</span> Quack <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>  <span class="token comment">// 使用结构体指针实现接口</span>
-
-<span class="token keyword">var</span> d Duck <span class="token operator">=</span> Cat<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>      <span class="token comment">// 使用结构体初始化变量</span>
-<span class="token keyword">var</span> d Duck <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>     <span class="token comment">// 使用结构体指针初始化变量</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Cat <span class="keyword">struct</span> &#123;&#125;</span><br><span class="line"><span class="keyword">type</span> Duck <span class="keyword">interface</span> &#123; ... &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c  Cat)</span> <span class="title">Quack</span></span> &#123;&#125;  <span class="comment">// 使用结构体实现接口</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Cat)</span> <span class="title">Quack</span></span> &#123;&#125;  <span class="comment">// 使用结构体指针实现接口</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> d Duck = Cat&#123;&#125;      <span class="comment">// 使用结构体初始化变量</span></span><br><span class="line"><span class="keyword">var</span> d Duck = &amp;Cat&#123;&#125;     <span class="comment">// 使用结构体指针初始化变量</span></span><br></pre></td></tr></table></figure>
 <p>实现接口的类型和初始化返回的类型两个维度组成了四种情况，这四种情况并不都能通过编译器的检查：</p>
 <div class="table-container">
 <table>
@@ -285,136 +347,52 @@
 <li>方法接受者和初始化类型都是结构体指针；</li>
 </ul>
 <p>而剩下的两种方式为什么一种能够通过编译，另一种无法通过编译呢？我们先来看一下能够通过编译的情况，也就是方法的接受者是结构体，而初始化的变量是结构体指针：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> Cat <span class="token keyword">struct</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token punctuation">(</span>c Cat<span class="token punctuation">)</span> <span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"meow"</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">var</span> c Duck <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-	c<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>作为指针的 <code>&amp;Cat&#123;&#125;</code> 变量能够 <strong> 隐式地获取 </strong> 到指向的结构体，所以能在结构体上调用 <code>Walk</code> 和 <code>Quack</code> 方法。我们可以将这里的调用理解成 C 语言中的 <code>d-&gt;Walk()</code> 和 <code>d-&gt;Speak()</code>，它们都会先获取指向的结构体再执行对应的方法。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Cat <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c Cat)</span> <span class="title">Quack</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;meow&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> c Duck = &amp;Cat&#123;&#125;</span><br><span class="line">	c.Quack()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>作为指针的 <code>&amp;Cat&#123;&#125;</code> 变量能够<strong>隐式地获取</strong>到指向的结构体，所以能在结构体上调用 <code>Walk</code> 和 <code>Quack</code> 方法。我们可以将这里的调用理解成 C 语言中的 <code>d-&gt;Walk()</code> 和 <code>d-&gt;Speak()</code>，它们都会先获取指向的结构体再执行对应的方法。</p>
 <p>但是如果我们将上述代码中方法的接受者和初始化的类型进行交换，代码就无法通过编译了：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> Duck <span class="token keyword">interface</span> <span class="token punctuation">&#123;</span>
-	<span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">type</span> Cat <span class="token keyword">struct</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token punctuation">(</span>c <span class="token operator">*</span>Cat<span class="token punctuation">)</span> <span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"meow"</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">var</span> c Duck <span class="token operator">=</span> Cat<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-	c<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-
-$ <span class="token keyword">go</span> build <span class="token keyword">interface</span><span class="token punctuation">.</span><span class="token keyword">go</span>
-<span class="token punctuation">.</span><span class="token operator">/</span><span class="token keyword">interface</span><span class="token punctuation">.</span><span class="token keyword">go</span><span class="token punctuation">:</span><span class="token number">20</span><span class="token punctuation">:</span><span class="token number">6</span><span class="token punctuation">:</span> cannot use Cat literal <span class="token punctuation">(</span><span class="token keyword">type</span> Cat<span class="token punctuation">)</span> as <span class="token keyword">type</span> Duck in assignment<span class="token punctuation">:</span>
-	Cat does not implement Duck <span class="token punctuation">(</span>Quack method has pointer receiver<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>编译器会提醒我们：<code>Cat</code> 类型没有实现 <code>Duck</code> 接口，<code>Quack</code> 方法的接受者是指针。这两个报错对于刚刚接触 Go 语言的开发者比较难以理解，如果我们想要搞清楚这个问题，首先要知道 Go 语言在 <a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part2-foundation/ch04-basic/golang-function-call/"> 传递参数 </a> 时都是传值的。</p>
-<p><img src="https://i.loli.net/2020/09/04/4dSzOu7GJYiXxfP.png" alt="golang-interface-method-receive"></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Duck <span class="keyword">interface</span> &#123;</span><br><span class="line">	Quack()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Cat <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Cat)</span> <span class="title">Quack</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;meow&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> c Duck = Cat&#123;&#125;</span><br><span class="line">	c.Quack()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$ <span class="keyword">go</span> build <span class="keyword">interface</span>.<span class="keyword">go</span></span><br><span class="line">./<span class="keyword">interface</span>.<span class="keyword">go</span>:<span class="number">20</span>:<span class="number">6</span>: cannot use Cat literal (<span class="keyword">type</span> Cat) as <span class="keyword">type</span> Duck in assignment:</span><br><span class="line">	Cat does not implement Duck (Quack method has pointer receiver)</span><br></pre></td></tr></table></figure>
+<p>编译器会提醒我们：<code>Cat</code> 类型没有实现 <code>Duck</code> 接口，<code>Quack</code> 方法的接受者是指针。这两个报错对于刚刚接触 Go 语言的开发者比较难以理解，如果我们想要搞清楚这个问题，首先要知道 Go 语言在<a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part2-foundation/ch04-basic/golang-function-call/">传递参数</a>时都是传值的。</p>
+<p><img data-src="https://i.loli.net/2020/09/04/4dSzOu7GJYiXxfP.png" alt="golang-interface-method-receive"></p>
 <p>如上图所示，无论上述代码中初始化的变量 <code>c</code> 是 <code>Cat&#123;&#125;</code> 还是 <code>&amp;Cat&#123;&#125;</code>，使用 <code>c.Quack()</code> 调用方法时都会发生值拷贝：</p>
 <ul>
 <li>上图左侧，对于 <code>&amp;Cat&#123;&#125;</code> 来说，这意味着拷贝一个新的 <code>&amp;Cat&#123;&#125;</code> 指针，这个指针与原来的指针指向一个相同并且唯一的结构体，所以编译器可以隐式的对变量解引用（dereference）获取指针指向的结构体；</li>
 <li>上图右侧，对于 <code>Cat&#123;&#125;</code> 来说，这意味着 <code>Quack</code> 方法会接受一个全新的 <code>Cat&#123;&#125;</code>，因为方法的参数是 <code>*Cat</code>，编译器不会无中生有创建一个新的指针；即使编译器可以创建新指针，这个指针指向的也不是最初调用该方法的结构体；</li>
 </ul>
 <p>上面的分析解释了指针类型的现象，当我们使用指针实现接口时，只有指针类型的变量才会实现该接口；当我们使用结构体实现接口时，指针类型和结构体类型都会实现该接口。当然这并不意味着我们应该一律使用结构体实现接口，这个问题在实际工程中也没那么重要，在这里我们只想解释现象背后的原因。</p>
-<h3><span id="nil-和-non-nil">nil 和 non-nil</span></h3><p>我们可以通过一个例子理解 <strong>『Go 语言的接口类型不是任意类型』</strong> 这一句话，下面的代码在 <code>main</code> 函数中初始化了一个 <code>*TestStruct</code> 结构体指针，由于指针的零值是 <code>nil</code>，所以变量 <code>s</code> 在初始化之后也是 <code>nil</code>：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
-
-<span class="token keyword">type</span> TestStruct <span class="token keyword">struct</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">NilOrNot</span><span class="token punctuation">(</span>v <span class="token keyword">interface</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token builtin">bool</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">return</span> v <span class="token operator">==</span> <span class="token boolean">nil</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">var</span> s <span class="token operator">*</span>TestStruct
-	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>s <span class="token operator">==</span> <span class="token boolean">nil</span><span class="token punctuation">)</span>      <span class="token comment">// #=> true</span>
-	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token function">NilOrNot</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">)</span>   <span class="token comment">// #=> false</span>
-<span class="token punctuation">&#125;</span>
-
-$ <span class="token keyword">go</span> run main<span class="token punctuation">.</span><span class="token keyword">go</span>
-<span class="token boolean">true</span>
-<span class="token boolean">false</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="nil-和-non-nil"><a href="#nil-和-non-nil" class="headerlink" title="nil 和 non-nil"></a>nil 和 non-nil</h3><p>我们可以通过一个例子理解<strong>『Go 语言的接口类型不是任意类型』</strong>这一句话，下面的代码在 <code>main</code> 函数中初始化了一个 <code>*TestStruct</code> 结构体指针，由于指针的零值是 <code>nil</code>，所以变量 <code>s</code> 在初始化之后也是 <code>nil</code>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> TestStruct <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NilOrNot</span><span class="params">(v <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> v == <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> s *TestStruct</span><br><span class="line">	fmt.Println(s == <span class="literal">nil</span>)      <span class="comment">// #=&gt; true</span></span><br><span class="line">	fmt.Println(NilOrNot(s))   <span class="comment">// #=&gt; false</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$ <span class="keyword">go</span> run main.<span class="keyword">go</span></span><br><span class="line"><span class="literal">true</span></span><br><span class="line"><span class="literal">false</span></span><br></pre></td></tr></table></figure>
 <p>我们简单总结一下上述代码执行的结果：</p>
 <ul>
 <li>将上述变量与 <code>nil</code> 比较会返回 <code>true</code>；</li>
 <li>将上述变量传入 <code>NilOrNot</code> 方法并与 <code>nil</code> 比较会返回 <code>false</code>；</li>
 </ul>
-<p>出现上述现象的原因是 —— 调用 <code>NilOrNot</code> 函数时发生了 <strong> 隐式的类型转换</strong>，除了向方法传入参数之外，变量的赋值也会触发隐式类型转换。在类型转换时，<code>*TestStruct</code> 类型会转换成 <code>interface&#123;&#125;</code> 类型，转换后的变量不仅包含转换前的变量，还包含变量的类型信息 <code>TestStruct</code>，所以转换后的变量与 <code>nil</code> 不相等。</p>
-<h2><span id="数据结构">数据结构 </span></h2><p> 接下来我们从源代码和汇编指令层面介绍接口的底层数据结构。</p>
+<p>出现上述现象的原因是 —— 调用 <code>NilOrNot</code> 函数时发生了<strong>隐式的类型转换</strong>，除了向方法传入参数之外，变量的赋值也会触发隐式类型转换。在类型转换时，<code>*TestStruct</code> 类型会转换成 <code>interface&#123;&#125;</code> 类型，转换后的变量不仅包含转换前的变量，还包含变量的类型信息 <code>TestStruct</code>，所以转换后的变量与 <code>nil</code> 不相等。</p>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>接下来我们从源代码和汇编指令层面介绍接口的底层数据结构。</p>
 <p>Go 语言根据接口类型『是否包含一组方法』对类型做了不同的处理。我们使用 <code>iface</code> 结构体表示包含方法的接口；使用 <code>eface</code> 结构体表示不包含任何方法的 <code>interface&#123;&#125;</code> 类型，<code>eface</code> 结构体在 Go 语言的定义是这样的：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> eface <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 16 bytes</span>
-	_type <span class="token operator">*</span>_type
-	data  unsafe<span class="token punctuation">.</span>Pointer
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> eface <span class="keyword">struct</span> &#123; <span class="comment">// 16 bytes</span></span><br><span class="line">	_type *_type</span><br><span class="line">	data  unsafe.Pointer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>由于 <code>interface&#123;&#125;</code> 类型不包含任何方法，所以它的结构也相对来说比较简单，只包含指向底层数据和类型的两个指针。从上述结构我们也能推断出 — Go 语言中的任意类型都可以转换成 <code>interface&#123;&#125;</code> 类型。</p>
 <p>另一个用于表示接口的结构体就是 <code>iface</code>，这个结构体中有指向原始数据的指针 <code>data</code>，不过更重要的是 <code>itab</code> 类型的 <code>tab</code> 字段。</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> iface <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 16 bytes</span>
-	tab  <span class="token operator">*</span>itab
-	data unsafe<span class="token punctuation">.</span>Pointer
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> iface <span class="keyword">struct</span> &#123; <span class="comment">// 16 bytes</span></span><br><span class="line">	tab  *itab</span><br><span class="line">	data unsafe.Pointer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>接下来我们将详细分析 Go 语言接口中的这两个类型，即 <code>_type</code> 和 <code>itab</code>。</p>
-<h3><span id="类型结构体">类型结构体</span></h3><p><code>_type</code> 是 Go 语言类型的运行时表示。下面是运行时包中的结构体，结构体包含了很多元信息，例如：类型的大小、哈希、对齐以及种类等。</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> _type <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span>
-	size       <span class="token builtin">uintptr</span>
-	ptrdata    <span class="token builtin">uintptr</span>
-	hash       <span class="token builtin">uint32</span>
-	tflag      tflag
-	align      <span class="token builtin">uint8</span>
-	fieldAlign <span class="token builtin">uint8</span>
-	kind       <span class="token builtin">uint8</span>
-	equal      <span class="token keyword">func</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span>Pointer<span class="token punctuation">,</span> unsafe<span class="token punctuation">.</span>Pointer<span class="token punctuation">)</span> <span class="token builtin">bool</span>
-	gcdata     <span class="token operator">*</span><span class="token builtin">byte</span>
-	str        nameOff
-	ptrToThis  typeOff
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="类型结构体"><a href="#类型结构体" class="headerlink" title="类型结构体"></a>类型结构体</h3><p><code>_type</code> 是 Go 语言类型的运行时表示。下面是运行时包中的结构体，结构体包含了很多元信息，例如：类型的大小、哈希、对齐以及种类等。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> _type <span class="keyword">struct</span> &#123;</span><br><span class="line">	size       <span class="keyword">uintptr</span></span><br><span class="line">	ptrdata    <span class="keyword">uintptr</span></span><br><span class="line">	hash       <span class="keyword">uint32</span></span><br><span class="line">	tflag      tflag</span><br><span class="line">	align      <span class="keyword">uint8</span></span><br><span class="line">	fieldAlign <span class="keyword">uint8</span></span><br><span class="line">	kind       <span class="keyword">uint8</span></span><br><span class="line">	equal      <span class="function"><span class="keyword">func</span><span class="params">(unsafe.Pointer, unsafe.Pointer)</span> <span class="title">bool</span></span></span><br><span class="line">	gcdata     *<span class="keyword">byte</span></span><br><span class="line">	str        nameOff</span><br><span class="line">	ptrToThis  typeOff</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li><code>size</code> 字段存储了类型占用的内存空间，为内存空间的分配提供信息；</li>
 <li><code>hash</code> 字段能够帮助我们快速确定类型是否相等；</li>
 <li><code>equal</code> 字段用于判断当前类型的多个对象是否相等，该字段是为了减少 Go 语言二进制包大小从 <code>typeAlg</code> 结构体中迁移过来的；</li>
 </ul>
 <p>我们只需要对 <code>_type</code> 结构体中的字段有一个大体的概念，不需要详细理解所有字段的作用和意义。</p>
-<h3><span id="itab-结构体">itab 结构体</span></h3><p><code>itab</code> 结构体是接口类型的核心组成部分，每一个 <code>itab</code> 都占 32 字节的空间，我们可以将其看成接口类型和具体类型的组合，它们分别用 <code>inter</code> 和 <code>_type</code> 两个字段表示：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> itab <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 32 bytes</span>
-	inter <span class="token operator">*</span>interfacetype
-	_type <span class="token operator">*</span>_type
-	hash  <span class="token builtin">uint32</span>
-	<span class="token boolean">_</span>     <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token builtin">byte</span>
-	fun   <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token builtin">uintptr</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="itab-结构体"><a href="#itab-结构体" class="headerlink" title="itab 结构体"></a>itab 结构体</h3><p><code>itab</code> 结构体是接口类型的核心组成部分，每一个 <code>itab</code> 都占 32 字节的空间，我们可以将其看成接口类型和具体类型的组合，它们分别用 <code>inter</code> 和 <code>_type</code> 两个字段表示：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> itab <span class="keyword">struct</span> &#123; <span class="comment">// 32 bytes</span></span><br><span class="line">	inter *interfacetype</span><br><span class="line">	_type *_type</span><br><span class="line">	hash  <span class="keyword">uint32</span></span><br><span class="line">	_     [<span class="number">4</span>]<span class="keyword">byte</span></span><br><span class="line">	fun   [<span class="number">1</span>]<span class="keyword">uintptr</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>除了 <code>inter</code> 和 <code>_type</code> 两个用于表示类型的字段之外，上述结构体中的另外两个字段也有自己的作用：</p>
 <ul>
 <li><code>hash</code> 是对 <code>_type.hash</code> 的拷贝，当我们想将 <code>interface</code> 类型转换成具体类型时，可以使用该字段快速判断目标类型和具体类型 <code>_type</code> 是否一致；</li>
 <li><code>fun</code> 是一个动态大小的数组，它是一个用于动态派发的虚函数表，存储了一组函数指针。虽然该变量被声明成大小固定的数组，但是在使用时会通过原始指针获取其中的数据，所以 <code>fun</code> 数组中保存的元素数量是不确定的；</li>
 </ul>
 <p>我们会在类型断言中介绍 <code>hash</code> 字段的使用，在动态派发一节中介绍 <code>fun</code> 数组中存储的函数指针是如何被使用的。</p>
-<h2><span id="类型转换">类型转换 </span></h2><p> 既然我们已经了解了接口在运行时的数据结构，接下来会通过几个例子来深入理解接口类型是如何初始化和传递的，这里会介绍在实现接口时使用指针类型和结构体类型的区别。这两种不同的接口实现方式会导致 Go 语言编译器生成不同的汇编代码，带来执行过程上的一些差异。</p>
-<h3><span id="指针类型">指针类型 </span></h3><p> 首先我们回到这一节开头提到的 <code>Duck</code> 接口的例子，我们使用 <code>//go:noinline</code> 指令禁止 <code>Quack</code> 方法的内联编译：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
-
-<span class="token keyword">type</span> Duck <span class="token keyword">interface</span> <span class="token punctuation">&#123;</span>
-	<span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">type</span> Cat <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span>
-	Name <span class="token builtin">string</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">//go:noinline</span>
-<span class="token keyword">func</span> <span class="token punctuation">(</span>c <span class="token operator">*</span>Cat<span class="token punctuation">)</span> <span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token function">println</span><span class="token punctuation">(</span>c<span class="token punctuation">.</span>Name <span class="token operator">+</span> <span class="token string">"meow"</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">var</span> c Duck <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"grooming"</span><span class="token punctuation">&#125;</span>
-	c<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h2><p>既然我们已经了解了接口在运行时的数据结构，接下来会通过几个例子来深入理解接口类型是如何初始化和传递的，这里会介绍在实现接口时使用指针类型和结构体类型的区别。这两种不同的接口实现方式会导致 Go 语言编译器生成不同的汇编代码，带来执行过程上的一些差异。</p>
+<h3 id="指针类型"><a href="#指针类型" class="headerlink" title="指针类型"></a>指针类型</h3><p>首先我们回到这一节开头提到的 <code>Duck</code> 接口的例子，我们使用 <code>//go:noinline</code> 指令禁止 <code>Quack</code> 方法的内联编译：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Duck <span class="keyword">interface</span> &#123;</span><br><span class="line">	Quack()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Cat <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//go:noinline</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Cat)</span> <span class="title">Quack</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="built_in">println</span>(c.Name + <span class="string">&quot; meow&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> c Duck = &amp;Cat&#123;Name: <span class="string">&quot;grooming&quot;</span>&#125;</span><br><span class="line">	c.Quack()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们使用编译器将上述代码编译成汇编语言，删掉其中一些对理解接口原理无用的指令并保留与赋值语句 <code>var c Duck = &amp;Cat&#123;Name: &quot;grooming&quot;&#125;</code> 相关的代码，我们将生成的汇编指令拆分成三部分分析：</p>
 <ol>
 <li>结构体 <code>Cat</code> 的初始化；</li>
@@ -422,49 +400,24 @@ $ <span class="token keyword">go</span> run main<span class="token punctuation">
 <li>调用接口的方法 <code>Quack()</code>；</li>
 </ol>
 <p>我们先来分析结构体 <code>Cat</code> 的初始化过程：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">LEAQ	<span class="token keyword">type</span><span class="token punctuation">.</span><span class="token string">""</span><span class="token punctuation">.</span><span class="token function">Cat</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span><span class="token punctuation">,</span> AX                <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token keyword">type</span><span class="token punctuation">.</span><span class="token string">""</span><span class="token punctuation">.</span>Cat
-MOVQ	AX<span class="token punctuation">,</span> <span class="token punctuation">(</span>SP<span class="token punctuation">)</span>                           <span class="token punctuation">;</span><span class="token punctuation">;</span> SP <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token keyword">type</span><span class="token punctuation">.</span><span class="token string">""</span><span class="token punctuation">.</span>Cat
-CALL	runtime<span class="token punctuation">.</span><span class="token function">newobject</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span>              <span class="token punctuation">;</span><span class="token punctuation">;</span> SP <span class="token operator">+</span> <span class="token number">8</span> <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-MOVQ	<span class="token function">8</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> DI                          <span class="token punctuation">;</span><span class="token punctuation">;</span> DI <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-MOVQ	$<span class="token number">8</span><span class="token punctuation">,</span> <span class="token function">8</span><span class="token punctuation">(</span>DI<span class="token punctuation">)</span>                          <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token function">StringHeader</span><span class="token punctuation">(</span>DI<span class="token punctuation">.</span>Name<span class="token punctuation">)</span><span class="token punctuation">.</span>Len <span class="token operator">=</span> <span class="token number">8</span>
-LEAQ	<span class="token keyword">go</span><span class="token punctuation">.</span><span class="token builtin">string</span><span class="token punctuation">.</span><span class="token string">"grooming"</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span><span class="token punctuation">,</span> AX       <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token string">"grooming"</span>
-MOVQ	AX<span class="token punctuation">,</span> <span class="token punctuation">(</span>DI<span class="token punctuation">)</span>                           <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token function">StringHeader</span><span class="token punctuation">(</span>DI<span class="token punctuation">.</span>Name<span class="token punctuation">)</span><span class="token punctuation">.</span>Data <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token string">"grooming"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">LEAQ	<span class="keyword">type</span>.<span class="string">&quot;&quot;</span>.Cat(SB), AX                ;; AX = &amp;<span class="keyword">type</span>.<span class="string">&quot;&quot;</span>.Cat</span><br><span class="line">MOVQ	AX, (SP)                           ;; SP = &amp;<span class="keyword">type</span>.<span class="string">&quot;&quot;</span>.Cat</span><br><span class="line">CALL	runtime.newobject(SB)              ;; SP + <span class="number">8</span> = &amp;Cat&#123;&#125;</span><br><span class="line">MOVQ	<span class="number">8</span>(SP), DI                          ;; DI = &amp;Cat&#123;&#125;</span><br><span class="line">MOVQ	$<span class="number">8</span>, <span class="number">8</span>(DI)                          ;; StringHeader(DI.Name).Len = <span class="number">8</span></span><br><span class="line">LEAQ	<span class="keyword">go</span>.<span class="keyword">string</span>.<span class="string">&quot;grooming&quot;</span>(SB), AX       ;; AX = &amp;<span class="string">&quot;grooming&quot;</span></span><br><span class="line">MOVQ	AX, (DI)                           ;; StringHeader(DI.Name).Data = &amp;<span class="string">&quot;grooming&quot;</span></span><br></pre></td></tr></table></figure>
 <ol>
 <li>获取 <code>Cat</code> 结构体类型指针并将其作为参数放到栈上；</li>
 <li>通过 <code>CALL</code> 指定调用 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/5042317d6919d4c84557e04be35130430e8d1dd4/src/runtime/malloc.go#L1162-L1164"><code>runtime.newobject</code></a> 函数，这个函数会以 <code>Cat</code> 结构体类型指针作为入参，分配一片新的内存空间并将指向这片内存空间的指针返回到 SP+8 上；</li>
 <li>SP+8 现在存储了一个指向 <code>Cat</code> 结构体的指针，我们将栈上的指针拷贝到寄存器 <code>DI</code> 上方便操作；</li>
 <li>由于 <code>Cat</code> 中只包含一个字符串类型的 <code>Name</code> 变量，所以在这里会分别将字符串地址 <code>&amp;&quot;grooming&quot;</code> 和字符串长度 <code>8</code> 设置到结构体上，最后三行汇编指令等价于 <code>cat.Name = &quot;grooming&quot;</code>；</li>
 </ol>
-<p>字符串在运行时的表示其实就是指针加上字符串长度，在前面的章节 <a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-string/"> 字符串 </a> 已经介绍过它的底层表示和实现原理，但是我们这里要看一下初始化之后的 <code>Cat</code> 结构体在内存中的表示是什么样的：</p>
-<p><img src="https://img.draveness.me/golang-new-struct-pointer.png" alt="golang-new-struct-pointe"></p>
+<p>字符串在运行时的表示其实就是指针加上字符串长度，在前面的章节<a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-string/">字符串</a>已经介绍过它的底层表示和实现原理，但是我们这里要看一下初始化之后的 <code>Cat</code> 结构体在内存中的表示是什么样的：</p>
+<p><img data-src="https://img.draveness.me/golang-new-struct-pointer.png" alt="golang-new-struct-pointe"></p>
 <p>因为 <code>Cat</code> 结构体的定义中只包含一个字符串，而字符串在 Go 语言中总共占 16 字节，所以每一个 <code>Cat</code> 结构体的大小都是 16 字节。初始化 <code>Cat</code> 结构体之后就进入了将 <code>*Cat</code> 转换成 <code>Duck</code> 类型的过程了：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">LEAQ	<span class="token keyword">go</span><span class="token punctuation">.</span>itab<span class="token punctuation">.</span><span class="token operator">*</span><span class="token string">""</span><span class="token punctuation">.</span>Cat<span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">.</span><span class="token function">Duck</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span><span class="token punctuation">,</span> AX    <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token operator">*</span><span class="token function">itab</span><span class="token punctuation">(</span><span class="token keyword">go</span><span class="token punctuation">.</span>itab<span class="token punctuation">.</span><span class="token operator">*</span><span class="token string">""</span><span class="token punctuation">.</span>Cat<span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">.</span>Duck<span class="token punctuation">)</span>
-MOVQ	DI<span class="token punctuation">,</span> <span class="token punctuation">(</span>SP<span class="token punctuation">)</span>                           <span class="token punctuation">;</span><span class="token punctuation">;</span> SP <span class="token operator">=</span> AX<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LEAQ	<span class="keyword">go</span>.itab.*<span class="string">&quot;&quot;</span>.Cat,<span class="string">&quot;&quot;</span>.Duck(SB), AX    ;; AX = *itab(<span class="keyword">go</span>.itab.*<span class="string">&quot;&quot;</span>.Cat,<span class="string">&quot;&quot;</span>.Duck)</span><br><span class="line">MOVQ	DI, (SP)                           ;; SP = AX</span><br></pre></td></tr></table></figure>
 <p>类型转换的过程比较简单，<code>Duck</code> 作为一个包含方法的接口，它在底层使用 <code>iface</code> 结构体表示。<code>iface</code> 结构体包含两个字段，其中一个是指向数据的指针，另一个是表示接口和结构体关系的 <code>tab</code> 字段，我们已经通过上一段代码 SP+8 初始化了 <code>Cat</code> 结构体指针，这段代码只是将编译期间生成的 <code>itab</code> 结构体指针复制到 SP 上：</p>
-<p><img src="https://img.draveness.me/golang-struct-pointer-to-iface.png" alt="golang-struct-pointer-to-iface"></p>
+<p><img data-src="https://img.draveness.me/golang-struct-pointer-to-iface.png" alt="golang-struct-pointer-to-iface"></p>
 <p>到这里，我们会发现 SP ~ SP+16 共同组成了 <code>iface</code> 结构体，而栈上的这个 <code>iface</code> 结构体也是 <code>Quack</code> 方法的第一个入参。</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">CALL    <span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">*</span>Cat<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span>                <span class="token punctuation">;</span><span class="token punctuation">;</span> SP<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CALL    <span class="string">&quot;&quot;</span>.(*Cat).Quack(SB)                ;; SP.Quack()</span><br></pre></td></tr></table></figure>
 <p>上述代码会直接通过 <code>CALL</code> 指令完成方法的调用，细心的读者可能会发现一个问题 —— 为什么在代码中我们调用的是 <code>Duck.Quack</code> 但生成的汇编是 <code>*Cat.Quack</code> 呢？Go 语言的编译器会在编译期间将一些需要动态派发的方法调用改写成对目标方法的直接调用，以减少性能的额外开销。如果在这里禁用编译器优化，就会看到动态派发的过程，我们会在后面分析接口的动态派发以及性能上的额外开销。</p>
-<h3><span id="结构体类型">结构体类型 </span></h3><p> 在这里，我们继续修改上一节中的代码，使用结构体类型实现 <code>Duck</code> 接口并初始化结构体类型的变量：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
-
-<span class="token keyword">type</span> Duck <span class="token keyword">interface</span> <span class="token punctuation">&#123;</span>
-	<span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">type</span> Cat <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span>
-	Name <span class="token builtin">string</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">//go:noinline</span>
-<span class="token keyword">func</span> <span class="token punctuation">(</span>c Cat<span class="token punctuation">)</span> <span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token function">println</span><span class="token punctuation">(</span>c<span class="token punctuation">.</span>Name <span class="token operator">+</span> <span class="token string">"meow"</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">var</span> c Duck <span class="token operator">=</span> Cat<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"grooming"</span><span class="token punctuation">&#125;</span>
-	c<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="结构体类型"><a href="#结构体类型" class="headerlink" title="结构体类型"></a>结构体类型</h3><p>在这里，我们继续修改上一节中的代码，使用结构体类型实现 <code>Duck</code> 接口并初始化结构体类型的变量：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Duck <span class="keyword">interface</span> &#123;</span><br><span class="line">	Quack()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Cat <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//go:noinline</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c Cat)</span> <span class="title">Quack</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="built_in">println</span>(c.Name + <span class="string">&quot; meow&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> c Duck = Cat&#123;Name: <span class="string">&quot;grooming&quot;</span>&#125;</span><br><span class="line">	c.Quack()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果我们在初始化变量时使用指针类型 <code>&amp;Cat&#123;Name: &quot;grooming&quot;&#125;</code> 也能够通过编译，不过生成的汇编代码和上一节中的几乎完全相同，所以这里也就不分析这个情况了。</p>
 <p>编译上述的代码会得到如下所示的汇编指令，需要注意的是为了代码更容易理解和分析，这里的汇编指令依然经过了删减，不过不会影响具体的执行过程。与上一节一样，我们将汇编代码的执行过程分成以下几个部分：</p>
 <ol>
@@ -473,76 +426,30 @@ MOVQ	DI<span class="token punctuation">,</span> <span class="token punctuation">
 <li>调用接口的 <code>Quack</code> 方法；</li>
 </ol>
 <p>我们先来看一下上述汇编代码中用于初始化 <code>Cat</code> 结构体的部分：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">XORPS   X0<span class="token punctuation">,</span> X0                          <span class="token punctuation">;</span><span class="token punctuation">;</span> X0 <span class="token operator">=</span> <span class="token number">0</span>
-MOVUPS  X0<span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">.</span>autotmp_1<span class="token operator">+</span><span class="token function">32</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span>        <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token function">StringHeader</span><span class="token punctuation">(</span>SP<span class="token operator">+</span><span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">.</span>Data <span class="token operator">=</span> <span class="token number">0</span>
-LEAQ    <span class="token keyword">go</span><span class="token punctuation">.</span><span class="token builtin">string</span><span class="token punctuation">.</span><span class="token string">"grooming"</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span><span class="token punctuation">,</span> AX    <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token string">"grooming"</span>
-MOVQ    AX<span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">.</span>autotmp_1<span class="token operator">+</span><span class="token function">32</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span>        <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token function">StringHeader</span><span class="token punctuation">(</span>SP<span class="token operator">+</span><span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">.</span>Data <span class="token operator">=</span> AX
-MOVQ    $<span class="token number">8</span><span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">.</span>autotmp_1<span class="token operator">+</span><span class="token function">40</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span>        <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token function">StringHeader</span><span class="token punctuation">(</span>SP<span class="token operator">+</span><span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">.</span>Len <span class="token operator">=</span><span class="token number">8</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">XORPS   X0, X0                          ;; X0 = <span class="number">0</span></span><br><span class="line">MOVUPS  X0, <span class="string">&quot;&quot;</span>..autotmp_1+<span class="number">32</span>(SP)        ;; StringHeader(SP+<span class="number">32</span>).Data = <span class="number">0</span></span><br><span class="line">LEAQ    <span class="keyword">go</span>.<span class="keyword">string</span>.<span class="string">&quot;grooming&quot;</span>(SB), AX    ;; AX = &amp;<span class="string">&quot;grooming&quot;</span></span><br><span class="line">MOVQ    AX, <span class="string">&quot;&quot;</span>..autotmp_1+<span class="number">32</span>(SP)        ;; StringHeader(SP+<span class="number">32</span>).Data = AX</span><br><span class="line">MOVQ    $<span class="number">8</span>, <span class="string">&quot;&quot;</span>..autotmp_1+<span class="number">40</span>(SP)        ;; StringHeader(SP+<span class="number">32</span>).Len =<span class="number">8</span></span><br></pre></td></tr></table></figure>
 <p>这段汇编指令会在栈上初始化 <code>Cat</code> 结构体，而上一节的代码在堆上申请了 16 字节的内存空间，栈上只有一个指向 <code>Cat</code> 的指针。</p>
 <p>初始化结构体后就进入类型转换的阶段，编译器会将 <code>go.itab.&quot;&quot;.Cat,&quot;&quot;.Duck</code> 的地址和指向 <code>Cat</code> 结构体的指针作为参数一并传入 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/0c5d545ccdd01403d6ce865fb03774a6aff6032c/src/runtime/iface.go#L398-L411"><code>runtime.convT2I</code></a> 函数：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">LEAQ	<span class="token keyword">go</span><span class="token punctuation">.</span>itab<span class="token punctuation">.</span><span class="token string">""</span><span class="token punctuation">.</span>Cat<span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">.</span><span class="token function">Duck</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span><span class="token punctuation">,</span> AX     <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token punctuation">(</span><span class="token keyword">go</span><span class="token punctuation">.</span>itab<span class="token punctuation">.</span><span class="token string">""</span><span class="token punctuation">.</span>Cat<span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">.</span>Duck<span class="token punctuation">)</span>
-MOVQ	AX<span class="token punctuation">,</span> <span class="token punctuation">(</span>SP<span class="token punctuation">)</span>                           <span class="token punctuation">;</span><span class="token punctuation">;</span> SP <span class="token operator">=</span> AX
-LEAQ	<span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">.</span>autotmp_1<span class="token operator">+</span><span class="token function">32</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> AX           <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token punctuation">(</span>SP<span class="token operator">+</span><span class="token number">32</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"grooming"</span><span class="token punctuation">&#125;</span>
-MOVQ	AX<span class="token punctuation">,</span> <span class="token function">8</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span>                          <span class="token punctuation">;</span><span class="token punctuation">;</span> SP <span class="token operator">+</span> <span class="token number">8</span> <span class="token operator">=</span> AX
-CALL	runtime<span class="token punctuation">.</span><span class="token function">convT2I</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span>                <span class="token punctuation">;</span><span class="token punctuation">;</span> runtime<span class="token punctuation">.</span><span class="token function">convT2I</span><span class="token punctuation">(</span>SP<span class="token punctuation">,</span> SP<span class="token operator">+</span><span class="token number">8</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LEAQ	<span class="keyword">go</span>.itab.<span class="string">&quot;&quot;</span>.Cat,<span class="string">&quot;&quot;</span>.Duck(SB), AX     ;; AX = &amp;(<span class="keyword">go</span>.itab.<span class="string">&quot;&quot;</span>.Cat,<span class="string">&quot;&quot;</span>.Duck)</span><br><span class="line">MOVQ	AX, (SP)                           ;; SP = AX</span><br><span class="line">LEAQ	<span class="string">&quot;&quot;</span>..autotmp_1+<span class="number">32</span>(SP), AX           ;; AX = &amp;(SP+<span class="number">32</span>) = &amp;Cat&#123;Name: <span class="string">&quot;grooming&quot;</span>&#125;</span><br><span class="line">MOVQ	AX, <span class="number">8</span>(SP)                          ;; SP + <span class="number">8</span> = AX</span><br><span class="line">CALL	runtime.convT2I(SB)                ;; runtime.convT2I(SP, SP+<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
 <p>这个函数会获取 <code>itab</code> 中存储的类型，根据类型的大小申请一片内存空间并将 <code>elem</code> 指针中的内容拷贝到目标的内存空间中：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">convT2I</span><span class="token punctuation">(</span>tab <span class="token operator">*</span>itab<span class="token punctuation">,</span> elem unsafe<span class="token punctuation">.</span>Pointer<span class="token punctuation">)</span> <span class="token punctuation">(</span>i iface<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	t <span class="token operator">:=</span> tab<span class="token punctuation">.</span>_type
-	x <span class="token operator">:=</span> <span class="token function">mallocgc</span><span class="token punctuation">(</span>t<span class="token punctuation">.</span>size<span class="token punctuation">,</span> t<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
-	<span class="token function">typedmemmove</span><span class="token punctuation">(</span>t<span class="token punctuation">,</span> x<span class="token punctuation">,</span> elem<span class="token punctuation">)</span>
-	i<span class="token punctuation">.</span>tab <span class="token operator">=</span> tab
-	i<span class="token punctuation">.</span>data <span class="token operator">=</span> x
-	<span class="token keyword">return</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">convT2I</span><span class="params">(tab *itab, elem unsafe.Pointer)</span> <span class="params">(i iface)</span></span> &#123;</span><br><span class="line">	t := tab._type</span><br><span class="line">	x := mallocgc(t.size, t, <span class="literal">true</span>)</span><br><span class="line">	typedmemmove(t, x, elem)</span><br><span class="line">	i.tab = tab</span><br><span class="line">	i.data = x</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/0c5d545ccdd01403d6ce865fb03774a6aff6032c/src/runtime/iface.go#L398-L411"><code>runtime.convT2I</code></a> 会返回一个 <code>iface</code> 结构体，其中包含 <code>itab</code> 指针和 <code>Cat</code> 变量。当前函数返回之后，<code>main</code> 函数的栈上会包含以下数据：</p>
-<p><img src="https://img.draveness.me/golang-struct-to-iface.png" alt="golang-struct-to-iface"></p>
+<p><img data-src="https://img.draveness.me/golang-struct-to-iface.png" alt="golang-struct-to-iface"></p>
 <p>SP 和 SP+8 中存储的 <code>itab</code> 和 <code>Cat</code> 指针就是 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/0c5d545ccdd01403d6ce865fb03774a6aff6032c/src/runtime/iface.go#L398-L411"><code>runtime.convT2I</code></a> 函数的入参，这个函数的返回值位于 SP+16，是一个占 16 字节内存空间的 <code>iface</code> 结构体，SP+32 存储的就是在栈上的 <code>Cat</code> 结构体，它会在 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/0c5d545ccdd01403d6ce865fb03774a6aff6032c/src/runtime/iface.go#L398-L411"><code>runtime.convT2I</code></a> 执行的过程中拷贝到堆上。</p>
 <p>在最后，我们会通过以下的指令调用 <code>Cat</code> 实现的接口方法 <code>Quack()</code>：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">MOVQ	<span class="token function">16</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> AX <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token punctuation">(</span><span class="token keyword">go</span><span class="token punctuation">.</span>itab<span class="token punctuation">.</span><span class="token string">""</span><span class="token punctuation">.</span>Cat<span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">.</span>Duck<span class="token punctuation">)</span>
-MOVQ	<span class="token function">24</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> CX <span class="token punctuation">;</span><span class="token punctuation">;</span> CX <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"grooming"</span><span class="token punctuation">&#125;</span>
-MOVQ	<span class="token function">24</span><span class="token punctuation">(</span>AX<span class="token punctuation">)</span><span class="token punctuation">,</span> AX <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> AX<span class="token punctuation">.</span>fun<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> Cat<span class="token punctuation">.</span>Quack
-MOVQ	CX<span class="token punctuation">,</span> <span class="token punctuation">(</span>SP<span class="token punctuation">)</span>   <span class="token punctuation">;</span><span class="token punctuation">;</span> SP <span class="token operator">=</span> CX
-CALL	AX         <span class="token punctuation">;</span><span class="token punctuation">;</span> CX<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MOVQ	<span class="number">16</span>(SP), AX ;; AX = &amp;(<span class="keyword">go</span>.itab.<span class="string">&quot;&quot;</span>.Cat,<span class="string">&quot;&quot;</span>.Duck)</span><br><span class="line">MOVQ	<span class="number">24</span>(SP), CX ;; CX = &amp;Cat&#123;Name: <span class="string">&quot;grooming&quot;</span>&#125;</span><br><span class="line">MOVQ	<span class="number">24</span>(AX), AX ;; AX = AX.fun[<span class="number">0</span>] = Cat.Quack</span><br><span class="line">MOVQ	CX, (SP)   ;; SP = CX</span><br><span class="line">CALL	AX         ;; CX.Quack()</span><br></pre></td></tr></table></figure>
 <p>这几个汇编指令还是非常好理解的，<code>MOVQ 24(AX), AX</code> 是最关键的指令，它从 <code>itab</code> 结构体中取出 <code>Cat.Quack</code> 方法指针作为 <code>CALL</code> 指令调用时的参数。接口变量的第 24 字节是 <code>itab.fun</code> 数组开始的位置，由于 <code>Duck</code> 接口只包含一个方法，所以 <code>itab.fun[0]</code> 中存储的就是指向 <code>Quack</code> 方法的指针了。</p>
-<h2><span id="类型断言">类型断言 </span></h2><p> 上一节介绍是如何把具体类型转换成接口类型，而这一节介绍的是如何将一个接口类型转换成具体类型。本节会根据接口中是否存在方法分两种情况介绍类型断言的执行过程。</p>
-<h3><span id="非空接口">非空接口 </span></h3><p> 首先分析接口中包含方法的情况，<code>Duck</code> 接口一个非空的接口，我们来分析从 <code>Duck</code> 转换回 <code>Cat</code> 结构体的过程：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">var</span> c Duck <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"grooming"</span><span class="token punctuation">&#125;</span>
-	<span class="token keyword">switch</span> c<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token keyword">type</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">case</span> <span class="token operator">*</span>Cat<span class="token punctuation">:</span>
-		cat <span class="token operator">:=</span> c<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">*</span>Cat<span class="token punctuation">)</span>
-		cat<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="类型断言"><a href="#类型断言" class="headerlink" title="类型断言"></a>类型断言</h2><p>上一节介绍是如何把具体类型转换成接口类型，而这一节介绍的是如何将一个接口类型转换成具体类型。本节会根据接口中是否存在方法分两种情况介绍类型断言的执行过程。</p>
+<h3 id="非空接口"><a href="#非空接口" class="headerlink" title="非空接口"></a>非空接口</h3><p>首先分析接口中包含方法的情况，<code>Duck</code> 接口一个非空的接口，我们来分析从 <code>Duck</code> 转换回 <code>Cat</code> 结构体的过程：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> c Duck = &amp;Cat&#123;Name: <span class="string">&quot;grooming&quot;</span>&#125;</span><br><span class="line">	<span class="keyword">switch</span> c.(<span class="keyword">type</span>) &#123;</span><br><span class="line">	<span class="keyword">case</span> *Cat:</span><br><span class="line">		cat := c.(*Cat)</span><br><span class="line">		cat.Quack()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们将编译得到的汇编指令分成两部分分析，第一部分是变量的初始化，第二部分是类型断言，第一部分的代码如下：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token number">00000</span> TEXT	<span class="token string">""</span><span class="token punctuation">.</span><span class="token function">main</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span><span class="token punctuation">,</span> ABIInternal<span class="token punctuation">,</span> $<span class="token number">32</span><span class="token operator">-</span><span class="token number">0</span>
-<span class="token operator">...</span>
-<span class="token number">00029</span> XORPS	X0<span class="token punctuation">,</span> X0
-<span class="token number">00032</span> MOVUPS	X0<span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">.</span>autotmp_4<span class="token operator">+</span><span class="token function">8</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span>
-<span class="token number">00037</span> LEAQ	<span class="token keyword">go</span><span class="token punctuation">.</span><span class="token builtin">string</span><span class="token punctuation">.</span><span class="token string">"grooming"</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span><span class="token punctuation">,</span> AX
-<span class="token number">00044</span> MOVQ	AX<span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">.</span>autotmp_4<span class="token operator">+</span><span class="token function">8</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span>
-<span class="token number">00049</span> MOVQ	$<span class="token number">8</span><span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">.</span>autotmp_4<span class="token operator">+</span><span class="token function">16</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">00000</span> TEXT	<span class="string">&quot;&quot;</span>.main(SB), ABIInternal, $<span class="number">32</span><span class="number">-0</span></span><br><span class="line">...</span><br><span class="line"><span class="number">00029</span> XORPS	X0, X0</span><br><span class="line"><span class="number">00032</span> MOVUPS	X0, <span class="string">&quot;&quot;</span>..autotmp_4+<span class="number">8</span>(SP)</span><br><span class="line"><span class="number">00037</span> LEAQ	<span class="keyword">go</span>.<span class="keyword">string</span>.<span class="string">&quot;grooming&quot;</span>(SB), AX</span><br><span class="line"><span class="number">00044</span> MOVQ	AX, <span class="string">&quot;&quot;</span>..autotmp_4+<span class="number">8</span>(SP)</span><br><span class="line"><span class="number">00049</span> MOVQ	$<span class="number">8</span>, <span class="string">&quot;&quot;</span>..autotmp_4+<span class="number">16</span>(SP)</span><br></pre></td></tr></table></figure>
 <p>0037 ~ 0049 三个指令初始化了 <code>Duck</code> 变量，<code>Cat</code> 结构体初始化在 SP+8 ~ SP+24 上。因为 Go 语言的编译器做了一些优化，所以代码中没有<code>iface</code> 的构建过程，不过对于这一节要介绍的类型断言和转换没有太多的影响。下面进入类型转换的部分：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token number">00058</span> CMPL  <span class="token keyword">go</span><span class="token punctuation">.</span>itab<span class="token punctuation">.</span><span class="token operator">*</span><span class="token string">""</span><span class="token punctuation">.</span>Cat<span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">.</span>Duck<span class="token operator">+</span><span class="token function">16</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span><span class="token punctuation">,</span> $<span class="token number">593696792</span>  
-                                        <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>c<span class="token punctuation">.</span>tab<span class="token punctuation">.</span>hash <span class="token operator">!=</span> <span class="token number">593696792</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-<span class="token number">00068</span> JEQ   <span class="token number">80</span>                          <span class="token punctuation">;</span><span class="token punctuation">;</span>      
-<span class="token number">00070</span> MOVQ  <span class="token function">24</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> BP                  <span class="token punctuation">;</span><span class="token punctuation">;</span>      BP <span class="token operator">=</span> SP<span class="token operator">+</span><span class="token number">24</span>
-<span class="token number">00075</span> ADDQ  $<span class="token number">32</span><span class="token punctuation">,</span> SP                     <span class="token punctuation">;</span><span class="token punctuation">;</span>      SP <span class="token operator">+=</span> <span class="token number">32</span>
-<span class="token number">00079</span> RET                               <span class="token punctuation">;</span><span class="token punctuation">;</span>      <span class="token keyword">return</span>
-                                        <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-<span class="token number">00080</span> LEAQ  <span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">.</span>autotmp_4<span class="token operator">+</span><span class="token function">8</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> AX     <span class="token punctuation">;</span><span class="token punctuation">;</span>      AX <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"grooming"</span><span class="token punctuation">&#125;</span>
-<span class="token number">00085</span> MOVQ  AX<span class="token punctuation">,</span> <span class="token punctuation">(</span>SP<span class="token punctuation">)</span>                    <span class="token punctuation">;</span><span class="token punctuation">;</span>      SP <span class="token operator">=</span> AX
-<span class="token number">00089</span> CALL  <span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">*</span>Cat<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span>         <span class="token punctuation">;</span><span class="token punctuation">;</span>      SP<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token number">00094</span> JMP   <span class="token number">70</span>                          <span class="token punctuation">;</span><span class="token punctuation">;</span>      <span class="token operator">...</span>
-                                        <span class="token punctuation">;</span><span class="token punctuation">;</span>      BP <span class="token operator">=</span> SP<span class="token operator">+</span><span class="token number">24</span>
-                                        <span class="token punctuation">;</span><span class="token punctuation">;</span>      SP <span class="token operator">+=</span> <span class="token number">32</span>
-                                        <span class="token punctuation">;</span><span class="token punctuation">;</span>      <span class="token keyword">return</span>
-                                        <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>switch 语句生成的汇编指令会将目标类型的 <code>hash</code> 与接口变量中的 <code>itab.hash</code> 进行比较：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">00058</span> CMPL  <span class="keyword">go</span>.itab.*<span class="string">&quot;&quot;</span>.Cat,<span class="string">&quot;&quot;</span>.Duck+<span class="number">16</span>(SB), $<span class="number">593696792</span>  </span><br><span class="line">                                        ;; <span class="keyword">if</span> (c.tab.hash != <span class="number">593696792</span>) &#123;</span><br><span class="line"><span class="number">00068</span> JEQ   <span class="number">80</span>                          ;;      </span><br><span class="line"><span class="number">00070</span> MOVQ  <span class="number">24</span>(SP), BP                  ;;      BP = SP+<span class="number">24</span></span><br><span class="line"><span class="number">00075</span> ADDQ  $<span class="number">32</span>, SP                     ;;      SP += <span class="number">32</span></span><br><span class="line"><span class="number">00079</span> RET                               ;;      <span class="keyword">return</span></span><br><span class="line">                                        ;; &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="number">00080</span> LEAQ  <span class="string">&quot;&quot;</span>..autotmp_4+<span class="number">8</span>(SP), AX     ;;      AX = &amp;Cat&#123;Name: <span class="string">&quot;grooming&quot;</span>&#125;</span><br><span class="line"><span class="number">00085</span> MOVQ  AX, (SP)                    ;;      SP = AX</span><br><span class="line"><span class="number">00089</span> CALL  <span class="string">&quot;&quot;</span>.(*Cat).Quack(SB)         ;;      SP.Quack()</span><br><span class="line"><span class="number">00094</span> JMP   <span class="number">70</span>                          ;;      ...</span><br><span class="line">                                        ;;      BP = SP+<span class="number">24</span></span><br><span class="line">                                        ;;      SP += <span class="number">32</span></span><br><span class="line">                                        ;;      <span class="keyword">return</span></span><br><span class="line">                                        ;; &#125;</span><br></pre></td></tr></table></figure>
+<p>switch语句生成的汇编指令会将目标类型的 <code>hash</code> 与接口变量中的 <code>itab.hash</code> 进行比较：</p>
 <ul>
 <li>如果两者相等意味着变量的具体类型是</li>
 </ul>
-  <pre class="line-numbers language-none"><code class="language-none">Cat<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+  <figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Cat</span></span><br></pre></td></tr></table></figure>
 <p>  ，我们会跳转到 0080 所在的分支完成类型转换。</p>
 <ol>
 <li>获取 SP+8 存储的 <code>Cat</code> 结构体指针；</li>
@@ -553,29 +460,18 @@ CALL	AX         <span class="token punctuation">;</span><span class="token punct
 <ul>
 <li>如果接口中存在的具体类型不是 <code>Cat</code>，就会直接恢复栈指针并返回到调用方；</li>
 </ul>
-<p><img src="https://img.draveness.me/golang-interface-to-struct.png" alt="golang-interface-to-struct"></p>
+<p><img data-src="https://img.draveness.me/golang-interface-to-struct.png" alt="golang-interface-to-struct"></p>
 <p>上图展示了调用 <code>Quack</code> 方法时的堆栈情况，其中 <code>Cat</code> 结构体存储在 SP+8 ~ SP+24 上，<code>Cat</code> 指针存储在栈顶并指向上述结构体。</p>
-<h3><span id="空接口">空接口 </span></h3><p> 当我们使用空接口类型 <code>interface&#123;&#125;</code> 进行类型断言时，如果不关闭 Go 语言编译器的优化选项，生成的汇编指令是差不多的。编译器会省略将 <code>Cat</code> 结构体转换成 <code>eface</code> 的过程：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">var</span> c <span class="token keyword">interface</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"grooming"</span><span class="token punctuation">&#125;</span>
-	<span class="token keyword">switch</span> c<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token keyword">type</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">case</span> <span class="token operator">*</span>Cat<span class="token punctuation">:</span>
-		cat <span class="token operator">:=</span> c<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">*</span>Cat<span class="token punctuation">)</span>
-		cat<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="空接口"><a href="#空接口" class="headerlink" title="空接口"></a>空接口</h3><p>当我们使用空接口类型 <code>interface&#123;&#125;</code> 进行类型断言时，如果不关闭 Go 语言编译器的优化选项，生成的汇编指令是差不多的。编译器会省略将 <code>Cat</code> 结构体转换成 <code>eface</code> 的过程：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> c <span class="keyword">interface</span>&#123;&#125; = &amp;Cat&#123;Name: <span class="string">&quot;grooming&quot;</span>&#125;</span><br><span class="line">	<span class="keyword">switch</span> c.(<span class="keyword">type</span>) &#123;</span><br><span class="line">	<span class="keyword">case</span> *Cat:</span><br><span class="line">		cat := c.(*Cat)</span><br><span class="line">		cat.Quack()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果禁用编译器优化，上述代码会在类型断言时就不是直接获取变量中具体类型的 <code>_type</code>，而是从 <code>eface._type</code> 中获取，汇编指令仍然会使用目标类型的 <code>hash</code> 字段与变量的类型比较。</p>
-<h2><span id="动态派发">动态派发 </span></h2><p> 动态派发（Dynamic dispatch）是在运行期间选择具体多态操作（方法或者函数）执行的过程，它是一种在面向对象语言中常见的特性。Go 语言虽然不是严格意义上的面向对象语言，但是接口的引入为它带来了动态派发这一特性，调用接口类型的方法时，如果编译期间不能确认接口的类型，Go 语言会在运行期间决定具体调用该方法的哪个实现。</p>
+<h2 id="动态派发"><a href="#动态派发" class="headerlink" title="动态派发"></a>动态派发</h2><p>动态派发（Dynamic dispatch）是在运行期间选择具体多态操作（方法或者函数）执行的过程，它是一种在面向对象语言中常见的特性。Go 语言虽然不是严格意义上的面向对象语言，但是接口的引入为它带来了动态派发这一特性，调用接口类型的方法时，如果编译期间不能确认接口的类型，Go 语言会在运行期间决定具体调用该方法的哪个实现。</p>
 <p>在如下所示的代码中，<code>main</code> 函数调用了两次 <code>Quack</code> 方法：</p>
 <ol>
 <li>第一次以 <code>Duck</code> 接口类型的身份调用，调用时需要经过运行时的动态派发；</li>
 <li>第二次以 <code>*Cat</code> 具体类型的身份调用，编译期就会确定调用的函数：</li>
 </ol>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">var</span> c Duck <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"grooming"</span><span class="token punctuation">&#125;</span>
-	c<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	c<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">*</span>Cat<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> c Duck = &amp;Cat&#123;Name: <span class="string">&quot;grooming&quot;</span>&#125;</span><br><span class="line">	c.Quack()</span><br><span class="line">	c.(*Cat).Quack()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>因为编译器优化影响了我们对原始汇编指令的理解，所以需要使用编译参数 <code>-N</code> 关闭编译器优化。如果不指定这个参数，编译器会对代码进行重写，与最初生成的执行过程有一些偏差，例如：</p>
 <ul>
 <li>因为接口类型中的 <code>tab</code> 参数并没有被使用，所以优化从 <code>Cat</code> 转换到 <code>Duck</code> 的过程；</li>
@@ -583,21 +479,9 @@ CALL	AX         <span class="token punctuation">;</span><span class="token punct
 <li>…</li>
 </ul>
 <p>在具体分析调用 <code>Quack</code> 方法的两种姿势之前，我们要先了解 <code>Cat</code> 结构体究竟是如何初始化的，以及初始化完成后的栈上有哪些数据：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">LEAQ	<span class="token keyword">type</span><span class="token punctuation">.</span><span class="token string">""</span><span class="token punctuation">.</span><span class="token function">Cat</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span><span class="token punctuation">,</span> AX                
-MOVQ	AX<span class="token punctuation">,</span> <span class="token punctuation">(</span>SP<span class="token punctuation">)</span>
-CALL	runtime<span class="token punctuation">.</span><span class="token function">newobject</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span>              <span class="token punctuation">;</span><span class="token punctuation">;</span> SP <span class="token operator">+</span> <span class="token number">8</span> <span class="token operator">=</span> <span class="token function">new</span><span class="token punctuation">(</span>Cat<span class="token punctuation">)</span>
-MOVQ	<span class="token function">8</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> DI                          <span class="token punctuation">;</span><span class="token punctuation">;</span> DI <span class="token operator">=</span> SP <span class="token operator">+</span> <span class="token number">8</span>
-MOVQ	DI<span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">.</span>autotmp_2<span class="token operator">+</span><span class="token function">32</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span>           <span class="token punctuation">;</span><span class="token punctuation">;</span> SP <span class="token operator">+</span> <span class="token number">32</span> <span class="token operator">=</span> DI
-MOVQ	$<span class="token number">8</span><span class="token punctuation">,</span> <span class="token function">8</span><span class="token punctuation">(</span>DI<span class="token punctuation">)</span>                          <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token function">StringHeader</span><span class="token punctuation">(</span>cat<span class="token punctuation">)</span><span class="token punctuation">.</span>Len <span class="token operator">=</span> <span class="token number">8</span>
-LEAQ	<span class="token keyword">go</span><span class="token punctuation">.</span><span class="token builtin">string</span><span class="token punctuation">.</span><span class="token string">"grooming"</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span><span class="token punctuation">,</span> AX       <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token string">"grooming"</span>
-MOVQ	AX<span class="token punctuation">,</span> <span class="token punctuation">(</span>DI<span class="token punctuation">)</span>                           <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token function">StringHeader</span><span class="token punctuation">(</span>cat<span class="token punctuation">)</span><span class="token punctuation">.</span>Data <span class="token operator">=</span> AX
-MOVQ	<span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">.</span>autotmp_2<span class="token operator">+</span><span class="token function">32</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> AX           <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span><span class="token operator">...</span><span class="token punctuation">&#125;</span>
-MOVQ	AX<span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">.</span>autotmp_1<span class="token operator">+</span><span class="token function">40</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span>           <span class="token punctuation">;</span><span class="token punctuation">;</span> SP <span class="token operator">+</span> <span class="token number">40</span> <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span><span class="token operator">...</span><span class="token punctuation">&#125;</span>
-LEAQ	<span class="token keyword">go</span><span class="token punctuation">.</span>itab<span class="token punctuation">.</span><span class="token operator">*</span><span class="token string">""</span><span class="token punctuation">.</span>Cat<span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">.</span><span class="token function">Duck</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span><span class="token punctuation">,</span> CX    <span class="token punctuation">;</span><span class="token punctuation">;</span> CX <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token keyword">go</span><span class="token punctuation">.</span>itab<span class="token punctuation">.</span><span class="token operator">*</span><span class="token string">""</span><span class="token punctuation">.</span>Cat<span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">.</span>Duck
-MOVQ	CX<span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">.</span>c<span class="token operator">+</span><span class="token function">48</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span>                    <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token function">iface</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">.</span>tab <span class="token operator">=</span> SP <span class="token operator">+</span> <span class="token number">48</span> <span class="token operator">=</span> CX
-MOVQ	AX<span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">.</span>c<span class="token operator">+</span><span class="token function">56</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span>                    <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token function">iface</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">.</span>data <span class="token operator">=</span> SP <span class="token operator">+</span> <span class="token number">56</span> <span class="token operator">=</span> AX<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">LEAQ	<span class="keyword">type</span>.<span class="string">&quot;&quot;</span>.Cat(SB), AX                </span><br><span class="line">MOVQ	AX, (SP)</span><br><span class="line">CALL	runtime.newobject(SB)              ;; SP + <span class="number">8</span> = <span class="built_in">new</span>(Cat)</span><br><span class="line">MOVQ	<span class="number">8</span>(SP), DI                          ;; DI = SP + <span class="number">8</span></span><br><span class="line">MOVQ	DI, <span class="string">&quot;&quot;</span>..autotmp_2+<span class="number">32</span>(SP)           ;; SP + <span class="number">32</span> = DI</span><br><span class="line">MOVQ	$<span class="number">8</span>, <span class="number">8</span>(DI)                          ;; StringHeader(cat).Len = <span class="number">8</span></span><br><span class="line">LEAQ	<span class="keyword">go</span>.<span class="keyword">string</span>.<span class="string">&quot;grooming&quot;</span>(SB), AX       ;; AX = &amp;<span class="string">&quot;grooming&quot;</span></span><br><span class="line">MOVQ	AX, (DI)                           ;; StringHeader(cat).Data = AX</span><br><span class="line">MOVQ	<span class="string">&quot;&quot;</span>..autotmp_2+<span class="number">32</span>(SP), AX           ;; AX = &amp;Cat&#123;...&#125;</span><br><span class="line">MOVQ	AX, <span class="string">&quot;&quot;</span>..autotmp_1+<span class="number">40</span>(SP)           ;; SP + <span class="number">40</span> = &amp;Cat&#123;...&#125;</span><br><span class="line">LEAQ	<span class="keyword">go</span>.itab.*<span class="string">&quot;&quot;</span>.Cat,<span class="string">&quot;&quot;</span>.Duck(SB), CX    ;; CX = &amp;<span class="keyword">go</span>.itab.*<span class="string">&quot;&quot;</span>.Cat,<span class="string">&quot;&quot;</span>.Duck</span><br><span class="line">MOVQ	CX, <span class="string">&quot;&quot;</span>.c+<span class="number">48</span>(SP)                    ;; iface(c).tab = SP + <span class="number">48</span> = CX</span><br><span class="line">MOVQ	AX, <span class="string">&quot;&quot;</span>.c+<span class="number">56</span>(SP)                    ;; iface(c).data = SP + <span class="number">56</span> = AX</span><br></pre></td></tr></table></figure>
 <p>这段代码的初始化过程其实和上两节中的过程没有太多的差别，它先初始化了 <code>Cat</code> 结构体指针，再将 <code>Cat</code> 和 <code>tab</code> 打包成了一个 <code>iface</code> 类型的结构体，我们直接来看初始化结束后的栈情况：</p>
-<p><img src="https://i.loli.net/2020/09/04/KWUkzZ8r4b2CH3p.png" alt="stack-after-initialize"></p>
+<p><img data-src="https://i.loli.net/2020/09/04/KWUkzZ8r4b2CH3p.png" alt="stack-after-initialize"></p>
 <p><strong>图 4-14 接口类型初始化后的栈</strong></p>
 <ul>
 <li>SP 是 <code>Cat</code> 类型，它也是运行时 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/5042317d6919d4c84557e04be35130430e8d1dd4/src/runtime/malloc.go#L1162-L1164"><code>runtime.newobject</code></a> 方法的参数；</li>
@@ -606,11 +490,7 @@ MOVQ	AX<span class="token punctuation">,</span> <span class="token string">""</s
 <li>SP+48 ~ SP+64 是接口变量 <code>iface</code> 结构体，其中包含了 <code>tab</code> 结构体指针和 <code>*Cat</code> 指针；</li>
 </ul>
 <p>初始化过程结束之后，我们进入到了动态派发的过程，<code>c.Quack()</code> 语句展开的汇编指令会在运行时确定函数指针。</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">MOVQ	<span class="token string">""</span><span class="token punctuation">.</span>c<span class="token operator">+</span><span class="token function">48</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> AX                    <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token function">iface</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">.</span>tab
-MOVQ	<span class="token function">24</span><span class="token punctuation">(</span>AX<span class="token punctuation">)</span><span class="token punctuation">,</span> AX                         <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token function">iface</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">.</span>tab<span class="token punctuation">.</span>fun<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> Cat<span class="token punctuation">.</span>Quack
-MOVQ	<span class="token string">""</span><span class="token punctuation">.</span>c<span class="token operator">+</span><span class="token function">56</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> CX                    <span class="token punctuation">;</span><span class="token punctuation">;</span> CX <span class="token operator">=</span> <span class="token function">iface</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">.</span>data
-MOVQ	CX<span class="token punctuation">,</span> <span class="token punctuation">(</span>SP<span class="token punctuation">)</span>                           <span class="token punctuation">;</span><span class="token punctuation">;</span> SP <span class="token operator">=</span> CX <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span><span class="token operator">...</span><span class="token punctuation">&#125;</span>
-CALL	AX                                 <span class="token punctuation">;</span><span class="token punctuation">;</span> SP<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MOVQ	<span class="string">&quot;&quot;</span>.c+<span class="number">48</span>(SP), AX                    ;; AX = iface(c).tab</span><br><span class="line">MOVQ	<span class="number">24</span>(AX), AX                         ;; AX = iface(c).tab.fun[<span class="number">0</span>] = Cat.Quack</span><br><span class="line">MOVQ	<span class="string">&quot;&quot;</span>.c+<span class="number">56</span>(SP), CX                    ;; CX = iface(c).data</span><br><span class="line">MOVQ	CX, (SP)                           ;; SP = CX = &amp;Cat&#123;...&#125;</span><br><span class="line">CALL	AX                                 ;; SP.Quack()</span><br></pre></td></tr></table></figure>
 <p>这段代码的执行过程可以分成以下三个步骤：</p>
 <ol>
 <li>从接口变量中获取了保存 <code>Cat.Quack</code> 方法指针的 <code>tab.func[0]</code>；</li>
@@ -618,53 +498,14 @@ CALL	AX                                 <span class="token punctuation">;</span>
 <li>方法指针会被拷贝到寄存器中并通过汇编指令 <code>CALL</code> 触发：</li>
 </ol>
 <p>另一个调用 <code>Quack</code> 方法的语句 <code>c.(*Cat).Quack()</code> 生成的汇编指令看起来会有一些复杂，但是代码前半部分都是在做类型转换，将接口类型转换成 <code>*Cat</code> 类型，只有最后两行代码才是函数调用相关的指令：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">MOVQ	<span class="token string">""</span><span class="token punctuation">.</span>c<span class="token operator">+</span><span class="token function">56</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> AX                    <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token function">iface</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">.</span>data <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span><span class="token operator">...</span><span class="token punctuation">&#125;</span>
-MOVQ	<span class="token string">""</span><span class="token punctuation">.</span>c<span class="token operator">+</span><span class="token function">48</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> CX                    <span class="token punctuation">;</span><span class="token punctuation">;</span> CX <span class="token operator">=</span> <span class="token function">iface</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">.</span>tab
-LEAQ	<span class="token keyword">go</span><span class="token punctuation">.</span>itab<span class="token punctuation">.</span><span class="token operator">*</span><span class="token string">""</span><span class="token punctuation">.</span>Cat<span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">.</span><span class="token function">Duck</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span><span class="token punctuation">,</span> DX    <span class="token punctuation">;</span><span class="token punctuation">;</span> DX <span class="token operator">=</span> <span class="token operator">&amp;&amp;</span><span class="token keyword">go</span><span class="token punctuation">.</span>itab<span class="token punctuation">.</span><span class="token operator">*</span><span class="token string">""</span><span class="token punctuation">.</span>Cat<span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">.</span>Duck
-CMPQ	CX<span class="token punctuation">,</span> DX                             <span class="token punctuation">;</span><span class="token punctuation">;</span> <span class="token function">CMP</span><span class="token punctuation">(</span>CX<span class="token punctuation">,</span> DX<span class="token punctuation">)</span>
-JEQ	<span class="token number">163</span>
-JMP	<span class="token number">201</span>
-MOVQ	AX<span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">.</span>autotmp_3<span class="token operator">+</span><span class="token function">24</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span>           <span class="token punctuation">;</span><span class="token punctuation">;</span> SP<span class="token operator">+</span><span class="token number">24</span> <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span><span class="token operator">...</span><span class="token punctuation">&#125;</span>
-MOVQ	AX<span class="token punctuation">,</span> <span class="token punctuation">(</span>SP<span class="token punctuation">)</span>                           <span class="token punctuation">;</span><span class="token punctuation">;</span> SP <span class="token operator">=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span><span class="token operator">...</span><span class="token punctuation">&#125;</span>
-CALL	<span class="token string">""</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">*</span>Cat<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span>SB<span class="token punctuation">)</span>                <span class="token punctuation">;</span><span class="token punctuation">;</span> SP<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">MOVQ	<span class="string">&quot;&quot;</span>.c+<span class="number">56</span>(SP), AX                    ;; AX = iface(c).data = &amp;Cat&#123;...&#125;</span><br><span class="line">MOVQ	<span class="string">&quot;&quot;</span>.c+<span class="number">48</span>(SP), CX                    ;; CX = iface(c).tab</span><br><span class="line">LEAQ	<span class="keyword">go</span>.itab.*<span class="string">&quot;&quot;</span>.Cat,<span class="string">&quot;&quot;</span>.Duck(SB), DX    ;; DX = &amp;&amp;<span class="keyword">go</span>.itab.*<span class="string">&quot;&quot;</span>.Cat,<span class="string">&quot;&quot;</span>.Duck</span><br><span class="line">CMPQ	CX, DX                             ;; CMP(CX, DX)</span><br><span class="line">JEQ	<span class="number">163</span></span><br><span class="line">JMP	<span class="number">201</span></span><br><span class="line">MOVQ	AX, <span class="string">&quot;&quot;</span>..autotmp_3+<span class="number">24</span>(SP)           ;; SP+<span class="number">24</span> = &amp;Cat&#123;...&#125;</span><br><span class="line">MOVQ	AX, (SP)                           ;; SP = &amp;Cat&#123;...&#125;</span><br><span class="line">CALL	<span class="string">&quot;&quot;</span>.(*Cat).Quack(SB)                ;; SP.Quack()</span><br></pre></td></tr></table></figure>
 <p>下面的几行代码只是将 <code>Cat</code> 指针拷贝到了栈顶并调用 <code>Quack</code> 方法。这一次调用的函数指针在编译期就已经确定了，所以运行时就不需要动态查找方法的实现：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">MOVQ	<span class="token string">""</span><span class="token punctuation">.</span>c<span class="token operator">+</span><span class="token function">48</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> AX                    <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token function">iface</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">.</span>tab
-MOVQ	<span class="token function">24</span><span class="token punctuation">(</span>AX<span class="token punctuation">)</span><span class="token punctuation">,</span> AX                         <span class="token punctuation">;</span><span class="token punctuation">;</span> AX <span class="token operator">=</span> <span class="token function">iface</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">.</span>tab<span class="token punctuation">.</span>fun<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> Cat<span class="token punctuation">.</span>Quack
-MOVQ	<span class="token string">""</span><span class="token punctuation">.</span>c<span class="token operator">+</span><span class="token function">56</span><span class="token punctuation">(</span>SP<span class="token punctuation">)</span><span class="token punctuation">,</span> CX                    <span class="token punctuation">;</span><span class="token punctuation">;</span> CX <span class="token operator">=</span> <span class="token function">iface</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">.</span>data<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MOVQ	<span class="string">&quot;&quot;</span>.c+<span class="number">48</span>(SP), AX                    ;; AX = iface(c).tab</span><br><span class="line">MOVQ	<span class="number">24</span>(AX), AX                         ;; AX = iface(c).tab.fun[<span class="number">0</span>] = Cat.Quack</span><br><span class="line">MOVQ	<span class="string">&quot;&quot;</span>.c+<span class="number">56</span>(SP), CX                    ;; CX = iface(c).data</span><br></pre></td></tr></table></figure>
 <p>两次方法调用对应的汇编指令差异就是动态派发带来的额外开销，这些额外开销在有低延时、高吞吐量需求的服务中是不能被忽视的，我们来详细分析一下产生的额外汇编指令对性能造成的影响。</p>
-<h4><span id="基准测试">基准测试 </span></h4><p> 下面代码中的两个方法 <code>BenchmarkDirectCall</code> 和 <code>BenchmarkDynamicDispatch</code> 分别会调用结构体方法和接口方法，在接口上调用方法时会使用动态派发机制，我们以直接调用作为基准分析动态派发带来了多少额外开销：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">BenchmarkDirectCall</span><span class="token punctuation">(</span>b <span class="token operator">*</span>testing<span class="token punctuation">.</span>B<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	c <span class="token operator">:=</span> <span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"grooming"</span><span class="token punctuation">&#125;</span>
-	<span class="token keyword">for</span> n <span class="token operator">:=</span> <span class="token number">0</span><span class="token punctuation">;</span> n <span class="token operator">&lt;</span> b<span class="token punctuation">.</span>N<span class="token punctuation">;</span> n<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
-		<span class="token comment">// MOVQ	AX, "".c+24(SP)</span>
-		<span class="token comment">// MOVQ	AX, (SP)</span>
-		<span class="token comment">// CALL	"".(*Cat).Quack(SB)</span>
-		c<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">BenchmarkDynamicDispatch</span><span class="token punctuation">(</span>b <span class="token operator">*</span>testing<span class="token punctuation">.</span>B<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	c <span class="token operator">:=</span> <span class="token function">Duck</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Cat<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"grooming"</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-	<span class="token keyword">for</span> n <span class="token operator">:=</span> <span class="token number">0</span><span class="token punctuation">;</span> n <span class="token operator">&lt;</span> b<span class="token punctuation">.</span>N<span class="token punctuation">;</span> n<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
-		<span class="token comment">// MOVQ	"".d+56(SP), AX</span>
-		<span class="token comment">// MOVQ	24(AX), AX</span>
-		<span class="token comment">// MOVQ	"".d+64(SP), CX</span>
-		<span class="token comment">// MOVQ	CX, (SP)</span>
-		<span class="token comment">// CALL	AX</span>
-		c<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="基准测试"><a href="#基准测试" class="headerlink" title="基准测试"></a>基准测试</h4><p>下面代码中的两个方法 <code>BenchmarkDirectCall</code> 和 <code>BenchmarkDynamicDispatch</code> 分别会调用结构体方法和接口方法，在接口上调用方法时会使用动态派发机制，我们以直接调用作为基准分析动态派发带来了多少额外开销：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">BenchmarkDirectCall</span><span class="params">(b *testing.B)</span></span> &#123;</span><br><span class="line">	c := &amp;Cat&#123;Name: <span class="string">&quot;grooming&quot;</span>&#125;</span><br><span class="line">	<span class="keyword">for</span> n := <span class="number">0</span>; n &lt; b.N; n++ &#123;</span><br><span class="line">		<span class="comment">// MOVQ	AX, &quot;&quot;.c+24(SP)</span></span><br><span class="line">		<span class="comment">// MOVQ	AX, (SP)</span></span><br><span class="line">		<span class="comment">// CALL	&quot;&quot;.(*Cat).Quack(SB)</span></span><br><span class="line">		c.Quack()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">BenchmarkDynamicDispatch</span><span class="params">(b *testing.B)</span></span> &#123;</span><br><span class="line">	c := Duck(&amp;Cat&#123;Name: <span class="string">&quot;grooming&quot;</span>&#125;)</span><br><span class="line">	<span class="keyword">for</span> n := <span class="number">0</span>; n &lt; b.N; n++ &#123;</span><br><span class="line">		<span class="comment">// MOVQ	&quot;&quot;.d+56(SP), AX</span></span><br><span class="line">		<span class="comment">// MOVQ	24(AX), AX</span></span><br><span class="line">		<span class="comment">// MOVQ	&quot;&quot;.d+64(SP), CX</span></span><br><span class="line">		<span class="comment">// MOVQ	CX, (SP)</span></span><br><span class="line">		<span class="comment">// CALL	AX</span></span><br><span class="line">		c.Quack()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们直接运行下面的命令，使用 1 个 CPU 运行上述代码，每一个基准测试都会被执行 3 次：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">$ <span class="token keyword">go</span> test <span class="token operator">-</span>gcflags<span class="token operator">=</span><span class="token operator">-</span>N <span class="token operator">-</span>benchmem <span class="token operator">-</span>test<span class="token punctuation">.</span>count<span class="token operator">=</span><span class="token number">3</span> <span class="token operator">-</span>test<span class="token punctuation">.</span>cpu<span class="token operator">=</span><span class="token number">1</span> <span class="token operator">-</span>test<span class="token punctuation">.</span>benchtime<span class="token operator">=</span><span class="token number">1</span>s <span class="token operator">-</span>bench<span class="token operator">=</span><span class="token punctuation">.</span>
-goos<span class="token punctuation">:</span> darwin
-goarch<span class="token punctuation">:</span> amd64
-pkg<span class="token punctuation">:</span> github<span class="token punctuation">.</span>com<span class="token operator">/</span>golang<span class="token operator">/</span>playground
-BenchmarkDirectCall      	<span class="token number">500000000</span>	         <span class="token number">3.11</span> ns<span class="token operator">/</span>op	       <span class="token number">0</span> B<span class="token operator">/</span>op	       <span class="token number">0</span> allocs<span class="token operator">/</span>op
-BenchmarkDirectCall      	<span class="token number">500000000</span>	         <span class="token number">2.94</span> ns<span class="token operator">/</span>op	       <span class="token number">0</span> B<span class="token operator">/</span>op	       <span class="token number">0</span> allocs<span class="token operator">/</span>op
-BenchmarkDirectCall      	<span class="token number">500000000</span>	         <span class="token number">3.04</span> ns<span class="token operator">/</span>op	       <span class="token number">0</span> B<span class="token operator">/</span>op	       <span class="token number">0</span> allocs<span class="token operator">/</span>op
-BenchmarkDynamicDispatch 	<span class="token number">500000000</span>	         <span class="token number">3.40</span> ns<span class="token operator">/</span>op	       <span class="token number">0</span> B<span class="token operator">/</span>op	       <span class="token number">0</span> allocs<span class="token operator">/</span>op
-BenchmarkDynamicDispatch 	<span class="token number">500000000</span>	         <span class="token number">3.79</span> ns<span class="token operator">/</span>op	       <span class="token number">0</span> B<span class="token operator">/</span>op	       <span class="token number">0</span> allocs<span class="token operator">/</span>op
-BenchmarkDynamicDispatch 	<span class="token number">500000000</span>	         <span class="token number">3.55</span> ns<span class="token operator">/</span>op	       <span class="token number">0</span> B<span class="token operator">/</span>op	       <span class="token number">0</span> allocs<span class="token operator">/</span>op<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">go</span> test -gcflags=-N -benchmem -test.count=<span class="number">3</span> -test.cpu=<span class="number">1</span> -test.benchtime=<span class="number">1</span>s -bench=.</span><br><span class="line">goos: darwin</span><br><span class="line">goarch: amd64</span><br><span class="line">pkg: github.com/golang/playground</span><br><span class="line">BenchmarkDirectCall      	<span class="number">500000000</span>	         <span class="number">3.11</span> ns/op	       <span class="number">0</span> B/op	       <span class="number">0</span> allocs/op</span><br><span class="line">BenchmarkDirectCall      	<span class="number">500000000</span>	         <span class="number">2.94</span> ns/op	       <span class="number">0</span> B/op	       <span class="number">0</span> allocs/op</span><br><span class="line">BenchmarkDirectCall      	<span class="number">500000000</span>	         <span class="number">3.04</span> ns/op	       <span class="number">0</span> B/op	       <span class="number">0</span> allocs/op</span><br><span class="line">BenchmarkDynamicDispatch 	<span class="number">500000000</span>	         <span class="number">3.40</span> ns/op	       <span class="number">0</span> B/op	       <span class="number">0</span> allocs/op</span><br><span class="line">BenchmarkDynamicDispatch 	<span class="number">500000000</span>	         <span class="number">3.79</span> ns/op	       <span class="number">0</span> B/op	       <span class="number">0</span> allocs/op</span><br><span class="line">BenchmarkDynamicDispatch 	<span class="number">500000000</span>	         <span class="number">3.55</span> ns/op	       <span class="number">0</span> B/op	       <span class="number">0</span> allocs/op</span><br></pre></td></tr></table></figure>
 <ul>
 <li>调用结构体方法时，每一次调用需要 <code>~3.03ns</code>；</li>
 <li>使用动态派发时，每一调用需要 <code>~3.58ns</code>；</li>
@@ -672,42 +513,9 @@ BenchmarkDynamicDispatch 	<span class="token number">500000000</span>	         <
 <p>在关闭编译器优化的情况下，从上面的数据来看，动态派发生成的指令会带来 <code>~18%</code> 左右的额外性能开销。</p>
 <p>这些性能开销在一个复杂的系统中不会带来太多的影响。一个项目不可能只使用动态派发，而且如果我们开启编译器优化后，动态派发的额外开销会降低至 <code>~5%</code>，这对应用性能的整体影响就更小了，所以与使用接口带来的好处相比，动态派发的额外开销往往可以忽略。</p>
 <p>上面的性能测试建立在实现和调用方法的都是结构体指针上，当我们将结构体指针换成结构体又会有比较大的差异：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">BenchmarkDirectCall</span><span class="token punctuation">(</span>b <span class="token operator">*</span>testing<span class="token punctuation">.</span>B<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	c <span class="token operator">:=</span> Cat<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"grooming"</span><span class="token punctuation">&#125;</span>
-	<span class="token keyword">for</span> n <span class="token operator">:=</span> <span class="token number">0</span><span class="token punctuation">;</span> n <span class="token operator">&lt;</span> b<span class="token punctuation">.</span>N<span class="token punctuation">;</span> n<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
-		<span class="token comment">// MOVQ	AX, (SP)</span>
-		<span class="token comment">// MOVQ	$8, 8(SP)</span>
-		<span class="token comment">// CALL	"".Cat.Quack(SB)</span>
-		c<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">BenchmarkDynamicDispatch</span><span class="token punctuation">(</span>b <span class="token operator">*</span>testing<span class="token punctuation">.</span>B<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	c <span class="token operator">:=</span> <span class="token function">Duck</span><span class="token punctuation">(</span>Cat<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"grooming"</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-	<span class="token keyword">for</span> n <span class="token operator">:=</span> <span class="token number">0</span><span class="token punctuation">;</span> n <span class="token operator">&lt;</span> b<span class="token punctuation">.</span>N<span class="token punctuation">;</span> n<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
-		<span class="token comment">// MOVQ	16(SP), AX</span>
-		<span class="token comment">// MOVQ	24(SP), CX</span>
-		<span class="token comment">// MOVQ	AX, "".d+32(SP)</span>
-		<span class="token comment">// MOVQ	CX, "".d+40(SP)</span>
-		<span class="token comment">// MOVQ	"".d+32(SP), AX</span>
-		<span class="token comment">// MOVQ	24(AX), AX</span>
-		<span class="token comment">// MOVQ	"".d+40(SP), CX</span>
-		<span class="token comment">// MOVQ	CX, (SP)</span>
-		<span class="token comment">// CALL	AX</span>
-		c<span class="token punctuation">.</span><span class="token function">Quack</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">BenchmarkDirectCall</span><span class="params">(b *testing.B)</span></span> &#123;</span><br><span class="line">	c := Cat&#123;Name: <span class="string">&quot;grooming&quot;</span>&#125;</span><br><span class="line">	<span class="keyword">for</span> n := <span class="number">0</span>; n &lt; b.N; n++ &#123;</span><br><span class="line">		<span class="comment">// MOVQ	AX, (SP)</span></span><br><span class="line">		<span class="comment">// MOVQ	$8, 8(SP)</span></span><br><span class="line">		<span class="comment">// CALL	&quot;&quot;.Cat.Quack(SB)</span></span><br><span class="line">		c.Quack()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">BenchmarkDynamicDispatch</span><span class="params">(b *testing.B)</span></span> &#123;</span><br><span class="line">	c := Duck(Cat&#123;Name: <span class="string">&quot;grooming&quot;</span>&#125;)</span><br><span class="line">	<span class="keyword">for</span> n := <span class="number">0</span>; n &lt; b.N; n++ &#123;</span><br><span class="line">		<span class="comment">// MOVQ	16(SP), AX</span></span><br><span class="line">		<span class="comment">// MOVQ	24(SP), CX</span></span><br><span class="line">		<span class="comment">// MOVQ	AX, &quot;&quot;.d+32(SP)</span></span><br><span class="line">		<span class="comment">// MOVQ	CX, &quot;&quot;.d+40(SP)</span></span><br><span class="line">		<span class="comment">// MOVQ	&quot;&quot;.d+32(SP), AX</span></span><br><span class="line">		<span class="comment">// MOVQ	24(AX), AX</span></span><br><span class="line">		<span class="comment">// MOVQ	&quot;&quot;.d+40(SP), CX</span></span><br><span class="line">		<span class="comment">// MOVQ	CX, (SP)</span></span><br><span class="line">		<span class="comment">// CALL	AX</span></span><br><span class="line">		c.Quack()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们重新执行相同的基准测试时，会得到如下所示的结果：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">$ <span class="token keyword">go</span> test <span class="token operator">-</span>gcflags<span class="token operator">=</span><span class="token operator">-</span>N <span class="token operator">-</span>benchmem <span class="token operator">-</span>test<span class="token punctuation">.</span>count<span class="token operator">=</span><span class="token number">3</span> <span class="token operator">-</span>test<span class="token punctuation">.</span>cpu<span class="token operator">=</span><span class="token number">1</span> <span class="token operator">-</span>test<span class="token punctuation">.</span>benchtime<span class="token operator">=</span><span class="token number">1</span>s <span class="token punctuation">.</span>
-goos<span class="token punctuation">:</span> darwin
-goarch<span class="token punctuation">:</span> amd64
-pkg<span class="token punctuation">:</span> github<span class="token punctuation">.</span>com<span class="token operator">/</span>golang<span class="token operator">/</span>playground
-BenchmarkDirectCall      	<span class="token number">500000000</span>	         <span class="token number">3.15</span> ns<span class="token operator">/</span>op	       <span class="token number">0</span> B<span class="token operator">/</span>op	       <span class="token number">0</span> allocs<span class="token operator">/</span>op
-BenchmarkDirectCall      	<span class="token number">500000000</span>	         <span class="token number">3.02</span> ns<span class="token operator">/</span>op	       <span class="token number">0</span> B<span class="token operator">/</span>op	       <span class="token number">0</span> allocs<span class="token operator">/</span>op
-BenchmarkDirectCall      	<span class="token number">500000000</span>	         <span class="token number">3.09</span> ns<span class="token operator">/</span>op	       <span class="token number">0</span> B<span class="token operator">/</span>op	       <span class="token number">0</span> allocs<span class="token operator">/</span>op
-BenchmarkDynamicDispatch 	<span class="token number">200000000</span>	         <span class="token number">6.92</span> ns<span class="token operator">/</span>op	       <span class="token number">0</span> B<span class="token operator">/</span>op	       <span class="token number">0</span> allocs<span class="token operator">/</span>op
-BenchmarkDynamicDispatch 	<span class="token number">200000000</span>	         <span class="token number">6.91</span> ns<span class="token operator">/</span>op	       <span class="token number">0</span> B<span class="token operator">/</span>op	       <span class="token number">0</span> allocs<span class="token operator">/</span>op
-BenchmarkDynamicDispatch 	<span class="token number">200000000</span>	         <span class="token number">7.10</span> ns<span class="token operator">/</span>op	       <span class="token number">0</span> B<span class="token operator">/</span>op	       <span class="token number">0</span> allocs<span class="token operator">/</span>op<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">go</span> test -gcflags=-N -benchmem -test.count=<span class="number">3</span> -test.cpu=<span class="number">1</span> -test.benchtime=<span class="number">1</span>s .</span><br><span class="line">goos: darwin</span><br><span class="line">goarch: amd64</span><br><span class="line">pkg: github.com/golang/playground</span><br><span class="line">BenchmarkDirectCall      	<span class="number">500000000</span>	         <span class="number">3.15</span> ns/op	       <span class="number">0</span> B/op	       <span class="number">0</span> allocs/op</span><br><span class="line">BenchmarkDirectCall      	<span class="number">500000000</span>	         <span class="number">3.02</span> ns/op	       <span class="number">0</span> B/op	       <span class="number">0</span> allocs/op</span><br><span class="line">BenchmarkDirectCall      	<span class="number">500000000</span>	         <span class="number">3.09</span> ns/op	       <span class="number">0</span> B/op	       <span class="number">0</span> allocs/op</span><br><span class="line">BenchmarkDynamicDispatch 	<span class="number">200000000</span>	         <span class="number">6.92</span> ns/op	       <span class="number">0</span> B/op	       <span class="number">0</span> allocs/op</span><br><span class="line">BenchmarkDynamicDispatch 	<span class="number">200000000</span>	         <span class="number">6.91</span> ns/op	       <span class="number">0</span> B/op	       <span class="number">0</span> allocs/op</span><br><span class="line">BenchmarkDynamicDispatch 	<span class="number">200000000</span>	         <span class="number">7.10</span> ns/op	       <span class="number">0</span> B/op	       <span class="number">0</span> allocs/op</span><br></pre></td></tr></table></figure>
 <p>直接调用方法需要消耗时间的平均值和使用指针实现接口时差不多，约为 <code>~3.09ns</code>，而使用动态派发调用方法却需要 <code>~6.98ns</code> 相比直接调用额外消耗了 <code>~125%</code> 的时间，从生成的汇编指令我们也能看出后者的额外开销会高很多。</p>
 <div class="table-container">
 <table>
@@ -734,8 +542,8 @@ BenchmarkDynamicDispatch 	<span class="token number">200000000</span>	         <
 </div>
 <p>从上述表格我们可以看到使用结构体来实现接口带来的开销会大于使用指针实现，而动态派发在结构体上的表现非常差，这也提醒我们应当尽量避免使用结构体类型实现接口。</p>
 <p>使用结构体带来的巨大性能差异不只是接口带来的问题，带来性能问题主要因为 Go 语言在函数调用时是传值的，动态派发的过程只是放大了参数拷贝带来的影响。</p>
-<h2><span id="小结">小结 </span></h2><p> 重新回顾一下本节介绍的内容，我们在开头简单介绍了使用 Go 语言接口的常见问题，例如使用不同类型实现接口带来的差异、函数调用时发生的隐式类型转换；我们还分析了接口的类型转换、类型断言以及动态派发机制。</p>
-<h2><span id="参考">参考</span></h2><ul>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>重新回顾一下本节介绍的内容，我们在开头简单介绍了使用 Go 语言接口的常见问题，例如使用不同类型实现接口带来的差异、函数调用时发生的隐式类型转换；我们还分析了接口的类型转换、类型断言以及动态派发机制。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://www.tapirgames.com/blog/golang-interface-implementation">How Interfaces Work in Go</a></li>
 <li><a target="_blank" rel="noopener" href="https://golang.org/doc/effective_go.html#interfaces_and_types">Interfaces and other types · Effective Go</a></li>
 <li><a target="_blank" rel="noopener" href="https://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go">How to use interfaces in Go</a></li>
@@ -745,26 +553,364 @@ BenchmarkDynamicDispatch 	<span class="token number">200000000</span>	         <
 <li><a target="_blank" rel="noopener" href="https://github.com/teh-cmc/go-internals/blob/master/chapter2_interfaces/README.md">Chapter II: Interfaces</a></li>
 </ul>
 
-            </div>
-            <!-- Post Comments -->
-            
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Go/" rel="tag"><i class="fa fa-tag"></i> Go</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/01/10/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E8%B0%83%E5%BA%A6%E6%9C%BA%E5%88%B6/" rel="prev" title="Go语言的调度器">
+      <i class="fa fa-chevron-left"></i> Go语言的调度器
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/01/13/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="next" title="Go语言的哈希表">
+      Go语言的哈希表 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
     
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%90%E5%BC%8F%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.1.</span> <span class="nav-text">隐式接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E5%92%8C%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.3.</span> <span class="nav-text">指针和接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nil-%E5%92%8C-non-nil"><span class="nav-number">1.4.</span> <span class="nav-text">nil 和 non-nil</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-number">2.1.</span> <span class="nav-text">类型结构体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#itab-%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-number">2.2.</span> <span class="nav-text">itab 结构体</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.</span> <span class="nav-text">类型转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">指针类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.2.</span> <span class="nav-text">结构体类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80"><span class="nav-number">4.</span> <span class="nav-text">类型断言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E7%A9%BA%E6%8E%A5%E5%8F%A3"><span class="nav-number">4.1.</span> <span class="nav-text">非空接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E6%8E%A5%E5%8F%A3"><span class="nav-number">4.2.</span> <span class="nav-text">空接口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E6%B4%BE%E5%8F%91"><span class="nav-number">5.</span> <span class="nav-text">动态派发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95"><span class="nav-number">5.0.1.</span> <span class="nav-text">基准测试</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
 </body>
-
-
-
-
-
 </html>

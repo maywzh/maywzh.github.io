@@ -1,367 +1,1484 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
-    
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-	    
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Namasday.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cult I.O.">
+<meta property="og:url" content="https://io.maywzh.com/page/8/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="Namasday.">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Tech Blogs">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://io.maywzh.com/page/8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Cult I.O.</title>
   
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
     </script>
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
 
 
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in overlay">
-        <!-- Intro 头部显示 s -->
-                <div id="intro">
-            <h1>This is<br />
-                        MAYWZH </h1>
-            <p> A mind needs books like a sword needs a whetstone     -Tyrion Lannister
-            </p>
-            <ul class="actions">
-                <li><a href="#header" class="button icon solo fa-arrow-down scrolly">Continue</a></li>
-            </ul>
-        </div>
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Header 头部logo end -->
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/uncategorized/">uncategorized</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
 
 
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-        <!-- Nav 导航条 end -->
-        <!-- Main 主要部分 start -->
-        
-        <!-- 文章列表   s -->
-        <div id="main" style="background-color: transparent; padding:0;">
-        <section class="link_container" style="margin-top: 0; background-color: transparent; ">
-            <div class="link_row">
-                <!-- 文章sample  s-->
 
-                
-                <div class="6u 12u(narrower)">
-                    <section class="link_box special">
-                       <a href="/2017/09/01/Linux/%E8%B8%A9%E5%9D%91%E8%AE%B0%E4%B9%8Bzsh%E4%B8%8D%E5%85%BC%E5%AE%B9%E9%80%9A%E9%85%8D%E7%AC%A6%E6%9F%A5%E6%89%BE/">
-                        <div class="page_title" style="background-image: url(https://i.loli.net/2020/09/01/48RV5Srk2mXHYG1.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;">
-                            <!--标题-->
-                            <h2 class="page_title_text"> 踩坑记之 zsh 不兼容通配符查找 </h2>
-                            <!--段落-->
-                        </div>
-                        </a>
-                        <div class="home-post-info">
-                            <!-- Author Avatar -->
-                            <div class="home-post-info-author-avatar">
-                                <h6><span class="home-post-info-data">2017-09-01</span></h6>
-                                <div class="home-post-info-Category">
-                                    <!-- Category -->
-                                    <span>
-                            <h6>
-                            <a class="post_category-link" target="_blank" rel="noopener" href="http://localhost:4000/categories/Algorithm/">
-                                <a class="post_category-link" href="/categories/%E5%9D%91/">坑</a></a>
-                            </h6>
-                        </span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-                <!-- 文章sample  e-->
-            
-                <div class="6u 12u(narrower)">
-                    <section class="link_box special">
-                       <a href="/2017/09/01/java/2017%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%87%86%E5%A4%87/">
-                        <div class="page_title" style="background-image: url(https://i.loli.net/2020/09/27/BptI6CGiQDUcW2Z.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;">
-                            <!--标题-->
-                            <h2 class="page_title_text"> 2017 Java 后端面试题集锦 </h2>
-                            <!--段落-->
-                        </div>
-                        </a>
-                        <div class="home-post-info">
-                            <!-- Author Avatar -->
-                            <div class="home-post-info-author-avatar">
-                                <h6><span class="home-post-info-data">2017-09-01</span></h6>
-                                <div class="home-post-info-Category">
-                                    <!-- Category -->
-                                    <span>
-                            <h6>
-                            <a class="post_category-link" target="_blank" rel="noopener" href="http://localhost:4000/categories/Algorithm/">
-                                <a class="post_category-link" href="/categories/uncategorized/">uncategorized</a></a>
-                            </h6>
-                        </span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-                <!-- 文章sample  e-->
-            
-                <div class="6u 12u(narrower)">
-                    <section class="link_box special">
-                       <a href="/2017/08/31/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E4%B9%8B%E4%B8%BB%E5%AE%9A%E7%90%86%E8%AE%A1%E7%AE%97%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">
-                        <div class="page_title" style="background-image: url(https://i.loli.net/2020/08/31/hQ3gWEuUCfmB6LO.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;">
-                            <!--标题-->
-                            <h2 class="page_title_text"> 主定理计算时间复杂度 </h2>
-                            <!--段落-->
-                        </div>
-                        </a>
-                        <div class="home-post-info">
-                            <!-- Author Avatar -->
-                            <div class="home-post-info-author-avatar">
-                                <h6><span class="home-post-info-data">2017-08-31</span></h6>
-                                <div class="home-post-info-Category">
-                                    <!-- Category -->
-                                    <span>
-                            <h6>
-                            <a class="post_category-link" target="_blank" rel="noopener" href="http://localhost:4000/categories/Algorithm/">
-                                <a class="post_category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></a>
-                            </h6>
-                        </span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-                <!-- 文章sample  e-->
-            
-                <div class="6u 12u(narrower)">
-                    <section class="link_box special">
-                       <a href="/2017/08/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E8%AF%A6%E8%A7%A3/">
-                        <div class="page_title" style="background-image: url(https://i.loli.net/2020/09/04/7JYus8OL5tZVnzc.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;">
-                            <!--标题-->
-                            <h2 class="page_title_text"> TCP 三次握手与四次挥手详解 </h2>
-                            <!--段落-->
-                        </div>
-                        </a>
-                        <div class="home-post-info">
-                            <!-- Author Avatar -->
-                            <div class="home-post-info-author-avatar">
-                                <h6><span class="home-post-info-data">2017-08-04</span></h6>
-                                <div class="home-post-info-Category">
-                                    <!-- Category -->
-                                    <span>
-                            <h6>
-                            <a class="post_category-link" target="_blank" rel="noopener" href="http://localhost:4000/categories/Algorithm/">
-                                <a class="post_category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></a>
-                            </h6>
-                        </span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-                <!-- 文章sample  e-->
-            
-                <div class="6u 12u(narrower)">
-                    <section class="link_box special">
-                       <a href="/2017/07/26/javascript/JavaScript%E4%B8%AD%E7%9A%84Promise/">
-                        <div class="page_title" style="background-image: url(https://i.loli.net/2020/08/23/rODmiQtKSy25wvn.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;">
-                            <!--标题-->
-                            <h2 class="page_title_text"> 实现 JavaScript 中的 Promise </h2>
-                            <!--段落-->
-                        </div>
-                        </a>
-                        <div class="home-post-info">
-                            <!-- Author Avatar -->
-                            <div class="home-post-info-author-avatar">
-                                <h6><span class="home-post-info-data">2017-07-26</span></h6>
-                                <div class="home-post-info-Category">
-                                    <!-- Category -->
-                                    <span>
-                            <h6>
-                            <a class="post_category-link" target="_blank" rel="noopener" href="http://localhost:4000/categories/Algorithm/">
-                                <a class="post_category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></a>
-                            </h6>
-                        </span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-                <!-- 文章sample  e-->
-            
-                <div class="6u 12u(narrower)">
-                    <section class="link_box special">
-                       <a href="/2017/07/20/javascript/JavaScript%E4%B9%8B%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87/">
-                        <div class="page_title" style="background-image: url(https://i.loli.net/2020/08/23/IBfNdaH3pCxYoFc.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;">
-                            <!--标题-->
-                            <h2 class="page_title_text"> JavaScript 的变量提升 </h2>
-                            <!--段落-->
-                        </div>
-                        </a>
-                        <div class="home-post-info">
-                            <!-- Author Avatar -->
-                            <div class="home-post-info-author-avatar">
-                                <h6><span class="home-post-info-data">2017-07-20</span></h6>
-                                <div class="home-post-info-Category">
-                                    <!-- Category -->
-                                    <span>
-                            <h6>
-                            <a class="post_category-link" target="_blank" rel="noopener" href="http://localhost:4000/categories/Algorithm/">
-                                <a class="post_category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></a>
-                            </h6>
-                        </span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-                <!-- 文章sample  e-->
-            
-            </div>
-        </section>
-        </div>
-        <!-- 文章列表   end -->
-        <!-- Main 主要部分 end -->
-        <!-- footer  页码 start-->
-        <footer style="text-align: center; padding-top: 2em;">
-    
-    <div class="pagination">
-        <a class="extend prev" rel="prev" href="/page/7/">pre</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/9/">nex</a>
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    
-</footer>
+  </div>
 
-        <!-- footer  页码 end-->
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
 </div>
-        <!-- Copyright 版权 end -->
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
     </div>
-    <!-- Wrapper 外包 e-->
-    <!-- Scripts --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/11/15/java/Java%E7%BA%BF%E4%B8%8ACPU%E3%80%81%E7%A3%81%E7%9B%98%E3%80%81%E5%86%85%E5%AD%98%E3%80%81%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/11/15/java/Java%E7%BA%BF%E4%B8%8ACPU%E3%80%81%E7%A3%81%E7%9B%98%E3%80%81%E5%86%85%E5%AD%98%E3%80%81%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C%E6%8C%87%E5%8D%97/" class="post-title-link" itemprop="url">Java线上CPU、磁盘、内存、网络排障指南</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.11.15 15:53:54" itemprop="dateCreated datePublished" datetime="2016-11-15T15:53:54+08:00">2016.11.15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/11/15/java/Java%E7%BA%BF%E4%B8%8ACPU%E3%80%81%E7%A3%81%E7%9B%98%E3%80%81%E5%86%85%E5%AD%98%E3%80%81%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C%E6%8C%87%E5%8D%97/" class="post-meta-item leancloud_visitors" data-flag-title="Java线上CPU、磁盘、内存、网络排障指南" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>线上故障主要会包括cpu、磁盘、内存以及网络问题，而大多数故障可能会包含不止一个层面的问题，所以进行排查时候尽量四个方面依次排查一遍。同时例如jstack、jmap等工具也是不囿于一个方面的问题的，基本上出问题就是df、free、top 三连，然后依次jstack、jmap伺候，具体问题具体分析即可。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/11/15/java/Java%E7%BA%BF%E4%B8%8ACPU%E3%80%81%E7%A3%81%E7%9B%98%E3%80%81%E5%86%85%E5%AD%98%E3%80%81%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C%E6%8C%87%E5%8D%97/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/11/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/11/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/" class="post-title-link" itemprop="url">HTTPS原理解析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.11.03 13:41:36" itemprop="dateCreated datePublished" datetime="2016-11-03T13:41:36+08:00">2016.11.03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/11/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/" class="post-meta-item leancloud_visitors" data-flag-title="HTTPS原理解析" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>HTTP协议是明文传输，它简单易于理解，但同时也带来了安全性问题，在复杂的网络环境中，HTTP流量几乎是在裸奔，可以轻易被监听，为了解决这个问题，人们提出了HTTP over SSL即HTTPS，即通过ssl隧道来传输HTTP流量，这样加密了HTTP数据包，实现了传输链路上的安全性。相比于HTTP，HTTPS在TCP层上多了一个SSL/TLS层。</p>
+<p><img data-src="http://blog.upyun.com/wp-content/uploads/2017/03/httpvshttps.png" alt="img"></p>
+<h2 id="HTTPS的通信过程"><a href="#HTTPS的通信过程" class="headerlink" title="HTTPS的通信过程"></a>HTTPS的通信过程</h2><h3 id="SSL-TLS"><a href="#SSL-TLS" class="headerlink" title="SSL/TLS"></a>SSL/TLS</h3><blockquote>
+<p>SSL（Secure Socket Layer，安全套接字层）：1994年为 Netscape 所研发，SSL 协议位于 TCP/IP 协议与各种应用层协议之间，为数据通讯提供安全支持。</p>
+<p>TLS（Transport Layer Security，传输层安全）：其前身是 SSL，它最初的几个版本（SSL 1.0、SSL 2.0、SSL 3.0）由网景公司开发，1999 年从 3.1 开始被 IETF 标准化并改名，发展至今已经有 TLS 1.0、TLS 1.1、TLS 1.2 三个版本。SSL3.0 和 TLS1.0 由于存在安全漏洞，已经很少被使用到。TLS 1.3 改动会比较大，目前还在草案阶段，目前使用最广泛的是 TLS 1.1、TLS 1.2。</p>
+</blockquote>
+<p>可以简单认为SSL与TLS是描述的同一种协议，本文中不做区分，SSL/TLS是为了在TCP连接上添加一个加密隧道来加密通信流量，可以确保通信流量安全无法解密。</p>
+<h3 id="图解"><a href="#图解" class="headerlink" title="图解"></a>图解</h3><p>由于HTTPS的TLS层是在TCP上的，所以与HTTP一样，在建立TLS连接之前必须先TCP三次握手</p>
+<p>HTTPS的通信过程可以由下图简单表示。</p>
+<h3 id="步骤详解"><a href="#步骤详解" class="headerlink" title="步骤详解"></a>步骤详解</h3><h4 id="0x01-ClientHello"><a href="#0x01-ClientHello" class="headerlink" title="0x01 ClientHello"></a>0x01 ClientHello</h4><ol>
+<li>ClientHello。 首先https请求是基于http的，也就是基于tcp的，所以先得建立tcp三次握手，这个就不说了，然后tcp握手后是SSL层的握手，也就是图中的ClientHello消息，client发送本地最新的TLS版本、算法组合的一个集合和其他很多辅助的信息，并且生成一个随机数A。</li>
+</ol>
+<p>   <img data-src="https:////upload-images.jianshu.io/upload_images/2000804-900ab967d4c437d5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000" alt="img"></p>
+<p>   ClientHello.png</p>
+<p>   可以看到随机数（</p>
+   <figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Random</span></span><br></pre></td></tr></table></figure>
+<p>   ）是一个GMT UNIX时间加上一串随机字节，算法组合（</p>
+   <figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Cipher Suite</span></span><br></pre></td></tr></table></figure>
+<p>   ）有26种。还有ClientHello并不是我随便叫叫的，真的叫ClientHello😢……</p>
+<ol>
+<li>ServerHello。Server收到这些信息后比对自己的TLS版本，选择其中低的一个作为返回，并且从算法组合的集合中选出一种合适的组合，然后同样也生成一个随机数B，一起打包到ServerHello中传回给Client。内容如图（<code>ServerHello.png</code>）：</li>
+</ol>
+<p>   <img data-src="https:////upload-images.jianshu.io/upload_images/2000804-84e576eff565ee07.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000" alt="img"></p>
+<p>   ServerHello.png</p>
+<p>   同样ServerHello也不是随便叫的，可以看到随机数格式和ClientHello一样，并且这里选出了一种CipherSuite算法组合。</p>
+<ol>
+<li>Certificatie,ServerHelloDone。服务端在选出沟通策略之后将自己的证书信息告诉Client端（<code>Certificate</code>），通知Client关于秘钥更新的信息（<code>ServerkeyExchange</code>），接下去就看你的了，并且表示该发的都发给你了，我的Hello结束了（<code>ServerHelloDone</code>）。</li>
+</ol>
+<p>   <img data-src="https:////upload-images.jianshu.io/upload_images/2000804-d472cf46f4216b0b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000" alt="img"></p>
+<p>   Certificate-ServerHelloDone.png</p>
+<ol>
+<li><p>Client收到2，3步的信息后先验证证书是不是合法的，包括它的颁发机构，域名匹配，有限期限等，这个具体的过程就不探究了，只要知道这些步骤就行了。</p>
+</li>
+<li><p>证书验证通过之后，生成随机数C1,然后用证书内容中的公钥通过服务器选择的非对称加密算法加密，得出为C2。</p>
+</li>
+<li><p>由之前的三个随机数A、B、C1通过一个伪随机函数再生成一个D，<strong>注意！这个是最终http真正使用的加密秘钥！！！</strong>。</p>
+</li>
+<li><p>由D再次通过伪随机函数生成一个秘钥组，包含6个秘钥，假设为P1,P2,P3,P4,P5,P6。</p>
+</li>
+<li><p>ClientKeyExchange。通知Server秘钥相关的信息，发送第5步中算出的C2给Server端。</p>
+</li>
+<li><p>Client端发送ClientKeyExchange之后，计算之前所有与Server端交互消息的hash值，假设为client_hash1，用步骤7中得到的其中一个P1进行加密，结果为E。</p>
+</li>
+<li><p>Server端收到C2后用私钥结合非对称算法解密C2，得到C1。</p>
+</li>
+<li><p>同样的Server端也根据A、B、C1由伪随机函数生成D(<strong>最终的加密秘钥！！！</strong>),再由D得出秘组钥（P1-P6），因为这里涉及到的算法都是一样的，所以得出的秘钥也是一样的。</p>
+</li>
+<li><p>Server端计算之前所有和Client端交互消息的hash值，假设为server_hash2，大家可能发现了，11、12跟Client端的6、7、9过程一致，只是少了9中的P1加密过程。</p>
+</li>
+<li><p>这个时候Client端会发送ChangeCipherSpec消息和EncryptedHandshakeMessage消息，通知Server端接下去使用选定的加密策略来通信了，并且将第9步中的E传给了Server。（这里几个步骤的顺序只是为了好理解一点而这样排列，实际两条线是独立在处理信息的，所以先后顺序不能保证）</p>
+</li>
+<li><p>这个时候Client会再次计算之前握手消息的hash值，得出结果client_hash2。</p>
+</li>
+<li><p>Server在收到EncryptedHandshakeMessage消息带过来的E之后，利用步骤11中的P1解密E，由于加密算法和P1都是相同的，所以这里还原出了client_hash1，然后与步骤12中的server_hash2比对，如果一样说明之前的几条协商秘钥的消息都被对方正确无误的理解了。</p>
+</li>
+<li><p>Server端再次对之前的消息做hash值，得出server_hash2，用P2进行加密结果为F，然后通过ChangeCipherSpec-EncryptedHandshakeMessage消息传给Client端。</p>
+</li>
+<li><p>Client收到Server的消息后根据P2解密F还原得出server_hash2，与client_hash2比对如果一致，则认为之前的交互过程都是正确无误且被对方理解的。至此，整个握手过程就结束了，之后的http数据报就会被之前确定的加密策略和加密秘钥D进行加密传输了。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/10/30/javascript/JavaScript%E4%B8%AD%E7%9A%84this/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/10/30/javascript/JavaScript%E4%B8%AD%E7%9A%84this/" class="post-title-link" itemprop="url">JavaScript中的this</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.10.30 13:36:00" itemprop="dateCreated datePublished" datetime="2016-10-30T13:36:00+08:00">2016.10.30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/10/30/javascript/JavaScript%E4%B8%AD%E7%9A%84this/" class="post-meta-item leancloud_visitors" data-flag-title="JavaScript中的this" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2016/10/30/javascript/JavaScript%E4%B8%AD%E7%9A%84this/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2016/10/30/javascript/JavaScript%E4%B8%AD%E7%9A%84this/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>我们由一段代码开始本文的主题。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  foo: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; </span><br><span class="line">      <span class="built_in">console</span>.log(<span class="built_in">this</span>.bar) </span><br><span class="line">  &#125;,</span><br><span class="line">  bar: <span class="number">1</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> foo = obj.foo;</span><br><span class="line"><span class="keyword">var</span> bar = <span class="number">2</span>;</span><br><span class="line">foo === obj.foo <span class="comment">//true</span></span><br><span class="line">obj.foo() <span class="comment">// 1</span></span><br><span class="line">foo() <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，<code>foo</code>和<code>obj.foo</code>实际上是严格相等的，它们是指向同一个代码段。由于<strong>上下文环境</strong>不同，所以他们运行的结果也不一样。<code>obj.foo</code>的上下文环境就是<code>this</code>指向的<code>obj</code>，而<code>foo</code>的上下文环境是全局环境。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/10/30/javascript/JavaScript%E4%B8%AD%E7%9A%84this/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/10/17/javascript/Javascript%E4%B8%AD%E7%9A%84call%E3%80%81apply%E5%92%8Cbind/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/10/17/javascript/Javascript%E4%B8%AD%E7%9A%84call%E3%80%81apply%E5%92%8Cbind/" class="post-title-link" itemprop="url">JavaScript中的call、apply和bind</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.10.17 18:35:00" itemprop="dateCreated datePublished" datetime="2016-10-17T18:35:00+08:00">2016.10.17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/10/17/javascript/Javascript%E4%B8%AD%E7%9A%84call%E3%80%81apply%E5%92%8Cbind/" class="post-meta-item leancloud_visitors" data-flag-title="JavaScript中的call、apply和bind" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2016/10/17/javascript/Javascript%E4%B8%AD%E7%9A%84call%E3%80%81apply%E5%92%8Cbind/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2016/10/17/javascript/Javascript%E4%B8%AD%E7%9A%84call%E3%80%81apply%E5%92%8Cbind/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="apply-amp-call"><a href="#apply-amp-call" class="headerlink" title="apply &amp; call"></a>apply &amp; call</h2><blockquote>
+<p>在 JavaScript中，call 和 apply 都是为了改变某个函数运行时的上下文（context）而存在的 </p>
+</blockquote>
+<p><strong>在JavaScript中，一切都是对象</strong>，包括函数。函数存在「定义时上下文」和「运行时上下文」以及「上下文是可以改变的」这样的概念。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/10/17/javascript/Javascript%E4%B8%AD%E7%9A%84call%E3%80%81apply%E5%92%8Cbind/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/10/10/Nginx/Nginx%E9%85%8D%E7%BD%AE%E5%88%9D%E6%AD%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/10/10/Nginx/Nginx%E9%85%8D%E7%BD%AE%E5%88%9D%E6%AD%A5/" class="post-title-link" itemprop="url">Nginx配置初步</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.10.10 08:10:25" itemprop="dateCreated datePublished" datetime="2016-10-10T08:10:25+08:00">2016.10.10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/10/10/Nginx/Nginx%E9%85%8D%E7%BD%AE%E5%88%9D%E6%AD%A5/" class="post-meta-item leancloud_visitors" data-flag-title="Nginx配置初步" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Nginx是一款轻量级的Web服务器、反向代理服务器，由于它的内存占用少，启动极快，高并发能力强，在互联网项目中广泛应用。这里实践一下nginx的配置</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/10/10/Nginx/Nginx%E9%85%8D%E7%BD%AE%E5%88%9D%E6%AD%A5/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/07/18/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B9%8B%E7%89%88%E6%9C%AC%E5%8F%B7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/07/18/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B9%8B%E7%89%88%E6%9C%AC%E5%8F%B7/" class="post-title-link" itemprop="url">如何理解版本号</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.07.18 01:36:00" itemprop="dateCreated datePublished" datetime="2016-07-18T01:36:00+08:00">2016.07.18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/07/18/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B9%8B%E7%89%88%E6%9C%AC%E5%8F%B7/" class="post-meta-item leancloud_visitors" data-flag-title="如何理解版本号" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2016/07/18/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B9%8B%E7%89%88%E6%9C%AC%E5%8F%B7/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2016/07/18/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B9%8B%E7%89%88%E6%9C%AC%E5%8F%B7/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一句话概括"><a href="#一句话概括" class="headerlink" title="一句话概括"></a>一句话概括</h2><p>语义化版本号的格式为主版本号.次版本号.修订号(x.y.z)，递增规则如下</p>
+<p>x: 主版本号，做了不兼容的 API 修改</p>
+<p>y: 次版本号，做了向下兼容的功能性更新</p>
+<p>z: 修订号，一般是向下兼容的 bugfix 和优化</p>
+<p>（以下，皆以 x 代表主版本号，y 代表次版本号，z 代表修订号）<br><img data-src="https://raw.githubusercontent.com/maywzh/imagebed/master/img/1_7h56wnp4mqlOqRm4aF9cTQ.png" alt="img"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/07/18/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B9%8B%E7%89%88%E6%9C%AC%E5%8F%B7/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/04/16/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BB%8E%E5%90%8C%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%88%B0%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/04/16/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BB%8E%E5%90%8C%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%88%B0%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" class="post-title-link" itemprop="url">从同步编程到异步编程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.04.16 01:55:36" itemprop="dateCreated datePublished" datetime="2016-04-16T01:55:36+08:00">2016.04.16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/04/16/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BB%8E%E5%90%8C%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%88%B0%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" class="post-meta-item leancloud_visitors" data-flag-title="从同步编程到异步编程" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>虽然我们生活在一个异步的世界里，但对于多数编程初学者来说，异步还是很陌生。学习一门编程语言，通常都是从同步流程开始的，即顺序、分支和循环。而异步流程是什么呢——开始一个异步调用，然后……就没有然后了。异步程序跑哪去了？</p>
+<p>异步程序会以某种异步的形式在运行着，比如多线程、异步IO等，直到处理完成。那如果需要处理结果怎么办？给一个程序入口，让它处理完当前过程之后，把处理结果送到这个入口，然后执行另一段程序——俗称回调。回调一般使用 <code>callback</code> 这个名称，不过有时候我更喜欢使用 <code>next</code>，因为它代表着下一个处理步骤。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/04/16/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BB%8E%E5%90%8C%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%88%B0%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/04/01/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E4%B9%8B%E5%A0%86%E6%8E%92%E5%BA%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/04/01/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E4%B9%8B%E5%A0%86%E6%8E%92%E5%BA%8F/" class="post-title-link" itemprop="url">排序之堆排序与JavaScript实现</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.04.01 21:07:39" itemprop="dateCreated datePublished" datetime="2016-04-01T21:07:39+08:00">2016.04.01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/04/01/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E4%B9%8B%E5%A0%86%E6%8E%92%E5%BA%8F/" class="post-meta-item leancloud_visitors" data-flag-title="排序之堆排序与JavaScript实现" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="成堆-Heapify"><a href="#成堆-Heapify" class="headerlink" title="成堆 Heapify"></a>成堆 <code>Heapify</code></h3><p>对于一个给定的数组，我们不一定实现堆这个类，而是通过<strong>成堆 (Heapify)</strong> 这样的操作来使得数组具有堆的性质。</p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/Heapify.png"><img data-src="http://mitscherlich.me/assets/imooc-algorithms/Heapify.png" alt="img"></a></p>
+<p>如图所示，要使得这个数组所对应的完全二叉树形成一个最大堆，只需要使得每一棵子树都形成最大堆即可。那么不难看出，所有的叶子结点都可以看作是一个仅有一个元素的最大堆，所以我们只需要从最后一个非叶子结点开始，通过前一节的 <code>shiftDown</code> 操作，就可以很容易的构建出最大堆来。</p>
+<blockquote>
+<p>一个显而易见的数学关系是: 完全二叉树最后一个非叶子节点的索引是 $n\div{2}$，例如这里有 <code>10</code> 个元素，那么最后一个非叶子结点的索引就是 <code>5</code>；类似的，如果有 <code>11</code> 个元素，那么同样 <code>5</code>是最后一个非叶子结点的索引；不过要注意的是，这里的索引是从 <code>1</code> 开始的，如果是从 <code>0</code> 开始的索引只需使 <code>i-1</code> ($n\div{2}-1$) 即可。这很容易就能用数学归纳法证明。</p>
+</blockquote>
+<p>简单来说，<code>Heapify</code> 的算法过程可以简述为:</p>
+<ol>
+<li>从最后一个非叶子结点开始向前遍历数组；</li>
+<li>每遇到一个非叶子结点，就通过 <code>shiftDown</code> 使以当前节点为根结点的子树成最大堆；</li>
+<li>重复直到根节点完成 <code>shiftDown</code>。</li>
+</ol>
+<p>动画演示:</p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/Heapify.gif"><img data-src="http://mitscherlich.me/assets/imooc-algorithms/Heapify.gif" alt="img"></a></p>
+<p>示例代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; PrintableMaxHeap &#125; = <span class="built_in">require</span>(<span class="string">&#x27;./02-Max-Heap-Class-Basic&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// heapSort1, 将所有的元素依次添加到堆中, 在将所有元素从堆中依次取出来, 即完成了排序</span></span><br><span class="line"><span class="comment">// 无论是创建堆的过程, 还是从堆中依次取出元素的过程, 时间复杂度均为 O(nlogn)</span></span><br><span class="line"><span class="comment">// 整个堆排序的整体时间复杂度为 O(nlogn)</span></span><br><span class="line"><span class="built_in">exports</span>.heapSort1 = <span class="function"><span class="params">array</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> n = array.length</span><br><span class="line">  <span class="keyword">const</span> maxHeap = <span class="keyword">new</span> PrintableMaxHeap(n)</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> i <span class="keyword">of</span> array) &#123;</span><br><span class="line">    maxHeap.insert(i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    array[i] = maxHeap.extractMax()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// heapSort2, 借助我们的 heapify 过程创建堆</span></span><br><span class="line"><span class="comment">// 此时, 创建堆的过程时间复杂度为 O(n), 将所有元素依次从堆中取出来, 时间复杂度为 O(nlogn)</span></span><br><span class="line"><span class="comment">// 堆排序的总体时间复杂度依然是 O(nlogn), 但是比上述 heapSort1 性能更优, 因为创建堆的性能更优</span></span><br><span class="line"><span class="built_in">exports</span>.heapSort2 = <span class="function"><span class="params">array</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> n = array.length</span><br><span class="line">  <span class="keyword">const</span> maxHeap = <span class="keyword">new</span> PrintableMaxHeap(array, n)</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    array[i] = maxHeap.extractMax()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaxHeap</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 新的构造函数，传入一个数组使其成最大堆</span></span><br><span class="line">  <span class="keyword">constructor</span> (array) &#123;</span><br><span class="line">    <span class="keyword">const</span> n = array.length</span><br><span class="line">    this.#data = new Array(n + 1)</span><br><span class="line">    this.#capacity = n</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">      this.#data[i + 1] = array[i]</span><br><span class="line">    &#125;</span><br><span class="line">    this.#count = n</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="built_in">Math</span>.floor(n / <span class="number">2</span>); i &gt;= <span class="number">1</span>; i--) &#123;</span><br><span class="line">      shiftDownEnhance(this.#data, i, n)  // 见【慕课】重学算法 - part.3 堆排序 (1)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="通过堆进行排序"><a href="#通过堆进行排序" class="headerlink" title="通过堆进行排序"></a>通过堆进行排序</h4><p>通过新的构造函数，我们可以方便的将一个数组构造为最大堆，显而易见的，我们将数组放入再取出最大堆的过程，其实就完成了一次排序。我们可以这样实现:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * generateRandomArray <span class="doctag">@see </span>https://github.com/Mitscherlich/Play-with-Algorithms-JS/blob/master/test/utils/index.js#L8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> sorted = []</span><br><span class="line"><span class="keyword">const</span> array = generateRandomArray(<span class="number">50</span>, <span class="number">0</span>, <span class="number">100</span>)</span><br><span class="line"><span class="keyword">const</span> maxHeap = <span class="keyword">new</span> MaxHeap(array.slice())</span><br><span class="line"><span class="keyword">while</span> (!maxHeap.isEmpty()) &#123;</span><br><span class="line">  sorted.unshift(maxHeap.extractMax())</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(sorted))</span><br></pre></td></tr></table></figure>
+<p>值得注意的是，这种通过 <code>Heapify</code> 来成堆的操作并进行堆排序速度由于上一节我们一个一个将元素插入进堆的操作，事实上，这两种操作的算法复杂度的确有所不同的：</p>
+<ul>
+<li>将 <code>n</code> 个元素注意插入空堆中：$O(nlog{n})$</li>
+<li><code>Heapfiy</code>：$O(n)$</li>
+</ul>
+<p>由于堆算法复杂度的证明不是本系列的重点并且有点难，感兴趣的同学可以自己来进行详细地推导证明，这里并不展开。</p>
+<h3 id="数组的原地堆排序"><a href="#数组的原地堆排序" class="headerlink" title="数组的原地堆排序"></a>数组的原地堆排序</h3><p>无论是将元素逐一插入空堆还是通过 <code>Heapify</code> 来使数组成堆，我们实际上都开辟了一个堆的空间 (也就是使用了额外的 $O(n)$ 的空间复杂度)。但结合上面 <code>Heapify</code> 的思想，我们也可以很容易的改造堆排序的过程，使数组原地完成堆排序的操作。</p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/HeapSort0.png"><img data-src="http://mitscherlich.me/assets/imooc-algorithms/HeapSort0.png" alt="img"></a></p>
+<blockquote>
+<p>一个已经形成最大堆的数组</p>
+</blockquote>
+<p>我们假定通过 <code>Heapify</code> 已经使一个数组形成最大堆，这时数组中第一个元素也就是最大的元素，要是数组从小到大排序，只需使现在数组第一个位置的元素与最后一个元素交换位置：</p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/HeapSort1.png"><img data-src="http://mitscherlich.me/assets/imooc-algorithms/HeapSort1.png" alt="img"></a></p>
+<p>而此时由于 <code>w</code> 并不一定是最大元素，也就使得原有最大堆的性质遭到了破坏。这时只需通过对 <code>w</code> 元素进行一次 <code>shiftDown</code> 操作，就能使数组的前部重新形成最大堆：</p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/HeapSort2.png"><img data-src="http://mitscherlich.me/assets/imooc-algorithms/HeapSort2.png" alt="img"></a></p>
+<p>那么重复上述操作就可以使整个数组完成排序。</p>
+<p>示例代码 </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> shiftDown = <span class="function">(<span class="params">array, n, k</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">2</span> * k + <span class="number">1</span> &lt; n) &#123;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">2</span> * k + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> (j + <span class="number">1</span> &lt; n &amp;&amp; array[j + <span class="number">1</span>] &gt; array[j]) &#123;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (array[k] &gt;= array[j]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// swap(arr[k] , arr[j])</span></span><br><span class="line">    [array[k], array[j]] = [array[j], array[k]]</span><br><span class="line">    k = j</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不使用一个额外的最大堆, 直接在原数组上进行原地的堆排序</span></span><br><span class="line"><span class="built_in">Array</span>.prototype.heapSort = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> array = <span class="built_in">this</span>.slice()</span><br><span class="line">  <span class="keyword">const</span> n = array.length</span><br><span class="line">  <span class="comment">// heapify</span></span><br><span class="line">  <span class="comment">// 注意，此时我们的堆是从 0 开始索引的</span></span><br><span class="line">  <span class="comment">// 从(最后一个元素的索引-1)/2 开始</span></span><br><span class="line">  <span class="comment">// 最后一个元素的索引 = n-1</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="built_in">Math</span>.floor((n - <span class="number">1</span>) / <span class="number">2</span>); i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    shiftDown(array, n, i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">    <span class="comment">// swap(arr[0], arr[i])</span></span><br><span class="line">    [array[<span class="number">0</span>], array[i]] = [array[i], array[<span class="number">0</span>]]</span><br><span class="line">    shiftDown(array, i, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>类似的，最后使用一步交换进行优化:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 优化的 shiftDown 过程, 使用赋值的方式取代不断的 swap,</span></span><br><span class="line"><span class="comment">// 该优化思想和我们之前对插入排序进行优化的思路是一致的</span></span><br><span class="line"><span class="keyword">const</span> shiftDownEnhance = <span class="function">(<span class="params">array, n, k</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> e = array[k]</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">2</span> * k + <span class="number">1</span> &lt; n) &#123;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">2</span> * k + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> (j + <span class="number">1</span> &lt; n &amp;&amp; array[j + <span class="number">1</span>] &gt; array[j]) &#123;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (e &gt;= array[j]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    array[k] = array[j]</span><br><span class="line">    k = j</span><br><span class="line">  &#125;</span><br><span class="line">  array[k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优化的堆排序</span></span><br><span class="line"><span class="built_in">Array</span>.prototype.heapSortEnhance = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> array = <span class="built_in">this</span>.slice()</span><br><span class="line">  <span class="keyword">const</span> n = array.length</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="built_in">Math</span>.floor((n - <span class="number">1</span>) / <span class="number">2</span>); i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    shiftDownEnhance(array, n, i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">    <span class="comment">// swap(arr[0], arr[i])</span></span><br><span class="line">    [array[<span class="number">0</span>], array[i]] = [array[i], array[<span class="number">0</span>]]</span><br><span class="line">    shiftDownEnhance(array, i, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="索引堆"><a href="#索引堆" class="headerlink" title="索引堆"></a>索引堆</h3><p>在上面的实现的堆中，我们总是直接操作原右数组元素。这在处理基本数据或者简单类型时没有问题，但往往我们面对的数据类型并非如此。例如，我们在处理 <code>CMS</code> 内容时如果使用对这种结构，一旦要交换的数据量非常大，交换操作本身变得非常慢；而这种问题还可以通过技术手段解决；又例如在操作系统的进程调度时，我们可能根据进程的 <code>pid</code> 数组构建了最大堆来表示进程的优先级，一旦我们直接交换了堆中元素的位置，我们就无法根据新的索引找到原来的进程，也就使得 <code>pid</code> 和进程脱离了关系；像这种情况使用<strong>索引堆</strong>就更为方便。</p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/IndexMaxHeap.png"><img data-src="http://mitscherlich.me/assets/imooc-algorithms/IndexMaxHeap.png" alt="img"></a></p>
+<blockquote>
+<p>索引最大堆示意图</p>
+</blockquote>
+<p>示例代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shiftUp</span> (<span class="params">data, indexes, k</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> e = indexes[k]</span><br><span class="line">  <span class="keyword">while</span> (k &gt; <span class="number">1</span> &amp;&amp; data[indexes[<span class="built_in">Math</span>.floor(k / <span class="number">2</span>)]] &lt; data[e]) &#123;</span><br><span class="line">    <span class="comment">// swap(indexes[k/2], indexes[k])</span></span><br><span class="line">    indexes[k] = indexes[<span class="built_in">Math</span>.floor(k / <span class="number">2</span>)]</span><br><span class="line">    k = <span class="built_in">Math</span>.floor(k /= <span class="number">2</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  indexes[k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shiftDown</span> (<span class="params">data, indexes, k, count </span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> e = indexes[k]</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">2</span> * k &lt;= count) &#123;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">2</span> * k <span class="comment">// 此轮循环中, swap(indexes[k], indexes[j])</span></span><br><span class="line">    <span class="keyword">if</span> (j + <span class="number">1</span> &lt;= count &amp;&amp; data[indexes[j + <span class="number">1</span>]] &gt; data[indexes[j]]) &#123;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (data[e] &gt;= data[indexes[j]]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// swap(indexes[k], indexes[j])</span></span><br><span class="line">    indexes[k] = indexes[j]</span><br><span class="line">    k = j</span><br><span class="line">  &#125;</span><br><span class="line">  indexes[k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IndexMaxHeap</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 构造函数, 构造一个空堆, 可容纳 capacity 个元素</span></span><br><span class="line">  <span class="keyword">constructor</span> (capacity) &#123;</span><br><span class="line">    this.#data = new Array(capacity + 1)</span><br><span class="line">    this.#indexes = new Array(capacity + 1)</span><br><span class="line">    this.#count = 0</span><br><span class="line">    this.#capacity = capacity</span><br><span class="line">  &#125;</span><br><span class="line">  size () &#123; return this.#count &#125;</span><br><span class="line">  isEmpty () &#123; return this.#count === 0 &#125;</span><br><span class="line">  <span class="comment">// 获取最大索引堆中的堆顶元素</span></span><br><span class="line">  getItem (i) &#123; return this.#data[i + 1] &#125;</span><br><span class="line">  <span class="comment">// 传入的 i 是从 0 开始索引的</span></span><br><span class="line">  insert (i, item) &#123;</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    this.#data[this.#count + 1] = item</span><br><span class="line">    this.#indexes[this.#count + 1] = i</span><br><span class="line">    this.#count++</span><br><span class="line">    shiftUp(this.#data, this.#indexes, this.#count)</span><br><span class="line">  &#125;</span><br><span class="line">  extractMax () &#123;</span><br><span class="line">    const ret = this.#data[this.#indexes[1]]</span><br><span class="line">    <span class="comment">// swap(data[indexes[1]], data[indexes[count]])</span></span><br><span class="line">    ;[this.#indexes[1], this.#indexes[this.#count]] = [this.#indexes[this.#count], this.#indexes[1]]</span><br><span class="line">    this.#count -= 1</span><br><span class="line">    shiftDown(this.#data, this.#indexes, 1, this.#count)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">  &#125;</span><br><span class="line">  extractMaxIndex () &#123;</span><br><span class="line">    const ret = this.#indexes[1] - 1</span><br><span class="line">    <span class="comment">// swap(data[indexes[1]], data[indexes[count]])</span></span><br><span class="line">    ;[this.#indexes[1], this.#indexes[this.#count]] = [this.#indexes[this.#count], this.#indexes[1]]</span><br><span class="line">    this.#count -= 1</span><br><span class="line">    shiftDown(this.#data, this.#indexes, 1, this.#count)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 将最大索引堆中索引为 i 的元素修改为 newItem</span></span><br><span class="line">  change (i, item) &#123;</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    this.#data[i] = item</span><br><span class="line">    <span class="comment">// 找到 indexes[j] = i, j 表示 data[i] 在堆中的位置</span></span><br><span class="line">    <span class="comment">// 之后 shiftUp(j), 再 shiftDown(j)</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = i; j &lt;= <span class="built_in">this</span>.size(); j++) &#123;</span><br><span class="line">      if (this.#indexes[j] === i) &#123;</span><br><span class="line">        shiftUp(this.#data, this.#indexes, j)</span><br><span class="line">        shiftDown(this.#data, this.#indexes, j, this.#count)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这个索引堆的类不仅实现了最基本的堆的操作，还实现了一些索引堆可以完成的特殊操作；而最重要的就是 <code>change</code> 操作，用户可以通过给定一个索引来方便的修改堆中某个元素的值。但可以注意到，修改完这个元素后，要使得堆继续形成最大堆，我们仍需要对新插入的元素进行 <code>shiftUp</code> 和 <code>shiftDown</code> 来维持堆的性质，而这使得修改元素的复杂度变成了 $O(n+log{n}) ~ O(n)$，这与堆的插入删除元素 $O(nlog{n})$ 的复杂度并不相符，我们可以尝试建立对<strong>索引的索引</strong>来优化这个过程：</p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/RevIndexMaxHeap.png"><img data-src="http://mitscherlich.me/assets/imooc-algorithms/RevIndexMaxHeap.png" alt="img"></a></p>
+<blockquote>
+<p>优化索引最大堆示意图</p>
+</blockquote>
+<p>用 <code>reverse</code> 数组来表示 <code>i</code> 在 <code>indexes</code>(堆)中的位置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">if </span><br><span class="line">	indexes[i] &#x3D; j</span><br><span class="line">	reverse[j] &#x3D; i</span><br><span class="line">then </span><br><span class="line">	indexes[reverse[i]] &#x3D; i</span><br><span class="line">	reverse[indexes[i]] &#x3D; i</span><br></pre></td></tr></table></figure>
+<p>这样，我们就可以在 $O(1)$ 内找到一个索引对应的元素：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shiftUpEnhance</span> (<span class="params">data, indexes, reverse, k</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> e = indexes[k]</span><br><span class="line">  <span class="keyword">while</span> (k &gt; <span class="number">1</span> &amp;&amp; data[indexes[<span class="built_in">Math</span>.floor(k / <span class="number">2</span>)]] &lt; data[e]) &#123;</span><br><span class="line">    <span class="comment">// swap(indexes[k/2], indexes[k])</span></span><br><span class="line">    indexes[k] = indexes[<span class="built_in">Math</span>.floor(k / <span class="number">2</span>)]</span><br><span class="line">    reverse[indexes[<span class="built_in">Math</span>.floor(k / <span class="number">2</span>)]] = <span class="built_in">Math</span>.floor(k / <span class="number">2</span>)</span><br><span class="line">    reverse[indexes[k]] = k</span><br><span class="line">    k = <span class="built_in">Math</span>.floor(k /= <span class="number">2</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  indexes[k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shiftDownEnhance</span> (<span class="params">data, indexes, reverse, k, count</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> e = indexes[k]</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">2</span> * k &lt;= count) &#123;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">2</span> * k <span class="comment">// 此轮循环中, swap(indexes[k], indexes[j])</span></span><br><span class="line">    <span class="keyword">if</span> (j + <span class="number">1</span> &lt;= count &amp;&amp; data[indexes[j + <span class="number">1</span>]] &gt; data[indexes[j]]) &#123;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (data[e] &gt;= data[indexes[j]]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// swap(indexes[k], indexes[j])</span></span><br><span class="line">    indexes[k] = indexes[j]</span><br><span class="line">    reverse[indexes[k]] = k</span><br><span class="line">    reverse[indexes[j]] = j</span><br><span class="line">    k = j</span><br><span class="line">  &#125;</span><br><span class="line">  indexes[k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IndexMaxHeap</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 构造函数, 构造一个空堆, 可容纳 capacity 个元素</span></span><br><span class="line">  <span class="keyword">constructor</span> (capacity) &#123;</span><br><span class="line">    this.#data = new Array(capacity + 1)</span><br><span class="line">    this.#indexes = new Array(capacity + 1)</span><br><span class="line">    this.#reverse = new Array(capacity + 1).fill(0) // 填入 0 使得默认的索引索引位置为 0 (总是无效的元素)</span><br><span class="line">    this.#count = 0</span><br><span class="line">    this.#capacity = capacity</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">  <span class="comment">// 传入的 i 是从 0 开始索引的</span></span><br><span class="line">  insert (i, item) &#123;</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    this.#data[this.#count + 1] = item</span><br><span class="line">    this.#indexes[this.#count + 1] = i</span><br><span class="line">    this.#reverse[i] = this.#count + 1</span><br><span class="line">    this.#count++</span><br><span class="line">    shiftUpEnhance(this.#data, this.#indexes, this.#reverse, this.#count)</span><br><span class="line">  &#125;</span><br><span class="line">  extractMax () &#123;</span><br><span class="line">    const ret = this.#data[this.#indexes[1]]</span><br><span class="line">    <span class="comment">// swap(data[indexes[1]], data[indexes[count]])</span></span><br><span class="line">    ;[this.#indexes[1], this.#indexes[this.#count]] = [this.#indexes[this.#count], this.#indexes[1]]</span><br><span class="line">    this.#reverse[this.#indexes[1]] = 1</span><br><span class="line">    this.#reverse[this.#indexes[this.#count]] = 0</span><br><span class="line">    this.#count -= 1</span><br><span class="line">    shiftDownEnhance(this.#data, this.#indexes, this.#reverse, 1, this.#count)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">  &#125;</span><br><span class="line">  extractMaxIndex () &#123;</span><br><span class="line">    const ret = this.#indexes[1] - 1</span><br><span class="line">    <span class="comment">// swap(data[indexes[1]], data[indexes[count]])</span></span><br><span class="line">    ;[this.#indexes[1], this.#indexes[this.#count]] = [this.#indexes[this.#count], this.#indexes[1]]</span><br><span class="line">    this.#reverse[this.#indexes[1]] = 1</span><br><span class="line">    this.#reverse[this.#indexes[this.#count]] = 0</span><br><span class="line">    this.#count -= 1</span><br><span class="line">    shiftDownEnhance(this.#data, this.#indexes, this.#reverse, 1, this.#count)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 将最大索引堆中索引为 i 的元素修改为 newItem</span></span><br><span class="line">  change (i, item) &#123;</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    this.#data[i] = item</span><br><span class="line">    <span class="comment">// 找到 indexes[j] = i, j 表示 data[i] 在堆中的位置</span></span><br><span class="line">    <span class="comment">// 之后 shiftUp(j), 再 shiftDown(j)</span></span><br><span class="line">    <span class="comment">// for (let j = i; j &lt;= this.size(); j++) &#123;</span></span><br><span class="line">    <span class="comment">//   if (this.#indexes[j] === i) &#123;</span></span><br><span class="line">    <span class="comment">//     shiftUpEnhance(this.#data, this.#indexes, j)</span></span><br><span class="line">    <span class="comment">//     shiftDownEnhance(this.#data, this.#indexes, j, this.#count)</span></span><br><span class="line">    <span class="comment">//     return</span></span><br><span class="line">    <span class="comment">//   &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 有了 reverse 之后,</span></span><br><span class="line">    <span class="comment">// 我们可以非常简单的通过reverse直接定位索引i在indexes中的位置</span></span><br><span class="line">    const j = this.#reverse[i]</span><br><span class="line">    shiftUpEnhance(this.#data, this.#indexes, this.#reverse, j)</span><br><span class="line">    shiftDownEnhance(this.#data, this.#indexes, this.#reverse, j, this.#count)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="排序总结"><a href="#排序总结" class="headerlink" title="排序总结"></a>排序总结</h3><p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/SortSummary.png"><img data-src="http://mitscherlich.me/assets/imooc-algorithms/SortSummary.png" alt="img"></a></p>
+<blockquote>
+<p>四大重要排序算法比较</p>
+</blockquote>
+<p>本系列的排序算法到这里就完结了。我们一共只为大家介绍了<strong>两</strong>类<strong>七</strong>种排序算法，大家也许还知道或者学习过其他更多的排序算法，这里限于篇幅就不一一为大家介绍了。</p>
+<p>我们主要学习的就是上图四种<strong>基于比较的排序算法</strong>。除了插入排序复杂度为 $O(n^2)$ 以外，其余几种排序算法复杂度均为 $O(nlog{n})$，但这也并不是说明插入排序不好，事实上我们在测试中可以发现在完全有序的数组上插入排序的复杂度退化为 $O(n)$，甚至优于同等的高级排序算法。这说明我们在编程开发时应学会结合实际情况，选择最优的排序算法，而不是只会做一个 <code>API caller</code>。</p>
+<h4 id="排序算法的稳定性"><a href="#排序算法的稳定性" class="headerlink" title="排序算法的稳定性"></a>排序算法的稳定性</h4><p>再看图中，我们看到了一个概念：<strong>稳定排序</strong>。这是指对于<strong>相等的</strong>元素，在排序前后，想等元素的<strong>相对位置</strong>没有发生改变。例如对一组学生成绩排序时，不仅要对成绩进行排序，还在在学生成绩想等时按姓名的字典序排序，很可能大部分时候原始数据都已经按姓名的字典序排好序了，但是快速排序和堆排序就有可能打乱原来的顺序。</p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/SortStable.png"><img data-src="http://mitscherlich.me/assets/imooc-algorithms/SortStable.png" alt="img"></a></p>
+<blockquote>
+<p>排序算法遇到相等的元素时行为有所不同</p>
+</blockquote>
+<p>但这并不是评价算法优劣的关键，因为我们可以通过修改排序比较的逻辑，或者干脆把比较的过程形成一个回调接口传递给用户，让用户自己完成比较的逻辑，从而使不稳定的排序变得稳定。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/03/30/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8BUbuntu%E6%90%AD%E5%BB%BAAFP%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ETimeMachine%E6%9C%8D%E5%8A%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/03/30/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8BUbuntu%E6%90%AD%E5%BB%BAAFP%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ETimeMachine%E6%9C%8D%E5%8A%A1/" class="post-title-link" itemprop="url">如何在Ubuntu上搭建TimeCapsule服务</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.03.30 14:42:35" itemprop="dateCreated datePublished" datetime="2016-03-30T14:42:35+08:00">2016.03.30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/03/30/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8BUbuntu%E6%90%AD%E5%BB%BAAFP%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ETimeMachine%E6%9C%8D%E5%8A%A1/" class="post-meta-item leancloud_visitors" data-flag-title="如何在Ubuntu上搭建TimeCapsule服务" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>一直是使用samba服务作为NAS，移动硬盘插在mac上作为TimeMachine备份盘，但这样还是太笨拙了。</p>
+<p>为了实现无线备份，一种方法是购买Apple TimeCapsule，另一种则是利用Linux设备来搭建<a target="_blank" rel="noopener" href="http://netatalk.sourceforge.net/">Netatalk</a>服务器。正好又一台闲置的Ubuntu机器，于是就决定采用这种方式。</p>
+<p><a target="_blank" rel="noopener" href="http://netatalk.sourceforge.net/">Netatalk</a>是一个开源的AppleTalk通信协议的实现，可以通过在Linux系统上搭建Netatalk服务来作为macOS设备的AFP服务器、AppleTalk路由等等。结合<a target="_blank" rel="noopener" href="https://github.com/lathiat/avahi">avahi</a>服务，可以达到Apple原生设备的效果。</p>
+<p>本文基于Ubuntu 18.04环境搭建，其他环境配置类似。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/03/30/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8BUbuntu%E6%90%AD%E5%BB%BAAFP%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ETimeMachine%E6%9C%8D%E5%8A%A1/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/01/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BTCP%E5%8D%8F%E8%AE%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/01/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BTCP%E5%8D%8F%E8%AE%AE/" class="post-title-link" itemprop="url">计算机网络之TCP协议</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.01.16 17:57:10" itemprop="dateCreated datePublished" datetime="2016-01-16T17:57:10+08:00">2016.01.16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/01/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BTCP%E5%8D%8F%E8%AE%AE/" class="post-meta-item leancloud_visitors" data-flag-title="计算机网络之TCP协议" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>TCP协议作为TCP/IP协议栈中最重要的一个协议之一，是因特网的基础。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/01/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BTCP%E5%8D%8F%E8%AE%AE/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
 </body>
-
-
-
 </html>

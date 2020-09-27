@@ -1,231 +1,294 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
-    
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-	    
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="很多 C 语言或者 Unix 开发者听到 select 想到的都是系统调用，而谈到 I&#x2F;O 模型时最终大都会提到基于 select、poll 和 epoll 等函数构建的 IO 多路复用模型。Go 语言的 select 与 C 语言中的 select 有着比较相似的功能。本节会介绍 Go 语言 select 常见的现象、数据结构以及四种不同情况下的实现原理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语言的select">
+<meta property="og:url" content="https://io.maywzh.com/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="很多 C 语言或者 Unix 开发者听到 select 想到的都是系统调用，而谈到 I&#x2F;O 模型时最终大都会提到基于 select、poll 和 epoll 等函数构建的 IO 多路复用模型。Go 语言的 select 与 C 语言中的 select 有着比较相似的功能。本节会介绍 Go 语言 select 常见的现象、数据结构以及四种不同情况下的实现原理。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img.draveness.me/2020-01-19-15794018429532-Golang-Select-Channels.png">
+<meta property="og:image" content="https://img.draveness.me/2020-01-18-15793463657473-golang-oselect-and-ocases.png">
+<meta property="og:image" content="https://img.draveness.me/2020-01-18-15793463657488-golang-runtime-selectgo.png">
+<meta property="og:image" content="https://img.draveness.me/2020-01-19-15794018429558-Golang-Select-Waiting.png">
+<meta property="article:published_time" content="2020-01-16T16:07:40.000Z">
+<meta property="article:modified_time" content="2020-09-27T07:48:52.159Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Go">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.draveness.me/2020-01-19-15794018429532-Golang-Select-Channels.png">
+
+<link rel="canonical" href="https://io.maywzh.com/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Go语言的select | Cult I.O.</title>
   
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
     </script>
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
 
 
 
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/uncategorized/">uncategorized</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
 
 
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
 </nav>
 
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>Go 语言的 select</h2>
-                </a>
-            </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>很多 C 语言或者 Unix 开发者听到 <code>select</code> 想到的都是系统调用，而谈到 I/O 模型时最终大都会提到基于 <code>select</code>、<code>poll</code> 和 <code>epoll</code> 等函数构建的 IO 多路复用模型。Go 语言的 <code>select</code> 与 C 语言中的 <code>select</code> 有着比较相似的功能。本节会介绍 Go 语言 <code>select</code> 常见的现象、数据结构以及四种不同情况下的实现原理。</p>
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Go语言的select
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020.01.17 00:07:40" itemprop="dateCreated datePublished" datetime="2020-01-17T00:07:40+08:00">2020.01.17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" class="post-meta-item leancloud_visitors" data-flag-title="Go语言的select" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>很多 C 语言或者 Unix 开发者听到 <code>select</code> 想到的都是系统调用，而谈到 I/O 模型时最终大都会提到基于 <code>select</code>、<code>poll</code> 和 <code>epoll</code> 等函数构建的 IO 多路复用模型。Go 语言的 <code>select</code> 与 C 语言中的 <code>select</code> 有着比较相似的功能。本节会介绍 Go 语言 <code>select</code> 常见的现象、数据结构以及四种不同情况下的实现原理。</p>
 <a id="more"></a>
 <p>C 语言中的 <code>select</code> 关键字可以同时监听多个文件描述符的可读或者可写的状态，Go 语言中的 <code>select</code> 关键字也能够让 Goroutine 同时等待多个 Channel 的可读或者可写，在多个文件或者 Channel 发生状态改变之前，<code>select</code> 会一直阻塞当前线程或者 Goroutine。</p>
-<p><img src="https://img.draveness.me/2020-01-19-15794018429532-Golang-Select-Channels.png" alt="Golang-Select-Channels"></p>
+<p><img data-src="https://img.draveness.me/2020-01-19-15794018429532-Golang-Select-Channels.png" alt="Golang-Select-Channels"></p>
 <p><strong>图 5-5 Select 和 Channels</strong></p>
 <p><code>select</code> 是一种与 <code>switch</code> 相似的控制结构，与 <code>switch</code> 不同的是，<code>select</code> 中虽然也有多个 <code>case</code>，但是这些 <code>case</code> 中的表达式必须都是 <a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-channel/">Channel</a> 的收发操作。下面的代码就展示了一个包含 Channel 收发操作的 <code>select</code> 结构：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">fibonacci</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> quit <span class="token keyword">chan</span> <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	x<span class="token punctuation">,</span> y <span class="token operator">:=</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span>
-	<span class="token keyword">for</span> <span class="token punctuation">&#123;</span>
-		<span class="token keyword">select</span> <span class="token punctuation">&#123;</span>
-		<span class="token keyword">case</span> c <span class="token operator">&lt;-</span> x<span class="token punctuation">:</span>
-			x<span class="token punctuation">,</span> y <span class="token operator">=</span> y<span class="token punctuation">,</span> x<span class="token operator">+</span>y
-		<span class="token keyword">case</span> <span class="token operator">&lt;-</span>quit<span class="token punctuation">:</span>
-			fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"quit"</span><span class="token punctuation">)</span>
-			<span class="token keyword">return</span>
-		<span class="token punctuation">&#125;</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fibonacci</span><span class="params">(c, quit <span class="keyword">chan</span> <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	x, y := <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> c &lt;- x:</span><br><span class="line">			x, y = y, x+y</span><br><span class="line">		<span class="keyword">case</span> &lt;-quit:</span><br><span class="line">			fmt.Println(<span class="string">&quot;quit&quot;</span>)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上述控制结构会等待 <code>c &lt;- x</code> 或者 <code>&lt;-quit</code> 两个表达式中任意一个的返回。无论哪一个表达式返回都会立刻执行 <code>case</code> 中的代码，当 <code>select</code> 中的两个 <code>case</code> 同时被触发时，就会随机选择一个 <code>case</code> 执行。</p>
-<h2><span id="现象">现象 </span></h2><p> 当我们在 Go 语言中使用 <code>select</code> 控制结构时，会遇到两个有趣的现象：</p>
+<h2 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h2><p>当我们在 Go 语言中使用 <code>select</code> 控制结构时，会遇到两个有趣的现象：</p>
 <ol>
 <li><code>select</code> 能在 Channel 上进行非阻塞的收发操作；</li>
 <li><code>select</code> 在遇到多个 Channel 同时响应时会随机挑选 <code>case</code> 执行；</li>
 </ol>
 <p>这两个现象是学习 <code>select</code> 时经常会遇到的，我们来深入了解具体的场景并分析这两个现象背后的设计原理。</p>
-<h3><span id="非阻塞的收发">非阻塞的收发 </span></h3><p> 在通常情况下，<code>select</code> 语句会阻塞当前 Goroutine 并等待多个 Channel 中的一个达到可以收发的状态。但是如果 <code>select</code> 控制结构中包含 <code>default</code> 语句，那么这个 <code>select</code> 语句在执行时会遇到以下两种情况：</p>
+<h3 id="非阻塞的收发"><a href="#非阻塞的收发" class="headerlink" title="非阻塞的收发"></a>非阻塞的收发</h3><p>在通常情况下，<code>select</code> 语句会阻塞当前 Goroutine 并等待多个 Channel 中的一个达到可以收发的状态。但是如果 <code>select</code> 控制结构中包含 <code>default</code> 语句，那么这个 <code>select</code> 语句在执行时会遇到以下两种情况：</p>
 <ol>
 <li>当存在可以收发的 Channel 时，直接处理该 Channel 对应的 <code>case</code>；</li>
 <li>当不存在可以收发的 Channel 是，执行 <code>default</code> 中的语句；</li>
 </ol>
 <p>当我们运行下面的代码时就不会阻塞当前的 Goroutine，它会直接执行 <code>default</code> 中的代码并返回。</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	ch <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token keyword">chan</span> <span class="token builtin">int</span><span class="token punctuation">)</span>
-	<span class="token keyword">select</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">case</span> i <span class="token operator">:=</span> <span class="token operator">&lt;-</span>ch<span class="token punctuation">:</span>
-		<span class="token function">println</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
-
-	<span class="token keyword">default</span><span class="token punctuation">:</span>
-		<span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"default"</span><span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-
-$ <span class="token keyword">go</span> run main<span class="token punctuation">.</span><span class="token keyword">go</span>
-<span class="token keyword">default</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	ch := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</span><br><span class="line">	<span class="keyword">select</span> &#123;</span><br><span class="line">	<span class="keyword">case</span> i := &lt;-ch:</span><br><span class="line">		<span class="built_in">println</span>(i)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		<span class="built_in">println</span>(<span class="string">&quot;default&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$ <span class="keyword">go</span> run main.<span class="keyword">go</span></span><br><span class="line"><span class="keyword">default</span></span><br></pre></td></tr></table></figure>
 <p>只要我们稍微想一下，就会发现 Go 语言设计的这个现象就非常合理。<code>select</code> 的作用就是同时监听多个 <code>case</code> 是否可以执行，如果多个 Channel 都不能执行，那么运行 <code>default</code> 中的代码也是理所当然的。</p>
 <p>非阻塞的 Channel 发送和接收操作还是很有必要的，在很多场景下我们不希望向 Channel 发送消息或者从 Channel 中接收消息会阻塞当前 Goroutine，我们只是想看看 Channel 的可读或者可写状态。下面就是一个常见的例子：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">errCh <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token keyword">chan</span> <span class="token builtin">error</span><span class="token punctuation">,</span> <span class="token function">len</span><span class="token punctuation">(</span>tasks<span class="token punctuation">)</span><span class="token punctuation">)</span>
-wg <span class="token operator">:=</span> sync<span class="token punctuation">.</span>WaitGroup<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-wg<span class="token punctuation">.</span><span class="token function">Add</span><span class="token punctuation">(</span><span class="token function">len</span><span class="token punctuation">(</span>tasks<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token keyword">for</span> i <span class="token operator">:=</span> <span class="token keyword">range</span> tasks <span class="token punctuation">&#123;</span>
-    <span class="token keyword">go</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">defer</span> wg<span class="token punctuation">.</span><span class="token function">Done</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-        <span class="token keyword">if</span> err <span class="token operator">:=</span> tasks<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">Run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
-            errCh <span class="token operator">&lt;-</span> err
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-wg<span class="token punctuation">.</span><span class="token function">Wait</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-
-<span class="token keyword">select</span> <span class="token punctuation">&#123;</span>
-<span class="token keyword">case</span> err <span class="token operator">:=</span> <span class="token operator">&lt;-</span>errCh<span class="token punctuation">:</span>
-    <span class="token keyword">return</span> err
-<span class="token keyword">default</span><span class="token punctuation">:</span>
-    <span class="token keyword">return</span> <span class="token boolean">nil</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">errCh := <span class="built_in">make</span>(<span class="keyword">chan</span> error, <span class="built_in">len</span>(tasks))</span><br><span class="line">wg := sync.WaitGroup&#123;&#125;</span><br><span class="line">wg.Add(<span class="built_in">len</span>(tasks))</span><br><span class="line"><span class="keyword">for</span> i := <span class="keyword">range</span> tasks &#123;</span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">defer</span> wg.Done()</span><br><span class="line">        <span class="keyword">if</span> err := tasks[i].Run(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">            errCh &lt;- err</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">&#125;</span><br><span class="line">wg.Wait()</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> err := &lt;-errCh:</span><br><span class="line">    <span class="keyword">return</span> err</span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在上面这段代码中，我们不关心到底多少个任务执行失败了，只关心是否存在返回错误的任务，最后的 <code>select</code> 语句就能很好地完成这个任务。然而使用 <code>select</code> 的语法不是最原始的设计，它在最初版本使用 <code>x, ok := &lt;-c</code> 的语法实现非阻塞的收发，以下是与非阻塞收发的相关提交：</p>
 <ol>
 <li><a target="_blank" rel="noopener" href="https://github.com/golang/go/commit/79fbbe37a76502e6f5f9647d2d82bab953ab1546#diff-fb0a5ae9dd70f0a43038d55c0204fdff">select default</a> 提交支持了 <code>select</code> 语句中的 <code>default</code> 情况；</li>
@@ -234,50 +297,17 @@ wg<span class="token punctuation">.</span><span class="token function">Wait</spa
 <li><a target="_blank" rel="noopener" href="https://github.com/golang/go/commit/8bf34e335686816f7fe7e28614b2c7a3e04e9e7c">gc, runtime: replace closed(c) with x, ok := &lt;-c</a> 提交使用 <code>x, ok := &lt;-c</code> 语法替代 <code>closed(c)</code> 语法判断 Channel 的关闭状态；</li>
 </ol>
 <p>我们可以从上面的几个提交中看到非阻塞收发从最初到现在的演变。</p>
-<h3><span id="随机执行">随机执行 </span></h3><p> 另一个使用 <code>select</code> 遇到的情况是同时有多个 <code>case</code> 就绪时，<code>select</code> 会选择那个 <code>case</code> 执行的问题，我们通过下面的代码可以简单了解一下：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	ch <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token keyword">chan</span> <span class="token builtin">int</span><span class="token punctuation">)</span>
-	<span class="token keyword">go</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-		<span class="token keyword">for</span> <span class="token keyword">range</span> time<span class="token punctuation">.</span><span class="token function">Tick</span><span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">*</span> time<span class="token punctuation">.</span>Second<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-			ch <span class="token operator">&lt;-</span> <span class="token number">0</span>
-		<span class="token punctuation">&#125;</span>
-	<span class="token punctuation">&#125;</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-
-	<span class="token keyword">for</span> <span class="token punctuation">&#123;</span>
-		<span class="token keyword">select</span> <span class="token punctuation">&#123;</span>
-		<span class="token keyword">case</span> <span class="token operator">&lt;-</span>ch<span class="token punctuation">:</span>
-			<span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"case1"</span><span class="token punctuation">)</span>
-		<span class="token keyword">case</span> <span class="token operator">&lt;-</span>ch<span class="token punctuation">:</span>
-			<span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"case2"</span><span class="token punctuation">)</span>
-		<span class="token punctuation">&#125;</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-
-$ <span class="token keyword">go</span> run main<span class="token punctuation">.</span><span class="token keyword">go</span>
-case1
-case2
-case1
-<span class="token operator">...</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="随机执行"><a href="#随机执行" class="headerlink" title="随机执行"></a>随机执行</h3><p>另一个使用 <code>select</code> 遇到的情况是同时有多个 <code>case</code> 就绪时，<code>select</code> 会选择那个 <code>case</code> 执行的问题，我们通过下面的代码可以简单了解一下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	ch := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> <span class="keyword">range</span> time.Tick(<span class="number">1</span> * time.Second) &#123;</span><br><span class="line">			ch &lt;- <span class="number">0</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> &lt;-ch:</span><br><span class="line">			<span class="built_in">println</span>(<span class="string">&quot;case1&quot;</span>)</span><br><span class="line">		<span class="keyword">case</span> &lt;-ch:</span><br><span class="line">			<span class="built_in">println</span>(<span class="string">&quot;case2&quot;</span>)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$ <span class="keyword">go</span> run main.<span class="keyword">go</span></span><br><span class="line">case1</span><br><span class="line">case2</span><br><span class="line">case1</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>从上述代码输出的结果中我们可以看到，<code>select</code> 在遇到多个 <code>&lt;-ch</code> 同时满足可读或者可写条件时会随机选择一个 <code>case</code> 执行其中的代码。</p>
 <p>这个设计是在十多年前被 <a target="_blank" rel="noopener" href="https://github.com/golang/go/commit/cb9b1038db77198c2b0961634cf161258af2374d">select</a> 提交引入并一直保留到现在的，虽然中间经历过一些修改<a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part2-foundation/ch05-keyword/golang-select/#fn:6">6</a>，但是语义一直都没有改变。在上面的代码中，两个 <code>case</code> 都是同时满足执行条件的，如果我们按照顺序依次判断，那么后面的条件永远都会得不到执行，而随机的引入就是为了避免饥饿问题的发生。</p>
-<h2><span id="数据结构">数据结构</span></h2><p><code>select</code> 在 Go 语言的源代码中不存在对应的结构体，但是 <code>select</code> 控制结构中的 <code>case</code> 却使用 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L28-L34"><code>runtime.scase</code></a> 结构体来表示：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> scase <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span>
-	c           <span class="token operator">*</span>hchan
-	elem        unsafe<span class="token punctuation">.</span>Pointer
-	kind        <span class="token builtin">uint16</span>
-	pc          <span class="token builtin">uintptr</span>
-	releasetime <span class="token builtin">int64</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p><code>select</code> 在 Go 语言的源代码中不存在对应的结构体，但是 <code>select</code> 控制结构中的 <code>case</code> 却使用 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L28-L34"><code>runtime.scase</code></a> 结构体来表示：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> scase <span class="keyword">struct</span> &#123;</span><br><span class="line">	c           *hchan</span><br><span class="line">	elem        unsafe.Pointer</span><br><span class="line">	kind        <span class="keyword">uint16</span></span><br><span class="line">	pc          <span class="keyword">uintptr</span></span><br><span class="line">	releasetime <span class="keyword">int64</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>因为非默认的 <code>case</code> 中都与 Channel 的发送和接收有关，所以 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L28-L34"><code>runtime.scase</code></a> 结构体中也包含一个 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L32-L51"><code>runtime.hchan</code></a> 类型的字段存储 <code>case</code> 中使用的 Channel；除此之外，<code>elem</code> 是接收或者发送数据的变量地址、<code>kind</code> 表示 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L28-L34"><code>runtime.scase</code></a> 的种类，总共包含以下四种：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">const</span> <span class="token punctuation">(</span>
-	caseNil <span class="token operator">=</span> <span class="token boolean">iota</span>
-	caseRecv
-	caseSend
-	caseDefault
-<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	caseNil = <span class="literal">iota</span></span><br><span class="line">	caseRecv</span><br><span class="line">	caseSend</span><br><span class="line">	caseDefault</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 <p>这四种常量分别表示不同类型的 <code>case</code>，相信它们的命名已经能够充分帮助我们理解它们的作用了，所以这里也不一一介绍了。</p>
-<h2><span id="实现原理">实现原理</span></h2><p><code>select</code> 语句在编译期间会被转换成 <code>OSELECT</code> 节点。每一个 <code>OSELECT</code> 节点都会持有一组 <code>OCASE</code> 节点，如果 <code>OCASE</code> 的执行条件是空，那就意味着这是一个 <code>default</code> 节点:</p>
-<p><img src="https://img.draveness.me/2020-01-18-15793463657473-golang-oselect-and-ocases.png" alt="golang-oselect-and-ocases"></p>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p><code>select</code> 语句在编译期间会被转换成 <code>OSELECT</code> 节点。每一个 <code>OSELECT</code> 节点都会持有一组 <code>OCASE</code> 节点，如果 <code>OCASE</code> 的执行条件是空，那就意味着这是一个 <code>default</code> 节点:</p>
+<p><img data-src="https://img.draveness.me/2020-01-18-15793463657473-golang-oselect-and-ocases.png" alt="golang-oselect-and-ocases"></p>
 <p><strong>图 5-7 OSELECT 和多个 OCASE</strong></p>
 <p>上图展示的就是 <code>select</code> 语句在编译期间的结构，每一个 <code>OCASE</code> 既包含执行条件也包含满足条件后执行的代码。</p>
 <p>编译器在中间代码生成期间会根据 <code>select</code> 中 <code>case</code> 的不同对控制语句进行优化，这一过程都发生在 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/c729116332ffb66a21dd587e3ee003cb8d0b16fe/src/cmd/compile/internal/gc/select.go#L108-L370"><code>cmd/compile/internal/gc.walkselectcases</code></a> 函数中，我们在这里会分四种情况介绍处理的过程和结果：</p>
@@ -288,143 +318,48 @@ case1
 <li><code>select</code> 存在多个 <code>case</code>；</li>
 </ol>
 <p>上述的四种情况不仅会涉及编译器的重写和优化，还会涉及 Go 语言的运行时机制，我们会从编译期间和运行时两方面分析上述情况。</p>
-<h3><span id="直接阻塞">直接阻塞 </span></h3><p> 首先介绍的是最简单的情况，也就是当 <code>select</code> 结构中不包含任何 <code>case</code> 时编译器是如何进行处理的，我们截取 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/c729116332ffb66a21dd587e3ee003cb8d0b16fe/src/cmd/compile/internal/gc/select.go#L108-L370"><code>cmd/compile/internal/gc.walkselectcases</code></a> 函数的前几行代码：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">walkselectcases</span><span class="token punctuation">(</span>cases <span class="token operator">*</span>Nodes<span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">*</span>Node <span class="token punctuation">&#123;</span>
-	n <span class="token operator">:=</span> cases<span class="token punctuation">.</span><span class="token function">Len</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-
-	<span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">&#123;</span>
-		<span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">*</span>Node<span class="token punctuation">&#123;</span><span class="token function">mkcall</span><span class="token punctuation">(</span><span class="token string">"block"</span><span class="token punctuation">,</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> <span class="token boolean">nil</span><span class="token punctuation">)</span><span class="token punctuation">&#125;</span>
-	<span class="token punctuation">&#125;</span>
-	<span class="token operator">...</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="直接阻塞"><a href="#直接阻塞" class="headerlink" title="直接阻塞"></a>直接阻塞</h3><p>首先介绍的是最简单的情况，也就是当 <code>select</code> 结构中不包含任何 <code>case</code> 时编译器是如何进行处理的，我们截取 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/c729116332ffb66a21dd587e3ee003cb8d0b16fe/src/cmd/compile/internal/gc/select.go#L108-L370"><code>cmd/compile/internal/gc.walkselectcases</code></a> 函数的前几行代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">walkselectcases</span><span class="params">(cases *Nodes)</span> []*<span class="title">Node</span></span> &#123;</span><br><span class="line">	n := cases.Len()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> n == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> []*Node&#123;mkcall(<span class="string">&quot;block&quot;</span>, <span class="literal">nil</span>, <span class="literal">nil</span>)&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这段代码非常简单并且容易理解，它直接将类似 <code>select &#123;&#125;</code> 的空语句转换成调用 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/c112289ee4141ebc31db50328c355b01278b987b/src/runtime/select.go#L104-L106"><code>runtime.block</code></a> 函数：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">block</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token function">gopark</span><span class="token punctuation">(</span><span class="token boolean">nil</span><span class="token punctuation">,</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> waitReasonSelectNoCases<span class="token punctuation">,</span> traceEvGoStop<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">block</span><span class="params">()</span></span> &#123;</span><br><span class="line">	gopark(<span class="literal">nil</span>, <span class="literal">nil</span>, waitReasonSelectNoCases, traceEvGoStop, <span class="number">1</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/c112289ee4141ebc31db50328c355b01278b987b/src/runtime/select.go#L104-L106"><code>runtime.block</code></a> 函数的实现非常简单，它会调用 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/c112289ee4141ebc31db50328c355b01278b987b/src/runtime/proc.go#L287-L305"><code>runtime.gopark</code></a> 让出当前 Goroutine 对处理器的使用权，传入的等待原因是 <code>waitReasonSelectNoCases</code>。</p>
 <p>简单总结一下，空的 <code>select</code> 语句会直接阻塞当前的 Goroutine，导致 Goroutine 进入无法被唤醒的永久休眠状态。</p>
-<h3><span id="单一管道">单一管道 </span></h3><p> 如果当前的 <code>select</code> 条件只包含一个 <code>case</code>，那么就会将 <code>select</code> 改写成 <code>if</code> 条件语句。下面展示了原始的 <code>select</code> 语句和被改写、优化后的代码：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// 改写前</span>
-<span class="token keyword">select</span> <span class="token punctuation">&#123;</span>
-<span class="token keyword">case</span> v<span class="token punctuation">,</span> ok <span class="token operator">&lt;-</span>ch<span class="token punctuation">:</span> <span class="token comment">// case ch &lt;- v</span>
-    <span class="token operator">...</span>    
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">// 改写后</span>
-<span class="token keyword">if</span> ch <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">block</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-v<span class="token punctuation">,</span> ok <span class="token operator">:=</span> <span class="token operator">&lt;-</span>ch <span class="token comment">// case ch &lt;- v</span>
-<span class="token operator">...</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="单一管道"><a href="#单一管道" class="headerlink" title="单一管道"></a>单一管道</h3><p>如果当前的 <code>select</code> 条件只包含一个 <code>case</code>，那么就会将 <code>select</code> 改写成 <code>if</code> 条件语句。下面展示了原始的 <code>select</code> 语句和被改写、优化后的代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 改写前</span></span><br><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> v, ok &lt;-ch: <span class="comment">// case ch &lt;- v</span></span><br><span class="line">    ...    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 改写后</span></span><br><span class="line"><span class="keyword">if</span> ch == <span class="literal">nil</span> &#123;</span><br><span class="line">    block()</span><br><span class="line">&#125;</span><br><span class="line">v, ok := &lt;-ch <span class="comment">// case ch &lt;- v</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p><a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/c729116332ffb66a21dd587e3ee003cb8d0b16fe/src/cmd/compile/internal/gc/select.go#L108-L370"><code>cmd/compile/internal/gc.walkselectcases</code></a> 在处理单操作 <code>select</code> 语句时，会根据 Channel 的收发情况生成不同的语句。当 <code>case</code> 中的 Channel 是空指针时，就会直接挂起当前 Goroutine 并永久休眠。</p>
-<h3><span id="非阻塞操作">非阻塞操作 </span></h3><p> 当 <code>select</code> 中仅包含两个 <code>case</code>，并且其中一个是 <code>default</code> 时，Go 语言的编译器就会认为这是一次非阻塞的收发操作。<a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/c729116332ffb66a21dd587e3ee003cb8d0b16fe/src/cmd/compile/internal/gc/select.go#L108-L370"><code>cmd/compile/internal/gc.walkselectcases</code></a> 函数会对这种情况单独处理，不过在正式优化之前，该函数会将 <code>case</code> 中的所有 Channel 都转换成指向 Channel 的地址。我们会分别介绍非阻塞发送和非阻塞接收时，编译器进行的不同优化。</p>
-<h4><span id="发送">发送 </span></h4><p> 首先是 Channel 的发送过程，当 <code>case</code> 中表达式的类型是 <code>OSEND</code> 时，编译器会使用 <code>if/else</code> 语句和 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L662-L664"><code>runtime.selectnbsend</code></a> 函数改写代码：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">select</span> <span class="token punctuation">&#123;</span>
-<span class="token keyword">case</span> ch <span class="token operator">&lt;-</span> i<span class="token punctuation">:</span>
-    <span class="token operator">...</span>
-<span class="token keyword">default</span><span class="token punctuation">:</span>
-    <span class="token operator">...</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">if</span> <span class="token function">selectnbsend</span><span class="token punctuation">(</span>ch<span class="token punctuation">,</span> i<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token operator">...</span>
-<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-    <span class="token operator">...</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="非阻塞操作"><a href="#非阻塞操作" class="headerlink" title="非阻塞操作"></a>非阻塞操作</h3><p>当 <code>select</code> 中仅包含两个 <code>case</code>，并且其中一个是 <code>default</code> 时，Go 语言的编译器就会认为这是一次非阻塞的收发操作。<a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/c729116332ffb66a21dd587e3ee003cb8d0b16fe/src/cmd/compile/internal/gc/select.go#L108-L370"><code>cmd/compile/internal/gc.walkselectcases</code></a> 函数会对这种情况单独处理，不过在正式优化之前，该函数会将 <code>case</code> 中的所有 Channel 都转换成指向 Channel 的地址。我们会分别介绍非阻塞发送和非阻塞接收时，编译器进行的不同优化。</p>
+<h4 id="发送"><a href="#发送" class="headerlink" title="发送"></a>发送</h4><p>首先是 Channel 的发送过程，当 <code>case</code> 中表达式的类型是 <code>OSEND</code> 时，编译器会使用 <code>if/else</code> 语句和 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L662-L664"><code>runtime.selectnbsend</code></a> 函数改写代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> ch &lt;- i:</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> selectnbsend(ch, i) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这段代码中最重要的就是 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L662-L664"><code>runtime.selectnbsend</code></a> 函数，它为我们提供了向 Channel 非阻塞地发送数据的能力。我们在 <a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-channel/">Channel</a> 一节介绍了向 Channel 发送数据的 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L157-L278"><code>runtime.chansend</code></a> 函数包含一个 <code>block</code> 参数，该参数会决定这一次的发送是不是阻塞的：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">selectnbsend</span><span class="token punctuation">(</span>c <span class="token operator">*</span>hchan<span class="token punctuation">,</span> elem unsafe<span class="token punctuation">.</span>Pointer<span class="token punctuation">)</span> <span class="token punctuation">(</span>selected <span class="token builtin">bool</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">return</span> <span class="token function">chansend</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> elem<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token function">getcallerpc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">selectnbsend</span><span class="params">(c *hchan, elem unsafe.Pointer)</span> <span class="params">(selected <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> chansend(c, elem, <span class="literal">false</span>, getcallerpc())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>由于我们向 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L157-L278"><code>runtime.chansend</code></a> 函数传入了 <code>false</code>，所以哪怕是不存在接收方或者缓冲区空间不足都不会阻塞当前 Goroutine 而是会直接返回。</p>
-<h4><span id="接收">接收 </span></h4><p> 由于从 Channel 中接收数据可能会返回一个或者两个值，所以接受数据的情况会比发送稍显复杂，不过改写的套路是差不多的：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// 改写前</span>
-<span class="token keyword">select</span> <span class="token punctuation">&#123;</span>
-<span class="token keyword">case</span> v <span class="token operator">&lt;-</span> ch<span class="token punctuation">:</span> <span class="token comment">// case v, ok &lt;- ch:</span>
-    <span class="token operator">...</span><span class="token operator">...</span>
-<span class="token keyword">default</span><span class="token punctuation">:</span>
-    <span class="token operator">...</span><span class="token operator">...</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">// 改写后</span>
-<span class="token keyword">if</span> <span class="token function">selectnbrecv</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>v<span class="token punctuation">,</span> ch<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">// if selectnbrecv2(&amp;v, &amp;ok, ch) &#123;</span>
-    <span class="token operator">...</span>
-<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-    <span class="token operator">...</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="接收"><a href="#接收" class="headerlink" title="接收"></a>接收</h4><p>由于从 Channel 中接收数据可能会返回一个或者两个值，所以接受数据的情况会比发送稍显复杂，不过改写的套路是差不多的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 改写前</span></span><br><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> v &lt;- ch: <span class="comment">// case v, ok &lt;- ch:</span></span><br><span class="line">    ......</span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 改写后</span></span><br><span class="line"><span class="keyword">if</span> selectnbrecv(&amp;v, ch) &#123; <span class="comment">// if selectnbrecv2(&amp;v, &amp;ok, ch) &#123;</span></span><br><span class="line">    ...</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>返回值数量不同会导致使用函数的不同，两个用于非阻塞接收消息的函数 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L683-L686"><code>runtime.selectnbrecv</code></a> 和 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L705-L709"><code>runtime.selectnbrecv2</code></a> 只是对 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L448-L579"><code>runtime.chanrecv</code></a> 返回值的处理稍有不同：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">selectnbrecv</span><span class="token punctuation">(</span>elem unsafe<span class="token punctuation">.</span>Pointer<span class="token punctuation">,</span> c <span class="token operator">*</span>hchan<span class="token punctuation">)</span> <span class="token punctuation">(</span>selected <span class="token builtin">bool</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	selected<span class="token punctuation">,</span> <span class="token boolean">_</span> <span class="token operator">=</span> <span class="token function">chanrecv</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> elem<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
-	<span class="token keyword">return</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">func</span> <span class="token function">selectnbrecv2</span><span class="token punctuation">(</span>elem unsafe<span class="token punctuation">.</span>Pointer<span class="token punctuation">,</span> received <span class="token operator">*</span><span class="token builtin">bool</span><span class="token punctuation">,</span> c <span class="token operator">*</span>hchan<span class="token punctuation">)</span> <span class="token punctuation">(</span>selected <span class="token builtin">bool</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	selected<span class="token punctuation">,</span> <span class="token operator">*</span>received <span class="token operator">=</span> <span class="token function">chanrecv</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> elem<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
-	<span class="token keyword">return</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">selectnbrecv</span><span class="params">(elem unsafe.Pointer, c *hchan)</span> <span class="params">(selected <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">	selected, _ = chanrecv(c, elem, <span class="literal">false</span>)</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">selectnbrecv2</span><span class="params">(elem unsafe.Pointer, received *<span class="keyword">bool</span>, c *hchan)</span> <span class="params">(selected <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">	selected, *received = chanrecv(c, elem, <span class="literal">false</span>)</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>因为接收方不需要，所以 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L683-L686"><code>runtime.selectnbrecv</code></a> 会直接忽略返回的布尔值，而 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L705-L709"><code>runtime.selectnbrecv2</code></a> 会将布尔值回传给调用方。与 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L157-L278"><code>runtime.chansend</code></a> 一样，<a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L448-L579"><code>runtime.chanrecv</code></a> 也提供了一个 <code>block</code> 参数用于控制这一次接收是否阻塞。</p>
-<h3><span id="常见流程">常见流程 </span></h3><p> 在默认的情况下，编译器会使用如下的流程处理 <code>select</code> 语句：</p>
+<h3 id="常见流程"><a href="#常见流程" class="headerlink" title="常见流程"></a>常见流程</h3><p>在默认的情况下，编译器会使用如下的流程处理 <code>select</code> 语句：</p>
 <ol>
 <li>将所有的 <code>case</code> 转换成包含 Channel 以及类型等信息的 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L28-L34"><code>runtime.scase</code></a> 结构体；</li>
 <li>调用运行时函数 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L118-L497"><code>runtime.selectgo</code></a> 从多个准备就绪的 Channel 中选择一个可执行的 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L28-L34"><code>runtime.scase</code></a> 结构体；</li>
 <li>通过 <code>for</code> 循环生成一组 <code>if</code> 语句，在语句中判断自己是不是被选中的 <code>case</code></li>
 </ol>
 <p>一个包含三个 <code>case</code> 的正常 <code>select</code> 语句其实会被展开成如下所示的逻辑，我们可以看到其中处理的三个部分：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">selv <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span>scase<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-order <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">]</span><span class="token builtin">uint16</span>
-<span class="token keyword">for</span> i<span class="token punctuation">,</span> cas <span class="token operator">:=</span> <span class="token keyword">range</span> cases <span class="token punctuation">&#123;</span>
-    c <span class="token operator">:=</span> scase<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-    c<span class="token punctuation">.</span>kind <span class="token operator">=</span> <span class="token operator">...</span>
-    c<span class="token punctuation">.</span>elem <span class="token operator">=</span> <span class="token operator">...</span>
-    c<span class="token punctuation">.</span>c <span class="token operator">=</span> <span class="token operator">...</span>
-<span class="token punctuation">&#125;</span>
-chosen<span class="token punctuation">,</span> revcOK <span class="token operator">:=</span> <span class="token function">selectgo</span><span class="token punctuation">(</span>selv<span class="token punctuation">,</span> order<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>
-<span class="token keyword">if</span> chosen <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">&#123;</span>
-    <span class="token operator">...</span>
-    <span class="token keyword">break</span>
-<span class="token punctuation">&#125;</span>
-<span class="token keyword">if</span> chosen <span class="token operator">==</span> <span class="token number">1</span> <span class="token punctuation">&#123;</span>
-    <span class="token operator">...</span>
-    <span class="token keyword">break</span>
-<span class="token punctuation">&#125;</span>
-<span class="token keyword">if</span> chosen <span class="token operator">==</span> <span class="token number">2</span> <span class="token punctuation">&#123;</span>
-    <span class="token operator">...</span>
-    <span class="token keyword">break</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">selv := [<span class="number">3</span>]scase&#123;&#125;</span><br><span class="line">order := [<span class="number">6</span>]<span class="keyword">uint16</span></span><br><span class="line"><span class="keyword">for</span> i, cas := <span class="keyword">range</span> cases &#123;</span><br><span class="line">    c := scase&#123;&#125;</span><br><span class="line">    c.kind = ...</span><br><span class="line">    c.elem = ...</span><br><span class="line">    c.c = ...</span><br><span class="line">&#125;</span><br><span class="line">chosen, revcOK := selectgo(selv, order, <span class="number">3</span>)</span><br><span class="line"><span class="keyword">if</span> chosen == <span class="number">0</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> chosen == <span class="number">1</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> chosen == <span class="number">2</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>展开后的代码片段中最重要的就是用于选择待执行 <code>case</code> 的运行时函数 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L118-L497"><code>runtime.selectgo</code></a>，这也是我们要关注的重点。因为这个函数的实现比较复杂， 所以这里分两部分分析它的执行过程：</p>
 <ol>
 <li>执行一些必要的初始化操作并确定 <code>case</code> 的处理顺序；</li>
 <li>在循环中根据 <code>case</code> 的类型做出不同的处理；</li>
 </ol>
-<h4><span id="初始化">初始化</span></h4><p><a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L118-L497"><code>runtime.selectgo</code></a> 函数首先会进行执行必要的初始化操作并决定处理 <code>case</code> 的两个顺序 — 轮询顺序 <code>pollOrder</code> 和加锁顺序 <code>lockOrder</code>：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">selectgo</span><span class="token punctuation">(</span>cas0 <span class="token operator">*</span>scase<span class="token punctuation">,</span> order0 <span class="token operator">*</span><span class="token builtin">uint16</span><span class="token punctuation">,</span> ncases <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">bool</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	cas1 <span class="token operator">:=</span> <span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">[</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">16</span><span class="token punctuation">]</span>scase<span class="token punctuation">)</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span>cas0<span class="token punctuation">)</span><span class="token punctuation">)</span>
-	order1 <span class="token operator">:=</span> <span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">[</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">17</span><span class="token punctuation">]</span><span class="token builtin">uint16</span><span class="token punctuation">)</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span>order0<span class="token punctuation">)</span><span class="token punctuation">)</span>
-	
-	scases <span class="token operator">:=</span> cas1<span class="token punctuation">[</span><span class="token punctuation">:</span>ncases<span class="token punctuation">:</span>ncases<span class="token punctuation">]</span>
-	pollorder <span class="token operator">:=</span> order1<span class="token punctuation">[</span><span class="token punctuation">:</span>ncases<span class="token punctuation">:</span>ncases<span class="token punctuation">]</span>
-	lockorder <span class="token operator">:=</span> order1<span class="token punctuation">[</span>ncases<span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">:</span>ncases<span class="token punctuation">:</span>ncases<span class="token punctuation">]</span>
-	<span class="token keyword">for</span> i <span class="token operator">:=</span> <span class="token keyword">range</span> scases <span class="token punctuation">&#123;</span>
-		cas <span class="token operator">:=</span> <span class="token operator">&amp;</span>scases<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
-	<span class="token punctuation">&#125;</span>
-
-	<span class="token keyword">for</span> i <span class="token operator">:=</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> ncases<span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
-		j <span class="token operator">:=</span> <span class="token function">fastrandn</span><span class="token punctuation">(</span><span class="token function">uint32</span><span class="token punctuation">(</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-		pollorder<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> pollorder<span class="token punctuation">[</span>j<span class="token punctuation">]</span>
-		pollorder<span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">uint16</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-
-	<span class="token comment">// 根据 Channel 的地址排序确定加锁顺序</span>
-	<span class="token operator">...</span>
-	<span class="token function">sellock</span><span class="token punctuation">(</span>scases<span class="token punctuation">,</span> lockorder<span class="token punctuation">)</span>
-	<span class="token operator">...</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><p><a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L118-L497"><code>runtime.selectgo</code></a> 函数首先会进行执行必要的初始化操作并决定处理 <code>case</code> 的两个顺序 — 轮询顺序 <code>pollOrder</code> 和加锁顺序 <code>lockOrder</code>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">selectgo</span><span class="params">(cas0 *scase, order0 *<span class="keyword">uint16</span>, ncases <span class="keyword">int</span>)</span> <span class="params">(<span class="keyword">int</span>, <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">	cas1 := (*[<span class="number">1</span> &lt;&lt; <span class="number">16</span>]scase)(unsafe.Pointer(cas0))</span><br><span class="line">	order1 := (*[<span class="number">1</span> &lt;&lt; <span class="number">17</span>]<span class="keyword">uint16</span>)(unsafe.Pointer(order0))</span><br><span class="line">	</span><br><span class="line">	scases := cas1[:ncases:ncases]</span><br><span class="line">	pollorder := order1[:ncases:ncases]</span><br><span class="line">	lockorder := order1[ncases:][:ncases:ncases]</span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> scases &#123;</span><br><span class="line">		cas := &amp;scases[i]</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">1</span>; i &lt; ncases; i++ &#123;</span><br><span class="line">		j := fastrandn(<span class="keyword">uint32</span>(i + <span class="number">1</span>))</span><br><span class="line">		pollorder[i] = pollorder[j]</span><br><span class="line">		pollorder[j] = <span class="keyword">uint16</span>(i)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 根据 Channel 的地址排序确定加锁顺序</span></span><br><span class="line">	...</span><br><span class="line">	sellock(scases, lockorder)</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>轮询顺序 <code>pollOrder</code> 和加锁顺序 <code>lockOrder</code> 分别是通过以下的方式确认的：</p>
 <ul>
 <li>轮询顺序：通过 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/383b447e0da5bd1fcdc2439230b5a1d3e3402117/src/runtime/stubs.go#L114-L118"><code>runtime.fastrandn</code></a> 函数引入随机性；</li>
 <li>加锁顺序：按照 Channel 的地址排序后确定加锁顺序；</li>
 </ul>
 <p>随机的轮询顺序可以避免 Channel 的饥饿问题，保证公平性；而根据 Channel 的地址顺序确定加锁顺序能够避免死锁的发生。这段代码最后调用的 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L45-L54"><code>runtime.sellock</code></a> 函数会按照之前生成的加锁顺序锁定 <code>select</code> 语句中包含所有的 Channel。</p>
-<h4><span id="循环">循环 </span></h4><p> 当我们为 <code>select</code> 语句锁定了所有 Channel 之后就会进入 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L118-L497"><code>runtime.selectgo</code></a> 函数的主循环，它会分三个阶段查找或者等待某个 Channel 准备就绪：</p>
+<h4 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h4><p>当我们为 <code>select</code> 语句锁定了所有 Channel 之后就会进入 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L118-L497"><code>runtime.selectgo</code></a> 函数的主循环，它会分三个阶段查找或者等待某个 Channel 准备就绪：</p>
 <ol>
 <li>查找是否已经存在准备就绪的 Channel，即可以执行收发操作；</li>
 <li>将当前 Goroutine 加入 Channel 对应的收发队列上并等待其他 Goroutine 的唤醒；</li>
@@ -443,25 +378,13 @@ chosen<span class="token punctuation">,</span> revcOK <span class="token operato
 <p>我们先来分析循环执行的第一个阶段，查找已经准备就绪的 Channel。循环会遍历所有的 <code>case</code> 并找到需要被唤起的 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/cfe3cd903f018dec3cb5997d53b1744df4e53909/src/runtime/runtime2.go#L342-L368"><code>runtime.sudog</code></a> 结构，在这个阶段，我们会根据 <code>case</code> 的四种类型分别处理：</p>
 <ol>
 <li><p>```<br>caseNil</p>
-<pre class="line-numbers language-none"><code class="language-none">
-：当前
-
- 
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">：当前</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>case</p>
-<pre class="line-numbers language-none"><code class="language-none">
-    
-
-   不包含 Channel；
-
-   - 这种 &#96;case&#96; 会被跳过；
-
-2. &#96;&#96;&#96;
-   caseRecv<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">   不包含 Channel；</span><br><span class="line"></span><br><span class="line">   - 这种 `case` 会被跳过；</span><br><span class="line"></span><br><span class="line">2. ```</span><br><span class="line">   caseRecv</span><br></pre></td></tr></table></figure>
 <p>：当前</p>
 </li>
 </ol>
-   <pre class="line-numbers language-none"><code class="language-none">case<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+   <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span></span><br></pre></td></tr></table></figure>
 <p>   会从 Channel 中接收数据；</p>
 <ul>
 <li>如果当前 Channel 的 <code>sendq</code> 上有等待的 Goroutine，就会跳到 <code>recv</code> 标签并从缓冲区读取数据后将等待 Goroutine 中的数据放入到缓冲区中相同的位置；</li>
@@ -470,159 +393,54 @@ chosen<span class="token punctuation">,</span> revcOK <span class="token operato
 </ul>
 <ol>
 <li><p>```<br>caseSend</p>
-<pre class="line-numbers language-none"><code class="language-none">
-：当前
-
- 
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">：当前</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>case</p>
-<pre class="line-numbers language-none"><code class="language-none">
-    
-
-   会向 Channel 发送数据；
-
-   - 如果当前 Channel 已经被关，闭就会直接跳到 &#96;sclose&#96; 标签，触发 &#96;panic&#96; 尝试中止程序；
-   - 如果当前 Channel 的 &#96;recvq&#96; 上有等待的 Goroutine，就会跳到 &#96;send&#96; 标签向 Channel 发送数据；
-   - 如果当前 Channel 的缓冲区存在空闲位置，就会将待发送的数据存入缓冲区；
-
-4. &#96;&#96;&#96;
-   caseDefault<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">   会向 Channel 发送数据；</span><br><span class="line"></span><br><span class="line">   - 如果当前 Channel 已经被关，闭就会直接跳到 `sclose` 标签，触发 `panic` 尝试中止程序；</span><br><span class="line">   - 如果当前 Channel 的 `recvq` 上有等待的 Goroutine，就会跳到 `send` 标签向 Channel 发送数据；</span><br><span class="line">   - 如果当前 Channel 的缓冲区存在空闲位置，就会将待发送的数据存入缓冲区；</span><br><span class="line"></span><br><span class="line">4. ```</span><br><span class="line">   caseDefault</span><br></pre></td></tr></table></figure>
 <p>：当前</p>
 </li>
 </ol>
-   <pre class="line-numbers language-none"><code class="language-none">case<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+   <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span></span><br></pre></td></tr></table></figure>
 <p>   为</p>
-   <pre class="line-numbers language-none"><code class="language-none">default<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+   <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">default</span></span><br></pre></td></tr></table></figure>
 <p>   语句；</p>
 <ul>
 <li>表示前面的所有 <code>case</code> 都没有被执行，这里会解锁所有 Channel 并返回，意味着当前 <code>select</code> 结构中的收发都是非阻塞的；</li>
 </ul>
-<p><img src="https://img.draveness.me/2020-01-18-15793463657488-golang-runtime-selectgo.png" alt="golang-runtime-selectgo"></p>
+<p><img data-src="https://img.draveness.me/2020-01-18-15793463657488-golang-runtime-selectgo.png" alt="golang-runtime-selectgo"></p>
 <p><strong>图 5-8 运行时 selectgo 函数</strong></p>
 <p>第一阶段的主要职责是查找所有 <code>case</code> 中 Channel 是否有可以立刻被处理的情况。无论是在包含等待的 Goroutine 还是缓冲区中存在数据，只要满足条件就会立刻处理，如果不能立刻找到活跃的 Channel 就会进入循环的下一阶段，按照需要将当前的 Goroutine 加入到 Channel 的 <code>sendq</code> 或者 <code>recvq</code> 队列中：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">selectgo</span><span class="token punctuation">(</span>cas0 <span class="token operator">*</span>scase<span class="token punctuation">,</span> order0 <span class="token operator">*</span><span class="token builtin">uint16</span><span class="token punctuation">,</span> ncases <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">bool</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token operator">...</span>
-	gp <span class="token operator">=</span> <span class="token function">getg</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	nextp <span class="token operator">=</span> <span class="token operator">&amp;</span>gp<span class="token punctuation">.</span>waiting
-	<span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> casei <span class="token operator">:=</span> <span class="token keyword">range</span> lockorder <span class="token punctuation">&#123;</span>
-		casi <span class="token operator">=</span> <span class="token function">int</span><span class="token punctuation">(</span>casei<span class="token punctuation">)</span>
-		cas <span class="token operator">=</span> <span class="token operator">&amp;</span>scases<span class="token punctuation">[</span>casi<span class="token punctuation">]</span>
-		c <span class="token operator">=</span> cas<span class="token punctuation">.</span>c
-		sg <span class="token operator">:=</span> <span class="token function">acquireSudog</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-		sg<span class="token punctuation">.</span>g <span class="token operator">=</span> gp
-		sg<span class="token punctuation">.</span>c <span class="token operator">=</span> c
-
-		<span class="token keyword">switch</span> cas<span class="token punctuation">.</span>kind <span class="token punctuation">&#123;</span>
-		<span class="token keyword">case</span> caseRecv<span class="token punctuation">:</span>
-			c<span class="token punctuation">.</span>recvq<span class="token punctuation">.</span><span class="token function">enqueue</span><span class="token punctuation">(</span>sg<span class="token punctuation">)</span>
-		<span class="token keyword">case</span> caseSend<span class="token punctuation">:</span>
-			c<span class="token punctuation">.</span>sendq<span class="token punctuation">.</span><span class="token function">enqueue</span><span class="token punctuation">(</span>sg<span class="token punctuation">)</span>
-		<span class="token punctuation">&#125;</span>
-	<span class="token punctuation">&#125;</span>
-
-	<span class="token function">gopark</span><span class="token punctuation">(</span>selparkcommit<span class="token punctuation">,</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> waitReasonSelect<span class="token punctuation">,</span> traceEvGoBlockSelect<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
-	<span class="token operator">...</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">selectgo</span><span class="params">(cas0 *scase, order0 *<span class="keyword">uint16</span>, ncases <span class="keyword">int</span>)</span> <span class="params">(<span class="keyword">int</span>, <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">	...</span><br><span class="line">	gp = getg()</span><br><span class="line">	nextp = &amp;gp.waiting</span><br><span class="line">	<span class="keyword">for</span> _, casei := <span class="keyword">range</span> lockorder &#123;</span><br><span class="line">		casi = <span class="keyword">int</span>(casei)</span><br><span class="line">		cas = &amp;scases[casi]</span><br><span class="line">		c = cas.c</span><br><span class="line">		sg := acquireSudog()</span><br><span class="line">		sg.g = gp</span><br><span class="line">		sg.c = c</span><br><span class="line"></span><br><span class="line">		<span class="keyword">switch</span> cas.kind &#123;</span><br><span class="line">		<span class="keyword">case</span> caseRecv:</span><br><span class="line">			c.recvq.enqueue(sg)</span><br><span class="line">		<span class="keyword">case</span> caseSend:</span><br><span class="line">			c.sendq.enqueue(sg)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	gopark(selparkcommit, <span class="literal">nil</span>, waitReasonSelect, traceEvGoBlockSelect, <span class="number">1</span>)</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>除了将当前 Goroutine 对应的 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/cfe3cd903f018dec3cb5997d53b1744df4e53909/src/runtime/runtime2.go#L342-L368"><code>runtime.sudog</code></a> 结构体加入队列之外，这些 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/cfe3cd903f018dec3cb5997d53b1744df4e53909/src/runtime/runtime2.go#L342-L368"><code>runtime.sudog</code></a> 结构体都会被串成链表附着在 Goroutine 上。在入队之后会调用 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/c112289ee4141ebc31db50328c355b01278b987b/src/runtime/proc.go#L287-L305"><code>runtime.gopark</code></a> 函数挂起当前 Goroutine 等待调度器的唤醒。</p>
-<p><img src="https://img.draveness.me/2020-01-19-15794018429558-Golang-Select-Waiting.png" alt="Golang-Select-Waiting"></p>
+<p><img data-src="https://img.draveness.me/2020-01-19-15794018429558-Golang-Select-Waiting.png" alt="Golang-Select-Waiting"></p>
 <p><strong>图 5-9 Goroutine 上等待收发的 sudog 链表</strong></p>
 <p>等到 <code>select</code> 中的一些 Channel 准备就绪之后，当前 Goroutine 就会被调度器唤醒。这时会继续执行 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/select.go#L118-L497"><code>runtime.selectgo</code></a> 函数的第三阶段，从 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/cfe3cd903f018dec3cb5997d53b1744df4e53909/src/runtime/runtime2.go#L342-L368"><code>runtime.sudog</code></a> 结构体中获取数据：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">selectgo</span><span class="token punctuation">(</span>cas0 <span class="token operator">*</span>scase<span class="token punctuation">,</span> order0 <span class="token operator">*</span><span class="token builtin">uint16</span><span class="token punctuation">,</span> ncases <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">bool</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token operator">...</span>
-	sg <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">*</span>sudog<span class="token punctuation">)</span><span class="token punctuation">(</span>gp<span class="token punctuation">.</span>param<span class="token punctuation">)</span>
-	gp<span class="token punctuation">.</span>param <span class="token operator">=</span> <span class="token boolean">nil</span>
-
-	casi <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span>
-	cas <span class="token operator">=</span> <span class="token boolean">nil</span>
-	sglist <span class="token operator">=</span> gp<span class="token punctuation">.</span>waiting
-	<span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> casei <span class="token operator">:=</span> <span class="token keyword">range</span> lockorder <span class="token punctuation">&#123;</span>
-		k <span class="token operator">=</span> <span class="token operator">&amp;</span>scases<span class="token punctuation">[</span>casei<span class="token punctuation">]</span>
-		<span class="token keyword">if</span> sg <span class="token operator">==</span> sglist <span class="token punctuation">&#123;</span>
-			casi <span class="token operator">=</span> <span class="token function">int</span><span class="token punctuation">(</span>casei<span class="token punctuation">)</span>
-			cas <span class="token operator">=</span> k
-		<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-			<span class="token keyword">if</span> k<span class="token punctuation">.</span>kind <span class="token operator">==</span> caseSend <span class="token punctuation">&#123;</span>
-				c<span class="token punctuation">.</span>sendq<span class="token punctuation">.</span><span class="token function">dequeueSudoG</span><span class="token punctuation">(</span>sglist<span class="token punctuation">)</span>
-			<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-				c<span class="token punctuation">.</span>recvq<span class="token punctuation">.</span><span class="token function">dequeueSudoG</span><span class="token punctuation">(</span>sglist<span class="token punctuation">)</span>
-			<span class="token punctuation">&#125;</span>
-		<span class="token punctuation">&#125;</span>
-		sgnext <span class="token operator">=</span> sglist<span class="token punctuation">.</span>waitlink
-		sglist<span class="token punctuation">.</span>waitlink <span class="token operator">=</span> <span class="token boolean">nil</span>
-		<span class="token function">releaseSudog</span><span class="token punctuation">(</span>sglist<span class="token punctuation">)</span>
-		sglist <span class="token operator">=</span> sgnext
-	<span class="token punctuation">&#125;</span>
-
-	c <span class="token operator">=</span> cas<span class="token punctuation">.</span>c
-	<span class="token keyword">goto</span> retc
-	<span class="token operator">...</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">selectgo</span><span class="params">(cas0 *scase, order0 *<span class="keyword">uint16</span>, ncases <span class="keyword">int</span>)</span> <span class="params">(<span class="keyword">int</span>, <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">	...</span><br><span class="line">	sg = (*sudog)(gp.param)</span><br><span class="line">	gp.param = <span class="literal">nil</span></span><br><span class="line"></span><br><span class="line">	casi = <span class="number">-1</span></span><br><span class="line">	cas = <span class="literal">nil</span></span><br><span class="line">	sglist = gp.waiting</span><br><span class="line">	<span class="keyword">for</span> _, casei := <span class="keyword">range</span> lockorder &#123;</span><br><span class="line">		k = &amp;scases[casei]</span><br><span class="line">		<span class="keyword">if</span> sg == sglist &#123;</span><br><span class="line">			casi = <span class="keyword">int</span>(casei)</span><br><span class="line">			cas = k</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> k.kind == caseSend &#123;</span><br><span class="line">				c.sendq.dequeueSudoG(sglist)</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				c.recvq.dequeueSudoG(sglist)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		sgnext = sglist.waitlink</span><br><span class="line">		sglist.waitlink = <span class="literal">nil</span></span><br><span class="line">		releaseSudog(sglist)</span><br><span class="line">		sglist = sgnext</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	c = cas.c</span><br><span class="line">	<span class="keyword">goto</span> retc</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>第三次遍历全部 <code>case</code> 时，我们会先获取当前 Goroutine 接收到的参数 <code>sudog</code> 结构，我们会依次对比所有 <code>case</code> 对应的 <code>sudog</code> 结构找到被唤醒的 <code>case</code>，获取该 <code>case</code> 对应的索引并返回。</p>
 <p>由于当前的 <code>select</code> 结构找到了一个 <code>case</code> 执行，那么剩下 <code>case</code> 中没有被用到的 <code>sudog</code> 就会被忽略并且释放掉。为了不影响 Channel 的正常使用，我们还是需要将这些废弃的 <code>sudog</code> 从 Channel 中出队。</p>
 <p>当我们在循环中发现缓冲区中有元素或者缓冲区未满时就会通过 <code>goto</code> 关键字跳转到 <code>bufrecv</code> 和 <code>bufsend</code> 两个代码段，这两段代码的执行过程都很简单，它们只是向 Channel 中发送数据或者从缓冲区中获取新数据：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">bufrecv<span class="token punctuation">:</span>
-	recvOK <span class="token operator">=</span> <span class="token boolean">true</span>
-	qp <span class="token operator">=</span> <span class="token function">chanbuf</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> c<span class="token punctuation">.</span>recvx<span class="token punctuation">)</span>
-	<span class="token keyword">if</span> cas<span class="token punctuation">.</span>elem <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
-		<span class="token function">typedmemmove</span><span class="token punctuation">(</span>c<span class="token punctuation">.</span>elemtype<span class="token punctuation">,</span> cas<span class="token punctuation">.</span>elem<span class="token punctuation">,</span> qp<span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-	<span class="token function">typedmemclr</span><span class="token punctuation">(</span>c<span class="token punctuation">.</span>elemtype<span class="token punctuation">,</span> qp<span class="token punctuation">)</span>
-	c<span class="token punctuation">.</span>recvx<span class="token operator">++</span>
-	<span class="token keyword">if</span> c<span class="token punctuation">.</span>recvx <span class="token operator">==</span> c<span class="token punctuation">.</span>dataqsiz <span class="token punctuation">&#123;</span>
-		c<span class="token punctuation">.</span>recvx <span class="token operator">=</span> <span class="token number">0</span>
-	<span class="token punctuation">&#125;</span>
-	c<span class="token punctuation">.</span>qcount<span class="token operator">--</span>
-	<span class="token function">selunlock</span><span class="token punctuation">(</span>scases<span class="token punctuation">,</span> lockorder<span class="token punctuation">)</span>
-	<span class="token keyword">goto</span> retc
-
-bufsend<span class="token punctuation">:</span>
-	<span class="token function">typedmemmove</span><span class="token punctuation">(</span>c<span class="token punctuation">.</span>elemtype<span class="token punctuation">,</span> <span class="token function">chanbuf</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> c<span class="token punctuation">.</span>sendx<span class="token punctuation">)</span><span class="token punctuation">,</span> cas<span class="token punctuation">.</span>elem<span class="token punctuation">)</span>
-	c<span class="token punctuation">.</span>sendx<span class="token operator">++</span>
-	<span class="token keyword">if</span> c<span class="token punctuation">.</span>sendx <span class="token operator">==</span> c<span class="token punctuation">.</span>dataqsiz <span class="token punctuation">&#123;</span>
-		c<span class="token punctuation">.</span>sendx <span class="token operator">=</span> <span class="token number">0</span>
-	<span class="token punctuation">&#125;</span>
-	c<span class="token punctuation">.</span>qcount<span class="token operator">++</span>
-	<span class="token function">selunlock</span><span class="token punctuation">(</span>scases<span class="token punctuation">,</span> lockorder<span class="token punctuation">)</span>
-	<span class="token keyword">goto</span> retc<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">bufrecv:</span><br><span class="line">	recvOK = <span class="literal">true</span></span><br><span class="line">	qp = chanbuf(c, c.recvx)</span><br><span class="line">	<span class="keyword">if</span> cas.elem != <span class="literal">nil</span> &#123;</span><br><span class="line">		typedmemmove(c.elemtype, cas.elem, qp)</span><br><span class="line">	&#125;</span><br><span class="line">	typedmemclr(c.elemtype, qp)</span><br><span class="line">	c.recvx++</span><br><span class="line">	<span class="keyword">if</span> c.recvx == c.dataqsiz &#123;</span><br><span class="line">		c.recvx = <span class="number">0</span></span><br><span class="line">	&#125;</span><br><span class="line">	c.qcount--</span><br><span class="line">	selunlock(scases, lockorder)</span><br><span class="line">	<span class="keyword">goto</span> retc</span><br><span class="line"></span><br><span class="line">bufsend:</span><br><span class="line">	typedmemmove(c.elemtype, chanbuf(c, c.sendx), cas.elem)</span><br><span class="line">	c.sendx++</span><br><span class="line">	<span class="keyword">if</span> c.sendx == c.dataqsiz &#123;</span><br><span class="line">		c.sendx = <span class="number">0</span></span><br><span class="line">	&#125;</span><br><span class="line">	c.qcount++</span><br><span class="line">	selunlock(scases, lockorder)</span><br><span class="line">	<span class="keyword">goto</span> retc</span><br></pre></td></tr></table></figure>
 <p>这里在缓冲区进行的操作和直接调用 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L157-L278"><code>runtime.chansend</code></a> 和 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L448-L579"><code>runtime.chanrecv</code></a> 函数差不多，上述两个过程在执行结束之后都会直接跳到 <code>retc</code> 字段。</p>
 <p>两个直接对 Channel 收发的情况会调用 Channel 运行时函数 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L286-L317"><code>runtime.send</code></a> 和 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/d1969015b4ac29be4f518b94817d3f525380639d/src/runtime/chan.go#L594-L635"><code>runtime.recv</code></a>，这两个函数会直接与处于休眠状态的 Goroutine 打交道：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">recv<span class="token punctuation">:</span>
-	<span class="token function">recv</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> sg<span class="token punctuation">,</span> cas<span class="token punctuation">.</span>elem<span class="token punctuation">,</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">selunlock</span><span class="token punctuation">(</span>scases<span class="token punctuation">,</span> lockorder<span class="token punctuation">)</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
-	recvOK <span class="token operator">=</span> <span class="token boolean">true</span>
-	<span class="token keyword">goto</span> retc
-
-send<span class="token punctuation">:</span>
-	<span class="token function">send</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> sg<span class="token punctuation">,</span> cas<span class="token punctuation">.</span>elem<span class="token punctuation">,</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">selunlock</span><span class="token punctuation">(</span>scases<span class="token punctuation">,</span> lockorder<span class="token punctuation">)</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
-	<span class="token keyword">goto</span> retc<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">recv:</span><br><span class="line">	recv(c, sg, cas.elem, <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; selunlock(scases, lockorder) &#125;, <span class="number">2</span>)</span><br><span class="line">	recvOK = <span class="literal">true</span></span><br><span class="line">	<span class="keyword">goto</span> retc</span><br><span class="line"></span><br><span class="line">send:</span><br><span class="line">	send(c, sg, cas.elem, <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; selunlock(scases, lockorder) &#125;, <span class="number">2</span>)</span><br><span class="line">	<span class="keyword">goto</span> retc</span><br></pre></td></tr></table></figure>
 <p>不过如果向关闭的 Channel 发送数据或者从关闭的 Channel 中接收数据，情况就稍微有一点复杂了：</p>
 <ul>
 <li>从一个关闭 Channel 中接收数据会直接清除 Channel 中的相关内容；</li>
 <li>向一个关闭的 Channel 发送数据就会直接 <code>panic</code> 造成程序崩溃：</li>
 </ul>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go">rclose<span class="token punctuation">:</span>
-	<span class="token function">selunlock</span><span class="token punctuation">(</span>scases<span class="token punctuation">,</span> lockorder<span class="token punctuation">)</span>
-	recvOK <span class="token operator">=</span> <span class="token boolean">false</span>
-	<span class="token keyword">if</span> cas<span class="token punctuation">.</span>elem <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
-		<span class="token function">typedmemclr</span><span class="token punctuation">(</span>c<span class="token punctuation">.</span>elemtype<span class="token punctuation">,</span> cas<span class="token punctuation">.</span>elem<span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-	<span class="token keyword">goto</span> retc
-
-sclose<span class="token punctuation">:</span>
-	<span class="token function">selunlock</span><span class="token punctuation">(</span>scases<span class="token punctuation">,</span> lockorder<span class="token punctuation">)</span>
-	<span class="token function">panic</span><span class="token punctuation">(</span><span class="token function">plainError</span><span class="token punctuation">(</span><span class="token string">"send on closed channel"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">rclose:</span><br><span class="line">	selunlock(scases, lockorder)</span><br><span class="line">	recvOK = <span class="literal">false</span></span><br><span class="line">	<span class="keyword">if</span> cas.elem != <span class="literal">nil</span> &#123;</span><br><span class="line">		typedmemclr(c.elemtype, cas.elem)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">goto</span> retc</span><br><span class="line"></span><br><span class="line">sclose:</span><br><span class="line">	selunlock(scases, lockorder)</span><br><span class="line">	<span class="built_in">panic</span>(plainError(<span class="string">&quot;send on closed channel&quot;</span>))</span><br></pre></td></tr></table></figure>
 <p>总体来看，<code>select</code> 语句中的 Channel 收发操作和直接操作 Channel 没有太多出入，只是由于 <code>select</code> 多出了 <code>default</code> 关键字所以会支持非阻塞的收发。</p>
-<h2><span id="小结">小结 </span></h2><p> 我们简单总结一下 <code>select</code> 结构的执行过程与实现原理，首先在编译期间，Go 语言会对 <code>select</code> 语句进行优化，它会根据 <code>select</code> 中 <code>case</code> 的不同选择不同的优化路径：</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>我们简单总结一下 <code>select</code> 结构的执行过程与实现原理，首先在编译期间，Go 语言会对 <code>select</code> 语句进行优化，它会根据 <code>select</code> 中 <code>case</code> 的不同选择不同的优化路径：</p>
 <ol>
 <li><p>空的 <code>select</code> 语句会被转换成 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/c112289ee4141ebc31db50328c355b01278b987b/src/runtime/select.go#L104-L106"><code>runtime.block</code></a> 函数的调用，直接挂起当前 Goroutine；</p>
 </li>
 <li><p>如果</p>
 </li>
 </ol>
-   <pre class="line-numbers language-none"><code class="language-none">select<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+   <figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span></span><br></pre></td></tr></table></figure>
 <p>   语句中只包含一个</p>
-   <pre class="line-numbers language-none"><code class="language-none">case<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+   <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span></span><br></pre></td></tr></table></figure>
 <p>   ，就会被转换成</p>
-   <pre class="line-numbers language-none"><code class="language-none">if ch &#x3D;&#x3D; nil &#123; block &#125;; n;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+   <figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if ch == nil &#123; <span class="keyword">block </span>&#125;<span class="comment">; n;</span></span><br></pre></td></tr></table></figure>
 <p>   表达式；</p>
 <ul>
 <li>首先判断操作的 Channel 是不是空的；</li>
@@ -641,9 +459,9 @@ sclose<span class="token punctuation">:</span>
 <li><p>根据</p>
 </li>
 </ol>
-   <pre class="line-numbers language-none"><code class="language-none">pollOrder<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+   <figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">pollOrder</span></span><br></pre></td></tr></table></figure>
 <p>   遍历所有的</p>
-   <pre class="line-numbers language-none"><code class="language-none">case<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+   <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span></span><br></pre></td></tr></table></figure>
 <p>   查看是否有可以立刻处理的 Channel；</p>
 <ol>
 <li>如果存在就直接获取 <code>case</code> 对应的索引并返回；</li>
@@ -653,30 +471,368 @@ sclose<span class="token punctuation">:</span>
 <li>当调度器唤醒当前 Goroutine 时就会再次按照 <code>lockOrder</code> 遍历所有的 <code>case</code>，从中查找需要被处理的 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/cfe3cd903f018dec3cb5997d53b1744df4e53909/src/runtime/runtime2.go#L342-L368"><code>runtime.sudog</code></a> 结构对应的索引；</li>
 </ol>
 <p><code>select</code> 关键字是 Go 语言特有的控制结构，它的实现原理比较复杂，需要编译器和运行时函数的通力合作。</p>
-<h2><span id="参考">参考</span></h2><ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a target="_blank" rel="noopener" href="http://man7.org/linux/man-pages/man2/select.2.html">SELECT(2) · Linux</a></li>
 </ul>
 
-            </div>
-            <!-- Post Comments -->
-            
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Go/" rel="tag"><i class="fa fa-tag"></i> Go</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" rel="prev" title="Go语言的并发原理">
+      <i class="fa fa-chevron-left"></i> Go语言的并发原理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" rel="next" title="Go语言的反射">
+      Go语言的反射 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
     
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%B0%E8%B1%A1"><span class="nav-number">1.</span> <span class="nav-text">现象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E9%98%BB%E5%A1%9E%E7%9A%84%E6%94%B6%E5%8F%91"><span class="nav-number">1.1.</span> <span class="nav-text">非阻塞的收发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%89%A7%E8%A1%8C"><span class="nav-number">1.2.</span> <span class="nav-text">随机执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E9%98%BB%E5%A1%9E"><span class="nav-number">3.1.</span> <span class="nav-text">直接阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%B8%80%E7%AE%A1%E9%81%93"><span class="nav-number">3.2.</span> <span class="nav-text">单一管道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E9%98%BB%E5%A1%9E%E6%93%8D%E4%BD%9C"><span class="nav-number">3.3.</span> <span class="nav-text">非阻塞操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%91%E9%80%81"><span class="nav-number">3.3.1.</span> <span class="nav-text">发送</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6"><span class="nav-number">3.3.2.</span> <span class="nav-text">接收</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E6%B5%81%E7%A8%8B"><span class="nav-number">3.4.</span> <span class="nav-text">常见流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">3.4.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF"><span class="nav-number">3.4.2.</span> <span class="nav-text">循环</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
 </body>
-
-
-
-
-
 </html>

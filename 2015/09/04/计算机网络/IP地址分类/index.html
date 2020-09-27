@@ -1,207 +1,169 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
 
-<meta name="author" content="maywzh">
+	    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
 
-<meta name="subtitle" content="0x01 MAYSTORY">
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<!-- Layouts -->
 
 
-<meta name="description" content="Namasday.">
 
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
 
-<meta name="keywords" content="Tech Blogs">
-
-
-<title>IP 地址分类 | 0x01 MAYSTORY </title>
-
-
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
+<body class="is-loading">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
 </header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
-</script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/uncategorized/">uncategorized</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-</script>
-    
-
-    
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">IP 地址分类</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
-
-                    
-                        <span class="post-time">
-                        Date: <a href="#">September 4, 2015&nbsp;&nbsp;16:23:16</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
-
-        <div class="post-content">
-            <p>在计算机网络中有著名的 OSI 七层协议体系结构，概念清楚，理论完整，但是它既复杂又不实用。TCP/IP 体系结构则不同，得到的广泛的应用。最终结合 OSI 和 TCP/IP 的优点，采用了一种只有五层协议的体系结构，本文的讲述的 IP 都是基于五层协议模型中的 <strong><em> 网络层 \</em></strong>。</p>
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/30/dPi5N3M6WpC4xF9.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>IP 地址分类</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <p>在计算机网络中有著名的 OSI 七层协议体系结构，概念清楚，理论完整，但是它既复杂又不实用。TCP/IP 体系结构则不同，得到的广泛的应用。最终结合 OSI 和 TCP/IP 的优点，采用了一种只有五层协议的体系结构，本文的讲述的 IP 都是基于五层协议模型中的 <strong><em> 网络层 \</em></strong>。</p>
 <a id="more"></a>
-<h2 id="网络模型介绍"><a href="#网络模型介绍" class="headerlink" title="网络模型介绍"></a>网络模型介绍</h2><div class="table-container">
+<h2><span id="网络模型介绍">网络模型介绍</span></h2><div class="table-container">
 <table>
 <thead>
 <tr>
@@ -253,7 +215,7 @@
 </tbody>
 </table>
 </div>
-<h2 id="分类的-IP-地址"><a href="#分类的-IP-地址" class="headerlink" title="分类的 IP 地址"></a>分类的 IP 地址</h2><h3 id="IP-地址的表示方法"><a href="#IP-地址的表示方法" class="headerlink" title="IP 地址的表示方法"></a>IP 地址的表示方法</h3><p>IP 地址就是给英特网上的每个主机（路由器）的每个接口分配一个在全世界范围内是唯一的 32 位的标识符。其组成第一个字段是网络号，第二个字段是主机号。一个主机号在前面的网络号所指明的网络范围内必须是唯一的，所以一个 IP 地址在整个网络中都是唯一的。目前分为 A、B、C、D、E 五类 IP 地址。<br><img src="https://img-blog.csdn.net/20170604163951489?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXpjc3U=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="IP"></p>
+<h2><span id="分类的-ip-地址">分类的 IP 地址</span></h2><h3><span id="ip-地址的表示方法">IP 地址的表示方法</span></h3><p>IP 地址就是给英特网上的每个主机（路由器）的每个接口分配一个在全世界范围内是唯一的 32 位的标识符。其组成第一个字段是网络号，第二个字段是主机号。一个主机号在前面的网络号所指明的网络范围内必须是唯一的，所以一个 IP 地址在整个网络中都是唯一的。目前分为 A、B、C、D、E 五类 IP 地址。<br><img src="https://img-blog.csdn.net/20170604163951489?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXpjc3U=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="IP"></p>
 <ul>
 <li>在 A、B、C 三类地址中灰色的部分即为网络号，网络号的前三位是类别位，分别是 0,10，110。也就是说我们可以凭借这个类别位置来判断网络类别。</li>
 <li>32 位的总长度，由于 A、B、C 三类网络号的长度的不同，导致 A、B、C 类地址的主机号字段的字节数分别为 3、2、1（一个字节 8 位）。</li>
@@ -261,18 +223,18 @@
 </ul>
 <p>因此我们一般使用的就是 ABC 三类网络地址，IP 地址是 32 位的二进制代码，为了提高可读性，把 32 位的 IP 地址中的每 8 位用等效的十进制表示出来（点分十进制），于是我们日常生活中常见的 IP 地址就出现了。</p>
 <p>例如：IP 地址，128.11.3.31，转化为二进制为 100000000 00001011 00000011 00011111 ，可以看出类别位为 10，可以判断为一个 B 类地址。</p>
-<h3 id="常用-IP-地址的指派范围"><a href="#常用-IP-地址的指派范围" class="headerlink" title="常用 IP 地址的指派范围"></a>常用 IP 地址的指派范围</h3><h4 id="网络号指派范围"><a href="#网络号指派范围" class="headerlink" title="网络号指派范围"></a>网络号指派范围</h4><ul>
-<li>A 类地址网络号占用一个字节，但是由于有一位是类别位，只有 7 位可供使用，但是由于规定，网络字段全 0 是个保留字段表示本网络，而 127（01111111）是另外一个保留字段，作为本地软件的环回测试。<strong> 我们常见的 127.0.0.1 表示本机，原因也是出自这里。</strong> 所以 A 类地址可以指派的网络号个数为（27-2）.</li>
+<h3><span id="常用-ip-地址的指派范围">常用 IP 地址的指派范围 </span></h3><h4><span id="网络号指派范围"> 网络号指派范围</span></h4><ul>
+<li>A 类地址网络号占用一个字节，但是由于有一位是类别位，只有 7 位可供使用，但是由于规定，网络字段全 0 是个保留字段表示本网络，而 127（01111111）是另外一个保留字段，作为本地软件的环回测试。<strong>我们常见的 127.0.0.1 表示本机，原因也是出自这里。</strong>所以 A 类地址可以指派的网络号个数为（27-2）.</li>
 <li>B 类网络地址网络号有两个字节，前两位为 10 已经固定，只剩下 14 位可用，由于这 14 位无论怎么取值都不会使得网络号为全 0 或者全 1，单实际上规定，规定 B 类最小网络地址为 128.1.0.0。因此 B 类地址可指派的网络号个数为（214-1）.</li>
 <li>C 类地址有 3 个字节的网络字段号，前三位固定 110，只有剩下 21 位可用，同样 C 类地址可指派的最小网络地址也是 192.0.1.0。因此 C 类地址可指派的网络号个数为（221-1）.</li>
 </ul>
-<h4 id="主机号指派范围"><a href="#主机号指派范围" class="headerlink" title="主机号指派范围"></a>主机号指派范围</h4><ul>
-<li>由于主机号有规定，全 0 的主机号代表 IP 地址是 “本主机” 所连接到的单个网络地址（例，一主机地址为 5.6.7.8，则该主机所在的网络地址为 5.0.0.0），而全 1 则表示 “所有的”，即表示该网络上的所有主机。</li>
+<h4><span id="主机号指派范围">主机号指派范围</span></h4><ul>
+<li>由于主机号有规定，全 0 的主机号代表 IP 地址是“本主机”所连接到的单个网络地址（例，一主机地址为 5.6.7.8，则该主机所在的网络地址为 5.0.0.0），而全 1 则表示“所有的”，即表示该网络上的所有主机。</li>
 <li>A 类地址的主机号是由三个字节，24 位组成，所以每一个 A 类网络中可分配的主机个数为（224-2）.</li>
 <li>B 类地址的主机号是由两个字节，16 位组成，所以每一个 B 类网络中可分配的主机个数为（216-2）.</li>
 <li>C 类地址的主机号是由一个字节，8 位组成，所以每一个 C 类网络中可分配的主机个数为（28-2）.</li>
 </ul>
-<h4 id="总结-IP-指派范围"><a href="#总结-IP-指派范围" class="headerlink" title="总结 IP 指派范围"></a>总结 IP 指派范围</h4><p>综上网络号和主机号的指派描述可知，IP 地址空间共有 232 个地址。<br>所有 A 类地址共有（27-2）∗∗（224-2）个，大约 231，占 50%；<br>所有 B 类地址共有（214-1）∗∗（216-2）个，大约 230, 占 25%；<br>所有 C 类地址共有（221-1）∗∗（28-2）个，大约 229, 占 12.5%；</p>
+<h4><span id="总结-ip-指派范围">总结 IP 指派范围 </span></h4><p> 综上网络号和主机号的指派描述可知，IP 地址空间共有 232 个地址。<br>所有 A 类地址共有（27-2）∗∗（224-2）个，大约 231，占 50%；<br>所有 B 类地址共有（214-1）∗∗（216-2）个，大约 230, 占 25%；<br>所有 C 类地址共有（221-1）∗∗（28-2）个，大约 229, 占 12.5%；</p>
 <div class="table-container">
 <table>
 <thead>
@@ -314,61 +276,41 @@
 <li>所以可以这样来表示一个 B 类 IP 地址 n.m.x.yn.m.x.y，若 128≤n≤191128≤n≤191，0≤m≤2550≤m≤255，0≤x,y≤2550≤x,y≤255，其中 I. 当 n=128n=128 时，m≠0m≠0; II. x,yx,y 不同时为 0 也不能同时为 255;</li>
 <li>所以可以这样来表示一个 C 类 IP 地址 n.m.k.xn.m.k.x，若 192≤n≤223192≤n≤223，0≤m,k≤2550≤m,k≤255，1≤x≤2541≤x≤254，其中 当 n=192n=192 时，k≠0k≠0.</li>
 </ul>
-<h2 id="IP-地址和硬件地址"><a href="#IP-地址和硬件地址" class="headerlink" title="IP 地址和硬件地址"></a>IP 地址和硬件地址</h2><p>从层次角度来看，硬件地址是数据链路层和物理层使用的地址（常称作 MAC 地址），而 IP 地址是网络层和以上各层使用的地址，是一种逻辑地址。在网络层我们进行数据报文从 IP1 传输到 IP2，无论我们中间经过多少次转发，从网络层来看，源地址始终是 IP1，目的地址始终是 IP2。但是从数据链路层来看，显然就不是这样了，这些是物理地址，很有可能从源节点经过多次中间节点的物理地址的转变才能到达目的节点。</p>
+<h2><span id="ip-地址和硬件地址">IP 地址和硬件地址 </span></h2><p> 从层次角度来看，硬件地址是数据链路层和物理层使用的地址（常称作 MAC 地址），而 IP 地址是网络层和以上各层使用的地址，是一种逻辑地址。在网络层我们进行数据报文从 IP1 传输到 IP2，无论我们中间经过多少次转发，从网络层来看，源地址始终是 IP1，目的地址始终是 IP2。但是从数据链路层来看，显然就不是这样了，这些是物理地址，很有可能从源节点经过多次中间节点的物理地址的转变才能到达目的节点。</p>
 <blockquote>
 <p>而 IP 地址和物理地址的之间的转化则需要依靠两个重要的协议 ARP（地址解析协议），RARP（逆地址解析协议）。IP 地址通过 ARP 转化成物理地址，物理地址可以通过 RARP 转化成相应的 IP 地址。</p>
 </blockquote>
-<h2 id="子网和超网"><a href="#子网和超网" class="headerlink" title="子网和超网"></a>子网和超网</h2><p>简单的来说就是如何来管理一个 IP 地址下的多台主机</p>
-<h3 id="子网"><a href="#子网" class="headerlink" title="子网"></a>子网</h3><p>现在假设这样一个场景，一个数据报起目的地址是 145.13.3.10（在子网 145.13.3.0 中），已经到达路由器 R1（145.13.0.0），那么这个路由器怎么将它转发到 145.13.3.0 呢？<br>我们并不知道目的地址是否进行了子网的划分。<br>这就引出了子网掩码的概念了，子网掩码也是 32 位，由一串 1 和 0 组成，子网掩码中的 1 对应于 IP 地址中的网络号位置 + 子网网络号位置，子网掩码中的 0 对应与 IP 地址中现在的主机号位置。<br>我们只要将 IP 地址和子网掩码进行 “与” 运算，如果进行子网的划分，就立刻得出要找的子网的网络地址，如果没有进行子网划分（有默认的子网掩码），则直接能够得出该 IP 地址的网络地址出来。</p>
+<h2><span id="子网和超网">子网和超网 </span></h2><p> 简单的来说就是如何来管理一个 IP 地址下的多台主机</p>
+<h3><span id="子网">子网 </span></h3><p> 现在假设这样一个场景，一个数据报起目的地址是 145.13.3.10（在子网 145.13.3.0 中），已经到达路由器 R1（145.13.0.0），那么这个路由器怎么将它转发到 145.13.3.0 呢？<br>我们并不知道目的地址是否进行了子网的划分。<br>这就引出了子网掩码的概念了，子网掩码也是 32 位，由一串 1 和 0 组成，子网掩码中的 1 对应于 IP 地址中的网络号位置 + 子网网络号位置，子网掩码中的 0 对应与 IP 地址中现在的主机号位置。<br>我们只要将 IP 地址和子网掩码进行“与”运算，如果进行子网的划分，就立刻得出要找的子网的网络地址，如果没有进行子网划分（有默认的子网掩码），则直接能够得出该 IP 地址的网络地址出来。</p>
 <ul>
 <li>A 类地址的默认子网掩码是 255.0.0.0</li>
 <li>B 类地址的默认子网掩码是 255.255.0.0</li>
 <li>C 类地址的默认子网掩码是 255.255.255.0</li>
 </ul>
-<h3 id="超网"><a href="#超网" class="headerlink" title="超网"></a>超网</h3><p>无分类编址 CIDR，使用变长的子网掩码，可以进一步提高 IP 地址的资源利用率。有两个特点<br>第一，消除了传统的 ABC 类地址及划分子网的概念，CIRD 把 32 位的 IP 地址划分成为两个部分，网络前缀和剩下的部分，表示方法为，在 IP 地址后面加上 “/”，然后写上网络前缀所占位数。<br>第二，把网络前缀相同的 IP 地址组成一个 CIDR 地址块，例如，IP 地址 128.14.35.7/20 用二进制表示 100000000 00001110 00100011 00000111，所以我们很容易可以得出这块地址中最小地址为 128.14.32.0, 即 100000000 00001110 00100000 00000000，最大地址为 128.14.47.255，即 100000000 00001110 00101111 11111111.</p>
-<p>为了更加方便进行路由选择，CIDR 使用 32 位的地址掩码，1 的个数就是网络前缀的长度，如上面所举例中的 / 20 的地址块的地址掩码是 11111111 11111111 11110000 00000000</p>
-<p>因此可以看出，网络前缀越短，其地址块所包含的地址就越多，这样可以根据实际情况更加有效的分配 IPv4 的地址空间。而由很多个 CIDR 地址快构成的庞大的网络就就被称为 “超网”。</p>
+<h3><span id="超网">超网 </span></h3><p> 无分类编址 CIDR，使用变长的子网掩码，可以进一步提高 IP 地址的资源利用率。有两个特点 <br> 第一，消除了传统的 ABC 类地址及划分子网的概念，CIRD 把 32 位的 IP 地址划分成为两个部分，网络前缀和剩下的部分，表示方法为，在 IP 地址后面加上“/”，然后写上网络前缀所占位数。<br>第二，把网络前缀相同的 IP 地址组成一个 CIDR 地址块，例如，IP 地址 128.14.35.7/20 用二进制表示 100000000 00001110 00100011 00000111，所以我们很容易可以得出这块地址中最小地址为 128.14.32.0, 即 100000000 00001110 00100000 00000000，最大地址为 128.14.47.255，即 100000000 00001110 00101111 11111111.</p>
+<p>为了更加方便进行路由选择，CIDR 使用 32 位的地址掩码，1 的个数就是网络前缀的长度，如上面所举例中的 /20 的地址块的地址掩码是 11111111 11111111 11110000 00000000</p>
+<p>因此可以看出，网络前缀越短，其地址块所包含的地址就越多，这样可以根据实际情况更加有效的分配 IPv4 的地址空间。而由很多个 CIDR 地址快构成的庞大的网络就就被称为“超网”。</p>
 
+            </div>
+            <!-- Post Comments -->
+            
         </div>
-
-        
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2015/09/16/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%B8%B8%E8%A7%8132%E4%B8%AA%E7%AE%97%E6%B3%95/">计算机科学中最重要的 32 个算法</a>
-            
-            
-            <a class="next" rel="next" href="/2015/08/29/git/git%E7%AC%94%E8%AE%B0%E4%B9%8Bignore/">git 笔记之 ignore</a>
-            
-        </section>
-
-
-    </article>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
 </div>
-
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
-        
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
-    </div>
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
+
+
+
+
+
 </html>

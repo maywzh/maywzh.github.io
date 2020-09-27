@@ -1,205 +1,167 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
 
-<meta name="author" content="maywzh">
+	    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
 
-<meta name="subtitle" content="0x01 MAYSTORY">
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<!-- Layouts -->
 
 
-<meta name="description" content="Namasday.">
 
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
 
-<meta name="keywords" content="Tech Blogs">
-
-
-<title>分布式协议之 Raft 算法 | 0x01 MAYSTORY </title>
-
-
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
+<body class="is-loading">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
 </header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
-</script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/uncategorized/">uncategorized</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-</script>
-    
-
-    
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">分布式协议之 Raft 算法</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
-
-                    
-                        <span class="post-time">
-                        Date: <a href="#">September 28, 2017&nbsp;&nbsp;23:58:56</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
-
-        <div class="post-content">
-            <p>Raft 是一种分布式共识算法。相对于之前的 Paxos 协议，它的设计易于理解。它解决了即使面对故障也使多个服务器在共享状态上达成一致的问题。共享状态通常是复制日志支持的数据结构。只要大多数服务器都处于运行状态，我们就需要系统能够完全运行。</p>
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/09/c5jmaJvZiU4oQ2O.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>分布式协议之 Raft 算法</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <p>Raft 是一种分布式共识算法。相对于之前的 Paxos 协议，它的设计易于理解。它解决了即使面对故障也使多个服务器在共享状态上达成一致的问题。共享状态通常是复制日志支持的数据结构。只要大多数服务器都处于运行状态，我们就需要系统能够完全运行。</p>
 <p>Raft 通过选举集群中的一位 leader 来工作。leader 负责接受 client 请求并管理将日志复制到其他服务器。数据仅在一个方向上流动：从 leader 流向其他服务器。</p>
 <a id="more"></a>
 <p>Raft 将共识分解为三个子问题：</p>
@@ -208,7 +170,7 @@
 <li>日志复制：leader 需要通过复制使所有服务器的日志与其自己的服务器保持同步。</li>
 <li>安全性：如果其中一台服务器已在特定索引上提交了日志条目，则其他任何服务器都无法对该索引应用其他日志条目。</li>
 </ul>
-<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>每个服务器都处于以下三种状态之一：leader，follower 或 candidate。</p>
+<h2><span id="基础">基础 </span></h2><p> 每个服务器都处于以下三种状态之一：leader，follower 或 candidate。</p>
 <p><img src="https://i.loli.net/2020/09/09/xoBVRrGPyQzFDAY.png" alt="oN6xZLkKQrVnaWWlp7I8w9aep2NNgMz5fR9D"></p>
 <blockquote>
 <p>在正常操作中，只有一个 leader，其他所有服务器都是 follower。follower 是被动的：他们自己不发出请求，而只是响应 leader 和 candidate 的请求。leader 处理所有客户请求（如果客户联系 follower，则 follower 将其重定向到 leader）。第三种状态，candidate，用于选举新 leader。</p>
@@ -220,7 +182,7 @@
 </blockquote>
 <p>Raft 利用两个远程过程调用（RPC）来执行其基本操作。</p>
 <p>candidate 在选举期间使用 RequestVotes<br>leader 将 AppendEntries 用于复制日志条目，并用作检测信号（检查服务器是否已启动的信号 - 它不包含任何日志条目）</p>
-<h2 id="leader-选举"><a href="#leader-选举" class="headerlink" title="leader 选举"></a>leader 选举</h2><p>leader 定期向其 follower 发送心跳，以保持权威。当 follower 在等待 leader 的心跳后超时时，将触发 leader 选举。该 follower 转换为 candidate 状态并增加其任期编号。在为自己投票之后，它与集群中的其他进程并行地发出 RequestVotes RPC。可能有以下三种结果：</p>
+<h2><span id="leader-选举">leader 选举</span></h2><p>leader 定期向其 follower 发送心跳，以保持权威。当 follower 在等待 leader 的心跳后超时时，将触发 leader 选举。该 follower 转换为 candidate 状态并增加其任期编号。在为自己投票之后，它与集群中的其他进程并行地发出 RequestVotes RPC。可能有以下三种结果：</p>
 <ol>
 <li>candidate 从大多数服务器中获得选票并成为 leader。然后，它将心跳消息发送给集群中的其他人以建立权限。</li>
 <li>如果其他 candidate 收到 AppendEntries RPC，他们将检查 term 号。如果 term 号大于自己的 term 号，则他们接受服务器作为 leader 并返回到 follower 状态。如果 term 号数量较小，则他们拒绝 RPC，并且仍然是 candidate。</li>
@@ -229,7 +191,7 @@
 <blockquote>
 <p>Raft 使用随机的选举超时来确保分割票很少发生，并且可以快速解决。为了避免一票分裂，首先从固定间隔（例如 150-300 毫秒）中随机选择选举超时。这样会分散服务器，因此在大多数情况下，只有一台服务器会超时；它会赢得选举并在其他任何服务器超时之前发送心跳信号。使用相同的机制来处理拆分投票。每位 candidate 在选举开始时都会重新启动其随机选举超时时间，并等待该超时时间过去后才开始下一次选举；这减少了在新选举中再次进行分裂表决的可能性。</p>
 </blockquote>
-<h2 id="日志复制"><a href="#日志复制" class="headerlink" title="日志复制"></a>日志复制</h2><p>client 请求现在假定为仅写。每个请求都包含一个命令，该命令理想地由所有服务器的复制状态机执行。leader 收到客户请求后，会将其作为新条目添加到自己的日志中。日志中的每个条目：</p>
+<h2><span id="日志复制">日志复制</span></h2><p>client 请求现在假定为仅写。每个请求都包含一个命令，该命令理想地由所有服务器的复制状态机执行。leader 收到客户请求后，会将其作为新条目添加到自己的日志中。日志中的每个条目：</p>
 <ul>
 <li>包含 client 指定的命令</li>
 <li>有一个索引来标识日志中条目的位置（索引从 1 开始）</li>
@@ -257,10 +219,10 @@
 <blockquote>
 <p>通过这种机制，leader 在上电时不需要采取任何特殊的操作来恢复日志一致性。它只需开始正常的操作，日志就会自动收敛，以应对 Append-Entries 一致性检查的失败。leader 从不覆盖或删除自己日志中的条目。</p>
 </blockquote>
-<h2 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h2><p>Raft 确保一个 term 的 leader 在其日志中承诺了以前所有 term 的条目。<br>Raft 确保一个 term 的 leader 在其日志中已经提交了以前所有 term 的条目。这是为了确保所有的日志是一致的，并且状态机执行相同的命令集。</p>
+<h2><span id="安全性">安全性</span></h2><p>Raft 确保一个 term 的 leader 在其日志中承诺了以前所有 term 的条目。<br>Raft 确保一个 term 的 leader 在其日志中已经提交了以前所有 term 的条目。这是为了确保所有的日志是一致的，并且状态机执行相同的命令集。</p>
 <p>在 leader 选举期间，RequestVote RPC 包含了 candidate 的日志信息。如果投票者发现它的日志比 candidate 的更新，它就不会投给它。</p>
 <p>Raft 通过比较两个日志中最后条目的索引和 term 来确定哪个日志更及时。如果日志的最后条目有不同的 term，那么 term 较晚的日志更及时。如果两个日志的最后条目有相同的 term，那么哪个日志更长，哪个日志就更最新。</p>
-<h2 id="集群成员"><a href="#集群成员" class="headerlink" title="集群成员"></a>集群成员</h2><p>为了使配置变更机制安全，在过渡期间必须没有任何一点可以让两个 leader 在同一 term 内当选。不幸的是，任何服务器直接从旧配置切换到新配置的方法都是不安全的。<br>Raft 使用了一个两阶段的方法来改变集群成员。首先，它切换到一个称为联合共识的中间配置。然后，一旦这一点被满足，它就会切换到新的配置。</p>
+<h2><span id="集群成员">集群成员 </span></h2><p> 为了使配置变更机制安全，在过渡期间必须没有任何一点可以让两个 leader 在同一 term 内当选。不幸的是，任何服务器直接从旧配置切换到新配置的方法都是不安全的。<br>Raft 使用了一个两阶段的方法来改变集群成员。首先，它切换到一个称为联合共识的中间配置。然后，一旦这一点被满足，它就会切换到新的配置。</p>
 <p>联合共识允许各个服务器在不同的时间在配置之间转换，而不影响安全。此外，联合共识还允许集群在整个配置变化过程中继续服务于 client 请求。<br>联合共识将新旧配置结合起来，具体如下。</p>
 <ul>
 <li>日志条目被复制到两个配置中的所有服务器上。</li>
@@ -269,52 +231,28 @@
 </ul>
 <p>当 leader 收到配置变更消息时，它会存储并复制加入共识 <code>C&lt;old，new&gt;</code> 的条目。服务器总是使用其日志中的最新配置来做决策，即使它没有被提交。当联合共识被提交时，只有日志中含有 <code>C&lt;old，new&gt;</code> 的服务器才能成为 leader。</p>
 <p>现在，leader 可以安全地创建一个描述 <code>C&lt;new&gt;</code> 的日志条目，并将其复制到集群中。同样，这个配置一旦被看到，就会在每个服务器上生效。当新配置在 <code>C&lt;new&gt;</code> 的规则下提交后，旧配置就无关紧要了，不在新配置中的服务器可以被关闭。</p>
-<h2 id="图解"><a href="#图解" class="headerlink" title="图解"></a>图解</h2><p>见 <a target="_blank" rel="noopener" href="http://thesecretlivesofdata.com/raft/">Raft 协议图解</a></p>
+<h2><span id="图解">图解 </span></h2><p> 见<a target="_blank" rel="noopener" href="http://thesecretlivesofdata.com/raft/">Raft 协议图解</a></p>
 
+            </div>
+            <!-- Post Comments -->
+            
         </div>
-
-        
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"># 分布式</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2017/10/10/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8BCPU/">CPU 的工作原理</a>
-            
-            
-            <a class="next" rel="next" href="/2017/09/28/%E5%B7%A5%E5%85%B7/%E7%94%9F%E4%BA%A7%E5%8A%9B%E5%B7%A5%E5%85%B7%E4%B9%8BWakaTime/">WakaTime - 时间记录工具</a>
-            
-        </section>
-
-
-    </article>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
 </div>
-
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
-        
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
-    </div>
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
+
+
+
+
+
 </html>

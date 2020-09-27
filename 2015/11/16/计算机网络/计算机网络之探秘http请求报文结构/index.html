@@ -1,210 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
 
-<meta name="author" content="maywzh">
+	    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
 
-<meta name="subtitle" content="0x01 MAYSTORY">
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<!-- Layouts -->
 
 
-<meta name="description" content="Namasday.">
 
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
 
-<meta name="keywords" content="Tech Blogs">
-
-
-<title>探秘 http 请求报文结构 | 0x01 MAYSTORY </title>
-
-
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
+<body class="is-loading">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
 </header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
-</script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/uncategorized/">uncategorized</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-</script>
-    
-
-    
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">探秘 http 请求报文结构</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
-
-                    
-                        <span class="post-time">
-                        Date: <a href="#">November 16, 2015&nbsp;&nbsp;18:55:07</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
-
-        <div class="post-content">
-            <p>HTTP 请求报文由客户端发出，在发送报文之前要先与服务器建立 TCP 连接，如果使用 HTTPS 协议还需要建立 TLS/SSL 加密隧道连接，HTTP 请求报文是由三部分组成: <strong> 请求行 </strong>, <strong> 请求报头 </strong> 和 <strong> 请求正文 </strong>。</p>
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/23/e3RwjsFMKWNa4fH.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>探秘 http 请求报文结构</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <p>HTTP 请求报文由客户端发出，在发送报文之前要先与服务器建立 TCP 连接，如果使用 HTTPS 协议还需要建立 TLS/SSL 加密隧道连接，HTTP 请求报文是由三部分组成: <strong>请求行 </strong>, <strong> 请求报头 </strong> 和<strong>请求正文</strong>。</p>
 <a id="more"></a>
-<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><p>举个例子，下面是对 www.google.com 发出的请求报文。我们可以在 Google Dev Tools 中查看。</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.2</span><br><span class="line"><span class="attribute">accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line"><span class="attribute">accept-encoding</span>: gzip, deflate, br</span><br><span class="line"><span class="attribute">accept-language</span>: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6</span><br><span class="line"><span class="attribute">cache-control</span>: no-cache</span><br><span class="line"><span class="attribute">cookie</span>: OTZ=4569705_24_24__24_; _ga=GA1.1.1839148291.1537105919; HSID=AOuQZEx7qIgKNr4Gg; SSID=sdsdfgGFWWA...</span><br><span class="line"><span class="attribute">dnt</span>: 1</span><br><span class="line"><span class="attribute">pragma</span>: no-cache</span><br><span class="line"><span class="attribute">upgrade-insecure-requests</span>: 1</span><br><span class="line"><span class="attribute">user-agent</span>: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36</span><br></pre></td></tr></table></figure>
-<h3 id="HTTP-请求行"><a href="#HTTP-请求行" class="headerlink" title="HTTP 请求行"></a>HTTP 请求行</h3><p>请求行标示请求方法、请求资源相对地址和 HTTP 协议版本</p>
-<h4 id="常用的请求方法"><a href="#常用的请求方法" class="headerlink" title="常用的请求方法"></a>常用的请求方法</h4><div class="table-container">
+<h3><span id="实例">实例 </span></h3><p> 举个例子，下面是对 www.google.com 发出的请求报文。我们可以在 Google Dev Tools 中查看。</p>
+<pre class="line-numbers language-http" data-language="http"><code class="language-http">GET / HTTP/1.2
+<span class="token header-name keyword">accept:</span> text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+<span class="token header-name keyword">accept-encoding:</span> gzip, deflate, br
+<span class="token header-name keyword">accept-language:</span> zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6
+<span class="token header-name keyword">cache-control:</span> no-cache
+<span class="token header-name keyword">cookie:</span> OTZ=4569705_24_24__24_; _ga=GA1.1.1839148291.1537105919; HSID=AOuQZEx7qIgKNr4Gg; SSID=sdsdfgGFWWA...
+<span class="token header-name keyword">dnt:</span> 1
+<span class="token header-name keyword">pragma:</span> no-cache
+<span class="token header-name keyword">upgrade-insecure-requests:</span> 1
+<span class="token header-name keyword">user-agent:</span> Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3><span id="http-请求行">HTTP 请求行 </span></h3><p> 请求行标示请求方法、请求资源相对地址和 HTTP 协议版本</p>
+<h4><span id="常用的请求方法">常用的请求方法</span></h4><div class="table-container">
 <table>
 <thead>
 <tr>
@@ -215,7 +186,7 @@
 <tbody>
 <tr>
 <td>GET</td>
-<td>GET 方法请求一个指定资源的表示形式。使用 GET 的请求应该只被用于获取数据.</td>
+<td>GET 方法请求一个指定资源的表示形式. 使用 GET 的请求应该只被用于获取数据.</td>
 </tr>
 <tr>
 <td>POST</td>
@@ -252,8 +223,8 @@
 </tbody>
 </table>
 </div>
-<h3 id="HTTP-请求报头"><a href="#HTTP-请求报头" class="headerlink" title="HTTP 请求报头"></a>HTTP 请求报头</h3><p>包含请求的附加信息和客户端的标识信息。</p>
-<h4 id="常用标准请求头字段："><a href="#常用标准请求头字段：" class="headerlink" title="常用标准请求头字段："></a>常用标准请求头字段：</h4><div class="table-container">
+<h3><span id="http-请求报头">HTTP 请求报头 </span></h3><p> 包含请求的附加信息和客户端的标识信息。</p>
+<h4><span id="常用标准请求头字段">常用标准请求头字段：</span></h4><div class="table-container">
 <table>
 <thead>
 <tr>
@@ -301,7 +272,7 @@
 <tr>
 <td><strong>Connection</strong></td>
 <td>设置当前连接和 hop-by-hop 协议请求字段列表的控制选项</td>
-<td>Connection: keep-alive<br />Connection: Upgrade</td>
+<td>Connection: keep-alive<br>Connection: Upgrade</td>
 </tr>
 <tr>
 <td><strong>Content-Length</strong></td>
@@ -336,7 +307,7 @@
 <tr>
 <td><strong>Forwarded</strong></td>
 <td>披露客户端通过 http 代理连接 web 服务的源信息</td>
-<td>Forwarded: for=192.0.2.60;proto=http;by=203.0.113.43 <br />Forwarded: for=192.0.2.43, for=198.51.100.17</td>
+<td>Forwarded: for=192.0.2.60;proto=http;by=203.0.113.43 <br>Forwarded: for=192.0.2.43, for=198.51.100.17</td>
 </tr>
 <tr>
 <td><strong>From</strong></td>
@@ -346,7 +317,7 @@
 <tr>
 <td><strong>Host</strong></td>
 <td>设置服务器域名和 TCP 端口号，如果使用的是服务请求标准端口号，端口号可以省略</td>
-<td>Host: en.wikipedia.org:8080<br/>Host: en.wikipedia.org</td>
+<td>Host: en.wikipedia.org:8080<br>Host: en.wikipedia.org</td>
 </tr>
 <tr>
 <td><strong>If-Match</strong></td>
@@ -431,7 +402,7 @@
 </tbody>
 </table>
 </div>
-<h4 id="常用非标准请求头字段"><a href="#常用非标准请求头字段" class="headerlink" title="常用非标准请求头字段"></a>常用非标准请求头字段</h4><div class="table-container">
+<h4><span id="常用非标准请求头字段">常用非标准请求头字段</span></h4><div class="table-container">
 <table>
 <thead>
 <tr>
@@ -449,17 +420,17 @@
 <tr>
 <td><strong>DNT</strong></td>
 <td>请求 web 应用禁用用户追踪</td>
-<td style="text-align:left">DNT: 1 (Do Not Track Enabled) <br />DNT: 0 (Do Not Track Disabled)</td>
+<td style="text-align:left">DNT: 1 (Do Not Track Enabled) <br>DNT: 0 (Do Not Track Disabled)</td>
 </tr>
 <tr>
 <td><strong>X-Forwarded-For</strong></td>
 <td>一个事实标准，用来标识客户端通过 HTTP 代理或者负载均衡器连接的 web 服务器的原始 IP 地址</td>
-<td style="text-align:left">X-Forwarded-For: client1, proxy1, proxy2<br/>X-Forwarded-For: 129.78.138.66, 129.78.64.103</td>
+<td style="text-align:left">X-Forwarded-For: client1, proxy1, proxy2<br>X-Forwarded-For: 129.78.138.66, 129.78.64.103</td>
 </tr>
 <tr>
 <td><strong>X-Forwarded-Host</strong></td>
 <td>一个事实标准，用来标识客户端在 HTTP 请求头中请求的原始 host, 因为主机名或者反向代理的端口可能与处理请求的原始服务器不同</td>
-<td style="text-align:left">X-Forwarded-Host: en.wikipedia.org:8080<br/>X-Forwarded-Host: en.wikipedia.org</td>
+<td style="text-align:left">X-Forwarded-Host: en.wikipedia.org:8080<br>X-Forwarded-Host: en.wikipedia.org</td>
 </tr>
 <tr>
 <td><strong>X-Forwarded-Proto</strong></td>
@@ -473,7 +444,7 @@
 </tr>
 <tr>
 <td><strong>X-Http-Method-Override</strong></td>
-<td>请求 web 应用时，使用 header 字段中给定的方法（通常是 put 或者 delete）覆盖请求中指定的方法（通常是 post）,<br /> 如果用户代理或者防火墙不支持直接使用 put 或者 delete 方法发送请求时，可以使用这个字段</td>
+<td>请求 web 应用时，使用 header 字段中给定的方法（通常是 put 或者 delete）覆盖请求中指定的方法（通常是 post）,<br>如果用户代理或者防火墙不支持直接使用 put 或者 delete 方法发送请求时，可以使用这个字段</td>
 <td style="text-align:left">X-HTTP-Method-Override: DELETE</td>
 </tr>
 <tr>
@@ -509,55 +480,55 @@
 </tbody>
 </table>
 </div>
-<h3 id="HTTP-请求正文"><a href="#HTTP-请求正文" class="headerlink" title="HTTP 请求正文"></a>HTTP 请求正文</h3><p>当使用 POST, PUT 等方法时，需要客户端向服务器传递参数。这些数据就储存在请求正文中。在请求报头中有一些与请求正文相关的信息。</p>
-<p>例如：现在的 Web 应用通常采用 Restful 架构，请求的数据格式一般为 json。这时就需要设置 Content-Type: application/json。</p>
+<h3><span id="http-请求正文">HTTP 请求正文 </span></h3><p> 当使用 POST, PUT 等方法时，需要客户端向服务器传递参数。这些数据就储存在请求正文中。在请求报头中有一些与请求正文相关的信息。</p>
+<p>例如: 现在的 Web 应用通常采用 Restful 架构，请求的数据格式一般为 json。这时就需要设置 Content-Type: application/json。</p>
 
-        </div>
-
-        
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/Web/"># Web</a>
-                    
-                        <a href="/tags/HTTP-HTTPS/"># HTTP/HTTPS</a>
-                    
-                        
-                </span>
             </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2015/12/16/Linux/Linux%E4%B8%AD%E7%9A%84lsof/">Linux 中的 lsof</a>
+            <!-- Post Comments -->
             
             
-            <a class="next" rel="next" href="/2015/11/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8B%E6%8E%A2%E7%A7%98http%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87%E7%BB%93%E6%9E%84/">探秘 http 响应报文结构</a>
-            
-        </section>
-
-
-    </article>
+    <!-- 使用 valine -->
+<div id="comment">
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#comment' ,
+        notify: false,
+        verify: false,
+        app_id: '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+        app_key: 'UrBohelQ00fEUxu5npX46rtL',
+        placeholder: 'Just go go',
+        pageSize: '10',
+        avatar: 'mm',
+        avatar_cdn: 'https://gravatar.loli.net/avatar/'
+    });
+</script>
 </div>
+<style>
+   #comment{
+        padding: 2pc;
+    }
+</style>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
             
-        </span>
-        
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
-    </div>
+        </div>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
+</div>
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
+
+
+
+
+
 </html>

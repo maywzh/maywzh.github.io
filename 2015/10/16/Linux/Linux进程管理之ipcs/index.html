@@ -1,285 +1,337 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
 
-<meta name="author" content="maywzh">
+	    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
 
-<meta name="subtitle" content="0x01 MAYSTORY">
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<!-- Layouts -->
 
 
-<meta name="description" content="Namasday.">
 
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
 
-<meta name="keywords" content="Tech Blogs">
-
-
-<title>Linux 进程管理之 ipcs | 0x01 MAYSTORY </title>
-
-
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
+<body class="is-loading">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
 </header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
-</script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/uncategorized/">uncategorized</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-</script>
-    
-
-    
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">Linux 进程管理之 ipcs</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
-
-                    
-                        <span class="post-time">
-                        Date: <a href="#">October 16, 2015&nbsp;&nbsp;18:45:56</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/DevOps/">DevOps</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
-
-        <div class="post-content">
-            <h2 id="ipcs-查询进程间通信状态"><a href="#ipcs-查询进程间通信状态" class="headerlink" title="ipcs - 查询进程间通信状态"></a>ipcs - 查询进程间通信状态</h2><p>ipcs 是 Linux 下显示进程间通信设施状态的工具。可以显示消息队列、共享内存和信号量的信息。可以为程序员提供大量信息来分析程序运行状态。</p>
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/23/HTsIf7oalGchv8J.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>Linux 进程管理之 ipcs</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <h2><span id="ipcs-查询进程间通信状态">ipcs - 查询进程间通信状态</span></h2><p>ipcs 是 Linux 下显示进程间通信设施状态的工具。可以显示消息队列、共享内存和信号量的信息。可以为程序员提供大量信息来分析程序运行状态。</p>
 <a id="more"></a>
-<h2 id="IPC-资源查询"><a href="#IPC-资源查询" class="headerlink" title="IPC 资源查询"></a>IPC 资源查询</h2><h3 id="查看系统使用的-IPC-资源"><a href="#查看系统使用的-IPC-资源" class="headerlink" title="查看系统使用的 IPC 资源"></a>查看系统使用的 IPC 资源</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ipcs</span></span><br><span class="line"></span><br><span class="line">------ Shared Memory Segments --------</span><br><span class="line">key        shmid      owner      perms      bytes      nattch     status</span><br><span class="line"></span><br><span class="line">------ Semaphore Arrays --------</span><br><span class="line">key        semid      owner      perms      nsems</span><br><span class="line">0x00000000 229376     weber      600        1</span><br><span class="line"></span><br><span class="line">------ Message Queues --------</span><br><span class="line">key        msqid      owner      perms      used-bytes   messages</span><br></pre></td></tr></table></figure>
+<h2><span id="ipc-资源查询">IPC 资源查询 </span></h2><h3><span id="查看系统使用的-ipc-资源"> 查看系统使用的 IPC 资源</span></h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$ipcs</span>
+
+------ Shared Memory Segments --------
+key        shmid      owner      perms      bytes      nattch     status
+
+------ Semaphore Arrays --------
+key        semid      owner      perms      nsems
+0x00000000 <span class="token number">229376</span>     weber      <span class="token number">600</span>        <span class="token number">1</span>
+
+------ Message Queues --------
+key        msqid      owner      perms      used-bytes   messages<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>分别查询 IPC 资源:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ipcs</span> -m <span class="comment"># 查看系统使用的 IPC 共享内存资源 </span></span><br><span class="line"><span class="variable">$ipcs</span> -q <span class="comment"># 查看系统使用的 IPC 队列资源 </span></span><br><span class="line"><span class="variable">$ipcs</span> -s <span class="comment"># 查看系统使用的 IPC 信号量资源 </span></span><br></pre></td></tr></table></figure>
-<h3 id="查看-IPC-资源被谁占用"><a href="#查看-IPC-资源被谁占用" class="headerlink" title="查看 IPC 资源被谁占用"></a>查看 IPC 资源被谁占用</h3><p>示例：有个 IPCKEY (51036)，需要查询其是否被占用；</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$ipcs</span> -m <span class="token comment"># 查看系统使用的 IPC 共享内存资源</span>
+<span class="token variable">$ipcs</span> -q <span class="token comment"># 查看系统使用的 IPC 队列资源</span>
+<span class="token variable">$ipcs</span> -s <span class="token comment"># 查看系统使用的 IPC 信号量资源</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3><span id="查看-ipc-资源被谁占用">查看 IPC 资源被谁占用 </span></h3><p> 示例：有个 IPCKEY(51036)，需要查询其是否被占用；</p>
 <ol>
 <li><p>首先通过计算器将其转为十六进制:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">printf</span> % x 51036</span><br><span class="line">c75c</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token builtin class-name">printf</span> %x <span class="token number">51036</span>
+c75c<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 </li>
 <li><p>如果知道是被共享内存占用:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ipcs -m | grep c75c</span><br><span class="line">0x0000c75c 40403197   tdea3    666        536870912  2</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ ipcs -m <span class="token operator">|</span> <span class="token function">grep</span> c75c
+0x0000c75c <span class="token number">40403197</span>   tdea3    <span class="token number">666</span>        <span class="token number">536870912</span>  <span class="token number">2</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 </li>
 <li><p>如果不确定，则直接查找:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ipcs</span> | grep c75c</span><br><span class="line">0x0000c75c 40403197   tdea3    666        536870912  2</span><br><span class="line">0x0000c75c 5079070    tdea3    666        4</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$ipcs</span> <span class="token operator">|</span> <span class="token function">grep</span> c75c
+0x0000c75c <span class="token number">40403197</span>   tdea3    <span class="token number">666</span>        <span class="token number">536870912</span>  <span class="token number">2</span>
+0x0000c75c <span class="token number">5079070</span>    tdea3    <span class="token number">666</span>        <span class="token number">4</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 </li>
 </ol>
-<h2 id="系统-IPC-参数查询"><a href="#系统-IPC-参数查询" class="headerlink" title="系统 IPC 参数查询"></a>系统 IPC 参数查询</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ ipcs -l</span><br><span class="line">------ Messages Limits --------</span><br><span class="line">max queues system wide = 32000</span><br><span class="line">max size of message (bytes) = 8192</span><br><span class="line">default max size of queue (bytes) = 16384</span><br><span class="line"></span><br><span class="line">------ Shared Memory Limits --------</span><br><span class="line">max number of segments = 4096</span><br><span class="line">max seg size (kbytes) = 18014398509465599</span><br><span class="line">max total shared memory (kbytes) = 18014398509481980</span><br><span class="line">min seg size (bytes) = 1</span><br><span class="line"></span><br><span class="line">------ Semaphore Limits --------</span><br><span class="line">max number of arrays = 32000</span><br><span class="line">max semaphores per array = 32000</span><br><span class="line">max semaphores system wide = 1024000000</span><br><span class="line">max ops per semop call = 500</span><br><span class="line">semaphore max value = 32767</span><br></pre></td></tr></table></figure>
+<h2><span id="系统-ipc-参数查询">系统 IPC 参数查询</span></h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ ipcs -l
+------ Messages Limits --------
+max queues system wide <span class="token operator">=</span> <span class="token number">32000</span>
+max size of message <span class="token punctuation">(</span>bytes<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">8192</span>
+default max size of queue <span class="token punctuation">(</span>bytes<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">16384</span>
+
+------ Shared Memory Limits --------
+max number of segments <span class="token operator">=</span> <span class="token number">4096</span>
+max seg size <span class="token punctuation">(</span>kbytes<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">18014398509465599</span>
+max total shared memory <span class="token punctuation">(</span>kbytes<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">18014398509481980</span>
+min seg size <span class="token punctuation">(</span>bytes<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">1</span>
+
+------ Semaphore Limits --------
+max number of arrays <span class="token operator">=</span> <span class="token number">32000</span>
+max semaphores per array <span class="token operator">=</span> <span class="token number">32000</span>
+max semaphores system wide <span class="token operator">=</span> <span class="token number">1024000000</span>
+max ops per semop call <span class="token operator">=</span> <span class="token number">500</span>
+semaphore max value <span class="token operator">=</span> <span class="token number">32767</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>以上输出显示，目前这个系统的允许的最大内存为 18014398509481980kb；最大可使用 32000 个信号量，每个消息的最大长度为 16384bytes；</p>
-<h2 id="修改-IPC-系统参数"><a href="#修改-IPC-系统参数" class="headerlink" title="修改 IPC 系统参数"></a>修改 IPC 系统参数</h2><p>以 linux 系统为例，在 root 用户下修改 /etc/sysctl.conf 文件，保存后使用 sysctl -p 生效:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ cat /etc/sysctl.conf</span><br><span class="line"><span class="comment"># 一个消息的最大长度 </span></span><br><span class="line">kernel.msgmax = 524288</span><br><span class="line"></span><br><span class="line"><span class="comment"># 一个消息队列上的最大字节数 </span></span><br><span class="line"><span class="comment"># 524288*10</span></span><br><span class="line">kernel.msgmnb = 5242880</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最大消息队列的个数 </span></span><br><span class="line">kernel.msgmni=2048</span><br><span class="line"></span><br><span class="line"><span class="comment"># 一个共享内存区的最大字节数 </span></span><br><span class="line">kernel.shmmax = 17179869184</span><br><span class="line"></span><br><span class="line"><span class="comment"># 系统范围内最大共享内存标识数 </span></span><br><span class="line">kernel.shmmni=4096</span><br><span class="line"></span><br><span class="line"><span class="comment"># 每个信号灯集的最大信号灯数 系统范围内最大信号灯数 每个信号灯支持的最大操作数 系统范围内最大信号灯集数 </span></span><br><span class="line"><span class="comment"># 此参数为系统默认，可以不用修改 </span></span><br><span class="line"><span class="comment">#kernel.sem = &lt;semmsl&gt; &lt;semmni&gt;*&lt;semmsl&gt; &lt;semopm&gt; &lt;semmni&gt;</span></span><br><span class="line">kernel.sem = 250 32000 32 128</span><br></pre></td></tr></table></figure>
+<h2><span id="修改-ipc-系统参数">修改 IPC 系统参数 </span></h2><p> 以 linux 系统为例，在 root 用户下修改 /etc/sysctl.conf 文件，保存后使用 sysctl -p 生效:</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">cat</span> /etc/sysctl.conf
+<span class="token comment"># 一个消息的最大长度</span>
+kernel.msgmax <span class="token operator">=</span> <span class="token number">524288</span>
+
+<span class="token comment"># 一个消息队列上的最大字节数</span>
+<span class="token comment"># 524288*10</span>
+kernel.msgmnb <span class="token operator">=</span> <span class="token number">5242880</span>
+
+<span class="token comment"># 最大消息队列的个数</span>
+kernel.msgmni<span class="token operator">=</span><span class="token number">2048</span>
+
+<span class="token comment"># 一个共享内存区的最大字节数</span>
+kernel.shmmax <span class="token operator">=</span> <span class="token number">17179869184</span>
+
+<span class="token comment"># 系统范围内最大共享内存标识数</span>
+kernel.shmmni<span class="token operator">=</span><span class="token number">4096</span>
+
+<span class="token comment"># 每个信号灯集的最大信号灯数 系统范围内最大信号灯数 每个信号灯支持的最大操作数 系统范围内最大信号灯集数</span>
+<span class="token comment"># 此参数为系统默认，可以不用修改</span>
+<span class="token comment">#kernel.sem = &lt;semmsl> &lt;semmni>*&lt;semmsl> &lt;semopm> &lt;semmni></span>
+kernel.sem <span class="token operator">=</span> <span class="token number">250</span> <span class="token number">32000</span> <span class="token number">32</span> <span class="token number">128</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>显示输入不带标志的 ipcs：的输出:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ ipcs</span><br><span class="line">IPC status from /dev/mem as of Mon Aug 14 15:03:46 1989</span><br><span class="line">T    ID         KEY        MODE       OWNER     GROUP</span><br><span class="line">Message Queues:</span><br><span class="line">q       0    0x00010381 -Rrw-rw-rw-   root      system</span><br><span class="line">q   65537    0x00010307 -Rrw-rw-rw-   root      system</span><br><span class="line">q   65538    0x00010311 -Rrw-rw-rw-   root      system</span><br><span class="line">q   65539    0x0001032f -Rrw-rw-rw-   root      system</span><br><span class="line">q   65540    0x0001031b -Rrw-rw-rw-   root      system</span><br><span class="line">q   65541    0x00010339--rw-rw-rw-    root      system</span><br><span class="line">q       6    0x0002fe03 -Rrw-rw-rw-   root      system</span><br><span class="line">Shared Memory:</span><br><span class="line">m   65537    0x00000000 DCrw-------   root      system</span><br><span class="line">m  720898    0x00010300 -Crw-rw-rw-   root      system</span><br><span class="line">m   65539    0x00000000 DCrw-------   root      system</span><br><span class="line">Semaphores:</span><br><span class="line">s  131072    0x4d02086a --ra-ra----   root      system</span><br><span class="line">s   65537    0x00000000 --ra-------   root      system</span><br><span class="line">s 1310722    0x000133d0 --ra-------   7003      30720</span><br></pre></td></tr></table></figure>
-<h2 id="清除-IPC-资源"><a href="#清除-IPC-资源" class="headerlink" title="清除 IPC 资源"></a>清除 IPC 资源</h2><p>使用 ipcrm 命令来清除 IPC 资源：这个命令同时会将与 ipc 对象相关联的数据也一起移除。当然，只有 root 用户，或者 ipc 对象的创建者才有这项权利；</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ ipcs
+IPC status from /dev/mem as of Mon Aug <span class="token number">14</span> <span class="token number">15</span>:03:46 <span class="token number">1989</span>
+T    ID         KEY        MODE       OWNER     GROUP
+Message Queues:
+q       <span class="token number">0</span>    0x00010381 -Rrw-rw-rw-   root      system
+q   <span class="token number">65537</span>    0x00010307 -Rrw-rw-rw-   root      system
+q   <span class="token number">65538</span>    0x00010311 -Rrw-rw-rw-   root      system
+q   <span class="token number">65539</span>    0x0001032f -Rrw-rw-rw-   root      system
+q   <span class="token number">65540</span>    0x0001031b -Rrw-rw-rw-   root      system
+q   <span class="token number">65541</span>    0x00010339--rw-rw-rw-    root      system
+q       <span class="token number">6</span>    0x0002fe03 -Rrw-rw-rw-   root      system
+Shared Memory:
+m   <span class="token number">65537</span>    0x00000000 DCrw-------   root      system
+m  <span class="token number">720898</span>    0x00010300 -Crw-rw-rw-   root      system
+m   <span class="token number">65539</span>    0x00000000 DCrw-------   root      system
+Semaphores:
+s  <span class="token number">131072</span>    0x4d02086a --ra-ra----   root      system
+s   <span class="token number">65537</span>    0x00000000 --ra-------   root      system
+s <span class="token number">1310722</span>    0x000133d0 --ra-------   <span class="token number">7003</span>      <span class="token number">30720</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2><span id="清除-ipc-资源">清除 IPC 资源 </span></h2><p> 使用 ipcrm 命令来清除 IPC 资源：这个命令同时会将与 ipc 对象相关联的数据也一起移除。当然，只有 root 用户，或者 ipc 对象的创建者才有这项权利；</p>
 <p>ipcrm 用法:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ipcrm -M shmkey  <span class="comment"># 移除用 shmkey 创建的共享内存段 </span></span><br><span class="line">ipcrm -m shmid    <span class="comment"># 移除用 shmid 标识的共享内存段 </span></span><br><span class="line">ipcrm -Q msgkey  <span class="comment"># 移除用 msqkey 创建的消息队列 </span></span><br><span class="line">ipcrm -q msqid  <span class="comment"># 移除用 msqid 标识的消息队列 </span></span><br><span class="line">ipcrm -S semkey  <span class="comment"># 移除用 semkey 创建的信号 </span></span><br><span class="line">ipcrm -s semid  <span class="comment"># 移除用 semid 标识的信号 </span></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ipcrm -M shmkey  <span class="token comment"># 移除用 shmkey 创建的共享内存段</span>
+ipcrm -m shmid    <span class="token comment"># 移除用 shmid 标识的共享内存段</span>
+ipcrm -Q msgkey  <span class="token comment"># 移除用 msqkey 创建的消息队列</span>
+ipcrm -q msqid  <span class="token comment"># 移除用 msqid 标识的消息队列</span>
+ipcrm -S semkey  <span class="token comment"># 移除用 semkey 创建的信号</span>
+ipcrm -s semid  <span class="token comment"># 移除用 semid 标识的信号</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>清除当前用户创建的所有的 IPC 资源:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ipcs -q | awk <span class="string">&#x27;&#123; print &quot;ipcrm -q &quot;$2&#125;&#x27;</span> | sh &gt; /dev/null 2&gt;&amp;1;</span><br><span class="line">ipcs -m | awk <span class="string">&#x27;&#123; print &quot;ipcrm -m &quot;$2&#125;&#x27;</span> | sh &gt; /dev/null 2&gt;&amp;1;</span><br><span class="line">ipcs -s | awk <span class="string">&#x27;&#123; print &quot;ipcrm -s &quot;$2&#125;&#x27;</span> | sh &gt; /dev/null 2&gt;&amp;1;</span><br></pre></td></tr></table></figure>
-<h2 id="综合应用"><a href="#综合应用" class="headerlink" title="综合应用"></a>综合应用</h2><h3 id="查询-user1-用户环境上是否存在积-Queue-现象"><a href="#查询-user1-用户环境上是否存在积-Queue-现象" class="headerlink" title="查询 user1 用户环境上是否存在积 Queue 现象"></a>查询 user1 用户环境上是否存在积 Queue 现象</h3><ol>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ipcs -q <span class="token operator">|</span> <span class="token function">awk</span> <span class="token string">'&#123; print"ipcrm -q "<span class="token variable">$2</span>&#125;'</span> <span class="token operator">|</span> <span class="token function">sh</span> <span class="token operator">></span> /dev/null <span class="token operator"><span class="token file-descriptor important">2</span>></span><span class="token file-descriptor important">&amp;1</span><span class="token punctuation">;</span>
+ipcs -m <span class="token operator">|</span> <span class="token function">awk</span> <span class="token string">'&#123; print"ipcrm -m "<span class="token variable">$2</span>&#125;'</span> <span class="token operator">|</span> <span class="token function">sh</span> <span class="token operator">></span> /dev/null <span class="token operator"><span class="token file-descriptor important">2</span>></span><span class="token file-descriptor important">&amp;1</span><span class="token punctuation">;</span>
+ipcs -s <span class="token operator">|</span> <span class="token function">awk</span> <span class="token string">'&#123; print"ipcrm -s "<span class="token variable">$2</span>&#125;'</span> <span class="token operator">|</span> <span class="token function">sh</span> <span class="token operator">></span> /dev/null <span class="token operator"><span class="token file-descriptor important">2</span>></span><span class="token file-descriptor important">&amp;1</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h2><span id="综合应用">综合应用 </span></h2><h3><span id="查询-user1-用户环境上是否存在积-queue-现象"> 查询 user1 用户环境上是否存在积 Queue 现象</span></h3><ol>
 <li><p>查询队列 Queue:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ ipcs -q</span><br><span class="line"></span><br><span class="line">------ Message Queues --------</span><br><span class="line">key        msqid      owner      perms      used-bytes   messages</span><br><span class="line">0x49060005 58261504   user1    660        0            0</span><br><span class="line">0x4f060005 58294273   user1    660        0            0</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ ipcs -q
+
+------ Message Queues --------
+key        msqid      owner      perms      used-bytes   messages
+0x49060005 <span class="token number">58261504</span>   user1    <span class="token number">660</span>        <span class="token number">0</span>            <span class="token number">0</span>
+0x4f060005 <span class="token number">58294273</span>   user1    <span class="token number">660</span>        <span class="token number">0</span>            <span class="token number">0</span>
+<span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 <li><p>找出第 6 列大于 0 的服务:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ipcs -q |grep user1 |awk <span class="string">&#x27;&#123;if ($5&gt;0) print $0&#125;&#x27;</span></span><br><span class="line">0x00000000 1071579324 user1       644        1954530      4826</span><br><span class="line">0x00000000 1071644862 user1       644        1961820      4844</span><br><span class="line">0x00000000 1071677631 user1       644        1944810      4802</span><br><span class="line">0x00000000 1071710400 user1       644        1961820      4844</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ ipcs -q <span class="token operator">|</span><span class="token function">grep</span> user1 <span class="token operator">|</span><span class="token function">awk</span> <span class="token string">'&#123;if(<span class="token variable">$5</span>>0) print <span class="token variable">$0</span>&#125;'</span>
+0x00000000 <span class="token number">1071579324</span> user1       <span class="token number">644</span>        <span class="token number">1954530</span>      <span class="token number">4826</span>
+0x00000000 <span class="token number">1071644862</span> user1       <span class="token number">644</span>        <span class="token number">1961820</span>      <span class="token number">4844</span>
+0x00000000 <span class="token number">1071677631</span> user1       <span class="token number">644</span>        <span class="token number">1944810</span>      <span class="token number">4802</span>
+0x00000000 <span class="token number">1071710400</span> user1       <span class="token number">644</span>        <span class="token number">1961820</span>      <span class="token number">4844</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 </ol>
 
-        </div>
-
-        
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/Linux/"># Linux</a>
-                    
-                        
-                </span>
             </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2015/10/16/C&C++/c%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%8C%87%E9%92%88/">理解 c 语言中的指针</a>
+            <!-- Post Comments -->
             
             
-            <a class="next" rel="next" href="/2015/10/14/Linux/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8Bps/">Linux 进程管理之 ps</a>
-            
-        </section>
-
-
-    </article>
+    <!-- 使用 valine -->
+<div id="comment">
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#comment' ,
+        notify: false,
+        verify: false,
+        app_id: '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+        app_key: 'UrBohelQ00fEUxu5npX46rtL',
+        placeholder: 'Just go go',
+        pageSize: '10',
+        avatar: 'mm',
+        avatar_cdn: 'https://gravatar.loli.net/avatar/'
+    });
+</script>
 </div>
+<style>
+   #comment{
+        padding: 2pc;
+    }
+</style>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
             
-        </span>
-        
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
-    </div>
+        </div>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
+</div>
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
+
+
+
+
+
 </html>

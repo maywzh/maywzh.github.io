@@ -1,689 +1,217 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.1.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
-  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
-  </script>
-
-  <meta name="description" content="Go语言是为并发而生的语言，Go语言是为数不多的在语言层面实现并发的语言；也正是Go语言的并发特性，吸引了全球无数的开发者。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Go语言的并发原理">
-<meta property="og:url" content="https://io.maywzh.com/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/index.html">
-<meta property="og:site_name" content="Cult I.O.">
-<meta property="og:description" content="Go语言是为并发而生的语言，Go语言是为数不多的在语言层面实现并发的语言；也正是Go语言的并发特性，吸引了全球无数的开发者。">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://i6448038.github.io/img/csp/send.png">
-<meta property="og:image" content="https://i6448038.github.io/img/csp/accept.png">
-<meta property="og:image" content="https://i6448038.github.io/img/csp/communicate.png">
-<meta property="og:image" content="https://i6448038.github.io/img/csp/yonghutai.png">
-<meta property="og:image" content="https://i6448038.github.io/img/csp/neiheji.png">
-<meta property="og:image" content="https://i6448038.github.io/img/csp/liangji.png">
-<meta property="og:image" content="https://i6448038.github.io/img/csp/GMPrelation.png">
-<meta property="og:image" content="https://i6448038.github.io/img/csp/total.png">
-<meta property="og:image" content="https://i6448038.github.io/img/csp/giveupP.png">
-<meta property="og:image" content="https://i6448038.github.io/img/csp/stealwork.png">
-<meta property="article:published_time" content="2020-01-15T23:55:17.000Z">
-<meta property="article:modified_time" content="2020-09-27T07:48:52.160Z">
-<meta property="article:author" content="maywzh">
-<meta property="article:tag" content="Go">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i6448038.github.io/img/csp/send.png">
-
-<link rel="canonical" href="https://io.maywzh.com/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/">
-
-
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'en'
-  };
-</script>
-
-  <title>Go语言的并发原理 | Cult I.O.</title>
-  
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
-    <script data-pjax>
-      if (CONFIG.hostname === location.hostname) {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-119246999-4');
-      }
-    </script>
-
-
-
-
-
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
-
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">Cult I.O.</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-      <p class="site-subtitle" itemprop="description">Namasday.</p>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
-    </div>
-  </div>
-</div>
-
-
-
-
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
-  </ul>
-</nav>
-
-
-
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
-           placeholder="Searching..." spellcheck="false"
-           type="search" class="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
-  </div>
-</div>
-
-    </div>
-  </div>
-
-</div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-  <div class="reading-progress-bar"></div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
-
-    
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/myavatar.jpg">
-      <meta itemprop="name" content="maywzh">
-      <meta itemprop="description" content="Namasday.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cult I.O.">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          Go语言的并发原理
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020.01.16 07:55:17" itemprop="dateCreated datePublished" datetime="2020-01-16T07:55:17+08:00">2020.01.16</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" class="post-meta-item leancloud_visitors" data-flag-title="Go语言的并发原理" title="Views">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-        <p>Go语言是为并发而生的语言，Go语言是为数不多的在语言层面实现并发的语言；也正是Go语言的并发特性，吸引了全球无数的开发者。</p>
-<a id="more"></a>
-<h1 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h1><p><strong>并发(concurrency)</strong>：两个或两个以上的任务在一段时间内被执行。我们不必care这些任务在某一个时间点是否是同时执行，可能同时执行，也可能不是，我们只关心在一段时间内，哪怕是很短的时间（一秒或者两秒）是否执行解决了两个或两个以上任务。</p>
-<p><strong>并行(parallellism)：</strong>两个或两个以上的任务在同一时刻被同时执行。</p>
-<p>并发说的是逻辑上的概念，而并行，强调的是物理运行状态。并发“包含”并行。</p>
-<p>（详情请见：Rob Pike 的<a target="_blank" rel="noopener" href="https://talks.golang.org/2012/concurrency.slide#1">PPT</a>）</p>
-<h1 id="Go的CSP并发模型"><a href="#Go的CSP并发模型" class="headerlink" title="Go的CSP并发模型"></a>Go的CSP并发模型</h1><p>Go实现了两种并发形式。第一种是大家普遍认知的：多线程共享内存。其实就是Java或者C++等语言中的多线程开发。另外一种是Go语言特有的，也是Go语言推荐的：CSP（communicating sequential processes）并发模型。</p>
-<p>CSP并发模型是在1970年左右提出的概念，属于比较新的概念，不同于传统的多线程通过共享内存来通信，CSP讲究的是“以通信的方式来共享内存”。</p>
-<p>请记住下面这句话：<br><strong>Do not communicate by sharing memory; instead, share memory by communicating.</strong><br>“不要以共享内存的方式来通信，相反，要通过通信来共享内存。”</p>
-<p>普通的线程并发模型，就是像Java、C++、或者Python，他们线程间通信都是通过共享内存的方式来进行的。非常典型的方式就是，在访问共享数据（例如数组、Map、或者某个结构体或对象）的时候，通过锁来访问，因此，在很多时候，衍生出一种方便操作的数据结构，叫做“线程安全的数据结构”。例如Java提供的包”java.util.concurrent”中的数据结构。Go中也实现了传统的线程并发模型。</p>
-<p>Go的CSP并发模型，是通过<code>goroutine</code>和<code>channel</code>来实现的。</p>
-<ul>
-<li><code>goroutine</code> 是Go语言中并发的执行单位。有点抽象，其实就是和传统概念上的”线程“类似，可以理解为”线程“。</li>
-<li><code>channel</code>是Go语言中各个并发结构体(<code>goroutine</code>)之前的通信机制。 通俗的讲，就是各个<code>goroutine</code>之间通信的”管道“，有点类似于Linux中的管道。</li>
-</ul>
-<p>生成一个<code>goroutine</code>的方式非常的简单：Go一下，就生成了。</p>
-<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go f()<span class="comment">;</span></span><br></pre></td></tr></table></figure>
-<p>通信机制<code>channel</code>也很方便，传数据用<code>channel &lt;- data</code>，取数据用<code>&lt;-channel</code>。</p>
-<p>在通信过程中，传数据<code>channel &lt;- data</code>和取数据<code>&lt;-channel</code>必然会成对出现，因为这边传，那边取，两个<code>goroutine</code>之间才会实现通信。</p>
-<p>而且不管传还是取，必阻塞，直到另外的<code>goroutine</code>传或者取为止。</p>
-<p>有两个<code>goroutine</code>，其中一个发起了向<code>channel</code>中发起了传值操作。（<code>goroutine</code>为矩形，<code>channel</code>为箭头）</p>
-<p><img data-src="https://i6448038.github.io/img/csp/send.png" alt="img"></p>
-<p>左边的<code>goroutine</code>开始阻塞，等待有人接收。</p>
-<p>这时候，右边的<code>goroutine</code>发起了接收操作。</p>
-<p><img data-src="https://i6448038.github.io/img/csp/accept.png" alt="img"></p>
-<p>右边的<code>goroutine</code>也开始阻塞，等待别人传送。</p>
-<p>这时候，两边<code>goroutine</code>都发现了对方，于是两个<code>goroutine</code>开始一传，一收。</p>
-<p><img data-src="https://i6448038.github.io/img/csp/communicate.png" alt="img"></p>
-<p>这便是Golang CSP并发模型最基本的形式。</p>
-<h1 id="Go并发模型的实现原理"><a href="#Go并发模型的实现原理" class="headerlink" title="Go并发模型的实现原理"></a>Go并发模型的实现原理</h1><p>我们先从线程讲起，无论语言层面何种并发模型，到了操作系统层面，一定是以线程的形态存在的。而操作系统根据资源访问权限的不同，体系架构可分为用户空间和内核空间；内核空间主要操作访问CPU资源、I/O资源、内存资源等硬件资源，为上层应用程序提供最基本的基础资源，用户空间呢就是上层应用程序的固定活动空间，用户空间不可以直接访问资源，必须通过“系统调用”、“库函数”或“Shell脚本”来调用内核空间提供的资源。</p>
-<p>我们现在的计算机语言，可以狭义的认为是一种“软件”，它们中所谓的“线程”，往往是用户态的线程，和操作系统本身内核态的线程（简称KSE），还是有区别的。</p>
-<p>线程模型的实现，可以分为以下几种方式：</p>
-<h3 id="用户级线程模型"><a href="#用户级线程模型" class="headerlink" title="用户级线程模型"></a>用户级线程模型</h3><p><img data-src="https://i6448038.github.io/img/csp/yonghutai.png" alt="img"></p>
-<p>如图所示，多个用户态的线程对应着一个内核线程，程序线程的创建、终止、切换或者同步等线程工作必须自身来完成。</p>
-<h3 id="内核级线程模型"><a href="#内核级线程模型" class="headerlink" title="内核级线程模型"></a>内核级线程模型</h3><p><img data-src="https://i6448038.github.io/img/csp/neiheji.png" alt="img"></p>
-<p>这种模型直接调用操作系统的内核线程，所有线程的创建、终止、切换、同步等操作，都由内核来完成。C++就是这种。</p>
-<h3 id="两级线程模型"><a href="#两级线程模型" class="headerlink" title="两级线程模型"></a>两级线程模型</h3><p><img data-src="https://i6448038.github.io/img/csp/liangji.png" alt="img"></p>
-<p>这种模型是介于用户级线程模型和内核级线程模型之间的一种线程模型。这种模型的实现非常复杂，和内核级线程模型类似，一个进程中可以对应多个内核级线程，但是进程中的线程不和内核线程一一对应；这种线程模型会先创建多个内核级线程，然后用自身的用户级线程去对应创建的多个内核级线程，自身的用户级线程需要本身程序去调度，内核级的线程交给操作系统内核去调度。</p>
-<p>Go语言的线程模型就是一种特殊的两级线程模型。暂且叫它“MPG”模型吧。</p>
-<h2 id="Go线程实现模型MPG"><a href="#Go线程实现模型MPG" class="headerlink" title="Go线程实现模型MPG"></a>Go线程实现模型MPG</h2><p><code>M</code>指的是<code>Machine</code>，一个<code>M</code>直接关联了一个内核线程。<br><code>P</code>指的是”processor”，代表了<code>M</code>所需的上下文环境，也是处理用户级代码逻辑的处理器。<br><code>G</code>指的是<code>Goroutine</code>，其实本质上也是一种轻量级的线程。</p>
-<p>三者关系如下图所示：</p>
-<p><img data-src="https://i6448038.github.io/img/csp/GMPrelation.png" alt="img"></p>
-<p>以上这个图讲的是两个线程(内核线程)的情况。一个M会对应一个内核线程，一个M也会连接一个上下文P，一个上下文P相当于一个“处理器”，一个上下文连接一个或者多个Goroutine。P(Processor)的数量是在启动时被设置为环境变量GOMAXPROCS的值，或者通过运行时调用函数<code>runtime.GOMAXPROCS()</code>进行设置。Processor数量固定意味着任意时刻只有固定数量的线程在运行go代码。Goroutine中就是我们要执行并发的代码。图中P正在执行的<code>Goroutine</code>为蓝色的；处于待执行状态的<code>Goroutine</code>为灰色的，灰色的<code>Goroutine</code>形成了一个队列<code>runqueues</code></p>
-<p>三者关系的宏观的图为：</p>
-<p><img data-src="https://i6448038.github.io/img/csp/total.png" alt="img"></p>
-<h4 id="抛弃P-Processor"><a href="#抛弃P-Processor" class="headerlink" title="抛弃P(Processor)"></a>抛弃P(Processor)</h4><p>你可能会想，为什么一定需要一个上下文，我们能不能直接除去上下文，让<code>Goroutine</code>的<code>runqueues</code>挂到M上呢？答案是不行，需要上下文的目的，是让我们可以直接放开其他线程，当遇到内核线程阻塞的时候。</p>
-<p>一个很简单的例子就是系统调用<code>sysall</code>，一个线程肯定不能同时执行代码和系统调用被阻塞，这个时候，此线程M需要放弃当前的上下文环境P，以便可以让其他的<code>Goroutine</code>被调度执行。</p>
-<p><img data-src="https://i6448038.github.io/img/csp/giveupP.png" alt="img"></p>
-<p>如上图左图所示，M0中的G0执行了syscall，然后就创建了一个M1(也有可能本身就存在，没创建)，（转向右图）然后M0丢弃了P，等待syscall的返回值，M1接受了P，将·继续执行<code>Goroutine</code>队列中的其他<code>Goroutine</code>。</p>
-<p>当系统调用syscall结束后，M0会“偷”一个上下文，如果不成功，M0就把它的Gouroutine G0放到一个全局的runqueue中，然后自己放到线程池或者转入休眠状态。全局runqueue是各个P在运行完自己的本地的Goroutine runqueue后用来拉取新goroutine的地方。P也会周期性的检查这个全局runqueue上的goroutine，否则，全局runqueue上的goroutines可能得不到执行而饿死。</p>
-<h4 id="均衡的分配工作"><a href="#均衡的分配工作" class="headerlink" title="均衡的分配工作"></a>均衡的分配工作</h4><p>按照以上的说法，上下文P会定期的检查全局的goroutine 队列中的goroutine，以便自己在消费掉自身Goroutine队列的时候有事可做。假如全局goroutine队列中的goroutine也没了呢？就从其他运行的中的P的runqueue里偷。</p>
-<p>每个P中的<code>Goroutine</code>不同导致他们运行的效率和时间也不同，在一个有很多P和M的环境中，不能让一个P跑完自身的<code>Goroutine</code>就没事可做了，因为或许其他的P有很长的<code>goroutine</code>队列要跑，得需要均衡。<br>该如何解决呢？</p>
-<p>Go的做法倒也直接，从其他P中偷一半！</p>
-<p><img data-src="https://i6448038.github.io/img/csp/stealwork.png" alt="img"></p>
-
-    </div>
-
-    
-    
-    
-        
-
-  <div class="followme">
-    <p>Welcome to my other publishing channels</p>
-
-    <div class="social-list">
-
-        <div class="social-item">
-          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
-            <span class="icon">
-              <i class="fab fa-twitter"></i>
-            </span>
-
-            <span class="label">Twitter</span>
-          </a>
-        </div>
-
-        <div class="social-item">
-          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
-            <span class="icon">
-              <i class="fab fa-telegram"></i>
-            </span>
-
-            <span class="label">Telegram</span>
-          </a>
-        </div>
-
-        <div class="social-item">
-          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
-            <span class="icon">
-              <i class="fab fa-weibo"></i>
-            </span>
-
-            <span class="label">Weibo</span>
-          </a>
-        </div>
-    </div>
-  </div>
-
-
-      <footer class="post-footer">
-          
-          <div class="post-tags">
-              <a href="/tags/Go/" rel="tag"><i class="fa fa-tag"></i> Go</a>
-          </div>
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2020/01/13/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="prev" title="Go语言的哈希表">
-      <i class="fa fa-chevron-left"></i> Go语言的哈希表
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" rel="next" title="Go语言的select">
-      Go语言的select <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          Table of Contents
-        </li>
-        <li class="sidebar-nav-overview">
-          Overview
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E5%92%8C%E5%B9%B6%E8%A1%8C"><span class="nav-number">1.</span> <span class="nav-text">并发和并行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Go%E7%9A%84CSP%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">Go的CSP并发模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Go%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">Go并发模型的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%BA%A7%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.0.1.</span> <span class="nav-text">用户级线程模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E7%BA%A7%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.0.2.</span> <span class="nav-text">内核级线程模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%BA%A7%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.0.3.</span> <span class="nav-text">两级线程模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Go%E7%BA%BF%E7%A8%8B%E5%AE%9E%E7%8E%B0%E6%A8%A1%E5%9E%8BMPG"><span class="nav-number">3.1.</span> <span class="nav-text">Go线程实现模型MPG</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%9B%E5%BC%83P-Processor"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">抛弃P(Processor)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9D%87%E8%A1%A1%E7%9A%84%E5%88%86%E9%85%8D%E5%B7%A5%E4%BD%9C"><span class="nav-number">3.1.0.2.</span> <span class="nav-text">均衡的分配工作</span></a></li></ol></li></ol></li></ol></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="maywzh"
-      src="/uploads/myavatar.jpg">
-  <p class="site-author-name" itemprop="name">maywzh</p>
-  <div class="site-description" itemprop="description">Namasday.</div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">111</span>
-          <span class="site-state-item-name">posts</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
-        <span class="site-state-item-count">16</span>
-        <span class="site-state-item-name">categories</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">50</span>
-        <span class="site-state-item-name">tags</span></a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
-      </span>
-  </div>
-
-
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-
-<div class="copyright">
-  
-  &copy; 
-  <span itemprop="copyrightYear">2020</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
-</div>
-
-        
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
-
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/pjax/pjax.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-  <script>
-var pjax = new Pjax({
-  selectors: [
-    'head title',
-    '#page-configurations',
-    '.content-wrap',
-    '.post-toc-wrap',
-    '.languages',
-    '#pjax'
-  ],
-  switches: {
-    '.post-toc-wrap': Pjax.switches.innerHTML
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Go 语言的并发原理 | Cult Minds</title><meta name="description" content="Go 语言是为并发而生的语言，Go 语言是为数不多的在语言层面实现并发的语言；也正是 Go 语言的并发特性，吸引了全球无数的开发者。  并发和并行 并发 (concurrency)：两个或两个以上的任务在一段时间内被执行。我们不必 care 这些任务在某一个时间点是否是同时执行，可能同时执行，也可能不是，我们只关心在一段时间内，哪怕是很短的时间（一秒或者两秒）是否执行解决了两个或两个以上任务。"><meta name="keywords" content="Go"><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/bitbug_favicon_128s.ico"><link rel="canonical" href="https://tech.maywzh.com/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin="crossorigin"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//pingjs.qq.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="content"/><meta property="og:type" content="article"><meta property="og:title" content="Go 语言的并发原理"><meta property="og:url" content="https://tech.maywzh.com/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/"><meta property="og:site_name" content="Cult Minds"><meta property="og:description" content="Go 语言是为并发而生的语言，Go 语言是为数不多的在语言层面实现并发的语言；也正是 Go 语言的并发特性，吸引了全球无数的开发者。  并发和并行 并发 (concurrency)：两个或两个以上的任务在一段时间内被执行。我们不必 care 这些任务在某一个时间点是否是同时执行，可能同时执行，也可能不是，我们只关心在一段时间内，哪怕是很短的时间（一秒或者两秒）是否执行解决了两个或两个以上任务。"><meta property="og:image" content="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg"><meta property="article:published_time" content="2020-01-15T23:55:17.000Z"><meta property="article:modified_time" content="2020-09-27T07:48:52.160Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e5597df0e0a089595ae6b3fce53f24e8";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-5"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-119246999-5');
+</script><script>var _mtac = {};
+(function() {
+    var mta = document.createElement("script");
+    mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+    mta.setAttribute("name", "MTAH5");
+    mta.setAttribute("sid", "500728859");
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(mta, s);
+})();
+</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.1.1',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
   },
-  analytics: false,
-  cacheBust: false,
-  scrollTo : !CONFIG.bookmark.enable
-});
+  bookmark: {
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime: '',
+  date_suffix: {"one_hour":"Just","hours":"hours ago","day":"days ago"},
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false
+};
 
-window.addEventListener('pjax:success', () => {
-  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
-    var code = element.text || element.textContent || element.innerHTML || '';
-    var parent = element.parentNode;
-    parent.removeChild(element);
-    var script = document.createElement('script');
-    if (element.id) {
-      script.id = element.id;
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+      const now = new Date()
+      const expiryDay = ttl * 86400000
+      const item = {
+        value: value,
+        expiry: now.getTime() + expiryDay,
+      }
+      localStorage.setItem(key, JSON.stringify(item))
+    },
+  
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
     }
-    if (element.className) {
-      script.className = element.className;
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
     }
-    if (element.type) {
-      script.type = element.type;
-    }
-    if (element.src) {
-      script.src = element.src;
-      // Force synchronous loading of peripheral JS.
-      script.async = false;
-    }
-    if (element.dataset.pjax !== undefined) {
-      script.dataset.pjax = '';
-    }
-    if (code !== '') {
-      script.appendChild(document.createTextNode(code));
-    }
-    parent.appendChild(script);
-  });
-  NexT.boot.refresh();
-  // Define Motion Sequence & Bootstrap Motion.
-  if (CONFIG.motion.enable) {
-    NexT.motion.integrator
-      .init()
-      .add(NexT.motion.middleWares.subMenu)
-      .add(NexT.motion.middleWares.postList)
-      .bootstrap();
+    return item.value
   }
-  NexT.utils.updateSidebarPosition();
-});
-</script>
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2020.09.27 15:48:52'
+}</script><noscript><style type="text/css">
+#nav {
+  opacity: 1
+}
+.justified-gallery img {
+  opacity: 1
+}
+</style></noscript><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+  }
+}
 
+var autoChangeMode = '1'
+var t = saveToLocal.get('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
 
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (saveToLocal.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" data-lazy-src="/uploads/myavatar.jpg" onerror="onerror=null;src='/img/ripple.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">111</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">50</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E5%92%8C%E5%B9%B6%E8%A1%8C"><span class="toc-number">1.</span> <span class="toc-text">并发和并行</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Go-%E7%9A%84-CSP-%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">Go 的 CSP 并发模型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Go-%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">Go 并发模型的实现原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%BA%A7%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.0.1.</span> <span class="toc-text">用户级线程模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E7%BA%A7%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.0.2.</span> <span class="toc-text">内核级线程模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%BA%A7%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.0.3.</span> <span class="toc-text">两级线程模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Go-%E7%BA%BF%E7%A8%8B%E5%AE%9E%E7%8E%B0%E6%A8%A1%E5%9E%8B-MPG"><span class="toc-number">3.1.</span> <span class="toc-text">Go 线程实现模型 MPG</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%9B%E5%BC%83-P-Processor"><span class="toc-number">3.1.0.1.</span> <span class="toc-text">抛弃 P (Processor)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9D%87%E8%A1%A1%E7%9A%84%E5%88%86%E9%85%8D%E5%B7%A5%E4%BD%9C"><span class="toc-number">3.1.0.2.</span> <span class="toc-text">均衡的分配工作</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Cult Minds</a></span><span class="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">Go 语言的并发原理</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">Created</span><time datetime="2020-01-15T23:55:17.000Z" title="undefined 2020.01.16 07:55:17">2020.01.16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>6min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p>Go 语言是为并发而生的语言，Go 语言是为数不多的在语言层面实现并发的语言；也正是 Go 语言的并发特性，吸引了全球无数的开发者。</p>
+<a id="more"></a>
+<h1 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h1><p><strong> 并发 (concurrency)</strong>：两个或两个以上的任务在一段时间内被执行。我们不必 care 这些任务在某一个时间点是否是同时执行，可能同时执行，也可能不是，我们只关心在一段时间内，哪怕是很短的时间（一秒或者两秒）是否执行解决了两个或两个以上任务。</p>
+<p><strong> 并行 (parallellism)：</strong> 两个或两个以上的任务在同一时刻被同时执行。</p>
+<p>并发说的是逻辑上的概念，而并行，强调的是物理运行状态。并发 “包含” 并行。</p>
+<p>（详情请见：Rob Pike 的 <a target="_blank" rel="noopener" href="https://talks.golang.org/2012/concurrency.slide#1">PPT</a>）</p>
+<h1 id="Go-的-CSP-并发模型"><a href="#Go-的-CSP-并发模型" class="headerlink" title="Go 的 CSP 并发模型"></a>Go 的 CSP 并发模型</h1><p>Go 实现了两种并发形式。第一种是大家普遍认知的：多线程共享内存。其实就是 Java 或者 C++ 等语言中的多线程开发。另外一种是 Go 语言特有的，也是 Go 语言推荐的：CSP（communicating sequential processes）并发模型。</p>
+<p>CSP 并发模型是在 1970 年左右提出的概念，属于比较新的概念，不同于传统的多线程通过共享内存来通信，CSP 讲究的是 “以通信的方式来共享内存”。</p>
+<p>请记住下面这句话：<br><strong>Do not communicate by sharing memory; instead, share memory by communicating.</strong><br>“不要以共享内存的方式来通信，相反，要通过通信来共享内存。”</p>
+<p>普通的线程并发模型，就是像 Java、C++、或者 Python，他们线程间通信都是通过共享内存的方式来进行的。非常典型的方式就是，在访问共享数据（例如数组、Map、或者某个结构体或对象）的时候，通过锁来访问，因此，在很多时候，衍生出一种方便操作的数据结构，叫做 “线程安全的数据结构”。例如 Java 提供的包”java.util.concurrent” 中的数据结构。Go 中也实现了传统的线程并发模型。</p>
+<p>Go 的 CSP 并发模型，是通过 <code>goroutine</code> 和 <code>channel</code> 来实现的。</p>
+<ul>
+<li><code>goroutine</code> 是 Go 语言中并发的执行单位。有点抽象，其实就是和传统概念上的” 线程 “类似，可以理解为” 线程 “。</li>
+<li><code>channel</code> 是 Go 语言中各个并发结构体 (<code>goroutine</code>) 之前的通信机制。 通俗的讲，就是各个 <code>goroutine</code> 之间通信的” 管道 “，有点类似于 Linux 中的管道。</li>
+</ul>
+<p>生成一个 <code>goroutine</code> 的方式非常的简单：Go 一下，就生成了。</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go f ()<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<p>通信机制 <code>channel</code> 也很方便，传数据用 <code>channel &lt;- data</code>，取数据用 <code>&lt;-channel</code>。</p>
+<p>在通信过程中，传数据 <code>channel &lt;- data</code> 和取数据 <code>&lt;-channel</code> 必然会成对出现，因为这边传，那边取，两个 <code>goroutine</code> 之间才会实现通信。</p>
+<p>而且不管传还是取，必阻塞，直到另外的 <code>goroutine</code> 传或者取为止。</p>
+<p>有两个 <code>goroutine</code>，其中一个发起了向 <code>channel</code> 中发起了传值操作。（<code>goroutine</code> 为矩形，<code>channel</code> 为箭头）</p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i6448038.github.io/img/csp/send.png" alt="img"></p>
+<p>左边的 <code>goroutine</code> 开始阻塞，等待有人接收。</p>
+<p>这时候，右边的 <code>goroutine</code> 发起了接收操作。</p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i6448038.github.io/img/csp/accept.png" alt="img"></p>
+<p>右边的 <code>goroutine</code> 也开始阻塞，等待别人传送。</p>
+<p>这时候，两边 <code>goroutine</code> 都发现了对方，于是两个 <code>goroutine</code> 开始一传，一收。</p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i6448038.github.io/img/csp/communicate.png" alt="img"></p>
+<p>这便是 Golang CSP 并发模型最基本的形式。</p>
+<h1 id="Go-并发模型的实现原理"><a href="#Go-并发模型的实现原理" class="headerlink" title="Go 并发模型的实现原理"></a>Go 并发模型的实现原理</h1><p>我们先从线程讲起，无论语言层面何种并发模型，到了操作系统层面，一定是以线程的形态存在的。而操作系统根据资源访问权限的不同，体系架构可分为用户空间和内核空间；内核空间主要操作访问 CPU 资源、I/O 资源、内存资源等硬件资源，为上层应用程序提供最基本的基础资源，用户空间呢就是上层应用程序的固定活动空间，用户空间不可以直接访问资源，必须通过 “系统调用”、“库函数” 或 “Shell 脚本” 来调用内核空间提供的资源。</p>
+<p>我们现在的计算机语言，可以狭义的认为是一种 “软件”，它们中所谓的 “线程”，往往是用户态的线程，和操作系统本身内核态的线程（简称 KSE），还是有区别的。</p>
+<p>线程模型的实现，可以分为以下几种方式：</p>
+<h3 id="用户级线程模型"><a href="#用户级线程模型" class="headerlink" title="用户级线程模型"></a>用户级线程模型</h3><p><img src= "/img/loading2.gif" data-lazy-src="https://i6448038.github.io/img/csp/yonghutai.png" alt="img"></p>
+<p>如图所示，多个用户态的线程对应着一个内核线程，程序线程的创建、终止、切换或者同步等线程工作必须自身来完成。</p>
+<h3 id="内核级线程模型"><a href="#内核级线程模型" class="headerlink" title="内核级线程模型"></a>内核级线程模型</h3><p><img src= "/img/loading2.gif" data-lazy-src="https://i6448038.github.io/img/csp/neiheji.png" alt="img"></p>
+<p>这种模型直接调用操作系统的内核线程，所有线程的创建、终止、切换、同步等操作，都由内核来完成。C++ 就是这种。</p>
+<h3 id="两级线程模型"><a href="#两级线程模型" class="headerlink" title="两级线程模型"></a>两级线程模型</h3><p><img src= "/img/loading2.gif" data-lazy-src="https://i6448038.github.io/img/csp/liangji.png" alt="img"></p>
+<p>这种模型是介于用户级线程模型和内核级线程模型之间的一种线程模型。这种模型的实现非常复杂，和内核级线程模型类似，一个进程中可以对应多个内核级线程，但是进程中的线程不和内核线程一一对应；这种线程模型会先创建多个内核级线程，然后用自身的用户级线程去对应创建的多个内核级线程，自身的用户级线程需要本身程序去调度，内核级的线程交给操作系统内核去调度。</p>
+<p>Go 语言的线程模型就是一种特殊的两级线程模型。暂且叫它 “MPG” 模型吧。</p>
+<h2 id="Go-线程实现模型-MPG"><a href="#Go-线程实现模型-MPG" class="headerlink" title="Go 线程实现模型 MPG"></a>Go 线程实现模型 MPG</h2><p><code>M</code> 指的是 <code>Machine</code>，一个 <code>M</code> 直接关联了一个内核线程。<br><code>P</code> 指的是”processor”，代表了 <code>M</code> 所需的上下文环境，也是处理用户级代码逻辑的处理器。<br><code>G</code> 指的是 <code>Goroutine</code>，其实本质上也是一种轻量级的线程。</p>
+<p>三者关系如下图所示：</p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i6448038.github.io/img/csp/GMPrelation.png" alt="img"></p>
+<p>以上这个图讲的是两个线程 (内核线程) 的情况。一个 M 会对应一个内核线程，一个 M 也会连接一个上下文 P，一个上下文 P 相当于一个 “处理器”，一个上下文连接一个或者多个 Goroutine。P (Processor) 的数量是在启动时被设置为环境变量 GOMAXPROCS 的值，或者通过运行时调用函数 <code>runtime.GOMAXPROCS ()</code> 进行设置。Processor 数量固定意味着任意时刻只有固定数量的线程在运行 go 代码。Goroutine 中就是我们要执行并发的代码。图中 P 正在执行的 <code>Goroutine</code> 为蓝色的；处于待执行状态的 <code>Goroutine</code> 为灰色的，灰色的 <code>Goroutine</code> 形成了一个队列 <code>runqueues</code></p>
+<p>三者关系的宏观的图为：</p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i6448038.github.io/img/csp/total.png" alt="img"></p>
+<h4 id="抛弃-P-Processor"><a href="#抛弃-P-Processor" class="headerlink" title="抛弃 P (Processor)"></a>抛弃 P (Processor)</h4><p>你可能会想，为什么一定需要一个上下文，我们能不能直接除去上下文，让 <code>Goroutine</code> 的 <code>runqueues</code> 挂到 M 上呢？答案是不行，需要上下文的目的，是让我们可以直接放开其他线程，当遇到内核线程阻塞的时候。</p>
+<p>一个很简单的例子就是系统调用 <code>sysall</code>，一个线程肯定不能同时执行代码和系统调用被阻塞，这个时候，此线程 M 需要放弃当前的上下文环境 P，以便可以让其他的 <code>Goroutine</code> 被调度执行。</p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i6448038.github.io/img/csp/giveupP.png" alt="img"></p>
+<p>如上图左图所示，M0 中的 G0 执行了 syscall，然后就创建了一个 M1 (也有可能本身就存在，没创建)，（转向右图）然后 M0 丢弃了 P，等待 syscall 的返回值，M1 接受了 P，将・继续执行 <code>Goroutine</code> 队列中的其他 <code>Goroutine</code>。</p>
+<p>当系统调用 syscall 结束后，M0 会 “偷” 一个上下文，如果不成功，M0 就把它的 Gouroutine G0 放到一个全局的 runqueue 中，然后自己放到线程池或者转入休眠状态。全局 runqueue 是各个 P 在运行完自己的本地的 Goroutine runqueue 后用来拉取新 goroutine 的地方。P 也会周期性的检查这个全局 runqueue 上的 goroutine，否则，全局 runqueue 上的 goroutines 可能得不到执行而饿死。</p>
+<h4 id="均衡的分配工作"><a href="#均衡的分配工作" class="headerlink" title="均衡的分配工作"></a>均衡的分配工作</h4><p>按照以上的说法，上下文 P 会定期的检查全局的 goroutine 队列中的 goroutine，以便自己在消费掉自身 Goroutine 队列的时候有事可做。假如全局 goroutine 队列中的 goroutine 也没了呢？就从其他运行的中的 P 的 runqueue 里偷。</p>
+<p>每个 P 中的 <code>Goroutine</code> 不同导致他们运行的效率和时间也不同，在一个有很多 P 和 M 的环境中，不能让一个 P 跑完自身的 <code>Goroutine</code> 就没事可做了，因为或许其他的 P 有很长的 <code>goroutine</code> 队列要跑，得需要均衡。<br>该如何解决呢？</p>
+<p>Go 的做法倒也直接，从其他 P 中偷一半！</p>
+<p><img src= "/img/loading2.gif" data-lazy-src="https://i6448038.github.io/img/csp/stealwork.png" alt="img"></p>
+</div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Go/">Go</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/"><img class="prev-cover" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Go 语言的 select</div></div></a></div><div class="next-post pull-right"><a href="/2020/01/13/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8/"><img class="next-cover" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Go 语言的哈希表</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2020/01/06/go/Go语言的字符串/" title="Go 语言的字符串"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020.01.06</div><div class="relatedPosts_title">Go 语言的字符串</div></div></a></div><div class="relatedPosts_item"><a href="/2020/01/04/go/Go语言编译过程/" title="Go 语言编译过程"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020.01.04</div><div class="relatedPosts_title">Go 语言编译过程</div></div></a></div><div class="relatedPosts_item"><a href="/2020/04/06/刷题/牛客中几种语言的输入输出姿势md/" title="牛客中几种语言的输入输出姿势"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/09/06/8ApetyPcsJanqLV.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020.04.06</div><div class="relatedPosts_title">牛客中几种语言的输入输出姿势</div></div></a></div><div class="relatedPosts_item"><a href="/2020/01/17/go/Go语言的select/" title="Go 语言的 select"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020.01.17</div><div class="relatedPosts_title">Go 语言的 select</div></div></a></div><div class="relatedPosts_item"><a href="/2020/01/19/go/Go语言的上下文与Context/" title="Go 语言的上下文与 Context"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020.01.19</div><div class="relatedPosts_title">Go 语言的上下文与 Context</div></div></a></div><div class="relatedPosts_item"><a href="/2020/01/08/go/Go语言的函数调用/" title="Go 语言的函数调用"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020.01.08</div><div class="relatedPosts_title">Go 语言的函数调用</div></div></a></div></div></div></article></main><footer id="footer" style="background-image: url(https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2015 - 2020 By maywzh</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.spacingElementById('content-inner')
+  else {
+    $.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js', () => {
+      pangu.spacingElementById('content-inner')
+    })
+  }
+}
 
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
 
-  
-
-
-
-
-  
-<script src="/js/local-search.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div id="pjax">
-  
-
-  
-
-  
-
-
-<script>
-NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
-  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
-    var GUEST = ['nick', 'mail', 'link'];
-    var guest = 'nick,mail,link';
-    guest = guest.split(',').filter(item => {
-      return GUEST.includes(item);
-    });
-    new Valine({
-      el         : '#valine-comments',
-      verify     : false,
-      notify     : false,
-      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
-      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
-      placeholder: "Just go go",
-      avatar     : 'mm',
-      meta       : guest,
-      pageSize   : '10' || 10,
-      visitor    : true,
-      lang       : '' || 'zh-cn',
-      path       : location.pathname,
-      recordIP   : true,
-      serverURLs : ''
-    });
-  }, window.Valine);
-});
-</script>
-
-    </div>
-</body>
-</html>
+document.addEventListener('DOMContentLoaded', panguFn)</script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
+  document.body.style.overflow = 'auto';
+  document.getElementById('loading-box').classList.add("loaded")
+}
+window.addEventListener('load',endLoading)</script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

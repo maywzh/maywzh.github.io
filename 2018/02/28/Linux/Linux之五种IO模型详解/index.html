@@ -1,145 +1,205 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Linux 五种 IO 模型详解 | Cult Minds</title><meta name="description" content="I&#x2F;O 与计算是计算机系统的最核心的两个功能，而 I&#x2F;O 往往占据了相当多的资源和时间，所以如何提高 I&#x2F;O 性能，成为了性能优化的极其重要的点。这里我们结合一些其他的 Linux 系统核心概念来比较基本的五种 I&#x2F;O 模型。  概念引入用户空间和内核空间现在操作系统都是采用虚拟存储器，那么对 32 位操作系统而言，它的寻址空间（虚拟存储空间）为 4G（2 的 32 次方）。操作系统的核心是内核，"><meta name="keywords" content="Linux,I/O,操作系统"><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/bitbug_favicon_128s.ico"><link rel="canonical" href="https://tech.maywzh.com/2018/02/28/Linux/Linux%E4%B9%8B%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin="crossorigin"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//pingjs.qq.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="content"/><meta property="og:type" content="article"><meta property="og:title" content="Linux 五种 IO 模型详解"><meta property="og:url" content="https://tech.maywzh.com/2018/02/28/Linux/Linux%E4%B9%8B%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/"><meta property="og:site_name" content="Cult Minds"><meta property="og:description" content="I&#x2F;O 与计算是计算机系统的最核心的两个功能，而 I&#x2F;O 往往占据了相当多的资源和时间，所以如何提高 I&#x2F;O 性能，成为了性能优化的极其重要的点。这里我们结合一些其他的 Linux 系统核心概念来比较基本的五种 I&#x2F;O 模型。  概念引入用户空间和内核空间现在操作系统都是采用虚拟存储器，那么对 32 位操作系统而言，它的寻址空间（虚拟存储空间）为 4G（2 的 32 次方）。操作系统的核心是内核，"><meta property="og:image" content="https://i.loli.net/2020/08/28/jogd2NXQ5MuIvKc.png"><meta property="article:published_time" content="2018-02-28T13:40:10.000Z"><meta property="article:modified_time" content="2020-09-12T15:47:22.887Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?e5597df0e0a089595ae6b3fce53f24e8";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-5"></script><script>window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'UA-119246999-5');
-</script><script>var _mtac = {};
-(function() {
-    var mta = document.createElement("script");
-    mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
-    mta.setAttribute("name", "MTAH5");
-    mta.setAttribute("sid", "500728859");
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(mta, s);
-})();
-</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
-  root: '/',
-  hexoversion: '5.1.1',
-  algolia: undefined,
-  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
-  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
-  copy: {
-    success: 'Copy successfully',
-    error: 'Copy error',
-    noSupport: 'The browser does not support'
-  },
-  bookmark: {
-    message_prev: 'Press',
-    message_next: 'to bookmark this page'
-  },
-  runtime: '',
-  date_suffix: {"one_hour":"Just","hours":"hours ago","day":"days ago"},
-  copyright: undefined,
-  ClickShowText: undefined,
-  medium_zoom: false,
-  fancybox: true,
-  Snackbar: undefined,
-  justifiedGallery: {
-    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
-  },
-  baiduPush: false,
-  isPhotoFigcaption: false,
-  islazyload: true,
-  isanchor: false
-};
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-var saveToLocal = {
-  set: function setWithExpiry(key, value, ttl) {
-      const now = new Date()
-      const expiryDay = ttl * 86400000
-      const item = {
-        value: value,
-        expiry: now.getTime() + expiryDay,
-      }
-      localStorage.setItem(key, JSON.stringify(item))
-    },
-  
-  get: function getWithExpiry(key) {
-    const itemStr = localStorage.getItem(key)
+<meta name="author" content="maywzh">
 
-    if (!itemStr) {
-      return undefined
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>Linux 五种 IO 模型详解 | 0x01 MAYSTORY </title>
+
+
+    
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
+
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
     }
-    const item = JSON.parse(itemStr)
-    const now = new Date()
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
 
-    if (now.getTime() > item.expiry) {
-      localStorage.removeItem(key)
-      return undefined
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
     }
-    return item.value
-  }
-}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
-  isPost: true,
-  isHome: false,
-  isHighlightShrink: false,
-  isSidebar: true,
-  postUpdate: '2020.09.12 23:47:22'
-}</script><noscript><style type="text/css">
-#nav {
-  opacity: 1
-}
-.justified-gallery img {
-  opacity: 1
-}
-</style></noscript><script>var activateDarkMode = function () {
-  document.documentElement.setAttribute('data-theme', 'dark')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-  }
-}
-var activateLightMode = function () {
-  document.documentElement.setAttribute('data-theme', 'light')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-  }
-}
 
-var autoChangeMode = '1'
-var t = saveToLocal.get('theme')
-if (autoChangeMode === '1') {
-  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
-  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
-  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
-
-  if (t === undefined) {
-    if (isLightMode) activateLightMode()
-    else if (isDarkMode) activateDarkMode()
-    else if (isNotSpecified || hasNoSupport) {
-      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
-      var now = new Date()
-      var hour = now.getHours()
-      var isNight = hour <= 6 || hour >= 18
-      isNight ? activateDarkMode() : activateLightMode()
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
     }
-    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
-      if (saveToLocal.get('theme') === undefined) {
-        e.matches ? activateDarkMode() : activateLightMode()
-      }
-    })
-  } else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else if (autoChangeMode === '2') {
-  now = new Date()
-  hour = now.getHours()
-  isNight = hour <= 6 || hour >= 18
-  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
-  else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else {
-  if (t === 'dark') activateDarkMode()
-  else if (t === 'light') activateLightMode()
-}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" data-lazy-src="/uploads/myavatar.jpg" onerror="onerror=null;src='/img/ripple.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">111</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">50</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E5%BC%95%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">概念引入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E5%92%8C%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4"><span class="toc-number">1.1.</span> <span class="toc-text">用户空间和内核空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E5%88%87%E6%8D%A2"><span class="toc-number">1.2.</span> <span class="toc-text">进程切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E9%98%BB%E5%A1%9E"><span class="toc-number">1.3.</span> <span class="toc-text">进程阻塞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6-FD"><span class="toc-number">1.4.</span> <span class="toc-text">文件描述符 FD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98-IO"><span class="toc-number">1.5.</span> <span class="toc-text">缓存 IO</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E7%A7%8D-I-O-%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">五种 I&#x2F;O 模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E9%98%BB%E5%A1%9E-Blocking-I-O"><span class="toc-number">2.1.</span> <span class="toc-text">同步阻塞 Blocking I&#x2F;O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E9%9D%9E%E9%98%BB%E5%A1%9E-Nonblocking-I-O"><span class="toc-number">2.2.</span> <span class="toc-text">同步非阻塞 Nonblocking I&#x2F;O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8-Multiplexing-I-O"><span class="toc-number">2.3.</span> <span class="toc-text">多路复用 Multiplexing I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%B0%E5%BA%95%E6%98%AF%E5%90%8C%E6%AD%A5%E9%98%BB%E5%A1%9E%E8%BF%98%E6%98%AF%E5%BC%82%E6%AD%A5%E9%98%BB%E5%A1%9E"><span class="toc-number">2.3.1.</span> <span class="toc-text">到底是同步阻塞还是异步阻塞</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8-IO-Signal-driven-I-O"><span class="toc-number">2.4.</span> <span class="toc-text">信号驱动 IO Signal-driven I&#x2F;O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5%E9%9D%9E%E9%98%BB%E5%A1%9E-asynchronous-I-O"><span class="toc-number">2.5.</span> <span class="toc-text">异步非阻塞 asynchronous I&#x2F;O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E5%BC%82%E6%AD%A5%E9%98%BB%E5%A1%9E"><span class="toc-number">2.6.</span> <span class="toc-text">关于异步阻塞</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E-vs-%E9%9D%9E%E9%98%BB%E5%A1%9E"><span class="toc-number">3.1.</span> <span class="toc-text">阻塞 vs 非阻塞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5-vs-%E5%BC%82%E6%AD%A5"><span class="toc-number">3.2.</span> <span class="toc-text">同步 vs 异步</span></a></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/08/28/jogd2NXQ5MuIvKc.png)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Cult Minds</a></span><span class="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">Linux 五种 IO 模型详解</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">Created</span><time datetime="2018-02-28T13:40:10.000Z" title="undefined 2018.02.28 21:40:10">2018.02.28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">6.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>19min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p>I/O 与计算是计算机系统的最核心的两个功能，而 I/O 往往占据了相当多的资源和时间，所以如何提高 I/O 性能，成为了性能优化的极其重要的点。这里我们结合一些其他的 Linux 系统核心概念来比较基本的五种 I/O 模型。</p>
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Linux 五种 IO 模型详解</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 28, 2018&nbsp;&nbsp;21:40:10</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>I/O 与计算是计算机系统的最核心的两个功能，而 I/O 往往占据了相当多的资源和时间，所以如何提高 I/O 性能，成为了性能优化的极其重要的点。这里我们结合一些其他的 Linux 系统核心概念来比较基本的五种 I/O 模型。</p>
 <a id="more"></a>
 <h2 id="概念引入"><a href="#概念引入" class="headerlink" title="概念引入"></a>概念引入</h2><h3 id="用户空间和内核空间"><a href="#用户空间和内核空间" class="headerlink" title="用户空间和内核空间"></a>用户空间和内核空间</h3><p>现在操作系统都是采用虚拟存储器，那么对 32 位操作系统而言，它的寻址空间（虚拟存储空间）为 4G（2 的 32 次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核（kernel），保证内核的安全，操作系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对 linux 操作系统而言，将最高的 1G 字节（从虚拟地址 0xC0000000 到 0xFFFFFFFF），供内核使用，称为内核空间，而将较低的 3G 字节（从虚拟地址 0x00000000 到 0xBFFFFFFF），供各个进程使用，称为用户空间。</p>
 <h3 id="进程切换"><a href="#进程切换" class="headerlink" title="进程切换"></a>进程切换</h3><p>为了控制进程的执行，内核必须有能力挂起正在 CPU 上运行的进程，并恢复以前挂起的某个进程的执行。这种行为被称为进程切换。因此可以说，任何进程都是在操作系统内核的支持下运行的，是与内核紧密相关的。</p>
@@ -164,7 +224,7 @@ if (autoChangeMode === '1') {
 </blockquote>
 <p>同步阻塞 IO 模型是最常用的一个模型，也是最简单的模型。在 linux 中，默认情况下所有的 socket 都是 blocking。它符合人们最常见的思考逻辑。阻塞就是进程 “被” 休息，CPU 处理其它进程去了。</p>
 <p>在这个 IO 模型中，用户空间的应用程序执行一个系统调用（recvform），这会导致应用程序阻塞，什么也不干，直到数据准备好，并且将数据从内核复制到用户进程，最后进程再处理数据，在等待数据到处理数据的两个阶段，整个进程都被阻塞。<strong> 不能处理别的网络 IO</strong>。调用应用程序处于一种不再消费 CPU 而只是简单等待响应的状态，因此从处理的角度来看，这是非常有效的。在调用 recv ()/recvfrom () 函数时，发生在内核中等待数据和复制数据的过程，大致如下图：</p>
-<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/28/V7co6PrnFAxOWei.png" alt="java10-1557020023"></p>
+<p><img src="https://i.loli.net/2020/08/28/V7co6PrnFAxOWei.png" alt="java10-1557020023"></p>
 <p>当用户进程调用了 <code>recv ()/recvfrom ()</code> 这个系统调用，kernel 就开始了 IO 的第一个阶段：准备数据（对于网络 IO 来说，很多时候数据在一开始还没有到达。比如，还没有收到一个完整的 UDP 包。这个时候 kernel 就要等待足够的数据到来）。这个过程需要等待，也就是说数据被拷贝到操作系统内核的缓冲区中是需要一个过程的。而在用户进程这边，整个进程会被阻塞（当然，是进程自己选择的阻塞）。第二个阶段：当 kernel 一直等到数据准备好了，它就会将数据从 kernel 中拷贝到用户内存，然后 kernel 返回结果，用户进程才解除 block 的状态，重新运行起来。</p>
 <p>所以，blocking IO 的特点就是在 IO 执行的两个阶段都被 block 了。</p>
 <p><strong> 优点：</strong></p>
@@ -185,7 +245,7 @@ if (autoChangeMode === '1') {
 <p>在网络 IO 时候，非阻塞 IO 也会进行 recvform 系统调用，检查数据是否准备好，与阻塞 IO 不一样，”非阻塞将大的整片时间的阻塞分成 N 多的小的阻塞，所以进程不断地有机会 ‘ 被 ‘ CPU 光顾”。</p>
 <p>也就是说非阻塞的 <code>recvform</code> 系统调用调用之后，进程并没有被阻塞，内核马上返回给进程，如果数据还没准备好，此时会返回一个 <code>error</code>。进程在返回之后，可以干点别的事情，然后再发起 recvform 系统调用。重复上面的过程，循环往复的进行 <code>recvform</code> 系统调用。这个过程通常被称之为轮询。轮询检查内核数据，直到数据准备好，再拷贝数据到进程，进行数据处理。<strong> 需要注意，拷贝数据整个过程，进程仍然是属于阻塞的状态 </strong>。</p>
 <p>在 linux 下，可以通过设置 socket 使其变为 non-blocking。当对一个 non-blocking socket 执行读操作时，流程如图所示：</p>
-<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/28/RbsD6CcZVMBvFaq.png" alt="20152818_DXcj"></p>
+<p><img src="https://i.loli.net/2020/08/28/RbsD6CcZVMBvFaq.png" alt="20152818_DXcj"></p>
 <p>当用户进程发出 <code>read</code> 操作时，如果 kernel 中的数据还没有准备好，那么它并不会 block 用户进程，而是立刻返回一个 error。从用户进程角度讲，它发起一个 read 操作后，并不需要等待，而是马上就得到了一个结果。用户进程判断结果是一个 error 时，它就知道数据还没有准备好，于是它可以再次发送 <code>read</code> 操作。一旦 kernel 中的数据准备好了，并且又再次收到了用户进程的 system call，那么它马上就将数据拷贝到了用户内存，然后返回。</p>
 <p>所以，nonblocking IO 的特点是用户进程需要不断的主动询问 kernel 数据好了没有。</p>
 <p><strong> 同步非阻塞方式相比同步阻塞方式：</strong></p>
@@ -198,7 +258,7 @@ if (autoChangeMode === '1') {
 <p>I/O 多路复用有两个特别的系统调用 <code>select</code>、<code>poll</code>、<code>epoll</code> 函数。<code>select</code> 调用是内核级别的，<code>select</code> 轮询相对非阻塞的轮询的区别在于 —— 前者可以等待多个 socket，能实现同时对多个 IO 端口进行监听，当其中任何一个 socket 的数据准好了，就能返回进行可读，然后进程再进行 <code>recvform</code> 系统调用，将数据由内核拷贝到用户进程，当然这个过程是阻塞的。<code>select</code> 或 <code>poll</code> 调用之后，会阻塞进程，与 blocking IO 阻塞不同在于，此时的 <code>select</code> 不是等到 socket 数据全部到达再处理，而是有了一部分数据就会调用用户进程来处理。如何知道有一部分数据到达了呢？监视的事情交给了内核，内核负责数据到达的处理。也可以理解为 “非阻塞” 吧。</p>
 <p>I/O 复用模型会用到 <code>select</code>、<code>poll</code>、<code>epoll</code> 函数，这几个函数也会使进程阻塞，但是和阻塞 I/O 所不同的的，这两个函数可以同时阻塞多个 I/O 操作。而且可以同时对多个读操作、多个写操作的 I/O 函数进行检测，直到有数据可读或可写时（注意不是全部数据可读或可写），才真正调用 I/O 操作函数。</p>
 <p>对于多路复用，也就是轮询多个 socket。多路复用既然可以处理多个 IO，也就带来了新的问题，多个 IO 之间的顺序变得不确定了，当然也可以针对不同的编号。具体流程，如下图所示：</p>
-<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/28/T1hwz5douryFOXb.png" alt="20164149_LD8E"></p>
+<p><img src="https://i.loli.net/2020/08/28/T1hwz5douryFOXb.png" alt="20164149_LD8E"></p>
 <p>IO multiplexing 就是我们说的 <code>select</code>，<code>poll</code>，<code>epoll</code>，有些地方也称这种 IO 方式为 event driven IO。<code>select/epoll</code> 的好处就在于单个 process 就可以同时处理多个网络连接的 IO。它的基本原理就是 <code>select</code>，<code>poll</code>，<code>epoll</code> 这个 function 会不断的轮询所负责的所有 socket，当某个 socket 有数据到达了，就通知用户进程。</p>
 <p>当用户进程调用了 select，那么整个进程会被 block，而同时，kernel 会 “监视” 所有 select 负责的 socket，当任何一个 socket 中的数据准备好了，select 就会返回。这个时候用户进程再调用 read 操作，将数据从 kernel 拷贝到用户进程。</p>
 <blockquote>
@@ -225,13 +285,13 @@ if (autoChangeMode === '1') {
 <p>高并发的程序一般使用同步非阻塞方式而非多线程 + 同步阻塞方式。要理解这一点，首先要扯到并发和并行的区别。比如去某部门办事需要依次去几个窗口，办事大厅里的人数就是并发数，而窗口个数就是并行度。也就是说并发数是指同时进行的任务数（如同时服务的 HTTP 请求，而并行数是可以同时工作的物理资源数量（如 CPU 核数）。通过合理调度任务的不同阶段，并发数可以远远大于并行度，这就是区区几个 CPU 可以支持上万个用户并发请求的奥秘。在这种高并发的情况下，为每个任务（用户请求）创建一个进程或线程的开销非常大。而同步非阻塞方式可以把多个 IO 请求丢到后台去，这就可以在一个进程里服务大量的并发 IO 请求。</p>
 <h4 id="到底是同步阻塞还是异步阻塞"><a href="#到底是同步阻塞还是异步阻塞" class="headerlink" title="到底是同步阻塞还是异步阻塞"></a>到底是同步阻塞还是异步阻塞</h4><p>同步是需要主动等待消息通知，而异步则是被动接收消息通知，通过回调、通知、状态等方式来被动获取消息。IO 多路复用在阻塞到 select 阶段时，用户进程是主动等待并调用 select 函数获取数据就绪状态消息，并且其进程状态为阻塞。所以，把 IO 多路复用归为同步阻塞模式。</p>
 <h3 id="信号驱动-IO-Signal-driven-I-O"><a href="#信号驱动-IO-Signal-driven-I-O" class="headerlink" title="信号驱动 IO Signal-driven I/O"></a>信号驱动 IO Signal-driven I/O</h3><p>允许 Socket 进行信号驱动 IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个 SIGIO 信号，可以在信号处理函数中调用 I/O 操作函数处理数据。过程如下图所示：</p>
-<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/28/tI3sfV4oyaSiNwE.png" alt="21091434_DsZb"></p>
+<p><img src="https://i.loli.net/2020/08/28/tI3sfV4oyaSiNwE.png" alt="21091434_DsZb"></p>
 <h3 id="异步非阻塞-asynchronous-I-O"><a href="#异步非阻塞-asynchronous-I-O" class="headerlink" title="异步非阻塞 asynchronous I/O"></a>异步非阻塞 asynchronous I/O</h3><blockquote>
 <p>女友不想逛街，又餐厅太吵了，回家好好休息一下。于是我们叫外卖，打个电话点餐，然后我和女友可以在家好好休息一下，饭好了送货员送到家里来。这就是典型的异步，只需要打个电话说一下，然后可以做自己的事情，饭好了就送来了。</p>
 </blockquote>
 <p>相对于同步 IO，异步 IO 不是顺序执行。用户进程进行 aio_read 系统调用之后，无论内核数据是否准备好，都会直接返回给用户进程，然后用户态进程可以去做别的事情。等到 socket 数据准备好了，内核直接复制数据给进程，然后从内核向进程发送通知。IO 两个阶段，进程都是非阻塞的。</p>
 <p>Linux 提供了 AIO 库函数实现异步，但是用的很少。目前有很多开源的异步 IO 库，例如 libevent、libev、libuv。异步过程如下图所示：</p>
-<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/28/rsQRKLS6MxgYA2q.png" alt="20175459_gtgw"></p>
+<p><img src="https://i.loli.net/2020/08/28/rsQRKLS6MxgYA2q.png" alt="20175459_gtgw"></p>
 <p>用户进程发起 aio_read 操作之后，立刻就可以开始去做其它的事。而另一方面，从 kernel 的角度，当它受到一个 asynchronous read 之后，首先它会立刻返回，所以不会对用户进程产生任何 block。然后，kernel 会等待数据准备完成，然后将数据拷贝到用户内存。当这一切都完成之后，kernel 会给用户进程发送一个 signal 或执行一个基于线程的回调函数来完成这次 IO 处理过程，告诉它 read 操作完成了。</p>
 <p><strong> 在 Linux 中，通知的方式是 “信号”：</strong></p>
 <blockquote>
@@ -250,8 +310,8 @@ if (autoChangeMode === '1') {
 <p>IO 多路复用除了需要阻塞之外，<code>select</code> 函数所提供的功能（异步阻塞 IO）与 AIO 类似。不过，它是对通知事件进行阻塞，而不是对 IO 调用进行阻塞。</p>
 <h3 id="关于异步阻塞"><a href="#关于异步阻塞" class="headerlink" title="关于异步阻塞"></a>关于异步阻塞</h3><p>有时我们的 API 只提供异步通知方式，例如在 node.js 里，但业务逻辑需要的是做完一件事后做另一件事，例如数据库连接初始化后才能开始接受用户的 HTTP 请求，这样的业务逻辑就需要调用者是以阻塞方式来工作。</p>
 <p>为了在异步环境里模拟 “顺序执行” 的效果，就需要把同步代码转换成异步形式，这称为 CPS（Continuation Passing Style）变换。BYVoid 大神的 <a target="_blank" rel="noopener" href="https://link.jianshu.com?t=https://github.com/BYVoid/continuation">continuation.js</a> 库就是一个 CPS 变换的工具。用户只需用比较符合人类常理的同步方式书写代码，CPS 变换器会把它转换成层层嵌套的异步回调形式。</p>
-<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/28/Dxzcvh826j9Osfe.png" alt="20183314_5rY1"></p>
-<p><img src= "/img/loading2.gif" data-lazy-src="https://i.loli.net/2020/08/28/sGLikDutaBUR4TQ.png" alt="20183327_wIGf"></p>
+<p><img src="https://i.loli.net/2020/08/28/Dxzcvh826j9Osfe.png" alt="20183314_5rY1"></p>
+<p><img src="https://i.loli.net/2020/08/28/sGLikDutaBUR4TQ.png" alt="20183327_wIGf"></p>
 <p>另外一种使用阻塞方式的理由是降低响应延迟。如果采用非阻塞方式，一个任务 A 被提交到后台，就开始做另一件事 B，但 B 还没做完，A 就完成了，这时要想让 A 的完成事件被尽快处理（比如 A 是个紧急事务），要么丢弃做到一半的 B，要么保存 B 的中间状态并切换回 A，任务的切换是需要时间的（不管是从磁盘载入到内存，还是从内存载入到高速缓存），这势必降低 A 的响应速度。因此，对实时系统或者延迟敏感的事务，有时采用阻塞方式比非阻塞方式更好。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="阻塞-vs-非阻塞"><a href="#阻塞-vs-非阻塞" class="headerlink" title="阻塞 vs 非阻塞"></a>阻塞 vs 非阻塞</h3><p>调用 blocking IO 会一直 block 住对应的进程直到操作完成，而 non-blocking IO 在 kernel 还准备数据的情况下会立刻返回。</p>
 <h3 id="同步-vs-异步"><a href="#同步-vs-异步" class="headerlink" title="同步 vs 异步"></a>同步 vs 异步</h3><p>关于 synchronous 和 asynchronous，POSIX 给出了如下的定义：</p>
@@ -261,25 +321,55 @@ if (autoChangeMode === '1') {
 </blockquote>
 <p>两者的区别就在于 synchronous IO 做”IO operation” 的时候会将 process 阻塞。按照这个定义，之前所述的 blocking IO，non-blocking IO，IO multiplexing 都属于 synchronous IO。</p>
 <p>有人会说，non-blocking IO 并没有被 block 啊。这里有个非常 “狡猾” 的地方，定义中所指的”IO operation” 是指真实的 IO 操作，就是例子中的 <code>recvfrom</code> 这个 system call。non-blocking IO 在执行 <code>recvfrom</code> 这个 system call 的时候，如果 kernel 的数据没有准备好，这时候不会 block 进程。但是，当 kernel 中数据准备好的时候，recvfrom 会将数据从 kernel 拷贝到用户内存中，这个时候进程是被 block 了，在这段时间内，进程是被 block 的。</p>
-</div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/I-O/">I/O</a><a class="post-meta__tags" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/08/28/jogd2NXQ5MuIvKc.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2018/03/01/docker/Docker%20%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/"><img class="prev-cover" data-lazy-src="https://i.loli.net/2020/08/29/W4Mmi1SLqHOtcpb.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Docker 核心技术与原理初探</div></div></a></div><div class="next-post pull-right"><a href="/2018/02/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BTCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91/"><img class="next-cover" data-lazy-src="https://i.loli.net/2020/09/03/zIdFU6ZPQ5xtDLr.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">TCP 三次握手的底层逻辑</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2018/01/29/OS/操作系统之select、poll、epoll机制/" title="操作系统中的 select、poll、epoll 机制"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/29/ZrVGm1ju6eQApMO.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2018.01.29</div><div class="relatedPosts_title">操作系统中的 select、poll、epoll 机制</div></div></a></div><div class="relatedPosts_item"><a href="/2015/10/18/Linux/Linux-gcc简明教程/" title="Linux GNU-gcc 简明教程"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/Gexg6rV8BuyiTPv.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.10.18</div><div class="relatedPosts_title">Linux GNU-gcc 简明教程</div></div></a></div><div class="relatedPosts_item"><a href="/2015/10/22/Linux/Linux中的env/" title="Linux 中的 env 是什么"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.10.22</div><div class="relatedPosts_title">Linux 中的 env 是什么</div></div></a></div><div class="relatedPosts_item"><a href="/2015/06/21/Linux/Linux中的wget/" title="Linux 中的 wget"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.06.21</div><div class="relatedPosts_title">Linux 中的 wget</div></div></a></div><div class="relatedPosts_item"><a href="/2015/12/16/Linux/Linux中的lsof/" title="Linux 中的 lsof"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.12.16</div><div class="relatedPosts_title">Linux 中的 lsof</div></div></a></div><div class="relatedPosts_item"><a href="/2015/01/04/Linux/Linux中的重定向/" title="Linux 中的重定向"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.01.04</div><div class="relatedPosts_title">Linux 中的重定向</div></div></a></div></div></div></article></main><footer id="footer" style="background-image: url(https://i.loli.net/2020/08/28/jogd2NXQ5MuIvKc.png)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2015 - 2020 By maywzh</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script>function panguFn () {
-  if (typeof pangu === 'object') pangu.spacingElementById('content-inner')
-  else {
-    $.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js', () => {
-      pangu.spacingElementById('content-inner')
-    })
-  }
-}
 
-function panguInit () {
-  if (false){
-    GLOBAL_CONFIG_SITE.isPost && panguFn()
-  } else {
-    panguFn()
-  }
-}
+        </div>
 
-document.addEventListener('DOMContentLoaded', panguFn)</script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
-  document.body.style.overflow = 'auto';
-  document.getElementById('loading-box').classList.add("loaded")
-}
-window.addEventListener('load',endLoading)</script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Linux/"># Linux</a>
+                    
+                        <a href="/tags/I-O/"># I/O</a>
+                    
+                        <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"># 操作系统</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2018/03/01/docker/Docker%20%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">Docker 核心技术与原理初探</a>
+            
+            
+            <a class="next" rel="next" href="/2018/02/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BTCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91/">TCP 三次握手的底层逻辑</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

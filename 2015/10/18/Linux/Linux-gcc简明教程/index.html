@@ -1,298 +1,673 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-<meta name="author" content="maywzh">
-
-
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<title>Linux GNU-gcc 简明教程 | 0x01 MAYSTORY </title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="gcc&#x2F;g++是GNU工具包中强大的c&#x2F;c++编译工具，结合make工具，可以做到自动化编译功能。 一般来说，编译c语言使用gcc，编译c++语言使用g++，两者的命令几乎相同。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux GNU-gcc简明教程">
+<meta property="og:url" content="https://io.maywzh.com/2015/10/18/Linux/Linux-gcc%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="gcc&#x2F;g++是GNU工具包中强大的c&#x2F;c++编译工具，结合make工具，可以做到自动化编译功能。 一般来说，编译c语言使用gcc，编译c++语言使用g++，两者的命令几乎相同。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2015-10-17T17:51:25.000Z">
+<meta property="article:modified_time" content="2020-09-30T11:49:35.806Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://io.maywzh.com/2015/10/18/Linux/Linux-gcc%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/">
 
 
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
-</header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
 </script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
+
+  <title>Linux GNU-gcc简明教程 | Cult I.O.</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
+  </div>
 </div>
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
-</script>
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
 
     
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">Linux GNU-gcc 简明教程</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2015/10/18/Linux/Linux-gcc%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/">
 
-                    
-                        <span class="post-time">
-                        Date: <a href="#">October 18, 2015&nbsp;&nbsp;1:51:25</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/DevOps/">DevOps</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
 
-        <div class="post-content">
-            <p>gcc/g++ 是 GNU 工具包中强大的 c/c++ 编译工具，结合 make 工具，可以做到自动化编译功能。</p>
-<p>一般来说，编译 c 语言使用 gcc，编译 c++ 语言使用 g++，两者的命令几乎相同。</p>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux GNU-gcc简明教程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2015.10.18 01:51:25" itemprop="dateCreated datePublished" datetime="2015-10-18T01:51:25+08:00">2015.10.18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2015/10/18/Linux/Linux-gcc%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/" class="post-meta-item leancloud_visitors" data-flag-title="Linux GNU-gcc简明教程" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>gcc/g++是GNU工具包中强大的c/c++编译工具，结合make工具，可以做到自动化编译功能。</p>
+<p>一般来说，编译c语言使用gcc，编译c++语言使用g++，两者的命令几乎相同。</p>
 <a id="more"></a>
 <h2 id="编译流程"><a href="#编译流程" class="headerlink" title="编译流程"></a>编译流程</h2><p>分为四步，预处理、编译、汇编、链接</p>
 <p>样例程序</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*************************</span></span><br><span class="line"><span class="comment">		hello.cpp</span></span><br><span class="line"><span class="comment">	*************************/</span></span><br><span class="line">	<span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;IOSTREAM&gt;</span></span></span><br><span class="line"> </span><br><span class="line">	<span class="keyword">static</span> <span class="keyword">int</span> t = <span class="number">1</span>;</span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> T 9</span></span><br><span class="line"> </span><br><span class="line">	<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"> </span><br><span class="line">	<span class="keyword">typedef</span> <span class="keyword">int</span> Status;</span><br><span class="line"> </span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		Status i = <span class="number">1</span>;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; T * i &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//Test Cout</span></span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="指定输出文件-o"><a href="#指定输出文件-o" class="headerlink" title="指定输出文件 -o"></a>指定输出文件 -o</h3><p>表示指定输出的文件，o 为小写</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ [- 选项] inputfile -o outputfile</span><br></pre></td></tr></table></figure>
-<h3 id="预处理-E"><a href="#预处理-E" class="headerlink" title="预处理 -E"></a>预处理 -E</h3><p>使用预处理器 cpp。输出预处理后的文件，linux 下以 <code>.i</code> 为后缀名。默认不生成文件，可以重定向到一个输出文件中。这一步主要做了这些事情：宏的替换，还有注释的消除，还有找到相关的库文件，可以理解为无关代码的清除。</p>
+<h3 id="指定输出文件-o"><a href="#指定输出文件-o" class="headerlink" title="指定输出文件 -o"></a>指定输出文件 -o</h3><p>表示指定输出的文件,o为小写</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ [-选项] inputfile -o outputfile</span><br></pre></td></tr></table></figure>
+<h3 id="预处理-E"><a href="#预处理-E" class="headerlink" title="预处理 -E"></a>预处理 -E</h3><p>使用预处理器cpp。输出预处理后的文件，linux下以<code>.i</code>为后缀名。默认不生成文件，可以重定向到一个输出文件中。这一步主要做了这些事情：宏的替换，还有注释的消除，还有找到相关的库文件，可以理解为无关代码的清除。</p>
 <p>如果想查看待编译文件的预处理过程，可以用下面的命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -E hello.cpp</span><br></pre></td></tr></table></figure>
-<p>这样会直接在 terminal 中显示预处理过程，如果 <code>main.cxx</code> 中包含 <code>include</code>，例如 <code>#include&lt;iostream&gt;</code>, 只能看到部分预处理结果；这个只显示预处理，不生成文件。</p>
+<p>这样会直接在terminal中显示预处理过程，如果<code>main.cxx</code>中包含<code>include</code>，例如<code>#include&lt;iostream&gt;</code>,只能看到部分预处理结果；这个只显示预处理，不生成文件。</p>
 <p>也可以吧预处理的过程重定向到一个文件中。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -E hello.cpp -o hello.i</span><br></pre></td></tr></table></figure>
-<p>查看 <a target="_blank" rel="noopener" href="http://gcc.gnu.org/onlinedocs/cpp/Preprocessor-Output.html">官方文档</a> 来了解更多。</p>
-<h3 id="编译-S"><a href="#编译-S" class="headerlink" title="编译 -S"></a>编译 -S</h3><p>编译就是指使用编译器 egcs 把预处理的代码编译为汇编代码。</p>
-<p>例如吧把预处理后的文件 <code>hello.i</code> 编译为汇编代码文件 <code>hello.s</code>。</p>
+<p>查看<a target="_blank" rel="noopener" href="http://gcc.gnu.org/onlinedocs/cpp/Preprocessor-Output.html">官方文档</a>来了解更多。</p>
+<h3 id="编译-S"><a href="#编译-S" class="headerlink" title="编译 -S"></a>编译 -S</h3><p>编译就是指使用编译器egcs把预处理的代码编译为汇编代码。</p>
+<p>例如吧把预处理后的文件<code>hello.i</code>编译为汇编代码文件<code>hello.s</code>。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
-<h3 id="汇编-c"><a href="#汇编-c" class="headerlink" title="汇编 -c"></a>汇编 -c</h3><p>汇编就是指使用汇编器 as 把汇编代码生成目标代码，目标代码就是二进制机器码。</p>
-<p>例如把 <code>hello.s</code> 生成为目标代码 <code>hello.o</code>。</p>
+<h3 id="汇编-c"><a href="#汇编-c" class="headerlink" title="汇编 -c"></a>汇编 -c</h3><p>汇编就是指使用汇编器as把汇编代码生成目标代码，目标代码就是二进制机器码。</p>
+<p>例如把<code>hello.s</code>生成为目标代码<code>hello.o</code>。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -c hello.s -o hello.o</span><br></pre></td></tr></table></figure>
-<h3 id="链接-O"><a href="#链接-O" class="headerlink" title="链接 -O"></a>链接 -O</h3><p>链接就是指把 <code>.o</code> 文件与所需的库文件链接整合形成可执行文件。 <code>-L</code> 表示链接。</p>
-<p>注意此处的 <code>-O</code> 为大写不同于指定输出文件的 <code>-o</code> 小写</p>
+<h3 id="链接-O"><a href="#链接-O" class="headerlink" title="链接 -O"></a>链接 -O</h3><p>链接就是指把<code>.o</code>文件与所需的库文件链接整合形成可执行文件。 <code>-L</code>表示链接。</p>
+<p>注意此处的<code>-O</code>为大写不同于指定输出文件的<code>-o</code>小写</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -O hello.o lib1.a lib2.a -o main</span><br><span class="line">$ g++ hello.o -L /usr/include/iostream</span><br></pre></td></tr></table></figure>
-<h2 id="常见参数"><a href="#常见参数" class="headerlink" title="常见参数"></a>常见参数</h2><h3 id="警告相关"><a href="#警告相关" class="headerlink" title="警告相关"></a>警告相关</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -pedantic main.cpp -o illcode <span class="comment"># 显示不符合 ANSI/ISO C 语言标准的警告信息 </span></span><br><span class="line">$ g++ -Wall main.cpp -o illcode <span class="comment"># 产生尽可能多的警告信息 </span></span><br><span class="line">$ g++ -Werror main.cpp -o illcode <span class="comment"># 将所有的警告当成错误进行处理 </span></span><br></pre></td></tr></table></figure>
+<h2 id="常见参数"><a href="#常见参数" class="headerlink" title="常见参数"></a>常见参数</h2><h3 id="警告相关"><a href="#警告相关" class="headerlink" title="警告相关"></a>警告相关</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -pedantic main.cpp -o illcode <span class="comment"># 显示不符合ANSI/ISO C 语言标准的警告信息</span></span><br><span class="line">$ g++ -Wall main.cpp -o illcode <span class="comment">#产生尽可能多的警告信息</span></span><br><span class="line">$ g++ -Werror main.cpp -o illcode <span class="comment"># 将所有的警告当成错误进行处理</span></span><br></pre></td></tr></table></figure>
 <h3 id="调试信息-g"><a href="#调试信息-g" class="headerlink" title="调试信息 -g"></a>调试信息 -g</h3><p>编译的时候，产生调试信息。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -g main.cxx -o main</span><br></pre></td></tr></table></figure>
-<h3 id="指定语言-x"><a href="#指定语言-x" class="headerlink" title="指定语言 -x"></a>指定语言 -x</h3><p>支持 c c++ assembler none，‘none’意味着恢复默认行为，即根据文件的扩展名猜测源文件的语言</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -x c++ main.cxx// 指定源代码为 c++</span><br></pre></td></tr></table></figure>
+<h3 id="指定语言-x"><a href="#指定语言-x" class="headerlink" title="指定语言 -x"></a>指定语言 -x</h3><p>支持c c++ assembler none，‘none’意味着恢复默认行为，即根据文件的扩展名猜测源文件的语言</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -x c++ main.cxx // 指定源代码为c++</span><br></pre></td></tr></table></figure>
 <h3 id="关联信息-M"><a href="#关联信息-M" class="headerlink" title="关联信息 -M"></a>关联信息 -M</h3><p>生成文件关联信息，包含目标文件依赖的所有源代码。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -M main.cxx</span><br></pre></td></tr></table></figure>
-<h3 id="优化级别-O0-O1-O2-O3"><a href="#优化级别-O0-O1-O2-O3" class="headerlink" title="优化级别 - O0 -O1 -O2 -O3"></a>优化级别 - O0 -O1 -O2 -O3</h3><p>编译器的优化选项的 4 个级别，-O0 表示没有优化，-O1 为缺省值，-O3 优化级别最高　　 　　</p>
+<h3 id="优化级别-O0-O1-O2-O3"><a href="#优化级别-O0-O1-O2-O3" class="headerlink" title="优化级别-O0 -O1 -O2 -O3"></a>优化级别-O0 -O1 -O2 -O3</h3><p>编译器的优化选项的4个级别，-O0表示没有优化,-O1为缺省值，-O3优化级别最高　　 　　</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ main.cxx -o main -o2</span><br></pre></td></tr></table></figure>
 <h3 id="查看编译过程-v"><a href="#查看编译过程-v" class="headerlink" title="查看编译过程 -v"></a>查看编译过程 -v</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ main.cxx -v -o main</span><br></pre></td></tr></table></figure>
-<h2 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h2><h3 id="宏"><a href="#宏" class="headerlink" title="宏"></a>宏</h3><p>可以使用 - Dname 选项来定义一个宏，或者 - Dname=value 定义一个值 value 的宏。如果该值包含空格，则应包含在双引号中。</p>
+<h2 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h2><h3 id="宏"><a href="#宏" class="headerlink" title="宏"></a>宏</h3><p>可以使用-Dname 选项来定义一个宏，或者-Dname=value 定义一个值value的宏。如果该值包含空格，则应包含在双引号中。</p>
 <h3 id="库"><a href="#库" class="headerlink" title="库"></a>库</h3><p>库是一个预编译的对象文件的集合，可以通过链接器链接到程序中。<br>有两种类型的外部库：静态库和动态库。 </p>
-<p>Windows 系统的静态库文件扩展名为 <code>*.lib</code>，动态库文件扩展名为 <code>*.dll</code></p>
-<p>Unix 类系统的静态库文件扩展名为 <code>*.a</code>，动态库文件扩展名为 <code>*.so</code></p>
-<p>当程序与静态库链接时，程序中使用的外部函数的机器代码将被复制到可执行文件中。一个静态库可以通过存档程序”ar.exe” 创建。<br>当程序与一个动态库链接时，在可执行文件中创建了一个表。在可执行文件开始运行之前，操作系统加载所需的外部函数 <code>- a</code> 的机器代码，这被称为 <strong> 动态链接 </strong> 的过程。因为一个库的一个副本可以在多个程序之间共享，所以动态链接使可执行文件更小，并 <strong> 节省磁盘空间 </strong>。此外，大多数操作系统允许在内存中的共享库的一个副本被所有的运行程序使用，因此，也 <strong> 节省内存 </strong>。动态库的代码可以升级而 <strong> 无需重新编译 </strong> 程序。<br>动态链接库的优点非常多，GCC 默认是链接动态库的。 </p>
+<p>Windows系统的静态库文件扩展名为<code>*.lib</code>，动态库文件扩展名为<code>*.dll</code></p>
+<p>Unix类系统的静态库文件扩展名为<code>*.a</code>，动态库文件扩展名为<code>*.so</code></p>
+<p>当程序与静态库链接时，程序中使用的外部函数的机器代码将被复制到可执行文件中。一个静态库可以通过存档程序”ar.exe”创建。<br>当程序与一个动态库链接时，在可执行文件中创建了一个表。在可执行文件开始运行之前，操作系统加载所需的外部函数 <code>- a</code> 的机器代码，这被称为<strong>动态链接</strong>的过程。因为一个库的一个副本可以在多个程序之间共享，所以动态链接使可执行文件更小，并<strong>节省磁盘空间</strong>。此外，大多数操作系统允许在内存中的共享库的一个副本被所有的运行程序使用，因此，也<strong>节省内存</strong>。动态库的代码可以升级而<strong>无需重新编译</strong>程序。<br>动态链接库的优点非常多，GCC默认是链接动态库的。 </p>
 <h3 id="搜索头文件和库"><a href="#搜索头文件和库" class="headerlink" title="搜索头文件和库"></a>搜索头文件和库</h3><p>编译程序时，编译器需要头文件来编译源代码；链接器需要库来解析来自其他对象文件或库的外部引用。需要合适的设置来告诉编译器和链接器头文件和库的位置。</p>
-<p>每一个在源文件里使用的头文件 (<code>#include &lt; 头文件名字 &gt;</code>)，编译器搜索 <code>include-paths</code> 来找头文件。<code>include-paths</code> 是通过 <code>-Idir</code> 选项指定，或者是环境变量 <code>CPATH</code> 指定。由于头文件的文件名是已知的，所以只需要路径名就可以。 </p>
-<p>链接器 搜索 <code>library-paths</code> ，将程序链接到可执行文件所需的库。<code>library-paths</code> 是通过 <code>-Ldir</code> 选项指定（或环境变量 <code>LIBRARY_PATH</code>。</p>
+<p>每一个在源文件里使用的头文件(<code>#include &lt;头文件名字&gt;</code>)，编译器搜索<code>include-paths</code> 来找头文件。<code>include-paths</code>是通过 <code>-Idir</code> 选项指定，或者是环境变量 <code>CPATH</code>指定。由于头文件的文件名是已知的，所以只需要路径名就可以。 </p>
+<p>链接器 搜索 <code>library-paths</code> ，将程序链接到可执行文件所需的库。<code>library-paths</code>是通过 <code>-Ldir</code> 选项指定（或环境变量<code>LIBRARY_PATH</code>。</p>
 <p>此外还必须指定库名称，这里和编译器找头文件不同，头文件在源代码就有声明，所以不需要额外再去指定，而库需要使用 <code>-l</code> 选项来告诉链接器。</p>
-<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><h3 id="file-工具"><a href="#file-工具" class="headerlink" title="file 工具"></a>file 工具</h3><p>file 工具可以用来显示目标文件和可执行文件的类型</p>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><h3 id="file工具"><a href="#file工具" class="headerlink" title="file工具"></a>file工具</h3><p>file工具可以用来显示目标文件和可执行文件的类型</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -c hello.cpp</span><br><span class="line">$ g++ -o hello hello.o</span><br><span class="line">$ file hello.o</span><br><span class="line">hello.o: ELF 64-bit LSB  relocatable, x86-64, version 1 (SYSV), not stripped</span><br></pre></td></tr></table></figure>
-<h3 id="nm-工具"><a href="#nm-工具" class="headerlink" title="nm 工具"></a>nm 工具</h3><p>nm 工具用于列出目标文件的符号表，<br>常用来检查一个特定的函数是否被定义在一个对象文件中。</p>
+<h3 id="nm工具"><a href="#nm工具" class="headerlink" title="nm工具"></a>nm工具</h3><p>nm工具用于列出目标文件的符号表，<br>常用来检查一个特定的函数是否被定义在一个对象文件中。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ nm hello.o</span><br><span class="line">0000000000000000 T _main</span><br></pre></td></tr></table></figure>
-<h3 id="ldd-工具"><a href="#ldd-工具" class="headerlink" title="ldd 工具"></a>ldd 工具</h3><p>ldd 可以确定程序依赖的动态链接库有哪些。用于可执行文件，并显示它所依赖的共享库的列表。</p>
+<h3 id="ldd-工具"><a href="#ldd-工具" class="headerlink" title="ldd 工具"></a>ldd 工具</h3><p>ldd可以确定程序依赖的动态链接库有哪些。用于可执行文件，并显示它所依赖的共享库的列表。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ldd hello</span><br><span class="line">/media/study/mycode/GCC_test$ ldd hello</span><br><span class="line">linux-vdso.so.1 =&gt;  (0x00007ffe6653a000)</span><br><span class="line">libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007fd06d171000)</span><br><span class="line">/lib64/ld-linux-x86-64.so.2 (0x00007fd06d536000)</span><br></pre></td></tr></table></figure>
 
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
 
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+          </div>
+
         
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/Linux/"># Linux</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2015/10/22/Linux/Linux%E4%B8%AD%E7%9A%84env/">Linux 中的 env 是什么</a>
-            
-            
-            <a class="next" rel="next" href="/2015/10/16/C&C++/c%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%8C%87%E9%92%88/">理解 c 语言中的指针</a>
-            
-        </section>
 
 
-    </article>
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/10/16/C&C++/c%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%8C%87%E9%92%88/" rel="prev" title="理解c语言中的指针">
+      <i class="fa fa-chevron-left"></i> 理解c语言中的指针
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2015/10/22/Linux/Linux%E4%B8%AD%E7%9A%84env/" rel="next" title="Linux中的env是什么">
+      Linux中的env是什么 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">编译流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6-o"><span class="nav-number">1.1.</span> <span class="nav-text">指定输出文件 -o</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E5%A4%84%E7%90%86-E"><span class="nav-number">1.2.</span> <span class="nav-text">预处理 -E</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91-S"><span class="nav-number">1.3.</span> <span class="nav-text">编译 -S</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%87%E7%BC%96-c"><span class="nav-number">1.4.</span> <span class="nav-text">汇编 -c</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5-O"><span class="nav-number">1.5.</span> <span class="nav-text">链接 -O</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">常见参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AD%A6%E5%91%8A%E7%9B%B8%E5%85%B3"><span class="nav-number">2.1.</span> <span class="nav-text">警告相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E8%AF%95%E4%BF%A1%E6%81%AF-g"><span class="nav-number">2.2.</span> <span class="nav-text">调试信息 -g</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E8%AF%AD%E8%A8%80-x"><span class="nav-number">2.3.</span> <span class="nav-text">指定语言 -x</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E8%81%94%E4%BF%A1%E6%81%AF-M"><span class="nav-number">2.4.</span> <span class="nav-text">关联信息 -M</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E7%BA%A7%E5%88%AB-O0-O1-O2-O3"><span class="nav-number">2.5.</span> <span class="nav-text">优化级别-O0 -O1 -O2 -O3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B-v"><span class="nav-number">2.6.</span> <span class="nav-text">查看编译过程 -v</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E9%98%B6"><span class="nav-number">3.</span> <span class="nav-text">进阶</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8F"><span class="nav-number">3.1.</span> <span class="nav-text">宏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%93"><span class="nav-number">3.2.</span> <span class="nav-text">库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E5%A4%B4%E6%96%87%E4%BB%B6%E5%92%8C%E5%BA%93"><span class="nav-number">3.3.</span> <span class="nav-text">搜索头文件和库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7"><span class="nav-number">4.</span> <span class="nav-text">工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#file%E5%B7%A5%E5%85%B7"><span class="nav-number">4.1.</span> <span class="nav-text">file工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nm%E5%B7%A5%E5%85%B7"><span class="nav-number">4.2.</span> <span class="nav-text">nm工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ldd-%E5%B7%A5%E5%85%B7"><span class="nav-number">4.3.</span> <span class="nav-text">ldd 工具</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
 </div>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
         
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
     </div>
 </body>
 </html>

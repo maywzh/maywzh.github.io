@@ -1,283 +1,658 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-<meta name="author" content="maywzh">
-
-
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<title>通过 docker 容器方式搭建 gitlab 服务 | 0x01 MAYSTORY </title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一直使用git来做项目版本控制，但每次新建项目都要去服务器上操作，比较麻烦，所以选用开源的gitlab就相当合适了。 gitlab的自带组件比较多，例如redis、postgresql还有自带的nginx等等，中间的坑也很多，综合考量还是选用懒方法docker容器来安装。安全、快速。 部署环境为Ubuntu 18.04 的局域网机器，由于是Docker方式部署，理论上各个环境的部署方式都是类似的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过docker容器方式搭建gitlab服务">
+<meta property="og:url" content="https://io.maywzh.com/2017/02/17/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8B%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="一直使用git来做项目版本控制，但每次新建项目都要去服务器上操作，比较麻烦，所以选用开源的gitlab就相当合适了。 gitlab的自带组件比较多，例如redis、postgresql还有自带的nginx等等，中间的坑也很多，综合考量还是选用懒方法docker容器来安装。安全、快速。 部署环境为Ubuntu 18.04 的局域网机器，由于是Docker方式部署，理论上各个环境的部署方式都是类似的。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-02-17T08:56:07.000Z">
+<meta property="article:modified_time" content="2020-09-30T11:49:35.809Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://io.maywzh.com/2017/02/17/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8B%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/">
 
 
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
-</header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
 </script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
+
+  <title>通过docker容器方式搭建gitlab服务 | Cult I.O.</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
+  </div>
 </div>
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
-</script>
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
 
     
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">通过 docker 容器方式搭建 gitlab 服务</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2017/02/17/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8B%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/">
 
-                    
-                        <span class="post-time">
-                        Date: <a href="#">February 17, 2017&nbsp;&nbsp;16:56:07</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/DevOps/">DevOps</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
 
-        <div class="post-content">
-            <p>一直使用 git 来做项目版本控制，但每次新建项目都要去服务器上操作，比较麻烦，所以选用开源的 gitlab 就相当合适了。</p>
-<p>gitlab 的自带组件比较多，例如 redis、postgresql 还有自带的 nginx 等等，中间的坑也很多，综合考量还是选用懒方法 docker 容器来安装。安全、快速。</p>
-<p>部署环境为 Ubuntu 18.04 的局域网机器，由于是 Docker 方式部署，理论上各个环境的部署方式都是类似的。</p>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          通过docker容器方式搭建gitlab服务
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017.02.17 16:56:07" itemprop="dateCreated datePublished" datetime="2017-02-17T16:56:07+08:00">2017.02.17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/02/17/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8B%E6%90%AD%E5%BB%BAgitlab%E6%9C%8D%E5%8A%A1/" class="post-meta-item leancloud_visitors" data-flag-title="通过docker容器方式搭建gitlab服务" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>一直使用git来做项目版本控制，但每次新建项目都要去服务器上操作，比较麻烦，所以选用开源的gitlab就相当合适了。</p>
+<p>gitlab的自带组件比较多，例如redis、postgresql还有自带的nginx等等，中间的坑也很多，综合考量还是选用懒方法docker容器来安装。安全、快速。</p>
+<p>部署环境为Ubuntu 18.04 的局域网机器，由于是Docker方式部署，理论上各个环境的部署方式都是类似的。</p>
 <a id="more"></a>
-<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="性能要求"><a href="#性能要求" class="headerlink" title="性能要求"></a>性能要求</h3><p>最好是 4GB 内存以上，至少要 2GB 内存，否则卡的你怀疑人生。</p>
-<h3 id="安装-Docker"><a href="#安装-Docker" class="headerlink" title="安装 Docker"></a>安装 Docker</h3><p>我们从阿里源安装。</p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="性能要求"><a href="#性能要求" class="headerlink" title="性能要求"></a>性能要求</h3><p>最好是4GB内存以上，至少要2GB内存，否则卡的你怀疑人生。</p>
+<h3 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h3><p>我们从阿里源安装。</p>
 <p>安装必要的一些系统工具</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ apt-get update</span><br><span class="line">$ apt-get -y install apt-transport-https ca-certificates curl software-properties-common</span><br></pre></td></tr></table></figure>
-<p>安装 GPG 证书</p>
+<p>安装GPG证书</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -</span><br></pre></td></tr></table></figure>
 <p> 写入软件源信息</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ add-apt-repository <span class="string">&quot;deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu <span class="subst">$(lsb_release -cs)</span> stable&quot;</span></span><br></pre></td></tr></table></figure>
 <p>更新并安装 Docker-CE</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ apt-get -y update</span><br><span class="line">$ apt-get -y install docker-ce</span><br></pre></td></tr></table></figure>
-<p>安装好之后，来看看 Docker 的版本。</p>
+<p>安装好之后，来看看Docker的版本。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ docker version</span><br><span class="line">Client:</span><br><span class="line"> Version:           18.06.1-ce</span><br><span class="line"> API version:       1.38</span><br><span class="line"> Go version:        go1.10.3</span><br><span class="line"> Git commit:        e68fc7a</span><br><span class="line"> Built:             Tue Aug 21 17:24:51 2018</span><br><span class="line"> OS/Arch:           linux/amd64</span><br><span class="line"> Experimental:      <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">Server:</span><br><span class="line"> Engine:</span><br><span class="line">  Version:          18.06.1-ce</span><br><span class="line">  API version:      1.38 (minimum version 1.12)</span><br><span class="line">  Go version:       go1.10.3</span><br><span class="line">  Git commit:       e68fc7a</span><br><span class="line">  Built:            Tue Aug 21 17:23:15 2018</span><br><span class="line">  OS/Arch:          linux/amd64</span><br><span class="line">  Experimental:     <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<h2 id="安装-gitlab-ce"><a href="#安装-gitlab-ce" class="headerlink" title="安装 gitlab-ce"></a>安装 gitlab-ce</h2><h3 id="镜像拉取"><a href="#镜像拉取" class="headerlink" title="镜像拉取"></a>镜像拉取</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull gitlab-ce <span class="comment"># 大约 1.5GB 耐心等待 </span></span><br></pre></td></tr></table></figure>
-<h3 id="容器创建"><a href="#容器创建" class="headerlink" title="容器创建"></a>容器创建</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d \</span><br><span class="line">--hostname gitlab.maywzh.com \ 	  <span class="comment"># 指定容器域名，未知功能：创建镜像仓库的时候使用到 </span></span><br><span class="line">-p 8880:80 \                        	  <span class="comment"># 将容器内 80 端口映射到主机 8880, 提供 http 服务 </span></span><br><span class="line">-p 8222:22 \                        	  <span class="comment"># 将容器内 22 端口映射到主机 8222, 提供 ssh 服务 </span></span><br><span class="line">-p 9090:9090 \                            <span class="comment"># 将容器内 9090 端口映射到主机 9090, 提供 prometheus 服务 </span></span><br><span class="line">--name gitlab \                           <span class="comment"># 指定容器名称 </span></span><br><span class="line">--restart always \                        <span class="comment"># 容器退出时，自动重启 </span></span><br><span class="line">-v /srv/gitlab/config:/etc/gitlab \       <span class="comment"># 将本地 /srv/gitlab/config 挂载到容器内 /etc/gitlab</span></span><br><span class="line">-v /srv/gitlab/logs:/var/<span class="built_in">log</span>/gitlab \     <span class="comment"># 将本地 /srv/gitlab/logs 挂载到容器内 /var/log/gitlab</span></span><br><span class="line">-v /srv/gitlab/data:/var/opt/gitlab \     <span class="comment"># 将本地 /srv/gitlab/data 挂载到容器内 /var/opt/gitlab</span></span><br><span class="line">gitlab/gitlab-ce:latest                   <span class="comment"># 镜像名称：版本 </span></span><br></pre></td></tr></table></figure>
+<h2 id="安装gitlab-ce"><a href="#安装gitlab-ce" class="headerlink" title="安装gitlab-ce"></a>安装gitlab-ce</h2><h3 id="镜像拉取"><a href="#镜像拉取" class="headerlink" title="镜像拉取"></a>镜像拉取</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull gitlab-ce <span class="comment">#大约1.5GB 耐心等待</span></span><br></pre></td></tr></table></figure>
+<h3 id="容器创建"><a href="#容器创建" class="headerlink" title="容器创建"></a>容器创建</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d \</span><br><span class="line">--hostname gitlab.maywzh.com \ 	  <span class="comment"># 指定容器域名,未知功能:创建镜像仓库的时候使用到</span></span><br><span class="line">-p 8880:80 \                        	  <span class="comment"># 将容器内80端口映射到主机8880,提供http服务</span></span><br><span class="line">-p 8222:22 \                        	  <span class="comment"># 将容器内22端口映射到主机8222,提供ssh服务</span></span><br><span class="line">-p 9090:9090 \                            <span class="comment"># 将容器内9090端口映射到主机9090,提供prometheus服务</span></span><br><span class="line">--name gitlab \                           <span class="comment"># 指定容器名称</span></span><br><span class="line">--restart always \                        <span class="comment"># 容器退出时,自动重启</span></span><br><span class="line">-v /srv/gitlab/config:/etc/gitlab \       <span class="comment"># 将本地/srv/gitlab/config挂载到容器内/etc/gitlab</span></span><br><span class="line">-v /srv/gitlab/logs:/var/<span class="built_in">log</span>/gitlab \     <span class="comment"># 将本地/srv/gitlab/logs挂载到容器内/var/log/gitlab</span></span><br><span class="line">-v /srv/gitlab/data:/var/opt/gitlab \     <span class="comment"># 将本地/srv/gitlab/data挂载到容器内/var/opt/gitlab</span></span><br><span class="line">gitlab/gitlab-ce:latest                   <span class="comment"># 镜像名称:版本</span></span><br></pre></td></tr></table></figure>
 <p>查看容器运行状况</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker inspect gitlab --format <span class="string">&quot;&#123;&#123;.State.Status&#125;&#125;&quot;</span></span><br><span class="line">running <span class="comment"># 表示正常 </span></span><br></pre></td></tr></table></figure>
-<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>我们把 docker 容器的 gitlab 配置目录挂载在本地的 <code>/srv/gitlab/</code> 中。所以，需要改动这里的配置文件。</p>
-<p>先备份 <code>gitlab.rb</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker inspect gitlab --format <span class="string">&quot;&#123;&#123;.State.Status&#125;&#125;&quot;</span></span><br><span class="line">running <span class="comment">#表示正常</span></span><br></pre></td></tr></table></figure>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>我们把docker容器的gitlab配置目录挂载在本地的<code>/srv/gitlab/</code>中。所以，需要改动这里的配置文件。</p>
+<p>先备份<code>gitlab.rb</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /srv/gitlab/config      </span><br><span class="line">$ cp gitlab.rb gitlab.rb.default</span><br></pre></td></tr></table></figure>
-<h3 id="配置文件示例"><a href="#配置文件示例" class="headerlink" title="配置文件示例"></a>配置文件示例</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### gitlab.rb 把以下内容加在原 gitlab.rb 的最下面 有些配置项需要视情况改动 </span></span><br><span class="line"><span class="comment">## 域名设置 这个影响 git clone 的地址 </span></span><br><span class="line"><span class="attribute">external_url</span> http://github.maywzh.com</span><br><span class="line">## gitlab 镜像自带 nginx 配置 </span><br><span class="line">nginx [<span class="string">&#x27;enable&#x27;</span>] = <span class="literal">true</span></span><br><span class="line">nginx [<span class="string">&#x27;client_max_body_size&#x27;</span>] = <span class="string">&#x27;250m&#x27;</span></span><br><span class="line">nginx [<span class="string">&#x27;redirect_http_to_https&#x27;</span>] = <span class="literal">false</span></span><br><span class="line">nginx [<span class="string">&#x27;listen_addresses&#x27;</span>] = [<span class="string">&#x27;0.0.0.0&#x27;</span>, <span class="string">&#x27;[::]&#x27;</span>]</span><br><span class="line">nginx [<span class="string">&#x27;listen_port&#x27;</span>] = <span class="number">80</span></span><br><span class="line">nginx [<span class="string">&#x27;listen_https&#x27;</span>] = <span class="literal">false</span></span><br><span class="line">nginx [<span class="string">&#x27;custom_gitlab_server_config&#x27;</span>] = <span class="string">&quot;location ^~ /foo-namespace/bar-project/raw/ &#123;\n deny all;\n&#125;\n&quot;</span></span><br><span class="line">nginx [<span class="string">&#x27;custom_nginx_config&#x27;</span>] = <span class="string">&quot;include /etc/nginx/conf.d/*.conf;&quot;</span></span><br><span class="line">nginx [<span class="string">&#x27;proxy_read_timeout&#x27;</span>] = <span class="number">3600</span></span><br><span class="line">nginx [<span class="string">&#x27;proxy_connect_timeout&#x27;</span>] = <span class="number">300</span></span><br><span class="line">nginx [<span class="string">&#x27;proxy_set_headers&#x27;</span>] = &#123;</span><br><span class="line"> &quot;Host&quot; =&gt; &quot;$http_host_with_default&quot;,</span><br><span class="line"> &quot;X-Real-IP&quot; =&gt; &quot;$remote_addr&quot;,</span><br><span class="line"> &quot;X-Forwarded-For&quot; =&gt; &quot;$proxy_add_x_forwarded_for&quot;,</span><br><span class="line"> &quot;Upgrade&quot; =&gt; &quot;$http_upgrade&quot;,</span><br><span class="line"> &quot;Connection&quot; =&gt; &quot;$connection_upgrade&quot;</span><br><span class="line">&#125;</span><br><span class="line">nginx [&#x27;proxy_cache_path&#x27;] = &#x27;proxy_cache keys_zone=gitlab:10m max_size=1g levels=1:2&#x27;</span><br><span class="line">nginx [&#x27;proxy_cache&#x27;] = &#x27;gitlab&#x27;</span><br><span class="line">nginx [&#x27;http2_enabled&#x27;] = false</span><br><span class="line"><span class="comment"># nginx [&#x27;real_ip_trusted_addresses&#x27;] = [&#x27;172.16.0.0/16&#x27;] #需要改动 </span></span><br><span class="line">nginx [&#x27;real_ip_header&#x27;] = &#x27;X-Real-IP&#x27;</span><br><span class="line">nginx [&#x27;real_ip_recursive&#x27;] = on</span><br><span class="line">nginx [&#x27;custom_error_pages&#x27;] = &#123;</span><br><span class="line">  &#x27;404&#x27; =&gt; &#123;</span><br><span class="line">    &#x27;title&#x27; =&gt; &#x27;Example title&#x27;,</span><br><span class="line">    &#x27;header&#x27; =&gt; &#x27;Example header&#x27;,</span><br><span class="line">    &#x27;message&#x27; =&gt; &#x27;Example message&#x27;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">nginx [&#x27;dir&#x27;] = &quot;/var/opt/gitlab/nginx&quot;</span><br><span class="line">nginx [&#x27;log_directory&#x27;] = &quot;/var/log/gitlab/nginx&quot;</span><br><span class="line">nginx [&#x27;worker_processes&#x27;] = 4</span><br><span class="line">nginx [&#x27;worker_connections&#x27;] = 10240</span><br><span class="line">nginx [&#x27;log_format&#x27;] = &#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; $status $body_bytes_sent &quot;$http_referer&quot; &quot;$http_user_agent&quot;&#x27;</span><br><span class="line">nginx [&#x27;sendfile&#x27;] = &#x27;on&#x27;</span><br><span class="line">nginx [&#x27;tcp_nopush&#x27;] = &#x27;on&#x27;</span><br><span class="line">nginx [&#x27;tcp_nodelay&#x27;] = &#x27;on&#x27;</span><br><span class="line">nginx [&#x27;gzip&#x27;] = &quot;on&quot;</span><br><span class="line">nginx [&#x27;gzip_http_version&#x27;] = &quot;1.0&quot;</span><br><span class="line">nginx [&#x27;gzip_comp_level&#x27;] = &quot;2&quot;</span><br><span class="line">nginx [&#x27;gzip_proxied&#x27;] = &quot;any&quot;</span><br><span class="line">nginx [&#x27;gzip_types&#x27;] = [ &quot;text/plain&quot;, &quot;text/css&quot;, &quot;application/x-javascript&quot;, &quot;text/xml&quot;, &quot;application/xml&quot;, &quot;application/xml+rss&quot;, &quot;text/javascript&quot;, &quot;application/json&quot; ]</span><br><span class="line">nginx [&#x27;keepalive_timeout&#x27;] = 65</span><br><span class="line">nginx [&#x27;cache_max_size&#x27;] = &#x27;5000m&#x27;</span><br><span class="line">nginx [&#x27;server_names_hash_bucket_size&#x27;] = 64</span><br><span class="line">nginx [&#x27;status&#x27;] = &#123;</span><br><span class="line"> &quot;enable&quot; =&gt; false,</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">## 邮件服务 以 qq 邮箱为例 需要改动 </span></span><br><span class="line">gitlab_rails [&#x27;time_zone&#x27;] = &#x27;Asia/Shanghai&#x27;</span><br><span class="line">gitlab_rails [&#x27;smtp_enable&#x27;] = true</span><br><span class="line">gitlab_rails [&#x27;smtp_address&#x27;] = &quot;smtp.qq.com&quot;</span><br><span class="line">gitlab_rails [&#x27;smtp_port&#x27;] = 465</span><br><span class="line">gitlab_rails [&#x27;smtp_user_name&#x27;] = &quot;xxxxxx@qq.com&quot;</span><br><span class="line">gitlab_rails [&#x27;smtp_password&#x27;] = &quot;xxxxxxx&quot; #qq 邮箱的独立密码 </span><br><span class="line">gitlab_rails [&#x27;smtp_domain&#x27;] = &quot;smtp.qq.com&quot;</span><br><span class="line">gitlab_rails [&#x27;smtp_authentication&#x27;] = :plain</span><br><span class="line">gitlab_rails [&#x27;smtp_enable_starttls_auto&#x27;] = true</span><br><span class="line">gitlab_rails [&#x27;gitlab_email_from&#x27;] = &quot;xxxxxx@qq.com&quot;</span><br><span class="line">user [&#x27;git_user_email&#x27;] = &quot;xxxxxx@qq.com&quot;</span><br><span class="line">user [&#x27;git_user_name&#x27;] = &quot;gitlab&quot;</span><br><span class="line"></span><br><span class="line"><span class="comment">## gitlab 自带 Postgresql 配置 </span></span><br><span class="line">postgresql [&#x27;enable&#x27;] = true</span><br><span class="line">postgresql [&#x27;ssl&#x27;] = &#x27;off&#x27;</span><br><span class="line"></span><br><span class="line"><span class="comment">## gitlab 自带 Redis 配置 </span></span><br><span class="line">gitlab_rails [&#x27;redis_host&#x27;] = &quot;127.0.0.1&quot;</span><br><span class="line">gitlab_rails [&#x27;redis_port&#x27;] = 6379</span><br><span class="line">gitlab_rails [&#x27;redis_password&#x27;] = &#x27;0340fg2340jk342302342l&#x27; #需要改动 </span><br><span class="line">gitlab_rails [&#x27;redis_database&#x27;] = 0</span><br><span class="line">redis [&#x27;enable&#x27;] = true</span><br><span class="line">redis [&#x27;username&#x27;] = &quot;gitlab-redis&quot;</span><br><span class="line">redis [&#x27;maxclients&#x27;] = &quot;10000&quot;</span><br><span class="line">redis [&#x27;maxmemory&#x27;] = &quot;1gb&quot;</span><br><span class="line">redis [&#x27;maxmemory_policy&#x27;] = &quot;allkeys-lru&quot;</span><br><span class="line">redis [&#x27;maxmemory_samples&#x27;] = &quot;5&quot;</span><br><span class="line">redis [&#x27;tcp_timeout&#x27;] = &quot;60&quot;</span><br><span class="line">redis [&#x27;tcp_keepalive&#x27;] = &quot;300&quot;</span><br><span class="line">redis [&#x27;port&#x27;] = 6379</span><br><span class="line">redis [&#x27;password&#x27;] = &#x27;0340fg2340jk342302342l&#x27; #需要改动 </span><br><span class="line"></span><br><span class="line"><span class="comment">## gitlab 备份路径 </span></span><br><span class="line">gitlab_rails [&#x27;manage_backup_path&#x27;] = true</span><br><span class="line">gitlab_rails [&#x27;backup_path&#x27;] = &quot;/var/opt/gitlab/backups&quot;</span><br><span class="line"></span><br><span class="line"><span class="comment">## 监控 Prometheus 配置 </span></span><br><span class="line">prometheus [&#x27;enable&#x27;] = true</span><br><span class="line">prometheus [&#x27;monitor_kubernetes&#x27;] = false</span><br><span class="line">prometheus [&#x27;username&#x27;] = &#x27;gitlab-prometheus&#x27;</span><br><span class="line">prometheus [&#x27;uid&#x27;] = nil</span><br><span class="line">prometheus [&#x27;gid&#x27;] = nil</span><br><span class="line">prometheus [&#x27;shell&#x27;] = &#x27;/bin/sh&#x27;</span><br><span class="line">prometheus [&#x27;home&#x27;] = &#x27;/var/opt/gitlab/prometheus&#x27;</span><br><span class="line">prometheus [&#x27;log_directory&#x27;] = &#x27;/var/log/gitlab/prometheus&#x27;</span><br><span class="line">prometheus [&#x27;scrape_interval&#x27;] = 15</span><br><span class="line">prometheus [&#x27;scrape_timeout&#x27;] = 15</span><br><span class="line">prometheus [&#x27;chunk_encoding_version&#x27;] = 2</span><br><span class="line">prometheus [&#x27;listen_address&#x27;] = &#x27;0.0.0.0:9090&#x27;</span><br><span class="line">prometheus_monitoring [&#x27;enable&#x27;] = true</span><br><span class="line">node_exporter [&#x27;enable&#x27;] = true</span><br><span class="line">redis_exporter [&#x27;enable&#x27;] = true</span><br><span class="line">redis_exporter [&#x27;log_directory&#x27;] = &#x27;/var/log/gitlab/redis-exporter&#x27;</span><br><span class="line">redis_exporter [&#x27;flags&#x27;] = &#123;</span><br><span class="line">  &#x27;redis.addr&#x27; =&gt; &quot;127.0.0.1:6379&quot;,</span><br><span class="line">  &#x27;redis.password&#x27; =&gt; &#x27;0340fg2340jk342302342l&#x27; #需要改动 </span><br><span class="line">&#125;</span><br><span class="line">postgres_exporter [&#x27;enable&#x27;] = true</span><br><span class="line">gitlab_monitor [&#x27;enable&#x27;] = true                                </span><br></pre></td></tr></table></figure>
+<h3 id="配置文件示例"><a href="#配置文件示例" class="headerlink" title="配置文件示例"></a>配置文件示例</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### gitlab.rb 把以下内容加在原gitlab.rb的最下面 有些配置项需要视情况改动</span></span><br><span class="line"><span class="comment">## 域名设置 这个影响 git clone 的地址</span></span><br><span class="line"><span class="attribute">external_url</span> http://github.maywzh.com</span><br><span class="line">## gitlab镜像自带nginx配置</span><br><span class="line">nginx[<span class="string">&#x27;enable&#x27;</span>] = <span class="literal">true</span></span><br><span class="line">nginx[<span class="string">&#x27;client_max_body_size&#x27;</span>] = <span class="string">&#x27;250m&#x27;</span></span><br><span class="line">nginx[<span class="string">&#x27;redirect_http_to_https&#x27;</span>] = <span class="literal">false</span></span><br><span class="line">nginx[<span class="string">&#x27;listen_addresses&#x27;</span>] = [<span class="string">&#x27;0.0.0.0&#x27;</span>, <span class="string">&#x27;[::]&#x27;</span>]</span><br><span class="line">nginx[<span class="string">&#x27;listen_port&#x27;</span>] = <span class="number">80</span></span><br><span class="line">nginx[<span class="string">&#x27;listen_https&#x27;</span>] = <span class="literal">false</span></span><br><span class="line">nginx[<span class="string">&#x27;custom_gitlab_server_config&#x27;</span>] = <span class="string">&quot;location ^~ /foo-namespace/bar-project/raw/ &#123;\n deny all;\n&#125;\n&quot;</span></span><br><span class="line">nginx[<span class="string">&#x27;custom_nginx_config&#x27;</span>] = <span class="string">&quot;include /etc/nginx/conf.d/*.conf;&quot;</span></span><br><span class="line">nginx[<span class="string">&#x27;proxy_read_timeout&#x27;</span>] = <span class="number">3600</span></span><br><span class="line">nginx[<span class="string">&#x27;proxy_connect_timeout&#x27;</span>] = <span class="number">300</span></span><br><span class="line">nginx[<span class="string">&#x27;proxy_set_headers&#x27;</span>] = &#123;</span><br><span class="line"> &quot;Host&quot; =&gt; &quot;$http_host_with_default&quot;,</span><br><span class="line"> &quot;X-Real-IP&quot; =&gt; &quot;$remote_addr&quot;,</span><br><span class="line"> &quot;X-Forwarded-For&quot; =&gt; &quot;$proxy_add_x_forwarded_for&quot;,</span><br><span class="line"> &quot;Upgrade&quot; =&gt; &quot;$http_upgrade&quot;,</span><br><span class="line"> &quot;Connection&quot; =&gt; &quot;$connection_upgrade&quot;</span><br><span class="line">&#125;</span><br><span class="line">nginx[&#x27;proxy_cache_path&#x27;] = &#x27;proxy_cache keys_zone=gitlab:10m max_size=1g levels=1:2&#x27;</span><br><span class="line">nginx[&#x27;proxy_cache&#x27;] = &#x27;gitlab&#x27;</span><br><span class="line">nginx[&#x27;http2_enabled&#x27;] = false</span><br><span class="line"><span class="comment"># nginx[&#x27;real_ip_trusted_addresses&#x27;] = [&#x27;172.16.0.0/16&#x27;] #需要改动</span></span><br><span class="line">nginx[&#x27;real_ip_header&#x27;] = &#x27;X-Real-IP&#x27;</span><br><span class="line">nginx[&#x27;real_ip_recursive&#x27;] = on</span><br><span class="line">nginx[&#x27;custom_error_pages&#x27;] = &#123;</span><br><span class="line">  &#x27;404&#x27; =&gt; &#123;</span><br><span class="line">    &#x27;title&#x27; =&gt; &#x27;Example title&#x27;,</span><br><span class="line">    &#x27;header&#x27; =&gt; &#x27;Example header&#x27;,</span><br><span class="line">    &#x27;message&#x27; =&gt; &#x27;Example message&#x27;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">nginx[&#x27;dir&#x27;] = &quot;/var/opt/gitlab/nginx&quot;</span><br><span class="line">nginx[&#x27;log_directory&#x27;] = &quot;/var/log/gitlab/nginx&quot;</span><br><span class="line">nginx[&#x27;worker_processes&#x27;] = 4</span><br><span class="line">nginx[&#x27;worker_connections&#x27;] = 10240</span><br><span class="line">nginx[&#x27;log_format&#x27;] = &#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; $status $body_bytes_sent &quot;$http_referer&quot; &quot;$http_user_agent&quot;&#x27;</span><br><span class="line">nginx[&#x27;sendfile&#x27;] = &#x27;on&#x27;</span><br><span class="line">nginx[&#x27;tcp_nopush&#x27;] = &#x27;on&#x27;</span><br><span class="line">nginx[&#x27;tcp_nodelay&#x27;] = &#x27;on&#x27;</span><br><span class="line">nginx[&#x27;gzip&#x27;] = &quot;on&quot;</span><br><span class="line">nginx[&#x27;gzip_http_version&#x27;] = &quot;1.0&quot;</span><br><span class="line">nginx[&#x27;gzip_comp_level&#x27;] = &quot;2&quot;</span><br><span class="line">nginx[&#x27;gzip_proxied&#x27;] = &quot;any&quot;</span><br><span class="line">nginx[&#x27;gzip_types&#x27;] = [ &quot;text/plain&quot;, &quot;text/css&quot;, &quot;application/x-javascript&quot;, &quot;text/xml&quot;, &quot;application/xml&quot;, &quot;application/xml+rss&quot;, &quot;text/javascript&quot;, &quot;application/json&quot; ]</span><br><span class="line">nginx[&#x27;keepalive_timeout&#x27;] = 65</span><br><span class="line">nginx[&#x27;cache_max_size&#x27;] = &#x27;5000m&#x27;</span><br><span class="line">nginx[&#x27;server_names_hash_bucket_size&#x27;] = 64</span><br><span class="line">nginx[&#x27;status&#x27;] = &#123;</span><br><span class="line"> &quot;enable&quot; =&gt; false,</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">## 邮件服务 以qq邮箱为例 需要改动</span></span><br><span class="line">gitlab_rails[&#x27;time_zone&#x27;] = &#x27;Asia/Shanghai&#x27;</span><br><span class="line">gitlab_rails[&#x27;smtp_enable&#x27;] = true</span><br><span class="line">gitlab_rails[&#x27;smtp_address&#x27;] = &quot;smtp.qq.com&quot;</span><br><span class="line">gitlab_rails[&#x27;smtp_port&#x27;] = 465</span><br><span class="line">gitlab_rails[&#x27;smtp_user_name&#x27;] = &quot;xxxxxx@qq.com&quot;</span><br><span class="line">gitlab_rails[&#x27;smtp_password&#x27;] = &quot;xxxxxxx&quot; #qq邮箱的独立密码</span><br><span class="line">gitlab_rails[&#x27;smtp_domain&#x27;] = &quot;smtp.qq.com&quot;</span><br><span class="line">gitlab_rails[&#x27;smtp_authentication&#x27;] = :plain</span><br><span class="line">gitlab_rails[&#x27;smtp_enable_starttls_auto&#x27;] = true</span><br><span class="line">gitlab_rails[&#x27;gitlab_email_from&#x27;] = &quot;xxxxxx@qq.com&quot;</span><br><span class="line">user[&#x27;git_user_email&#x27;] = &quot;xxxxxx@qq.com&quot;</span><br><span class="line">user[&#x27;git_user_name&#x27;] = &quot;gitlab&quot;</span><br><span class="line"></span><br><span class="line"><span class="comment">## gitlab自带Postgresql配置</span></span><br><span class="line">postgresql[&#x27;enable&#x27;] = true</span><br><span class="line">postgresql[&#x27;ssl&#x27;] = &#x27;off&#x27;</span><br><span class="line"></span><br><span class="line"><span class="comment">## gitlab自带Redis配置</span></span><br><span class="line">gitlab_rails[&#x27;redis_host&#x27;] = &quot;127.0.0.1&quot;</span><br><span class="line">gitlab_rails[&#x27;redis_port&#x27;] = 6379</span><br><span class="line">gitlab_rails[&#x27;redis_password&#x27;] = &#x27;0340fg2340jk342302342l&#x27; #需要改动</span><br><span class="line">gitlab_rails[&#x27;redis_database&#x27;] = 0</span><br><span class="line">redis[&#x27;enable&#x27;] = true</span><br><span class="line">redis[&#x27;username&#x27;] = &quot;gitlab-redis&quot;</span><br><span class="line">redis[&#x27;maxclients&#x27;] = &quot;10000&quot;</span><br><span class="line">redis[&#x27;maxmemory&#x27;] = &quot;1gb&quot;</span><br><span class="line">redis[&#x27;maxmemory_policy&#x27;] = &quot;allkeys-lru&quot;</span><br><span class="line">redis[&#x27;maxmemory_samples&#x27;] = &quot;5&quot;</span><br><span class="line">redis[&#x27;tcp_timeout&#x27;] = &quot;60&quot;</span><br><span class="line">redis[&#x27;tcp_keepalive&#x27;] = &quot;300&quot;</span><br><span class="line">redis[&#x27;port&#x27;] = 6379</span><br><span class="line">redis[&#x27;password&#x27;] = &#x27;0340fg2340jk342302342l&#x27; #需要改动</span><br><span class="line"></span><br><span class="line"><span class="comment">## gitlab备份路径</span></span><br><span class="line">gitlab_rails[&#x27;manage_backup_path&#x27;] = true</span><br><span class="line">gitlab_rails[&#x27;backup_path&#x27;] = &quot;/var/opt/gitlab/backups&quot;</span><br><span class="line"></span><br><span class="line"><span class="comment">## 监控Prometheus配置</span></span><br><span class="line">prometheus[&#x27;enable&#x27;] = true</span><br><span class="line">prometheus[&#x27;monitor_kubernetes&#x27;] = false</span><br><span class="line">prometheus[&#x27;username&#x27;] = &#x27;gitlab-prometheus&#x27;</span><br><span class="line">prometheus[&#x27;uid&#x27;] = nil</span><br><span class="line">prometheus[&#x27;gid&#x27;] = nil</span><br><span class="line">prometheus[&#x27;shell&#x27;] = &#x27;/bin/sh&#x27;</span><br><span class="line">prometheus[&#x27;home&#x27;] = &#x27;/var/opt/gitlab/prometheus&#x27;</span><br><span class="line">prometheus[&#x27;log_directory&#x27;] = &#x27;/var/log/gitlab/prometheus&#x27;</span><br><span class="line">prometheus[&#x27;scrape_interval&#x27;] = 15</span><br><span class="line">prometheus[&#x27;scrape_timeout&#x27;] = 15</span><br><span class="line">prometheus[&#x27;chunk_encoding_version&#x27;] = 2</span><br><span class="line">prometheus[&#x27;listen_address&#x27;] = &#x27;0.0.0.0:9090&#x27;</span><br><span class="line">prometheus_monitoring[&#x27;enable&#x27;] = true</span><br><span class="line">node_exporter[&#x27;enable&#x27;] = true</span><br><span class="line">redis_exporter[&#x27;enable&#x27;] = true</span><br><span class="line">redis_exporter[&#x27;log_directory&#x27;] = &#x27;/var/log/gitlab/redis-exporter&#x27;</span><br><span class="line">redis_exporter[&#x27;flags&#x27;] = &#123;</span><br><span class="line">  &#x27;redis.addr&#x27; =&gt; &quot;127.0.0.1:6379&quot;,</span><br><span class="line">  &#x27;redis.password&#x27; =&gt; &#x27;0340fg2340jk342302342l&#x27; #需要改动</span><br><span class="line">&#125;</span><br><span class="line">postgres_exporter[&#x27;enable&#x27;] = true</span><br><span class="line">gitlab_monitor[&#x27;enable&#x27;] = true                                </span><br></pre></td></tr></table></figure>
 <p>修改好配置文件后，重载配置</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -t gitlab gitlab-ctl reconfigure</span><br><span class="line">$ docker <span class="built_in">exec</span> -t gitlab gitlab-ctl restart</span><br></pre></td></tr></table></figure>
-<h3 id="nginx-反向代理"><a href="#nginx-反向代理" class="headerlink" title="nginx 反向代理"></a>nginx 反向代理</h3><p>由于容器内部的 http 服务端口是 8880，为了能够直接输入域名来访问，需要设置 nginx 反向代理代理容器内部的 nginx 服务。</p>
+<h3 id="nginx反向代理"><a href="#nginx反向代理" class="headerlink" title="nginx反向代理"></a>nginx反向代理</h3><p>由于容器内部的http服务端口是8880，为了能够直接输入域名来访问，需要设置nginx反向代理代理容器内部的nginx服务。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/nginx/conf.d/gitlab.conf</span><br></pre></td></tr></table></figure>
-<p>修改 <code>/etc/nginx/conf.d/gitlab.conf</code></p>
+<p>修改<code>/etc/nginx/conf.d/gitlab.conf</code></p>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">server</span><br><span class="line">&#123; </span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span> gitlab.maywzh.com;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attribute">proxy_redirect</span> <span class="literal">off</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://localhost:8880;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>修改 <code>/etc/nginx/nginx.conf</code></p>
+<p>修改<code>/etc/nginx/nginx.conf</code></p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">http&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="attribute">include</span> /etc/nginx/conf.d/gitlab.conf;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>重启 nginx<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl restart nginx.service</span><br></pre></td></tr></table></figure></p>
+<p>重启nginx<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl restart nginx.service</span><br></pre></td></tr></table></figure></p>
 <p>这样就部署完成了～</p>
 
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
 
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
+          </div>
+
         
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/Docker/"># Docker</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2017/04/03/Redis/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E8%A7%A3%E7%AD%94/">Redis 面试题解答</a>
-            
-            
-            <a class="next" rel="next" href="/2017/02/13/docker/docker%E5%AE%9E%E8%B7%B5%20-%20%E5%8E%9F%E7%90%86%E5%92%8C%E5%88%9B%E5%BB%BA%E9%95%9C%E5%83%8F/">Docker 实践 - 原理和创建镜像</a>
-            
-        </section>
 
 
-    </article>
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/02/13/docker/docker%E5%AE%9E%E8%B7%B5%20-%20%E5%8E%9F%E7%90%86%E5%92%8C%E5%88%9B%E5%BB%BA%E9%95%9C%E5%83%8F/" rel="prev" title="Docker实践 - 原理和创建镜像">
+      <i class="fa fa-chevron-left"></i> Docker实践 - 原理和创建镜像
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/04/03/Redis/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E8%A7%A3%E7%AD%94/" rel="next" title="Redis面试题解答">
+      Redis面试题解答 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E8%A6%81%E6%B1%82"><span class="nav-number">1.1.</span> <span class="nav-text">性能要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Docker"><span class="nav-number">1.2.</span> <span class="nav-text">安装Docker</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85gitlab-ce"><span class="nav-number">2.</span> <span class="nav-text">安装gitlab-ce</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E6%8B%89%E5%8F%96"><span class="nav-number">2.1.</span> <span class="nav-text">镜像拉取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E5%88%9B%E5%BB%BA"><span class="nav-number">2.2.</span> <span class="nav-text">容器创建</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.1.</span> <span class="nav-text">配置文件示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-number">3.2.</span> <span class="nav-text">nginx反向代理</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
 </div>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
         
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
     </div>
 </body>
 </html>

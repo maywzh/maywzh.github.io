@@ -1,307 +1,685 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-<meta name="author" content="maywzh">
-
-
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<title>Python 的全局解释器锁是什么 | 0x01 MAYSTORY </title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="全局解释性锁，简称GIL(Global Interpreter Lock)，它是什么，官方有如下解释：  In CPython, the global interpreter lock, or GIL, is a mutex that protects access to Python objects, preventing multiple threads from executing Pyth">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python的全局解释器锁是什么">
+<meta property="og:url" content="https://io.maywzh.com/2018/09/08/Python/Python%E7%9A%84%E5%85%A8%E5%B1%80%E8%A7%A3%E9%87%8A%E5%99%A8%E9%94%81%E6%98%AF%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="全局解释性锁，简称GIL(Global Interpreter Lock)，它是什么，官方有如下解释：  In CPython, the global interpreter lock, or GIL, is a mutex that protects access to Python objects, preventing multiple threads from executing Pyth">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/09/08/PH9e8qMihbvyTDz.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/08/hGA8qPFcK2Vezr7.png">
+<meta property="article:published_time" content="2018-09-07T18:38:33.000Z">
+<meta property="article:modified_time" content="2020-09-30T11:49:35.811Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/09/08/PH9e8qMihbvyTDz.png">
+
+<link rel="canonical" href="https://io.maywzh.com/2018/09/08/Python/Python%E7%9A%84%E5%85%A8%E5%B1%80%E8%A7%A3%E9%87%8A%E5%99%A8%E9%94%81%E6%98%AF%E4%BB%80%E4%B9%88/">
 
 
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
-</header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
 </script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
+
+  <title>Python的全局解释器锁是什么 | Cult I.O.</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
+  </div>
 </div>
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
-</script>
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
 
     
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">Python 的全局解释器锁是什么</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2018/09/08/Python/Python%E7%9A%84%E5%85%A8%E5%B1%80%E8%A7%A3%E9%87%8A%E5%99%A8%E9%94%81%E6%98%AF%E4%BB%80%E4%B9%88/">
 
-                    
-                        <span class="post-time">
-                        Date: <a href="#">September 8, 2018&nbsp;&nbsp;2:38:33</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
 
-        <div class="post-content">
-            <p>全局解释性锁，简称 GIL (Global Interpreter Lock)，它是什么，官方有如下解释：</p>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python的全局解释器锁是什么
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018.09.08 02:38:33" itemprop="dateCreated datePublished" datetime="2018-09-08T02:38:33+08:00">2018.09.08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/09/08/Python/Python%E7%9A%84%E5%85%A8%E5%B1%80%E8%A7%A3%E9%87%8A%E5%99%A8%E9%94%81%E6%98%AF%E4%BB%80%E4%B9%88/" class="post-meta-item leancloud_visitors" data-flag-title="Python的全局解释器锁是什么" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>全局解释性锁，简称GIL(Global Interpreter Lock)，它是什么，官方有如下解释：</p>
 <blockquote>
 <p>In CPython, the global interpreter lock, or GIL, is a mutex that protects access to Python objects, preventing multiple threads from executing Python bytecodes at once. This lock is necessary mainly because CPython’s memory management is not thread-safe. (However, since the GIL exists, other features have grown to depend on the guarantees that it enforces.)</p>
 </blockquote>
 <p>我们可以得出：</p>
 <ul>
-<li><code>GIL</code> 在执行 Python 字节码时保护访问 Python 对象而阻止多个线程执行的互斥锁，主要因为 CPython 的解释器非线程安全。</li>
-<li><code>GIL</code> 非 Python 语言特性，而是依赖于解释器的实现，<code>CPython</code> 实现了 <code>GIL</code> 机制</li>
-<li><code>GIL</code> 保证 Python 解释器运行时，同一时刻只有一个线程运行，保证内存管理安全</li>
-<li>目前已经有许多功能依赖 <code>GIL</code></li>
+<li><code>GIL</code>在执行Python字节码时保护访问Python对象而阻止多个线程执行的互斥锁，主要因为CPython的解释器非线程安全。</li>
+<li><code>GIL</code>非Python语言特性，而是依赖于解释器的实现，<code>CPython</code>实现了<code>GIL</code>机制</li>
+<li><code>GIL</code>保证Python解释器运行时，同一时刻只有一个线程运行，保证内存管理安全</li>
+<li>目前已经有许多功能依赖<code>GIL</code></li>
 </ul>
 <a id="more"></a>
-<p>常见的 Python 解释器有如下几种，以及这些解释器是否存在 <code>GIL</code>：</p>
+<p>常见的Python解释器有如下几种，以及这些解释器是否存在<code>GIL</code>：</p>
 <ul>
-<li><code>CPython</code>：<code>C</code> 语言开发的解释器，默认官方版本，使用最为广泛，有 <code>GIL</code></li>
-<li><code>IPython</code>：基于 <code>CPython</code> 开发的交互式解释器，只是增强了交互功能，执行功能与 <code>CPython</code> 完全一样</li>
-<li><code>PyPy</code>：目标是加快执行速度，采用 JIT 技术，对 Python 代码进行动态编译（不是解释），可显著提高执行速度，但执行结果可能与 <code>CPython</code> 不同。有 <code>GIL</code>，但其开发者宣布发布去掉 <code>GIL</code> 的版本</li>
-<li><code>Jython</code>：运行在 Java 平台上的 Python 解释器，可以把 Python 代码编译成 <code>Java</code> 字节码，依赖 <code>Java</code> 平台，没有 <code>GIL</code></li>
-<li><code>IronPython</code>：和 <code>Jython</code> 类似，执行在微软 <code>.Net</code> 平台的 Python 解释器，可以把 Python 代码编译成 <code>.Net</code> 字节码依赖 <code>.Net</code> 平台，没有 <code>GIL</code></li>
+<li><code>CPython</code>：<code>C</code>语言开发的解释器，默认官方版本，使用最为广泛，有<code>GIL</code></li>
+<li><code>IPython</code>：基于<code>CPython</code>开发的交互式解释器，只是增强了交互功能，执行功能与<code>CPython</code>完全一样</li>
+<li><code>PyPy</code>：目标是加快执行速度，采用JIT技术，对Python代码进行动态编译（不是解释），可显著提高执行速度，但执行结果可能与<code>CPython</code>不同。有<code>GIL</code>，但其开发者宣布发布去掉<code>GIL</code>的版本</li>
+<li><code>Jython</code>：运行在Java平台上的Python解释器，可以把Python代码编译成<code>Java</code>字节码，依赖<code>Java</code>平台，没有<code>GIL</code></li>
+<li><code>IronPython</code>：和<code>Jython</code>类似，执行在微软<code>.Net</code>平台的Python解释器，可以把Python代码编译成<code>.Net</code>字节码依赖<code>.Net</code>平台，没有<code>GIL</code></li>
 </ul>
-<h2 id="GIL-Problem"><a href="#GIL-Problem" class="headerlink" title="GIL Problem:"></a>GIL Problem:</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loop</span>():</span></span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> count &lt;= <span class="number">1000000000</span>:</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2 个线程执行 loop 方法 </span></span><br><span class="line">t1 = threading.Thread (target=loop)</span><br><span class="line">t2 = threading.Thread (target=loop)</span><br><span class="line"></span><br><span class="line">t1.start ()</span><br><span class="line">t2.start ()</span><br><span class="line">t1.join ()</span><br><span class="line">t2.join ()</span><br></pre></td></tr></table></figure>
-<p>上面这段代码，虽然开了 2 个线程执行，但我们观察 CPU 使用情况，发现其只能跑满一个核心。</p>
-<p>由于 <code>GIL</code> 的存在，当线程被操作系统唤醒后，必须拿到 <code>GIL</code> 锁后才能执行代码，也就是说同一时刻永远只有一个线程在执行，这就导致如果我们的程序是 CPU 密集运算型的任务，那么使用 Python 多线程是不能提高效率的。</p>
-<p>但即使有 <code>GIL</code> 的存在，理论来上来说，只要 <code>GIL</code> 释放的够勤快，多线程执行怎么也要比单线程效率高吧？</p>
+<h2 id="GIL-Problem"><a href="#GIL-Problem" class="headerlink" title="GIL Problem:"></a>GIL Problem:</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loop</span>():</span></span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> count &lt;= <span class="number">1000000000</span>:</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2个线程执行loop方法</span></span><br><span class="line">t1 = threading.Thread(target=loop)</span><br><span class="line">t2 = threading.Thread(target=loop)</span><br><span class="line"></span><br><span class="line">t1.start()</span><br><span class="line">t2.start()</span><br><span class="line">t1.join()</span><br><span class="line">t2.join()</span><br></pre></td></tr></table></figure>
+<p>上面这段代码，虽然开了2个线程执行，但我们观察CPU使用情况，发现其只能跑满一个核心。</p>
+<p>由于<code>GIL</code>的存在，当线程被操作系统唤醒后，必须拿到<code>GIL</code>锁后才能执行代码，也就是说同一时刻永远只有一个线程在执行，这就导致如果我们的程序是CPU密集运算型的任务，那么使用Python多线程是不能提高效率的。</p>
+<p>但即使有<code>GIL</code>的存在，理论来上来说，只要<code>GIL</code>释放的够勤快，多线程执行怎么也要比单线程效率高吧？</p>
 <p>现实结果是：效率比我们想象的更糟糕！</p>
 <ul>
-<li>串行执行 2 次 CPU 密集型任务：</li>
+<li>串行执行2次CPU密集型任务：</li>
 </ul>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">time</span></span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line">def <span class="keyword">loop</span>():</span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> count &lt;= <span class="number">5000000000</span>:</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main ():</span><br><span class="line">    # 串行执行 < span class="number">2</span > 次 CPU 密集型任务 </span><br><span class="line">    start = <span class="type">time</span>.time ()</span><br><span class="line">    <span class="keyword">loop</span>()</span><br><span class="line">    <span class="keyword">loop</span>()</span><br><span class="line">    print <span class="type">time</span>.time () - <span class="keyword">start</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main ()</span><br><span class="line"></span><br><span class="line"># <span class="number">540.302778006</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">time</span></span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line">def <span class="keyword">loop</span>():</span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> count &lt;= <span class="number">5000000000</span>:</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    # 串行执行<span class="number">2</span>次CPU密集型任务</span><br><span class="line">    start = <span class="type">time</span>.time()</span><br><span class="line">    <span class="keyword">loop</span>()</span><br><span class="line">    <span class="keyword">loop</span>()</span><br><span class="line">    print <span class="type">time</span>.time() - <span class="keyword">start</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br><span class="line"></span><br><span class="line"># <span class="number">540.302778006</span></span><br></pre></td></tr></table></figure>
 <ul>
-<li>2 个线程同时执行 CPU 密集型任务：</li>
+<li>2个线程同时执行CPU密集型任务：</li>
 </ul>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">time</span></span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line">def <span class="keyword">loop</span>():</span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> count &lt;= <span class="number">5000000000</span>:</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main ():</span><br><span class="line">    # <span class="number">2</span > 个线程同时执行 CPU 密集型任务 </span><br><span class="line">    start = <span class="type">time</span>.time ()</span><br><span class="line">    </span><br><span class="line">    t1 = threading.Thread (target=<span class="keyword">loop</span>)</span><br><span class="line">    t2 = threading.Thread (target=<span class="keyword">loop</span>)</span><br><span class="line">    t1.<span class="keyword">start</span>()</span><br><span class="line">    t2.<span class="keyword">start</span>()</span><br><span class="line">    t1.<span class="keyword">join</span>()</span><br><span class="line">    t2.<span class="keyword">join</span>()</span><br><span class="line">    </span><br><span class="line">    print <span class="type">time</span>.time () - <span class="keyword">start</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main ()</span><br><span class="line">    </span><br><span class="line"># <span class="number">573.972337961</span></span><br></pre></td></tr></table></figure>
-<p>上面的代码分别模拟了一个 CPU 密集型任务在串行执行 2 次和 2 个线程同时执行的场景，执行结果发现，多线程的效率还不如串行效率高！</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">time</span></span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line">def <span class="keyword">loop</span>():</span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> count &lt;= <span class="number">5000000000</span>:</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    # <span class="number">2</span>个线程同时执行CPU密集型任务</span><br><span class="line">    start = <span class="type">time</span>.time()</span><br><span class="line">    </span><br><span class="line">    t1 = threading.Thread(target=<span class="keyword">loop</span>)</span><br><span class="line">    t2 = threading.Thread(target=<span class="keyword">loop</span>)</span><br><span class="line">    t1.<span class="keyword">start</span>()</span><br><span class="line">    t2.<span class="keyword">start</span>()</span><br><span class="line">    t1.<span class="keyword">join</span>()</span><br><span class="line">    t2.<span class="keyword">join</span>()</span><br><span class="line">    </span><br><span class="line">    print <span class="type">time</span>.time() - <span class="keyword">start</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br><span class="line">    </span><br><span class="line"># <span class="number">573.972337961</span></span><br></pre></td></tr></table></figure>
+<p>上面的代码分别模拟了一个CPU密集型任务在串行执行2次和2个线程同时执行的场景，执行结果发现，多线程的效率还不如串行效率高！</p>
 <p>为什么会导致这种情况？我们来分析其背后的工作原理。</p>
-<h2 id="How-GIL"><a href="#How-GIL" class="headerlink" title="How GIL?"></a>How GIL?</h2><p>由于 Python 的线程就是 C 语言的 <code>pthread</code>，它是通过操作系统调度算法调度执行。而 Python 的执行是基于 <code>opcode</code> 数量的调度方式，简单来说就是每执行一定数量的字节码，或遇到系统 IO 时，会强制释放 <code>GIL</code>，然后触发一次操作系统的线程调度。</p>
-<h3 id="单核-CPU-下的多线程"><a href="#单核-CPU-下的多线程" class="headerlink" title="单核 CPU 下的多线程"></a>单核 CPU 下的多线程</h3><p>如果是单核 CPU 情况下，在多线程执行时，每次线程 A 释放 <code>GIL</code> 后，被唤醒的线程 B 能够立即拿到 <code>GIL</code>，能够无缝执行，执行流程如下图：</p>
-<p><img src="https://i.loli.net/2020/09/08/PH9e8qMihbvyTDz.png" alt="1524717396"></p>
-<h3 id="多核-CPU-下的多线程"><a href="#多核-CPU-下的多线程" class="headerlink" title="多核 CPU 下的多线程"></a>多核 CPU 下的多线程</h3><p>但在多核 CPU 情况下多线程执行时，一个线程在 CPU0 执行完之后释放 <code>GIL</code>，其他 CPU 上的线程都会进行竞争，但 CPU0 可能又马上获取到了 <code>GIL</code>，这就导致其他 CPU 上被唤醒的线程只能眼巴巴地看着 CPU0 上的线程欢快地执行着，而自己只能等待，直到又被切换到待调度的状态，这就会产生多核 CPU 频繁进行线程切换，消耗着资源，但只有一个线程能够拿到 <code>GIL</code> 真正执行 Python 代码，这就导致多线程在多核 CPU 情况下，效率还不如单线程执行效率高。执行流程如下图：</p>
-<p><img src="https://i.loli.net/2020/09/08/hGA8qPFcK2Vezr7.png" alt="1524709489"></p>
-<p>绿色部分是线程获得了 <code>GIL</code> 并进行有效的 CPU 运算，红色部分是被唤醒的线程由于没有争夺到 <code>GIL</code>，只能无效地等待，无法充分利用 CPU 的并行运算能力。这就是多线程在多核 CPU 下，执行效率还不如单线程或单核 CPU 效率高的原因。</p>
-<h3 id="多线程-IO-密集型任务"><a href="#多线程-IO-密集型任务" class="headerlink" title="多线程 IO 密集型任务"></a>多线程 IO 密集型任务</h3><p>我们再进一步试想，如果多线程执行 IO 密集型任务，效率如何？</p>
+<h2 id="How-GIL"><a href="#How-GIL" class="headerlink" title="How GIL?"></a>How GIL?</h2><p>由于Python的线程就是C语言的<code>pthread</code>，它是通过操作系统调度算法调度执行。而Python的执行是基于<code>opcode</code>数量的调度方式，简单来说就是每执行一定数量的字节码，或遇到系统IO时，会强制释放<code>GIL</code>，然后触发一次操作系统的线程调度。</p>
+<h3 id="单核CPU下的多线程"><a href="#单核CPU下的多线程" class="headerlink" title="单核CPU下的多线程"></a>单核CPU下的多线程</h3><p>如果是单核CPU情况下，在多线程执行时，每次线程A释放<code>GIL</code>后，被唤醒的线程B能够立即拿到<code>GIL</code>，能够无缝执行，执行流程如下图：</p>
+<p><img data-src="https://i.loli.net/2020/09/08/PH9e8qMihbvyTDz.png" alt="1524717396"></p>
+<h3 id="多核CPU下的多线程"><a href="#多核CPU下的多线程" class="headerlink" title="多核CPU下的多线程"></a>多核CPU下的多线程</h3><p>但在多核CPU情况下多线程执行时，一个线程在CPU0执行完之后释放<code>GIL</code>，其他CPU上的线程都会进行竞争，但CPU0可能又马上获取到了<code>GIL</code>，这就导致其他CPU上被唤醒的线程只能眼巴巴地看着CPU0上的线程欢快地执行着，而自己只能等待，直到又被切换到待调度的状态，这就会产生多核CPU频繁进行线程切换，消耗着资源，但只有一个线程能够拿到<code>GIL</code>真正执行Python代码，这就导致多线程在多核CPU情况下，效率还不如单线程执行效率高。执行流程如下图：</p>
+<p><img data-src="https://i.loli.net/2020/09/08/hGA8qPFcK2Vezr7.png" alt="1524709489"></p>
+<p>绿色部分是线程获得了<code>GIL</code>并进行有效的CPU运算，红色部分是被唤醒的线程由于没有争夺到<code>GIL</code>，只能无效地等待，无法充分利用CPU的并行运算能力。这就是多线程在多核CPU下，执行效率还不如单线程或单核CPU效率高的原因。</p>
+<h3 id="多线程IO密集型任务"><a href="#多线程IO密集型任务" class="headerlink" title="多线程IO密集型任务"></a>多线程IO密集型任务</h3><p>我们再进一步试想，如果多线程执行IO密集型任务，效率如何？</p>
 <p>答案是比单线程效率要高。</p>
-<p>这是由于 IO 密集型的任务，大部分时间都在等待 IO 上，很少消耗 CPU 的资源，所以在 IO 密集型任务的场景下，使用多线程是可以提升效率的。</p>
-<h2 id="Why-GIL"><a href="#Why-GIL" class="headerlink" title="Why GIL?"></a>Why GIL?</h2><p>既然 <code>GIL</code> 的影响这么大，那为什么 Python 的解释器 <code>CPython</code> 在设计时要采用这种方式呢？</p>
-<p>这就要追溯历史原因，2000 年以前，各个 CPU 厂商都在努力提升核心频率从而提高计算机的性能，但到 2000 年以后逐渐遇到天花板，之后提升方向改为多核心方向。</p>
-<p>为了更有效的利用多核心 CPU，就出现了多线程的编程方式，而随之带来的就是线程间数据一致性和状态同步的困难。</p>
-<p>Python 设计者在设计解释器时，可能没有想到 CPU 的性能提升会这么快转为多核心方向发展，所以在当时的场景下，设计一个全局锁是那个时代保护多线程资源一致性的最简单经济的设计方案。</p>
-<p>而随着多核心时代来临，当大家试图去拆分和去除 <code>GIL</code> 的时候，发现大量库的代码开发者已经重度依赖 <code>GIL</code>（默认 Pythonn 内部对象是线程安全的，无需在开发时额外加锁），所以这个去除 <code>GIL</code> 的任务变得复杂且难以实现。</p>
-<p>所以简单来说 <code>GIL</code> 的存在更多的是历史原因，如果推倒重来重新设计，面对多线程问题可能设计得会更为优雅。</p>
-<h2 id="How-to-solve"><a href="#How-to-solve" class="headerlink" title="How to solve?"></a>How to solve?</h2><p>既然 <code>GIL</code> 存在会导致这么多问题，那我们有什么方式可以绕开这些问题，提高程序性能？总结如下：</p>
+<p>这是由于IO密集型的任务，大部分时间都在等待IO上，很少消耗CPU的资源，所以在IO密集型任务的场景下，使用多线程是可以提升效率的。</p>
+<h2 id="Why-GIL"><a href="#Why-GIL" class="headerlink" title="Why GIL?"></a>Why GIL?</h2><p>既然<code>GIL</code>的影响这么大，那为什么Python的解释器<code>CPython</code>在设计时要采用这种方式呢？</p>
+<p>这就要追溯历史原因，2000年以前，各个CPU厂商都在努力提升核心频率从而提高计算机的性能，但到2000年以后逐渐遇到天花板，之后提升方向改为多核心方向。</p>
+<p>为了更有效的利用多核心CPU，就出现了多线程的编程方式，而随之带来的就是线程间数据一致性和状态同步的困难。</p>
+<p>Python设计者在设计解释器时，可能没有想到CPU的性能提升会这么快转为多核心方向发展，所以在当时的场景下，设计一个全局锁是那个时代保护多线程资源一致性的最简单经济的设计方案。</p>
+<p>而随着多核心时代来临，当大家试图去拆分和去除<code>GIL</code>的时候，发现大量库的代码开发者已经重度依赖<code>GIL</code>（默认Pythonn内部对象是线程安全的，无需在开发时额外加锁），所以这个去除<code>GIL</code>的任务变得复杂且难以实现。</p>
+<p>所以简单来说<code>GIL</code>的存在更多的是历史原因，如果推倒重来重新设计，面对多线程问题可能设计得会更为优雅。</p>
+<h2 id="How-to-solve"><a href="#How-to-solve" class="headerlink" title="How to solve?"></a>How to solve?</h2><p>既然<code>GIL</code>存在会导致这么多问题，那我们有什么方式可以绕开这些问题，提高程序性能？总结如下：</p>
 <ul>
-<li>IO 密集型任务场景，多线程可以提高运行效率（推荐）</li>
-<li>使用没有 <code>GIL</code> 的 Python 解释器（不推荐）</li>
-<li>CPU 密集型任务场景，可改为多进程执行（推荐）</li>
-<li>编写 Python 的 C 扩展模块，把 CPU 密集型任务交给 C 模块处理（编码复杂，不推荐）</li>
-<li>更换其他语言实现 CPU 密集型任务</li>
+<li>IO密集型任务场景，多线程可以提高运行效率（推荐）</li>
+<li>使用没有<code>GIL</code>的Python解释器（不推荐）</li>
+<li>CPU密集型任务场景，可改为多进程执行（推荐）</li>
+<li>编写Python的C扩展模块，把CPU密集型任务交给C模块处理（编码复杂，不推荐）</li>
+<li>更换其他语言实现CPU密集型任务</li>
 </ul>
 
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
 
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+          </div>
+
         
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/Python/"># Python</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2019/10/10/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%AD%A6%E4%B9%8BDiffie-Hellman%E5%AF%86%E9%92%A5%E4%BA%A4%E6%8D%A2/">密码学之 Diffie-Hellman 密钥交换</a>
-            
-            
-            <a class="next" rel="next" href="/2018/03/04/Redis/Redis%E8%AF%A6%E8%A7%A3%E4%B9%8B%E2%80%94%E2%80%94%E7%89%B9%E6%80%A7%E4%B8%8E%E7%94%A8%E9%80%94/">Redis 详解之 —— 特性与用途</a>
-            
-        </section>
 
 
-    </article>
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/03/04/Redis/Redis%E8%AF%A6%E8%A7%A3%E4%B9%8B%E2%80%94%E2%80%94%E7%89%B9%E6%80%A7%E4%B8%8E%E7%94%A8%E9%80%94/" rel="prev" title="Redis详解之——特性与用途">
+      <i class="fa fa-chevron-left"></i> Redis详解之——特性与用途
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/10/10/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%AD%A6%E4%B9%8BDiffie-Hellman%E5%AF%86%E9%92%A5%E4%BA%A4%E6%8D%A2/" rel="next" title="密码学之Diffie-Hellman密钥交换">
+      密码学之Diffie-Hellman密钥交换 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GIL-Problem"><span class="nav-number">1.</span> <span class="nav-text">GIL Problem:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-GIL"><span class="nav-number">2.</span> <span class="nav-text">How GIL?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%A0%B8CPU%E4%B8%8B%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="nav-number">2.1.</span> <span class="nav-text">单核CPU下的多线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E6%A0%B8CPU%E4%B8%8B%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="nav-number">2.2.</span> <span class="nav-text">多核CPU下的多线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8BIO%E5%AF%86%E9%9B%86%E5%9E%8B%E4%BB%BB%E5%8A%A1"><span class="nav-number">2.3.</span> <span class="nav-text">多线程IO密集型任务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-GIL"><span class="nav-number">3.</span> <span class="nav-text">Why GIL?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-solve"><span class="nav-number">4.</span> <span class="nav-text">How to solve?</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
 </div>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
         
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-    </div>
-</footer>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
     </div>
 </body>
 </html>

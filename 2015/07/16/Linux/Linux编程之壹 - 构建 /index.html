@@ -1,180 +1,204 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>实践 Linux 编程之壹 - 构建 | Cult Minds</title><meta name="description" content="一般源代码提供的程序安装需要通过配置、编译、安装三个步骤；  配置做的工作主要是检查当前环境是否满足要安装软件的依赖关系，以及设置程序安装所需要的初始化信息，比如安装路径，需要安装哪些组件；配置完成，会生成 makefile 文件供第二步 make 使用； 编译是对源文件进行编译链接生成可执行程序； 安装做的工作就简单多了，就是将生成的可执行文件拷贝到配置时设置的初始路径下；   配置查询可用的配"><meta name="keywords" content="Linux"><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/bitbug_favicon_128s.ico"><link rel="canonical" href="https://tech.maywzh.com/2015/07/16/Linux/Linux%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%A3%B9%20-%20%E6%9E%84%E5%BB%BA%20/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin="crossorigin"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//pingjs.qq.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="content"/><meta property="og:type" content="article"><meta property="og:title" content="实践 Linux 编程之壹 - 构建"><meta property="og:url" content="https://tech.maywzh.com/2015/07/16/Linux/Linux%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%A3%B9%20-%20%E6%9E%84%E5%BB%BA%20/"><meta property="og:site_name" content="Cult Minds"><meta property="og:description" content="一般源代码提供的程序安装需要通过配置、编译、安装三个步骤；  配置做的工作主要是检查当前环境是否满足要安装软件的依赖关系，以及设置程序安装所需要的初始化信息，比如安装路径，需要安装哪些组件；配置完成，会生成 makefile 文件供第二步 make 使用； 编译是对源文件进行编译链接生成可执行程序； 安装做的工作就简单多了，就是将生成的可执行文件拷贝到配置时设置的初始路径下；   配置查询可用的配"><meta property="og:image" content="https://i.loli.net/2020/08/23/DaNnkXpQMLl9YUG.png"><meta property="article:published_time" content="2015-07-16T11:14:29.000Z"><meta property="article:modified_time" content="2020-09-27T07:48:52.153Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?e5597df0e0a089595ae6b3fce53f24e8";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-5"></script><script>window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'UA-119246999-5');
-</script><script>var _mtac = {};
-(function() {
-    var mta = document.createElement("script");
-    mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
-    mta.setAttribute("name", "MTAH5");
-    mta.setAttribute("sid", "500728859");
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(mta, s);
-})();
-</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
-  root: '/',
-  hexoversion: '5.1.1',
-  algolia: undefined,
-  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
-  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
-  copy: {
-    success: 'Copy successfully',
-    error: 'Copy error',
-    noSupport: 'The browser does not support'
-  },
-  bookmark: {
-    message_prev: 'Press',
-    message_next: 'to bookmark this page'
-  },
-  runtime: '',
-  date_suffix: {"one_hour":"Just","hours":"hours ago","day":"days ago"},
-  copyright: undefined,
-  ClickShowText: undefined,
-  medium_zoom: false,
-  fancybox: true,
-  Snackbar: undefined,
-  justifiedGallery: {
-    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
-  },
-  baiduPush: false,
-  isPhotoFigcaption: false,
-  islazyload: true,
-  isanchor: false
-};
+<!DOCTYPE HTML>
+<html>
 
-var saveToLocal = {
-  set: function setWithExpiry(key, value, ttl) {
-      const now = new Date()
-      const expiryDay = ttl * 86400000
-      const item = {
-        value: value,
-        expiry: now.getTime() + expiryDay,
-      }
-      localStorage.setItem(key, JSON.stringify(item))
-    },
+<head>
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
+
+	    
   
-  get: function getWithExpiry(key) {
-    const itemStr = localStorage.getItem(key)
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
 
-    if (!itemStr) {
-      return undefined
-    }
-    const item = JSON.parse(itemStr)
-    const now = new Date()
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
-    if (now.getTime() > item.expiry) {
-      localStorage.removeItem(key)
-      return undefined
-    }
-    return item.value
-  }
-}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
-  isPost: true,
-  isHome: false,
-  isHighlightShrink: false,
-  isSidebar: true,
-  postUpdate: '2020.09.27 15:48:52'
-}</script><noscript><style type="text/css">
-#nav {
-  opacity: 1
-}
-.justified-gallery img {
-  opacity: 1
-}
-</style></noscript><script>var activateDarkMode = function () {
-  document.documentElement.setAttribute('data-theme', 'dark')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-  }
-}
-var activateLightMode = function () {
-  document.documentElement.setAttribute('data-theme', 'light')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-  }
-}
 
-var autoChangeMode = '1'
-var t = saveToLocal.get('theme')
-if (autoChangeMode === '1') {
-  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
-  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
-  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
-  if (t === undefined) {
-    if (isLightMode) activateLightMode()
-    else if (isDarkMode) activateDarkMode()
-    else if (isNotSpecified || hasNoSupport) {
-      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
-      var now = new Date()
-      var hour = now.getHours()
-      var isNight = hour <= 6 || hour >= 18
-      isNight ? activateDarkMode() : activateLightMode()
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
-      if (saveToLocal.get('theme') === undefined) {
-        e.matches ? activateDarkMode() : activateLightMode()
-      }
-    })
-  } else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else if (autoChangeMode === '2') {
-  now = new Date()
-  hour = now.getHours()
-  isNight = hour <= 6 || hour >= 18
-  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
-  else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else {
-  if (t === 'dark') activateDarkMode()
-  else if (t === 'light') activateLightMode()
-}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" data-lazy-src="/uploads/myavatar.jpg" onerror="onerror=null;src='/img/ripple.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">111</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">50</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">2.</span> <span class="toc-text">编译</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#makefile-%E7%BC%96%E5%86%99%E7%9A%84%E8%A6%81%E7%82%B9"><span class="toc-number">2.1.</span> <span class="toc-text">makefile 编写的要点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#makefile-%E4%B8%AD%E7%9A%84%E5%85%A8%E5%B1%80%E8%87%AA%E5%8F%98%E9%87%8F"><span class="toc-number">2.2.</span> <span class="toc-text">makefile 中的全局自变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CMake-%E5%B7%A5%E5%85%B7"><span class="toc-number">2.3.</span> <span class="toc-text">CMake 工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E4%BE%9D%E8%B5%96%E7%9A%84%E5%BA%93"><span class="toc-number">2.4.</span> <span class="toc-text">编译依赖的库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#g-%E7%BC%96%E8%AF%91"><span class="toc-number">2.5.</span> <span class="toc-text">g++ 编译</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">3.</span> <span class="toc-text">安装</span></a></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/08/23/DaNnkXpQMLl9YUG.png)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Cult Minds</a></span><span class="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">实践 Linux 编程之壹 - 构建</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">Created</span><time datetime="2015-07-16T11:14:29.000Z" title="undefined 2015.07.16 19:14:29">2015.07.16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/DevOps/">DevOps</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">876</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>3min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p>一般源代码提供的程序安装需要通过配置、编译、安装三个步骤；</p>
+<!-- Layouts -->
+
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+
+<body class="is-loading">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
+</header>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
+
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
+
+
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
+
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/23/DaNnkXpQMLl9YUG.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>实践 Linux 编程之壹 - 构建</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <p>一般源代码提供的程序安装需要通过配置、编译、安装三个步骤；</p>
 <ol>
 <li>配置做的工作主要是检查当前环境是否满足要安装软件的依赖关系，以及设置程序安装所需要的初始化信息，比如安装路径，需要安装哪些组件；配置完成，会生成 makefile 文件供第二步 make 使用；</li>
 <li>编译是对源文件进行编译链接生成可执行程序；</li>
 <li>安装做的工作就简单多了，就是将生成的可执行文件拷贝到配置时设置的初始路径下；</li>
 </ol>
 <a id="more"></a>
-<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>查询可用的配置选项:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+<h3><span id="配置">配置 </span></h3><p> 查询可用的配置选项:</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">./configure --help<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>配置路径:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/<span class="built_in">local</span>/snmp</span><br></pre></td></tr></table></figure>
-<p><code>–prefix</code> 是配置使用的最常用选项，设置程序安装的路径；</p>
-<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>编译使用 make 编译:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -f myMakefile</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">./configure --prefix<span class="token operator">=</span>/usr/local/snmp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><code>–prefix</code>是配置使用的最常用选项，设置程序安装的路径；</p>
+<h3><span id="编译">编译 </span></h3><p> 编译使用 make 编译:</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">make</span> -f myMakefile<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>通过 <code>-f</code> 选项显示指定需要编译的 makefile；如果待使用 makefile 文件在当前路径，且文件名为以下几个，则不用显示指定：</p>
 <p>makefile Makefile</p>
-<h4 id="makefile-编写的要点"><a href="#makefile-编写的要点" class="headerlink" title="makefile 编写的要点"></a>makefile 编写的要点</h4><ul>
+<h4><span id="makefile-编写的要点">makefile 编写的要点</span></h4><ul>
 <li>必须满足第一条规则，满足后停止</li>
 <li>除第一条规则，其他无顺序</li>
 </ul>
-<h4 id="makefile-中的全局自变量"><a href="#makefile-中的全局自变量" class="headerlink" title="makefile 中的全局自变量"></a>makefile 中的全局自变量</h4><ul>
-<li><code>$@</code> 目标文件名</li>
-<li><code>@^</code> 所有前提名，除副本</li>
-<li><code>@＋</code> 所有前提名，含副本</li>
-<li><code>@＜</code> 一个前提名</li>
-<li><code>@？</code> 所有新于目标文件的前提名</li>
-<li><code>@*</code> 目标文件的基名称</li>
+<h4><span id="makefile-中的全局自变量">makefile 中的全局自变量</span></h4><ul>
+<li><code>$@</code>目标文件名</li>
+<li><code>@^</code>所有前提名，除副本</li>
+<li><code>@＋</code>所有前提名，含副本</li>
+<li><code>@＜</code>一个前提名</li>
+<li><code>@？</code>所有新于目标文件的前提名</li>
+<li><code>@*</code>目标文件的基名称</li>
 </ul>
-<p>要系统学习 makefile 可以参考 <a target="_blank" rel="noopener" href="http://scc.qibebt.cas.cn/docs/linux/base/% B8% FA% CE% D2% D2% BB% C6% F0% D0% B4Makefile-% B3% C2% F0% A9.pdf">跟我一起学 makefile</a></p>
-<h4 id="CMake-工具"><a href="#CMake-工具" class="headerlink" title="CMake 工具"></a>CMake 工具</h4><p>CMake 是一个跨平台的安装（编译）工具，可以用简单的语句来描述所有平台的安装 (编译过程)。他能够输出各种各样的 makefile 或者 project 文件。使用 CMake，能够使程序员从复杂的编译连接过程中解脱出来。它使用一个名为 CMakeLists.txt 的文件来描述构建过程，可以生成标准的构建文件，如 Unix/Linux 的 Makefile 或 Windows Visual C++ 的 projects/workspaces 。</p>
-<h4 id="编译依赖的库"><a href="#编译依赖的库" class="headerlink" title="编译依赖的库"></a>编译依赖的库</h4><p>makefile 编译过程中所依赖的非标准库和头文件路径需要显示指明:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CPPFLAGS -I 标记非标准头文件存放路径 </span><br><span class="line">LDFLAGS  -L 标记非标准库存放路径 </span><br></pre></td></tr></table></figure>
+<p>要系统学习 makefile 可以参考 <a target="_blank" rel="noopener" href="http://scc.qibebt.cas.cn/docs/linux/base/%B8%FA%CE%D2%D2%BB%C6%F0%D0%B4Makefile-%B3%C2%F0%A9.pdf">跟我一起学 makefile</a></p>
+<h4><span id="cmake-工具">CMake 工具</span></h4><p>CMake 是一个跨平台的安装（编译）工具，可以用简单的语句来描述所有平台的安装(编译过程)。他能够输出各种各样的 makefile 或者 project 文件。使用 CMake，能够使程序员从复杂的编译连接过程中解脱出来。它使用一个名为 CMakeLists.txt 的文件来描述构建过程, 可以生成标准的构建文件, 如 Unix/Linux 的 Makefile 或 Windows Visual C++ 的 projects/workspaces 。</p>
+<h4><span id="编译依赖的库">编译依赖的库</span></h4><p>makefile 编译过程中所依赖的非标准库和头文件路径需要显示指明:</p>
+<pre class="line-numbers language-reStructuredText" data-language="reStructuredText"><code class="language-reStructuredText">CPPFLAGS -I 标记非标准头文件存放路径
+LDFLAGS  -L 标记非标准库存放路径<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>如果 CPPFLAGS 和 LDFLAGS 已在用户环境变量中设置并且导出（使用 export 关键字），就不用再显示指定；</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make -f myMakefile LDFLAGS=&#x27;-L/var/xxx/lib -L/opt/mysql/lib&#x27;</span><br><span class="line">    CPPFLAGS=&#x27;-I/usr/local/libcom/<span class="keyword">include</span> -I/usr/local/libpng/<span class="keyword">include</span>&#x27;</span><br></pre></td></tr></table></figure>
-<p>注意：<strong> 链接多库时，多个库之间如果有依赖，需要注意书写的顺序，右边是左边的前提；</strong></p>
-<h4 id="g-编译"><a href="#g-编译" class="headerlink" title="g++ 编译"></a>g++ 编译</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ -o unixApp unixApp.o a.o b.o</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile">make -f myMakefile LDFLAGS<span class="token operator">=</span><span class="token string">'-L/var/xxx/lib -L/opt/mysql/lib'</span>
+    CPPFLAGS<span class="token operator">=</span><span class="token string">'-I/usr/local/libcom/include -I/usr/local/libpng/include'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>注意：<strong>链接多库时，多个库之间如果有依赖，需要注意书写的顺序，右边是左边的前提；</strong></p>
+<h4><span id="g-编译">g++ 编译</span></h4><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ g++ -o unixApp unixApp.o a.o b.o<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>选项说明：</p>
 <ul>
 <li><code>-o</code>: 指明生成的目标文件</li>
@@ -182,34 +206,41 @@ if (autoChangeMode === '1') {
 <li><code>-E</code>: 查看中间文件</li>
 </ul>
 <p>应用：查询宏展开的中间文件：</p>
-<p>在 g++ 的编译选项中，添加 <code>-E</code> 选项，然后去掉 <code>-o</code> 选项 ，重定向到一个文件中即可:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -g -E unixApp.cpp  -I/opt/app/<span class="built_in">source</span> &gt; midfile</span><br></pre></td></tr></table></figure>
+<p>在 g++ 的编译选项中，添加 <code>-E</code>选项，然后去掉 <code>-o</code> 选项 ，重定向到一个文件中即可:</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">g++ -g -E unixApp.cpp  -I/opt/app/source <span class="token operator">></span> midfile<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>查询应用程序需要链接的库:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ldd myprogrammer</span><br><span class="line">    libstdc++.so.6 =&gt; /usr/lib64/libstdc++.so.6 (0x00000039a7e00000)</span><br><span class="line">    libm.so.6 =&gt; /lib64/libm.so.6 (0x0000003996400000)</span><br><span class="line">    libgcc_s.so.1 =&gt; /lib64/libgcc_s.so.1 (0x00000039a5600000)</span><br><span class="line">    libc.so.6 =&gt; /lib64/libc.so.6 (0x0000003995800000)</span><br><span class="line">    /lib64/ld-linux-x86-64.so.2 (0x0000003995400000)</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ ldd myprogrammer
+    libstdc++.so.6 <span class="token operator">=</span><span class="token operator">></span> /usr/lib64/libstdc++.so.6 <span class="token punctuation">(</span>0x00000039a7e00000<span class="token punctuation">)</span>
+    libm.so.6 <span class="token operator">=</span><span class="token operator">></span> /lib64/libm.so.6 <span class="token punctuation">(</span>0x0000003996400000<span class="token punctuation">)</span>
+    libgcc_s.so.1 <span class="token operator">=</span><span class="token operator">></span> /lib64/libgcc_s.so.1 <span class="token punctuation">(</span>0x00000039a5600000<span class="token punctuation">)</span>
+    libc.so.6 <span class="token operator">=</span><span class="token operator">></span> /lib64/libc.so.6 <span class="token punctuation">(</span>0x0000003995800000<span class="token punctuation">)</span>
+    /lib64/ld-linux-x86-64.so.2 <span class="token punctuation">(</span>0x0000003995400000<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>注解</p>
 <p>关于 ldd 的使用细节，参见 <a target="_blank" rel="noopener" href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/ldd.html#ldd">ldd 查看程序依赖库</a></p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>安装就是将生成的可执行文件拷贝到配置时设置的初始路径下:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ make install</span><br></pre></td></tr></table></figure>
+<h3><span id="安装">安装 </span></h3><p> 安装就是将生成的可执行文件拷贝到配置时设置的初始路径下:</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">make</span> <span class="token function">install</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>其实 <strong>install</strong> 就是 makefile 中的一个规则，打开 makefile 文件后可以查看程序安装的所做的工作；</p>
-</div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/08/23/DaNnkXpQMLl9YUG.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2015/07/20/Linux/Linux%E7%BC%96%E7%A8%8B%E4%B9%8B%E8%B4%B0%20-%20%E8%B0%83%E8%AF%95/"><img class="prev-cover" data-lazy-src="https://i.loli.net/2020/08/23/DaNnkXpQMLl9YUG.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">实践 Linux 编程之贰 - 调试</div></div></a></div><div class="next-post pull-right"><a href="/2015/06/21/Linux/Linux%E4%B8%AD%E7%9A%84wget/"><img class="next-cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Linux 中的 wget</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2015/10/18/Linux/Linux-gcc简明教程/" title="Linux GNU-gcc 简明教程"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/Gexg6rV8BuyiTPv.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.10.18</div><div class="relatedPosts_title">Linux GNU-gcc 简明教程</div></div></a></div><div class="relatedPosts_item"><a href="/2015/10/22/Linux/Linux中的env/" title="Linux 中的 env 是什么"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.10.22</div><div class="relatedPosts_title">Linux 中的 env 是什么</div></div></a></div><div class="relatedPosts_item"><a href="/2015/12/16/Linux/Linux中的lsof/" title="Linux 中的 lsof"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.12.16</div><div class="relatedPosts_title">Linux 中的 lsof</div></div></a></div><div class="relatedPosts_item"><a href="/2015/01/04/Linux/Linux中的重定向/" title="Linux 中的重定向"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.01.04</div><div class="relatedPosts_title">Linux 中的重定向</div></div></a></div><div class="relatedPosts_item"><a href="/2015/06/21/Linux/Linux中的wget/" title="Linux 中的 wget"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.06.21</div><div class="relatedPosts_title">Linux 中的 wget</div></div></a></div><div class="relatedPosts_item"><a href="/2015/08/21/Linux/Linux内存分析工具 - free/" title="Linux 内存分析工具 - free"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.08.21</div><div class="relatedPosts_title">Linux 内存分析工具 - free</div></div></a></div></div></div></article></main><footer id="footer" style="background-image: url(https://i.loli.net/2020/08/23/DaNnkXpQMLl9YUG.png)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2015 - 2020 By maywzh</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script>function panguFn () {
-  if (typeof pangu === 'object') pangu.spacingElementById('content-inner')
-  else {
-    $.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js', () => {
-      pangu.spacingElementById('content-inner')
-    })
-  }
-}
 
-function panguInit () {
-  if (false){
-    GLOBAL_CONFIG_SITE.isPost && panguFn()
-  } else {
-    panguFn()
-  }
-}
+            </div>
+            <!-- Post Comments -->
+            
+        </div>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
+</div>
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
 
-document.addEventListener('DOMContentLoaded', panguFn)</script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
-  document.body.style.overflow = 'auto';
-  document.getElementById('loading-box').classList.add("loaded")
-}
-window.addEventListener('load',endLoading)</script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
+
+
+
+
+</html>

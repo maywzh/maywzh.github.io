@@ -1,147 +1,169 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>2020 Java 后端面试题集锦 | Cult Minds</title><meta name="description" content="工程师通关集锦。  JavaJava 基础 final, finally, finalize 的区别 重载和重写的区别 抽象类和接口有什么区别 BIO、NIO、AIO 有什么区别？ 说说 Java 中多态的实现原理 Java 泛型和类型擦除 int 和 Integer 有什么区别，还有 Integer 缓存的实现 说说反射的用途及实现原理，Java 获取反射的三种方法 面向对象的特征 Java 中"><meta name="keywords" content="Linux,Redis,Java,ZooKeeper,面试,数据库"><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/bitbug_favicon_128s.ico"><link rel="canonical" href="https://tech.maywzh.com/2020/07/01/java/2020%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%87%86%E5%A4%87/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin="crossorigin"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//pingjs.qq.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="content"/><meta property="og:type" content="article"><meta property="og:title" content="2020 Java 后端面试题集锦"><meta property="og:url" content="https://tech.maywzh.com/2020/07/01/java/2020%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%87%86%E5%A4%87/"><meta property="og:site_name" content="Cult Minds"><meta property="og:description" content="工程师通关集锦。  JavaJava 基础 final, finally, finalize 的区别 重载和重写的区别 抽象类和接口有什么区别 BIO、NIO、AIO 有什么区别？ 说说 Java 中多态的实现原理 Java 泛型和类型擦除 int 和 Integer 有什么区别，还有 Integer 缓存的实现 说说反射的用途及实现原理，Java 获取反射的三种方法 面向对象的特征 Java 中"><meta property="og:image" content="https://i.loli.net/2020/09/27/BptI6CGiQDUcW2Z.jpg"><meta property="article:published_time" content="2020-06-30T16:26:28.000Z"><meta property="article:modified_time" content="2020-09-28T03:26:30.056Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?e5597df0e0a089595ae6b3fce53f24e8";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-5"></script><script>window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'UA-119246999-5');
-</script><script>var _mtac = {};
-(function() {
-    var mta = document.createElement("script");
-    mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
-    mta.setAttribute("name", "MTAH5");
-    mta.setAttribute("sid", "500728859");
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(mta, s);
-})();
-</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
-  root: '/',
-  hexoversion: '5.1.1',
-  algolia: undefined,
-  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
-  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
-  copy: {
-    success: 'Copy successfully',
-    error: 'Copy error',
-    noSupport: 'The browser does not support'
-  },
-  bookmark: {
-    message_prev: 'Press',
-    message_next: 'to bookmark this page'
-  },
-  runtime: '',
-  date_suffix: {"one_hour":"Just","hours":"hours ago","day":"days ago"},
-  copyright: undefined,
-  ClickShowText: undefined,
-  medium_zoom: false,
-  fancybox: true,
-  Snackbar: undefined,
-  justifiedGallery: {
-    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
-  },
-  baiduPush: false,
-  isPhotoFigcaption: false,
-  islazyload: true,
-  isanchor: false
-};
+<!DOCTYPE HTML>
+<html>
 
-var saveToLocal = {
-  set: function setWithExpiry(key, value, ttl) {
-      const now = new Date()
-      const expiryDay = ttl * 86400000
-      const item = {
-        value: value,
-        expiry: now.getTime() + expiryDay,
-      }
-      localStorage.setItem(key, JSON.stringify(item))
-    },
+<head>
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
+
+	    
   
-  get: function getWithExpiry(key) {
-    const itemStr = localStorage.getItem(key)
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
 
-    if (!itemStr) {
-      return undefined
-    }
-    const item = JSON.parse(itemStr)
-    const now = new Date()
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
-    if (now.getTime() > item.expiry) {
-      localStorage.removeItem(key)
-      return undefined
-    }
-    return item.value
-  }
-}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
-  isPost: true,
-  isHome: false,
-  isHighlightShrink: false,
-  isSidebar: true,
-  postUpdate: '2020.09.28 11:26:30'
-}</script><noscript><style type="text/css">
-#nav {
-  opacity: 1
-}
-.justified-gallery img {
-  opacity: 1
-}
-</style></noscript><script>var activateDarkMode = function () {
-  document.documentElement.setAttribute('data-theme', 'dark')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-  }
-}
-var activateLightMode = function () {
-  document.documentElement.setAttribute('data-theme', 'light')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-  }
-}
 
-var autoChangeMode = '1'
-var t = saveToLocal.get('theme')
-if (autoChangeMode === '1') {
-  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
-  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
-  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
-  if (t === undefined) {
-    if (isLightMode) activateLightMode()
-    else if (isDarkMode) activateDarkMode()
-    else if (isNotSpecified || hasNoSupport) {
-      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
-      var now = new Date()
-      var hour = now.getHours()
-      var isNight = hour <= 6 || hour >= 18
-      isNight ? activateDarkMode() : activateLightMode()
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
-      if (saveToLocal.get('theme') === undefined) {
-        e.matches ? activateDarkMode() : activateLightMode()
-      }
-    })
-  } else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else if (autoChangeMode === '2') {
-  now = new Date()
-  hour = now.getHours()
-  isNight = hour <= 6 || hour >= 18
-  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
-  else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else {
-  if (t === 'dark') activateDarkMode()
-  else if (t === 'light') activateLightMode()
-}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" data-lazy-src="/uploads/myavatar.jpg" onerror="onerror=null;src='/img/ripple.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">111</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">50</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java"><span class="toc-number">1.</span> <span class="toc-text">Java</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%9F%BA%E7%A1%80"><span class="toc-number">1.1.</span> <span class="toc-text">Java 基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E9%9B%86%E5%90%88"><span class="toc-number">1.2.</span> <span class="toc-text">Java 集合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%B9%B6%E5%8F%91-amp-amp-%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">Java 并发 &amp;&amp; 多线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JVM-%E7%AF%87"><span class="toc-number">1.4.</span> <span class="toc-text">JVM 篇</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">2.</span> <span class="toc-text">数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL"><span class="toc-number">2.1.</span> <span class="toc-text">MySQL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98-Redis"><span class="toc-number">2.2.</span> <span class="toc-text">缓存 &#x2F; Redis</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80"><span class="toc-number">3.</span> <span class="toc-text">计算机基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.1.</span> <span class="toc-text">操作系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C"><span class="toc-number">3.2.</span> <span class="toc-text">计算机网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%B3%95"><span class="toc-number">3.3.</span> <span class="toc-text">算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">3.4.</span> <span class="toc-text"> </span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91"><span class="toc-number">4.</span> <span class="toc-text">后端开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="toc-number">4.1.</span> <span class="toc-text">消息队列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mybatis"><span class="toc-number">4.2.</span> <span class="toc-text">mybatis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-%E7%9B%B8%E5%85%B3"><span class="toc-number">4.3.</span> <span class="toc-text">Spring 相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Netty-tomcat"><span class="toc-number">4.4.</span> <span class="toc-text">Netty&#x2F;tomcat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZooKeeper"><span class="toc-number">4.5.</span> <span class="toc-text">ZooKeeper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Elasticsearch"><span class="toc-number">4.6.</span> <span class="toc-text">Elasticsearch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dubbo-%E6%A1%86%E6%9E%B6"><span class="toc-number">4.7.</span> <span class="toc-text">dubbo 框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#spring-cloud"><span class="toc-number">4.8.</span> <span class="toc-text">spring cloud</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nginx"><span class="toc-number">4.9.</span> <span class="toc-text">nginx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F"><span class="toc-number">4.10.</span> <span class="toc-text">分布式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1-%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1"><span class="toc-number">4.11.</span> <span class="toc-text">系统设计 &#x2F; 方案设计</span></a></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/09/27/BptI6CGiQDUcW2Z.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Cult Minds</a></span><span class="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">2020 Java 后端面试题集锦</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">Created</span><time datetime="2020-06-30T16:26:28.000Z" title="undefined 2020.07.01 00:26:28">2020.07.01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">11.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>36min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p>工程师通关集锦。</p>
+<!-- Layouts -->
+
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+
+<body class="is-loading">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
+</header>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
+
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
+
+
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
+
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/27/BptI6CGiQDUcW2Z.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>2020 Java 后端面试题集锦</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <p>工程师通关集锦。</p>
 <a id="more"></a>
-<h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><h3 id="Java-基础"><a href="#Java-基础" class="headerlink" title="Java 基础"></a>Java 基础</h3><ol>
+<h2><span id="java">Java</span></h2><h3><span id="java-基础">Java 基础</span></h3><ol>
 <li>final, finally, finalize 的区别</li>
 <li>重载和重写的区别</li>
 <li>抽象类和接口有什么区别</li>
@@ -151,12 +173,12 @@ if (autoChangeMode === '1') {
 <li>int 和 Integer 有什么区别，还有 Integer 缓存的实现</li>
 <li>说说反射的用途及实现原理，Java 获取反射的三种方法</li>
 <li>面向对象的特征</li>
-<li>Java 中 IO 流分为几种？</li>
+<li>Java 中 IO 流分为几种?</li>
 <li>讲讲类的实例化顺序，比如父类静态数据，构造函数，子类静态数据，构造函数。</li>
 <li>Java 创建对象有几种方式</li>
 <li>如何将 GB2312 编码的字符串转换为 ISO-8859-1 编码的字符串呢？</li>
 <li>守护线程是什么？用什么方法实现守护线程</li>
-<li>notify () 和 notifyAll () 有什么区别？</li>
+<li>notify()和 notifyAll()有什么区别？</li>
 <li>Java 语言是如何处理异常的，关键字 throws、throw、try、catch、finally 怎么使用？</li>
 <li>谈谈 Java 的异常层次结构</li>
 <li>静态内部类与非静态内部类有什么区别区别</li>
@@ -172,7 +194,7 @@ if (autoChangeMode === '1') {
 <li>抽象工厂和工厂方法模式的区别？</li>
 <li>什么是值传递和引用传递？</li>
 <li>可以在 static 环境中访问非 static 变量吗？</li>
-<li>Java 支持多继承么，为什么？</li>
+<li>Java 支持多继承么, 为什么？</li>
 <li>用最有效率的方法计算 2 乘以 8？</li>
 <li>构造器是否可被重写？</li>
 <li>char 型变量中能不能存贮一个中文汉字，为什么？</li>
@@ -185,7 +207,7 @@ if (autoChangeMode === '1') {
 <li>2 个不相等的对象有可能具有相同的 hashcode 吗？</li>
 <li>访问修饰符 public,private,protected, 以及 default 的区别？</li>
 <li>谈谈 final 在 java 中的作用？</li>
-<li>java 中的 Math.round (-1.5) 等于多少呢？</li>
+<li>java 中的 Math.round(-1.5) 等于多少呢？</li>
 <li>String 属于基础的数据类型吗？</li>
 <li>如何将字符串反转呢？</li>
 <li>描述动态代理的几种实现方式，它们分别有什么优缺点</li>
@@ -196,15 +218,15 @@ if (autoChangeMode === '1') {
 <li>java8 的新特性。</li>
 <li>匿名内部类是什么？如何访问在其外面定义的变量呢？</li>
 <li>break 和 continue 有什么区别？</li>
-<li>String s = “Hello”;s = s + “world!”; 这两行代码执行后，原始的 String 对象中的内容是否会改变？</li>
+<li>String s = “Hello”;s = s + “ world!”; 这两行代码执行后，原始的 String 对象中的内容是否会改变？</li>
 <li>怎样将 GB2312 编码的字符串转换为 ISO-8859-1 编码的字符串？</li>
 <li>try-catch-finally-return 执行顺序</li>
 <li>Java 7 新的 try-with-resources 语句，平时有使用吗</li>
-<li>简述一下面向对象的” 六原则一法则”。</li>
+<li>简述一下面向对象的”六原则一法则”。</li>
 <li>switch 是否能作用在 byte 上，是否能作用在 long 上，是否能作用在 String 上？</li>
-<li>数组有没有 length () 方法？String 有没有 length () 方法？</li>
+<li>数组有没有 length()方法？String 有没有 length()方法？</li>
 <li>是否可以从一个静态（static）方法内部发出对非静态（non-static）方法的调用？</li>
-<li>String s = new String (“jay”); 创建了几个字符串对象？</li>
+<li>String s = new String(“jay”); 创建了几个字符串对象？</li>
 <li>匿名内部类是否可以继承其它类？是否可以实现接口？</li>
 <li>我们能将 int 强制转换为 byte 类型的变量吗？如果该值大于 byte 类型的范围，将会出现什么现象？</li>
 <li>float f=3.4; 正确吗？</li>
@@ -223,7 +245,7 @@ if (autoChangeMode === '1') {
 <li>为什么 char 数组比 Java 中的 String 更适合存储密码？</li>
 <li>如何使用双重检查锁定在 Java 中创建线程安全的单例？</li>
 <li>如果你的 Serializable 类包含一个不可序列化的成员，会发生什么？你是如何解决的？</li>
-<li>什么是 serialVersionUID ？如果你不定义这个，会发生什么？</li>
+<li>什么是 serialVersionUID ？如果你不定义这个, 会发生什么？</li>
 <li>Java 中，Maven 和 ant，gradle 有什么区别？</li>
 <li>常见的序列化协议有哪些</li>
 <li>@transactional 注解在什么情况下会失效，为什么。</li>
@@ -234,7 +256,7 @@ if (autoChangeMode === '1') {
 <li>父类的静态方法能否被子类重写</li>
 <li>什么是不可变对象</li>
 <li>如何正确的退出多层嵌套循环？</li>
-<li>SimpleDateFormat 是线程安全的吗？你一般怎么格式化</li>
+<li>SimpleDateFormat 是线程安全的吗? 你一般怎么格式化</li>
 <li>抽象类必须要有抽象方法吗？</li>
 <li>怎么实现动态代理？有哪些应用</li>
 <li>什么是内部类？内部类的作用</li>
@@ -250,7 +272,7 @@ if (autoChangeMode === '1') {
 <li>Java 中，Serializable 与 Externalizable 的区别？</li>
 <li>Java 锁有哪些种类，它们都有哪些区别</li>
 <li>抽象的方法是否可同时是静态的）, 是否可同时是本地方法），是否可同时被 synchronized 修饰？</li>
-<li>一个”.java” 源文件中是否可以包含多个类（不是内部类）？有什么限制？</li>
+<li>一个”.java”源文件中是否可以包含多个类（不是内部类）？有什么限制？</li>
 <li>说说代理的实现原理</li>
 <li>了解哪设计模式，举例说说在 jdk 源码哪些用到了你说的设计模式</li>
 <li>什么是 B/S 架构？什么是 C/S 架构</li>
@@ -258,14 +280,14 @@ if (autoChangeMode === '1') {
 <li>Java 内部类为什么可以访问到外部类呢？</li>
 <li>Java 支持的数据类型有哪些？什么是自动拆装箱呢？</li>
 <li>创建线程有几种不同的方式</li>
-<li>hashCode () 和 equals () 方法的重要性体现在什么地方？</li>
+<li>hashCode()和 equals()方法的重要性体现在什么地方？</li>
 <li>如何通过反射获取和设置对象私有字段的值？</li>
 <li>如何通过反射调用对象的方法？</li>
-<li>简述一下面向对象的 “六原则一法则”</li>
+<li>简述一下面向对象的”六原则一法则”</li>
 <li>Java 对象不使用时为什么要赋值为 null？</li>
 <li>什么时候用断言（assert）？</li>
 <li>AJAX 请求为什么不安全？</li>
-<li>一个 Java 字符串中到底能有多少个字符？</li>
+<li>一个 Java 字符串中到底能有多少个字符?</li>
 <li>StringBuilder 为什么线程不安全？</li>
 <li>深克隆和浅克隆</li>
 <li>聊一聊设计模式的基本原则</li>
@@ -293,15 +315,15 @@ if (autoChangeMode === '1') {
 <li>instanceof 工作中使用过吗？</li>
 <li>Java 自带线程池判断线程池是否已经结束运行的方法叫什么</li>
 <li>成员变量与局部变量的区别有那些？</li>
-<li>创建一个对象用什么运算符？对象实体与对象引用有何不同？</li>
+<li>创建一个对象用什么运算符? 对象实体与对象引用有何不同?</li>
 <li>一行 Java 代码是如何执行的？</li>
 </ol>
-<h3 id="Java-集合"><a href="#Java-集合" class="headerlink" title="Java 集合"></a>Java 集合</h3><ol>
+<h3><span id="java-集合">Java 集合</span></h3><ol>
 <li>Arraylist 与 LinkedList 区别</li>
 <li>Collections.sort 和 Arrays.sort 的实现原理</li>
 <li>HashMap 原理，java8 做了什么改变</li>
 <li>List 和 Set，Map 的区别</li>
-<li>poll () 方法和 remove () 方法的区别？</li>
+<li>poll()方法和 remove()方法的区别？</li>
 <li>HashMap，HashTable，ConcurrentHash 的共同点和区别</li>
 <li>写一段代码在遍历 ArrayList 时移除一个元素</li>
 <li>Java 中怎么打印数组？</li>
@@ -319,12 +341,12 @@ if (autoChangeMode === '1') {
 <li>Iterator 和 ListIterator 有什么区别？</li>
 <li>怎么确保一个集合不能被修改？</li>
 <li>快速失败 (fail-fast) 和安全失败 (fail-safe) 的区别是什么？</li>
-<li>什么是 Java 优先级队列 (Priority Queue)？</li>
+<li>什么是 Java 优先级队列(Priority Queue)？</li>
 <li>JAVA8 的 ConcurrentHashMap 为什么放弃了分段锁，有什么问题吗，如果你来设计，你如何设计。</li>
 <li>阻塞队列的实现，ArrayBlockingQueue 的底层实现？</li>
 <li>Java 中的 LinkedList 是单向链表还是双向链表？</li>
 <li>说一说 ArrayList 的扩容机制吧</li>
-<li>HashMap 的长度为什么是 2 的幂次方，以及其他常量定义的含义～</li>
+<li>HashMap 的长度为什么是 2 的幂次方，以及其他常量定义的含义~</li>
 <li>ConcurrenHashMap 原理？1.8 中为什么要用红黑树？</li>
 <li>ArrayList 的默认大小</li>
 <li>为何 Collection 不从 Cloneable 和 Serializable 接口继承？</li>
@@ -333,13 +355,13 @@ if (autoChangeMode === '1') {
 <li>当一个集合被作为参数传递给一个函数时，如何才可以确保函数不能修改它？</li>
 <li>说一下 HashSet 的实现原理？</li>
 <li>Array 和 ArrayList 有何区别？</li>
-<li>在 Queue 中 poll () 和 remove () 有什么区别？</li>
+<li>在 Queue 中 poll()和 remove()有什么区别？</li>
 <li>ArrayList 如何删除重复的元素或者指定的元素；</li>
 <li>讲讲红黑树的特点？</li>
 <li>Java 集合类框架的最佳实践有哪些？</li>
 <li>Enumeration 接口和 Iterator 接口的区别有哪些？</li>
 <li>HashSet 和 TreeSet 有什么区别？</li>
-<li>Set 里的元素是不能重复的，那么用什么方法来区分重复与否呢？是用 == 还是 equals ()?</li>
+<li>Set 里的元素是不能重复的，那么用什么方法来区分重复与否呢? 是用 == 还是 equals()?</li>
 <li>说出 ArrayList,LinkedList 的存储性能和特性</li>
 <li>Java 中 HashMap 的 key 值要是为类对象则该类需要满足什么条件？</li>
 <li>ArrayList 集合加入 1 万条数据，应该怎么提高效率</li>
@@ -348,23 +370,23 @@ if (autoChangeMode === '1') {
 <li>有没有有顺序的 Map 实现类，如果有，他们是怎么保证有序的</li>
 <li>HashMap 是怎么解决哈希冲突的</li>
 </ol>
-<h3 id="Java-并发-amp-amp-多线程"><a href="#Java-并发-amp-amp-多线程" class="headerlink" title="Java 并发 &amp;&amp; 多线程"></a>Java 并发 &amp;&amp; 多线程</h3><ol>
+<h3><span id="java-并发-ampamp-多线程">Java 并发 &amp;&amp; 多线程</span></h3><ol>
 <li>synchronized 的实现原理以及锁优化？</li>
 <li>ThreadLocal 原理，使用注意点，应用场景有哪些？</li>
 <li>synchronized 和 ReentrantLock 的区别？</li>
 <li>说说 CountDownLatch 与 CyclicBarrier 区别</li>
 <li>Fork/Join 框架的理解</li>
-<li>为什么我们调用 start () 方法时会执行 run () 方法，为什么我们不能直接调用 run () 方法？</li>
+<li>为什么我们调用 start()方法时会执行 run()方法，为什么我们不能直接调用 run()方法？</li>
 <li>Java 中的 volatile 关键是什么作用？怎样使用它？在 Java 中它跟 synchronized 方法有什么不同？volatile 的实现原理</li>
 <li>CAS？CAS 有什么缺陷，如何解决？</li>
 <li>如何检测死锁？怎么预防死锁？死锁四个必要条件</li>
-<li>如果线程过多，会怎样？</li>
+<li>如果线程过多, 会怎样?</li>
 <li>说说 Semaphore 原理？</li>
 <li>AQS 组件，实现原理</li>
 <li>假设有 T1、T2、T3 三个线程，你怎样保证 T2 在 T1 执行完后执行，T3 在 T2 执行完后执行？</li>
 <li>LockSupport 作用是？</li>
 <li>Condition 接口及其实现原理</li>
-<li>说说并发与并行的区别？</li>
+<li>说说并发与并行的区别?</li>
 <li>为什么要用线程池？Java 的线程池内部机制，参数作用，几种工作阻塞队列，线程池类型以及使用场景</li>
 <li>如何保证多线程下 i++ 结果正确？</li>
 <li>10 个线程和 2 个线程的同步代码，哪个更容易写？</li>
@@ -377,14 +399,14 @@ if (autoChangeMode === '1') {
 <li>线程的生命周期，线程的几种状态。</li>
 <li>ReentrantLock 实现原理</li>
 <li>java 并发包 concurrent 及常用的类</li>
-<li>wait (),notify () 和 suspend (),resume () 之间的区别</li>
+<li>wait(),notify()和 suspend(),resume()之间的区别</li>
 <li>FutureTask 是什么？</li>
 <li>一个线程如果出现了运行时异常会怎么样</li>
 <li>生产者消费者模型的作用是什么</li>
 <li>ReadWriteLock 是什么</li>
 <li>Java 中用到的线程调度算法是什么？</li>
 <li>线程池中的阻塞队列如果满了怎么办？</li>
-<li>线程池中 submit () 和 execute () 方法有什么区别？</li>
+<li>线程池中 submit()和 execute()方法有什么区别？</li>
 <li>介绍一下 AtomicInteger 类的原理？</li>
 <li>多线程锁的升级原理是什么？</li>
 <li>指令重排序，内存栅栏等？</li>
@@ -402,9 +424,9 @@ if (autoChangeMode === '1') {
 <li>同步方法和同步代码块的区别是什么？</li>
 <li>在 Java 中 Lock 接口比 synchronized 块的优势是什么？如果你需要实现一个高效的缓存，它允许多个用户读，但只允许一个用户写，以此来保持它的完整性，你会怎样去实现它？</li>
 <li>用 Java 实现阻塞队列。</li>
-<li>用 Java 写代码来解决生产者 —— 消费者问题。</li>
+<li>用 Java 写代码来解决生产者——消费者问题。</li>
 <li>什么是竞争条件？你怎样发现和解决竞争？</li>
-<li>为什么我们调用 start () 方法时会执行 run () 方法，为什么我们不能直接调用 run () 方法？</li>
+<li>为什么我们调用 start()方法时会执行 run()方法，为什么我们不能直接调用 run()方法？</li>
 <li>Java 中你怎样唤醒一个阻塞的线程？</li>
 <li>什么是不可变对象，它对写并发应用有什么帮助？</li>
 <li>你在多线程环境中遇到的共同的问题是什么？你是怎么解决它的？</li>
@@ -419,19 +441,19 @@ if (autoChangeMode === '1') {
 <li>怎么检测一个线程是否持有对象监视器</li>
 <li>什么情况会导致线程阻塞</li>
 <li>如何在两个线程间共享数据</li>
-<li>Thread.sleep (1000) 的作用是什么？</li>
+<li>Thread.sleep(1000)的作用是什么？</li>
 <li>使用多线程可能带来什么问题</li>
-<li>说说线程的生命周期和状态？</li>
+<li>说说线程的生命周期和状态?</li>
 <li>什么是上下文切换</li>
 <li>Java Monitor 的工作机理</li>
 <li>按线程池内部机制，当提交新任务时，有哪些异常要考虑。</li>
 <li>线程池都有哪几种工作队列？</li>
-<li>说说几种常见的线程池及使用场景？</li>
+<li>说说几种常见的线程池及使用场景?</li>
 <li>使用无界队列的线程池会导致内存飙升吗？</li>
 <li>为什么阿里发布的 Java 开发手册中强制线程池不允许使用 Executors 去创建？</li>
 <li>Future 有缺陷嘛？</li>
 </ol>
-<h3 id="JVM-篇"><a href="#JVM-篇" class="headerlink" title="JVM 篇"></a>JVM 篇</h3><ol>
+<h3><span id="jvm-篇">JVM 篇</span></h3><ol>
 <li>什么情况下会发生栈内存溢出。什么时候发生堆溢出？你是怎么排错的？</li>
 <li>JVM 怎么判断对象是可回收对象？有哪些方法。</li>
 <li>JVM 的内存结构，新生代与老年代的比例，Eden 和 Survivor 比例。</li>
@@ -449,22 +471,22 @@ if (autoChangeMode === '1') {
 <li>说一下类加载的执行过程</li>
 <li>JVM 垃圾回收机制，何时触发 MinorGC 等操作呢？</li>
 <li>ZGC 垃圾收集器，了解过吗</li>
-<li>对象的访问定位有哪两种方式？</li>
+<li>对象的访问定位有哪两种方式?</li>
 <li>说一下 jvm 调优的工具？</li>
 <li>对象什么时候会进入老年代？</li>
 <li>内存泄漏和内存溢出区别？</li>
 <li>什么是 tomcat 类加载机制？</li>
 <li>了解逃逸分析技术吗</li>
-<li>调用 System.gc () 会发生什么？</li>
+<li>调用 System.gc()会发生什么?</li>
 <li>谈谈 Minor GC 条件，full GC 条件</li>
 <li>Stop The World 了解过吗？</li>
 <li>谈谈你认识多少种 OOM？如何避免 OOM?</li>
-<li>了解过 JVM 调优没，基本思路是什么？如何确定它们的大小呢？</li>
+<li>了解过 JVM 调优没，基本思路是什么? 如何确定它们的大小呢？</li>
 <li>淘宝热门商品信息在 JVM 哪个内存区域</li>
 <li>字节码的编译过程</li>
 <li>Java 需要开发人员回收内存垃圾吗？</li>
 <li>Java 中垃圾回收有什么目的？什么时候进行垃圾回收？</li>
-<li>System.gc () 和 Runtime.gc () 会做什么事情？</li>
+<li>System.gc()和 Runtime.gc()会做什么事情？</li>
 <li>主内存与工作内存</li>
 <li>内存间交互操作</li>
 <li>volatile 禁止内存重排序</li>
@@ -473,7 +495,7 @@ if (autoChangeMode === '1') {
 <li>JVM 堆内存溢出后，其他线程是否可继续工作？</li>
 <li>说一下 JVM 常用参数有哪些？</li>
 <li>VM 为什么使用元空间替换了永久代？</li>
-<li>Java 堆的结构是什么样子的？什么是堆中的永久代 (Perm Gen space)?</li>
+<li>Java 堆的结构是什么样子的？什么是堆中的永久代(Perm Gen space)?</li>
 <li>JVM 的永久代中会发生垃圾回收么？</li>
 <li>什么是字节码？采用字节码的最大好处是什么？什么 Java 是虚拟机？</li>
 <li>MinorGC 的过程</li>
@@ -482,15 +504,15 @@ if (autoChangeMode === '1') {
 <li>WeakHashMap 是怎么工作的？</li>
 <li>解释 Java 堆空间及 GC？</li>
 <li>你能保证 GC 执行吗？</li>
-<li>JVM 中哪个参数是用来控制线程的栈堆栈小的？</li>
+<li>JVM 中哪个参数是用来控制线程的栈堆栈小的?</li>
 </ol>
-<h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><h3 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h3><ol>
+<h2><span id="数据库">数据库</span></h2><h3><span id="mysql">MySQL</span></h3><ol>
 <li>MySQL 索引使用有哪些事项呢？</li>
 <li>说说分库与分表的设计</li>
 <li>日常工作中你是怎么优化 SQL 的？</li>
 <li>MySQL 遇到过死锁问题吗，你是如何解决的？</li>
 <li>InnoDB 与 MyISAM 的区别</li>
-<li>数据库索引的原理，为什么要用 B + 树，为什么不用二叉树？</li>
+<li>数据库索引的原理，为什么要用 B+ 树，为什么不用二叉树？</li>
 <li>聚集索引与非聚集索引的区别</li>
 <li>limit 100000 加载很慢的话，你是怎么解决的呢？</li>
 <li>如何选择合适的分布式主键方案呢？</li>
@@ -509,16 +531,16 @@ if (autoChangeMode === '1') {
 <li>数据库中间件了解过吗，sharding jdbc，mycat？</li>
 <li>MYSQL 的主从延迟，你怎么解决？</li>
 <li>说一下大表的优化方案</li>
-<li>什么是数据库连接池？为什么需要数据库连接池呢？</li>
+<li>什么是数据库连接池? 为什么需要数据库连接池呢?</li>
 <li>一条 SQL 语句在 MySQL 中如何执行的？</li>
 <li>InnoDB 引擎中的索引策略，了解过吗？</li>
 <li>数据库存储日期格式时，如何考虑时区转换问题？</li>
 <li>一条 sql 执行过长的时间，你如何优化，从哪些方面入手？</li>
-<li>MYSQL 数据库服务器性能分析的方法命令有哪些？</li>
+<li>MYSQL 数据库服务器性能分析的方法命令有哪些?</li>
 <li>Blob 和 text 有什么区别？</li>
 <li>mysql 里记录货币用什么字段类型比较好？</li>
 <li>Mysql 中有哪几种锁，列举一下？</li>
-<li>Hash 索引和 B + 树区别是什么？你在设计索引是怎么抉择的？</li>
+<li>Hash 索引和 B+ 树区别是什么？你在设计索引是怎么抉择的？</li>
 <li>mysql 的内连接、左连接、右连接有什么区别？</li>
 <li>MySQL 的基础架构</li>
 <li>什么是内连接、外连接、交叉连接、笛卡尔积呢？</li>
@@ -532,9 +554,9 @@ if (autoChangeMode === '1') {
 <li>创建索引的三种方式</li>
 <li>百万级别或以上的数据，你是如何删除的？</li>
 <li>什么是最左前缀原则？什么是最左匹配原则？</li>
-<li>B 树和 B + 树的区别，数据库为什么使用 B + 树而不是 B 树？</li>
+<li>B 树和 B+ 树的区别，数据库为什么使用 B+ 树而不是 B 树？</li>
 <li>覆盖索引、回表等这些，了解过吗？</li>
-<li>B + 树在满足聚簇索引和覆盖索引的时候不需要回表查询数据？</li>
+<li>B+ 树在满足聚簇索引和覆盖索引的时候不需要回表查询数据？</li>
 <li>什么是聚簇索引？何时使用聚簇索引与非聚簇索引</li>
 <li>非聚簇索引一定会回表查询吗？</li>
 <li>联合索引是什么？为什么需要注意联合索引中的顺序？</li>
@@ -547,7 +569,7 @@ if (autoChangeMode === '1') {
 <li>为什么要使用视图？什么是视图？</li>
 <li>视图有哪些特点？哪些使用场景？</li>
 <li>视图的优点，缺点，讲一下？</li>
-<li>count (1)、count (*) 与 count (列名) 的区别？</li>
+<li>count(1)、count(*) 与 count(列名) 的区别？</li>
 <li>什么是游标？</li>
 <li>什么是存储过程？有哪些优缺点？</li>
 <li>什么是触发器？触发器的使用场景有哪些？</li>
@@ -555,8 +577,8 @@ if (autoChangeMode === '1') {
 <li>超键、候选键、主键、外键分别是什么？</li>
 <li>SQL 约束有哪几种呢？</li>
 <li>谈谈六种关联查询，使用场景。</li>
-<li>varchar (50) 中 50 的涵义</li>
-<li>mysql 中 int (20) 和 char (20) 以及 varchar (20) 的区别</li>
+<li>varchar(50)中 50 的涵义</li>
+<li>mysql 中 int(20)和 char(20)以及 varchar(20)的区别</li>
 <li>drop、delete 与 truncate 的区别</li>
 <li>UNION 与 UNION ALL 的区别？</li>
 <li>SQL 的生命周期？</li>
@@ -586,7 +608,7 @@ if (autoChangeMode === '1') {
 <li>一个 6 亿的表 a，一个 3 亿的表 b，通过外间 tid 关联，你如何最快的查询出满足条件的第 50000 到第 50200 中的这 200 条数据记录。</li>
 <li>数据库垂直和水平拆分</li>
 </ol>
-<h3 id="缓存-Redis"><a href="#缓存-Redis" class="headerlink" title="缓存 / Redis"></a>缓存 / Redis</h3><ol>
+<h3><span id="缓存-redis">缓存 /Redis</span></h3><ol>
 <li>Redis 用过哪些数据类型，每种数据类型的使用场景</li>
 <li>Redis 缓存穿透、缓存雪崩和缓存击穿原因，以及解决方案</li>
 <li>如何使用 Redis 来实现分布式锁，redis 分布式锁有什么缺陷？</li>
@@ -597,7 +619,7 @@ if (autoChangeMode === '1') {
 <li>redis 事务，了解吗，了解 Redis 事务的 CAS 操作吗</li>
 <li>如何解决 Redis 的并发竞争 Key 问题。</li>
 <li>Redis 为什么是单线程的，为什么单线程还这么快？</li>
-<li>如何保证缓存与数据库双写时的数据一致性？</li>
+<li>如何保证缓存与数据库双写时的数据一致性?</li>
 <li>redis 和 memcached 有什么区别</li>
 <li>JVM 本地缓存，了解过吗</li>
 <li>redis 的 list 结构相关的操作。</li>
@@ -618,14 +640,14 @@ if (autoChangeMode === '1') {
 <li>Redis key 的过期时间和永久有效分别怎么设置？</li>
 <li>Redis 回收使用的是什么算法？</li>
 <li>一个 Redis 实例最多能存放多少的 keys？List、Set、Sorted Set 他们最多能存放多少元素？</li>
-<li>Redis— 跳跃表，复杂度是多少？</li>
+<li>Redis—跳跃表，复杂度是多少？</li>
 <li>Redis 有哪些优缺点？为什么要用 Redis ？</li>
-<li>为什么要用 Redis 而不用 map/guava 做缓存？</li>
+<li>为什么要用 Redis 而不用 map/guava 做缓存?</li>
 <li>如何用 Redis 统计独立用户访问量？</li>
 <li>如何选择合适的持久化方式</li>
 <li>Redis 持久化数据和缓存怎么做扩容？</li>
 <li>Redis key 的过期时间和永久有效分别怎么设置？</li>
-<li>我们知道通过 expire 来设置 key 的过期时间，那么对过期的数据怎么处理呢？</li>
+<li>我们知道通过 expire 来设置 key 的过期时间，那么对过期的数据怎么处理呢?</li>
 <li>Redis 的过期键的删除策略</li>
 <li>Redis 的内存用完了会发生什么？</li>
 <li>Redis 如何做内存优化？</li>
@@ -658,7 +680,7 @@ if (autoChangeMode === '1') {
 <li>热点数据和冷数据是什么</li>
 <li>使用过 Redis 哪些命令？</li>
 </ol>
-<h2 id="计算机基础"><a href="#计算机基础" class="headerlink" title="计算机基础"></a>计算机基础</h2><h3 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h3><ol>
+<h2><span id="计算机基础">计算机基础 </span></h2><h3><span id="操作系统"> 操作系统</span></h3><ol>
 <li>Linux 系统下你关注过哪些内核参数，说说你知道的。</li>
 <li>epoll 和 poll 有什么区别。</li>
 <li>线上 CPU 爆高，请问你如何找到问题所在。</li>
@@ -667,7 +689,7 @@ if (autoChangeMode === '1') {
 <li>进程通信有几种方式？</li>
 <li>说说进程的调度算法</li>
 <li>常见的几种内存管理机制</li>
-<li>什么是虚拟内存 (Virtual Memory)?</li>
+<li>什么是虚拟内存(Virtual Memory)?</li>
 <li>内存置换算法</li>
 <li>虚拟地址、逻辑地址、线性地址、物理地址的区别。</li>
 <li>操作系统的页式存储</li>
@@ -681,7 +703,7 @@ if (autoChangeMode === '1') {
 <li>什么是 RR 调度算法？</li>
 <li>什么是 DMA（直接内存访问）？</li>
 </ol>
-<h3 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h3><ol>
+<h3><span id="计算机网络">计算机网络</span></h3><ol>
 <li>请详细介绍一下 TCP 的三次握手机制，为什么要三次握手？</li>
 <li>讲一下 HTTP 与 HTTPS 的区别。</li>
 <li>Session 和 cookie 的区别。</li>
@@ -692,7 +714,7 @@ if (autoChangeMode === '1') {
 <li>TCP/IP 如何保证可靠性，说说 TCP 头的结构。</li>
 <li>GET 与 POST 方式的区别</li>
 <li>如何避免浏览器缓存。</li>
-<li>TCP/IP 模型？</li>
+<li>TCP/IP 模型?</li>
 <li>讲一讲 TCP 和 UDP 各有什么特点，两者有什么区别</li>
 <li>详细讲一下 TCP 的滑动窗口</li>
 <li>说一下拥塞控制</li>
@@ -723,7 +745,7 @@ if (autoChangeMode === '1') {
 <li>如果客户端禁止 Cookie 能实现 Session</li>
 <li>HTTP 请求中 session 实现原理</li>
 </ol>
-<h3 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h3><ol>
+<h3><span id="算法">算法</span></h3><ol>
 <li>谈一谈一致性哈希算法。</li>
 <li>快排怎么实现</li>
 <li>手写二分查找</li>
@@ -746,9 +768,9 @@ if (autoChangeMode === '1') {
 <li>一棵二叉树，求最大通路长度。</li>
 <li>万亿级别的两个 URL 文件 A 和 B，如何求出 A 和 B 的差集 C,(Bit 映射 -&gt;hash 分组 -&gt; 多文件读写效率 -&gt; 磁盘寻址以及应用层面对寻址的优化)</li>
 <li>最快的排序算法是哪个？给阿里 2 万多名员工按年龄排序应该选择哪个算法？堆和树的区别；写出快排代码；链表逆序代码</li>
-<li>LeetCode 的经典算法题目，都要刷一遍以上哈～</li>
+<li>LeetCode 的经典算法题目，都要刷一遍以上哈~</li>
 </ol>
-<h3 id=""><a href="#" class="headerlink" title=" "></a> </h3><h2 id="后端开发"><a href="#后端开发" class="headerlink" title="后端开发"></a>后端开发</h2><h3 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h3><ol>
+<h3><span id> </span></h3><h2><span id="后端开发">后端开发 </span></h2><h3><span id="消息队列"> 消息队列</span></h3><ol>
 <li>消息队列有哪些使用场景。</li>
 <li>消息中间件如何解决消息丢失问题？</li>
 <li>谈谈消息的重发，补充策略。</li>
@@ -780,8 +802,8 @@ if (autoChangeMode === '1') {
 <li>消息怎么路由？</li>
 <li>消息如何分发？</li>
 </ol>
-<h3 id="mybatis"><a href="#mybatis" class="headerlink" title="mybatis"></a>mybatis</h3><ol>
-<li>mybatis 中 #{} 和 ${} 的区别是什么？</li>
+<h3><span id="mybatis">mybatis</span></h3><ol>
+<li>mybatis 中 #{}和 ${}的区别是什么？</li>
 <li>什么是 SQL 注入 ，如何避免。</li>
 <li>说一下 mybatis 的一级缓存和二级缓存</li>
 <li>mybatis 是否支持延迟加载？延迟加载的原理是什么？</li>
@@ -802,7 +824,7 @@ if (autoChangeMode === '1') {
 <li>Xml 映射文件中，除了常见的 select|insert|updae|delete 标签之外，还有哪些标签？</li>
 <li>简述 Mybatis 的插件运行原理，以及如何编写一个插件。</li>
 </ol>
-<h3 id="Spring-相关"><a href="#Spring-相关" class="headerlink" title="Spring 相关"></a>Spring 相关</h3><ol>
+<h3><span id="spring-相关">Spring 相关</span></h3><ol>
 <li>BeanFactory 和 ApplicationContext 有什么区别？</li>
 <li>Spring IOC 的理解，其初始化过程</li>
 <li>Spring Bean 的生命周期</li>
@@ -810,7 +832,7 @@ if (autoChangeMode === '1') {
 <li>Spring 循环注入的原理？</li>
 <li>Spring 中用到了那些设计模式？</li>
 <li>Spring AOP 的理解，各个术语，他们是怎么相互工作的？</li>
-<li>Spring 框架中的单例 bean 是线程安全的吗？</li>
+<li>Spring 框架中的单例 bean 是线程安全的吗?</li>
 <li>Spring @ Resource 和 Autowired 有什么区别？</li>
 <li>Spring 的不同事务传播行为有哪些，有什么作用？</li>
 <li>Spring Bean 的加载过程是怎样的？</li>
@@ -835,9 +857,9 @@ if (autoChangeMode === '1') {
 <li>spring 的 controller 是单例还是多例，怎么保证并发的安全。</li>
 <li>说一下 Spring 的核心模块</li>
 <li>如何向 Spring Bean 中注入一个 Java.util.Properties</li>
-<li>如何给 Spring 容器提供配置元数据？</li>
+<li>如何给 Spring 容器提供配置元数据?</li>
 <li>如何在 Spring 中如何注入一个 java 集合，实现过吗？</li>
-<li>什么是基于 Java 的 Spring 注解配置？举几个例子？</li>
+<li>什么是基于 Java 的 Spring 注解配置? 举几个例子？</li>
 <li>怎样开启注解装配？</li>
 <li>Spring 支持哪些事务管理类型</li>
 <li>在 Spring AOP 中，关注点和横切关注的区别是什么？</li>
@@ -849,13 +871,13 @@ if (autoChangeMode === '1') {
 <li>Spring Boot 自动配置原理是什么？</li>
 <li>RequestMapping 和 GetMapping 的不同之处在哪里？</li>
 <li>如何使用 Spring Boot 实现异常处理？</li>
-<li>Spring Boot 中如何解决跨域问题？</li>
-<li>Spring Boot 如何实现热部署？</li>
-<li>Spring Boot 打成的 jar 和普通的 jar 有什么区别呢？</li>
-<li>bootstrap.properties 和 application.properties 有何区别？</li>
+<li>Spring Boot 中如何解决跨域问题 ?</li>
+<li>Spring Boot 如何实现热部署 ?</li>
+<li>Spring Boot 打成的 jar 和普通的 jar 有什么区别呢?</li>
+<li>bootstrap.properties 和 application.properties 有何区别 ?</li>
 <li>springboot 启动机制</li>
 </ol>
-<h3 id="Netty-tomcat"><a href="#Netty-tomcat" class="headerlink" title="Netty/tomcat"></a>Netty/tomcat</h3><ol>
+<h3><span id="nettytomcat">Netty/tomcat</span></h3><ol>
 <li>BIO、NIO 和 AIO 区别</li>
 <li>说一下 Netty 的各大组件</li>
 <li>Netty 线程模型和 Reactor 模式</li>
@@ -877,7 +899,7 @@ if (autoChangeMode === '1') {
 <li>说说 Netty 的执行流程？</li>
 <li>select、poll、epoll 的机制及其区别？</li>
 </ol>
-<h3 id="ZooKeeper"><a href="#ZooKeeper" class="headerlink" title="ZooKeeper"></a>ZooKeeper</h3><ol>
+<h3><span id="zookeeper">ZooKeeper</span></h3><ol>
 <li>Zookeeper 的用途，选举的原理是什么。</li>
 <li>Zookeeper watch 机制原理。</li>
 <li>zookeeper 怎么保证主从节点的状态同步？</li>
@@ -891,7 +913,7 @@ if (autoChangeMode === '1') {
 <li>Zookeeper 的服务器角色（Leader，Follower，Observer）</li>
 <li>Zookeeper 有哪几种几种部署模式？</li>
 </ol>
-<h3 id="Elasticsearch"><a href="#Elasticsearch" class="headerlink" title="Elasticsearch"></a>Elasticsearch</h3><ol>
+<h3><span id="elasticsearch">Elasticsearch</span></h3><ol>
 <li>详细描述一下 Elasticsearch 索引文档的过程。</li>
 <li>详细描述一下 Elasticsearch 搜索的过程。</li>
 <li>Elasticsearch 的倒排索引是什么。</li>
@@ -903,9 +925,9 @@ if (autoChangeMode === '1') {
 <li>Elasticsearch 索引数据多了怎么办呢，如何调优，部署</li>
 <li>Elasticsearch 对于大数据量（上亿量级）的聚合如何实现？</li>
 </ol>
-<h3 id="dubbo-框架"><a href="#dubbo-框架" class="headerlink" title="dubbo 框架"></a>dubbo 框架</h3><ol>
+<h3><span id="dubbo-框架">dubbo 框架</span></h3><ol>
 <li>Dubbo 的服务请求失败怎么处理</li>
-<li>dubbo 的负载均衡有几种算法？（随机，轮询，最少活跃请求数，一致性 hash）</li>
+<li>dubbo 的负载均衡有几种算法?（随机，轮询，最少活跃请求数，一致性 hash）</li>
 <li>Dubbo 和 Spring Cloud 有什么区别？</li>
 <li>dubbo 都支持什么协议，推荐用哪种？</li>
 <li>画一画服务注册与发现的流程图</li>
@@ -930,9 +952,9 @@ if (autoChangeMode === '1') {
 <li>Dubbo 支持哪些序列化方式？</li>
 <li>Dubbo 超时重试，Dubbo 超时时间设置</li>
 </ol>
-<h3 id="spring-cloud"><a href="#spring-cloud" class="headerlink" title="spring cloud"></a>spring cloud</h3><ol>
+<h3><span id="spring-cloud">spring cloud</span></h3><ol>
 <li>Eureka 和 Zookeeper 区别</li>
-<li>什么是服务熔断？什么是服务降级？</li>
+<li>什么是服务熔断？什么是服务降级?</li>
 <li>什么是 Ribbon？</li>
 <li>什么是 Netflix Feign？它的优点是什么？</li>
 <li>Ribbon 和 Feign 的区别？</li>
@@ -943,19 +965,19 @@ if (autoChangeMode === '1') {
 <li>什么是微服务？微服务优缺点</li>
 <li>Sentinel，微服务哨兵，了解过吗</li>
 </ol>
-<h3 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h3><ol>
-<li>Nginx 的模块与工作原理是什么？</li>
+<h3><span id="nginx">nginx</span></h3><ol>
+<li>Nginx 的模块与工作原理是什么?</li>
 <li>Nginx 是什么？有什么作用？</li>
 <li>说说 Nginx 的一些特性。</li>
 <li>请说一下 Nginx 如何处理 HTTP 请求。</li>
-<li>你知道，Nginx 服务器上的 Master 和 Worker 进程分别是什么吗？</li>
+<li>你知道，Nginx 服务器上的 Master 和 Worker 进程分别是什么吗?</li>
 <li>Nginx 常用命令，启动，重启，检查配置文件等</li>
-<li>Nginx 和 Apache 比较，各有什么优缺点？</li>
+<li>Nginx 和 Apache 比较，各有什么优缺点?</li>
 <li>Nginx 多进程模型是如何实现高并发的？</li>
 <li>说说 Nginx 的反向代理和负载均衡</li>
 <li>请列举 Nginx 服务器的最佳用途。</li>
 </ol>
-<h3 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h3><ol>
+<h3><span id="分布式">分布式</span></h3><ol>
 <li>说说分布式事务？分布式事务的解决方案</li>
 <li>什么是分布式系统？</li>
 <li>讲讲 CAP 理念。</li>
@@ -967,7 +989,7 @@ if (autoChangeMode === '1') {
 <li>分布式事务</li>
 <li>什么是一致性 hash。</li>
 </ol>
-<h3 id="系统设计-方案设计"><a href="#系统设计-方案设计" class="headerlink" title="系统设计 / 方案设计"></a>系统设计 / 方案设计</h3><ol>
+<h3><span id="系统设计-方案设计">系统设计 / 方案设计</span></h3><ol>
 <li>谈谈如何设计秒杀系统。</li>
 <li>一千万的用户实时排名如何实现；</li>
 <li>五万人并发抢票怎么实现</li>
@@ -987,7 +1009,7 @@ if (autoChangeMode === '1') {
 <li>如何使用 redis 和 zookeeper 实现分布式锁？有什么区别优缺点，会有什么问题，分别适用什么</li>
 <li>如何设计一个安全的 API 接口。</li>
 <li>线上系统突然变得异常缓慢，你如何查找问题。</li>
-<li>设计一个社交网站中的 “私信” 功能，要求高并发、可扩展等等。画一下架构图。</li>
+<li>设计一个社交网站中的“私信”功能，要求高并发、可扩展等等。画一下架构图。</li>
 <li>后台系统怎么防止请求重复提交</li>
 <li>讲讲你理解的服务治理。</li>
 <li>执行某操作，前 50 次成功，第 51 次失败 a 全部回滚 b 前 50 次提交第 51 次抛异常，ab 场景分别如何设置</li>
@@ -996,25 +1018,27 @@ if (autoChangeMode === '1') {
 <li>1000 个线程同时运行，怎么防止不卡</li>
 <li>设计一个分布式自增 id 生成服务</li>
 </ol>
-</div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/Redis/">Redis</a><a class="post-meta__tags" href="/tags/Java/">Java</a><a class="post-meta__tags" href="/tags/ZooKeeper/">ZooKeeper</a><a class="post-meta__tags" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/09/27/BptI6CGiQDUcW2Z.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2020/04/06/%E5%88%B7%E9%A2%98/%E7%89%9B%E5%AE%A2%E4%B8%AD%E5%87%A0%E7%A7%8D%E8%AF%AD%E8%A8%80%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%A7%BF%E5%8A%BFmd/"><img class="next-cover" data-lazy-src="https://i.loli.net/2020/09/06/8ApetyPcsJanqLV.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">牛客中几种语言的输入输出姿势</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2017/06/08/Redis/分布式锁-Redis-vs-Zookeeper/" title="分布式锁：Redis vs. Zookeeper"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/09/08/S1dpotKYcvBOiH9.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2017.06.08</div><div class="relatedPosts_title">分布式锁：Redis vs. Zookeeper</div></div></a></div><div class="relatedPosts_item"><a href="/2015/10/18/Linux/Linux-gcc简明教程/" title="Linux GNU-gcc 简明教程"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/Gexg6rV8BuyiTPv.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.10.18</div><div class="relatedPosts_title">Linux GNU-gcc 简明教程</div></div></a></div><div class="relatedPosts_item"><a href="/2015/10/22/Linux/Linux中的env/" title="Linux 中的 env 是什么"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.10.22</div><div class="relatedPosts_title">Linux 中的 env 是什么</div></div></a></div><div class="relatedPosts_item"><a href="/2015/12/16/Linux/Linux中的lsof/" title="Linux 中的 lsof"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.12.16</div><div class="relatedPosts_title">Linux 中的 lsof</div></div></a></div><div class="relatedPosts_item"><a href="/2015/01/04/Linux/Linux中的重定向/" title="Linux 中的重定向"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.01.04</div><div class="relatedPosts_title">Linux 中的重定向</div></div></a></div><div class="relatedPosts_item"><a href="/2015/06/21/Linux/Linux中的wget/" title="Linux 中的 wget"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2015.06.21</div><div class="relatedPosts_title">Linux 中的 wget</div></div></a></div></div></div></article></main><footer id="footer" style="background-image: url(https://i.loli.net/2020/09/27/BptI6CGiQDUcW2Z.jpg)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2015 - 2020 By maywzh</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script>function panguFn () {
-  if (typeof pangu === 'object') pangu.spacingElementById('content-inner')
-  else {
-    $.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js', () => {
-      pangu.spacingElementById('content-inner')
-    })
-  }
-}
 
-function panguInit () {
-  if (false){
-    GLOBAL_CONFIG_SITE.isPost && panguFn()
-  } else {
-    panguFn()
-  }
-}
+            </div>
+            <!-- Post Comments -->
+            
+        </div>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
+</div>
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
 
-document.addEventListener('DOMContentLoaded', panguFn)</script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
-  document.body.style.overflow = 'auto';
-  document.getElementById('loading-box').classList.add("loaded")
-}
-window.addEventListener('load',endLoading)</script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
+
+
+
+
+</html>

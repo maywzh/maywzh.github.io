@@ -1,153 +1,175 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>操作系统之缺页中断及置换 | Cult Minds</title><meta name="description" content="缺页中断（英语：Page fault，又名硬错误、硬中断、分页错误、寻页缺失、缺页中断、页故障等）指的是当软件试图访问已映射在虚拟地址空间中，但是目前并未被加载在物理内存中的一个分页时，由中央处理器的内存管理单元所发出的中断。 通常情况下，用于处理此中断的程序是操作系统的一部分。如果操作系统判断此次访问是有效的，那么操作系统会尝试将相关的分页从硬盘上的虚拟内存文件中调入内存。而如果访问是不被允许的"><meta name="keywords" content="内存"><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/bitbug_favicon_128s.ico"><link rel="canonical" href="https://tech.maywzh.com/2017/10/16/OS/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E7%BC%BA%E9%A1%B5%E4%B8%AD%E6%96%AD%E5%8F%8A%E7%BD%AE%E6%8D%A2/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin="crossorigin"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//pingjs.qq.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="content"/><meta property="og:type" content="article"><meta property="og:title" content="操作系统之缺页中断及置换"><meta property="og:url" content="https://tech.maywzh.com/2017/10/16/OS/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E7%BC%BA%E9%A1%B5%E4%B8%AD%E6%96%AD%E5%8F%8A%E7%BD%AE%E6%8D%A2/"><meta property="og:site_name" content="Cult Minds"><meta property="og:description" content="缺页中断（英语：Page fault，又名硬错误、硬中断、分页错误、寻页缺失、缺页中断、页故障等）指的是当软件试图访问已映射在虚拟地址空间中，但是目前并未被加载在物理内存中的一个分页时，由中央处理器的内存管理单元所发出的中断。 通常情况下，用于处理此中断的程序是操作系统的一部分。如果操作系统判断此次访问是有效的，那么操作系统会尝试将相关的分页从硬盘上的虚拟内存文件中调入内存。而如果访问是不被允许的"><meta property="og:image" content="https://i.loli.net/2020/08/26/4YQgSrM9IkBnwfF.png"><meta property="article:published_time" content="2017-10-16T02:56:21.000Z"><meta property="article:modified_time" content="2020-09-27T07:48:52.156Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?e5597df0e0a089595ae6b3fce53f24e8";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-5"></script><script>window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'UA-119246999-5');
-</script><script>var _mtac = {};
-(function() {
-    var mta = document.createElement("script");
-    mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
-    mta.setAttribute("name", "MTAH5");
-    mta.setAttribute("sid", "500728859");
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(mta, s);
-})();
-</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
-  root: '/',
-  hexoversion: '5.1.1',
-  algolia: undefined,
-  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
-  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
-  copy: {
-    success: 'Copy successfully',
-    error: 'Copy error',
-    noSupport: 'The browser does not support'
-  },
-  bookmark: {
-    message_prev: 'Press',
-    message_next: 'to bookmark this page'
-  },
-  runtime: '',
-  date_suffix: {"one_hour":"Just","hours":"hours ago","day":"days ago"},
-  copyright: undefined,
-  ClickShowText: undefined,
-  medium_zoom: false,
-  fancybox: true,
-  Snackbar: undefined,
-  justifiedGallery: {
-    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
-  },
-  baiduPush: false,
-  isPhotoFigcaption: false,
-  islazyload: true,
-  isanchor: false
-};
+<!DOCTYPE HTML>
+<html>
 
-var saveToLocal = {
-  set: function setWithExpiry(key, value, ttl) {
-      const now = new Date()
-      const expiryDay = ttl * 86400000
-      const item = {
-        value: value,
-        expiry: now.getTime() + expiryDay,
-      }
-      localStorage.setItem(key, JSON.stringify(item))
-    },
+<head>
+	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
+
+	    
   
-  get: function getWithExpiry(key) {
-    const itemStr = localStorage.getItem(key)
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
 
-    if (!itemStr) {
-      return undefined
-    }
-    const item = JSON.parse(itemStr)
-    const now = new Date()
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
-    if (now.getTime() > item.expiry) {
-      localStorage.removeItem(key)
-      return undefined
-    }
-    return item.value
-  }
-}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
-  isPost: true,
-  isHome: false,
-  isHighlightShrink: false,
-  isSidebar: true,
-  postUpdate: '2020.09.27 15:48:52'
-}</script><noscript><style type="text/css">
-#nav {
-  opacity: 1
-}
-.justified-gallery img {
-  opacity: 1
-}
-</style></noscript><script>var activateDarkMode = function () {
-  document.documentElement.setAttribute('data-theme', 'dark')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-  }
-}
-var activateLightMode = function () {
-  document.documentElement.setAttribute('data-theme', 'light')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-  }
-}
 
-var autoChangeMode = '1'
-var t = saveToLocal.get('theme')
-if (autoChangeMode === '1') {
-  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
-  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
-  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
-  if (t === undefined) {
-    if (isLightMode) activateLightMode()
-    else if (isDarkMode) activateDarkMode()
-    else if (isNotSpecified || hasNoSupport) {
-      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
-      var now = new Date()
-      var hour = now.getHours()
-      var isNight = hour <= 6 || hour >= 18
-      isNight ? activateDarkMode() : activateLightMode()
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
-      if (saveToLocal.get('theme') === undefined) {
-        e.matches ? activateDarkMode() : activateLightMode()
-      }
-    })
-  } else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else if (autoChangeMode === '2') {
-  now = new Date()
-  hour = now.getHours()
-  isNight = hour <= 6 || hour >= 18
-  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
-  else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else {
-  if (t === 'dark') activateDarkMode()
-  else if (t === 'light') activateLightMode()
-}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" data-lazy-src="/uploads/myavatar.jpg" onerror="onerror=null;src='/img/ripple.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">111</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">50</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%BA%E9%A1%B5%E5%88%86%E7%B1%BB"><span class="toc-number">1.</span> <span class="toc-text">缺页分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AF%E6%80%A7%E9%A1%B5%E7%BC%BA%E5%A4%B1"><span class="toc-number">1.1.</span> <span class="toc-text">软性页缺失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E6%80%A7%E9%A1%B5%E7%BC%BA%E5%A4%B1"><span class="toc-number">1.2.</span> <span class="toc-text">硬性页缺失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%95%88%E9%A1%B5%E7%BC%BA%E5%A4%B1"><span class="toc-number">1.3.</span> <span class="toc-text">无效页缺失</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%BA%E9%A1%B5%E4%B8%AD%E6%96%AD"><span class="toc-number">2.</span> <span class="toc-text">缺页中断</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B"><span class="toc-number">2.1.</span> <span class="toc-text">过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E%E5%85%B6%E4%BB%96%E4%B8%AD%E6%96%AD%E5%8C%BA%E5%88%AB"><span class="toc-number">2.2.</span> <span class="toc-text">与其他中断区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">页面置换算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E4%BD%B3%E7%BD%AE%E6%8D%A2%EF%BC%88Optimal%EF%BC%8C-OPT"><span class="toc-number">3.1.</span> <span class="toc-text">最佳置换（Optimal， OPT)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E8%BF%9B%E5%85%88%E5%87%BA%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95%EF%BC%88First-In-First-Out-FIFO"><span class="toc-number">3.2.</span> <span class="toc-text">先进先出置换算法（First In First Out, FIFO)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Belady-%E5%BC%82%E5%B8%B8"><span class="toc-number">3.2.1.</span> <span class="toc-text">Belady 异常</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E8%BF%91%E6%9C%80%E4%B9%85%E6%9C%AA%E4%BD%BF%E7%94%A8%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95%EF%BC%88Least-Recently-Used%EF%BC%8C-LRU%EF%BC%89"><span class="toc-number">3.3.</span> <span class="toc-text">最近最久未使用置换算法（Least Recently Used， LRU）</span></a></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/08/26/4YQgSrM9IkBnwfF.png)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Cult Minds</a></span><span class="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">操作系统之缺页中断及置换</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">Created</span><time datetime="2017-10-16T02:56:21.000Z" title="undefined 2017.10.16 10:56:21">2017.10.16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">3.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>11min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p>缺页中断（英语：Page fault，又名硬错误、硬中断、分页错误、寻页缺失、缺页中断、页故障等）指的是当软件试图访问已映射在虚拟地址空间中，但是目前并未被加载在物理内存中的一个分页时，由中央处理器的内存管理单元所发出的中断。</p>
+<!-- Layouts -->
+
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+
+<body class="is-loading">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
+</header>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
+
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
+
+
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
+
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/26/4YQgSrM9IkBnwfF.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>操作系统之缺页中断及置换</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <p>缺页中断（英语：Page fault，又名硬错误、硬中断、分页错误、寻页缺失、缺页中断、页故障等）指的是当软件试图访问已映射在虚拟地址空间中，但是目前并未被加载在物理内存中的一个分页时，由中央处理器的内存管理单元所发出的中断。</p>
 <p>通常情况下，用于处理此中断的程序是操作系统的一部分。如果操作系统判断此次访问是有效的，那么操作系统会尝试将相关的分页从硬盘上的虚拟内存文件中调入内存。而如果访问是不被允许的，那么操作系统通常会结束相关的进程。</p>
-<p>虽然其名为 “页缺失” 错误，但实际上这并不一定是一种错误。而且这一机制对于利用虚拟内存来增加程序可用内存空间的操作系统（比如 Microsoft Windows 和各种类 Unix 系统）中都是常见且有必要的。</p>
-<p>微软在较新版 Windows 的资源监视器中使用 “硬错误”（Windows Vista 及以上）、“硬中断”（Windows 8 及以上）这一术语来指代 “页缺失”。</p>
+<p>虽然其名为“页缺失”错误，但实际上这并不一定是一种错误。而且这一机制对于利用虚拟内存来增加程序可用内存空间的操作系统（比如 Microsoft Windows 和各种类 Unix 系统）中都是常见且有必要的。</p>
+<p>微软在较新版 Windows 的资源监视器中使用“硬错误”（Windows Vista 及以上）、“硬中断”（Windows 8 及以上）这一术语来指代“页缺失”。</p>
 <a id="more"></a>
-<h2 id="缺页分类"><a href="#缺页分类" class="headerlink" title="缺页分类"></a>缺页分类</h2><h3 id="软性页缺失"><a href="#软性页缺失" class="headerlink" title="软性页缺失"></a>软性页缺失</h3><p>软性页缺失指页缺失发生时，相关的页已经被加载进内存，但是没有向 MMU 注册的情况。操作系统只需要在 MMU 中注册相关页对应的物理地址即可。</p>
+<h2><span id="缺页分类">缺页分类 </span></h2><h3><span id="软性页缺失"> 软性页缺失 </span></h3><p> 软性页缺失指页缺失发生时，相关的页已经被加载进内存，但是没有向 MMU 注册的情况。操作系统只需要在 MMU 中注册相关页对应的物理地址即可。</p>
 <p>发生这种情况的可能性之一，是一块物理内存被两个或多个程序共享，操作系统已经为其中的一个装载并注册了相应的页，但是没有为另一个程序注册。</p>
 <p>可能性之二，是该页已被从 CPU 的工作集中移除，但是尚未被交换到磁盘上。比如 OpenVMS 这样的使用次级页缓存的系统，就有可能会在工作集过大的情况下，将某页从工作集中去除，但是不写入硬盘也不擦除（比如说这一页被读出硬盘后没被修改过），只是放入空闲页表。除非有其他程序需要，导致这一页被分配出去了，不然这一页的内容不会被修改。当原程序再次需要该页内的数据时，如果这一页确实没有被分配出去，那么系统只需要重新为该页在 MMU 内注册映射即可。</p>
-<h3 id="硬性页缺失"><a href="#硬性页缺失" class="headerlink" title="硬性页缺失"></a>硬性页缺失</h3><p>与软性页缺失相反，硬性页缺失是指相关的页在页缺失发生时未被加载进内存的情况。这时操作系统需要：</p>
+<h3><span id="硬性页缺失">硬性页缺失 </span></h3><p> 与软性页缺失相反，硬性页缺失是指相关的页在页缺失发生时未被加载进内存的情况。这时操作系统需要：</p>
 <ol>
 <li>寻找到一个空闲的页。或者把另外一个使用中的页写到磁盘上（如果其在最后一次写入后发生了变化的话），并注销在 MMU 内的记录</li>
 <li>将数据读入被选定的页</li>
@@ -155,26 +177,26 @@ if (autoChangeMode === '1') {
 </ol>
 <p>硬性页缺失导致的性能损失是很大的。以一块 7200rpm 的主流机械硬盘为例，其平均寻道时间为 8.5 毫秒，读入内存需要 0.05 毫秒。相对的，DDR3 内存的访问延迟通常在数十到 100 纳秒之间，性能差距可能会达到 8 万到 22 万倍。</p>
 <p>另外，有些操作系统会将程序的一部分延迟到需要使用的时候再加载入内存执行，以此来提升性能。这一特性也是通过捕获硬性页缺失达到的。</p>
-<p>当硬性页缺失过于频繁的发生时，称发生 <strong> 系统颠簸 </strong>。</p>
-<h3 id="无效页缺失"><a href="#无效页缺失" class="headerlink" title="无效页缺失"></a>无效页缺失</h3><p>当程序访问的虚拟地址是不存在于虚拟地址空间内的时候，则发生无效页缺失。一般来说这是个软件问题，但是也不排除硬件可能，比如因为内存故障而损坏了一个正确的指针。</p>
+<p>当硬性页缺失过于频繁的发生时，称发生 <strong> 系统颠簸</strong>。</p>
+<h3><span id="无效页缺失">无效页缺失 </span></h3><p> 当程序访问的虚拟地址是不存在于虚拟地址空间内的时候，则发生无效页缺失。一般来说这是个软件问题，但是也不排除硬件可能，比如因为内存故障而损坏了一个正确的指针。</p>
 <p>具体动作与所使用的操作系统有关，比如 Windows 会使用异常机制向程序报告，而类 Unix 系统则会使用信号机制。如果程序未处理相关问题，那么操作系统会执行默认处理方式，通常是转储内存、终止相关的程序，然后向用户报告。</p>
-<h2 id="缺页中断"><a href="#缺页中断" class="headerlink" title="缺页中断"></a>缺页中断</h2><p>中断是指是指计算机在执行程序的过程中，当出现异常情况或特殊请求时，计算机停止现行程序的运行，转向对这些异常情况或特殊请求的处理，处理结束后再返回现行程序的间断处，继续执行原程序。</p>
+<h2><span id="缺页中断">缺页中断 </span></h2><p> 中断是指是指计算机在执行程序的过程中，当出现异常情况或特殊请求时，计算机停止现行程序的运行，转向对这些异常情况或特殊请求的处理，处理结束后再返回现行程序的间断处，继续执行原程序。</p>
 <p>对于缺页中断而言：</p>
-<p>中断次数 = 进程的物理块数 × 页面置换次数。</p>
-<h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><p>缺页中断发生时的事件顺序如下：</p>
+<p>中断次数 = 进程的物理块数×页面置换次数。</p>
+<h3><span id="过程">过程 </span></h3><p> 缺页中断发生时的事件顺序如下：</p>
 <ol>
 <li>硬件陷入内核，在内核堆栈中保存程序计数器。大多数机器将当前指令的各种状态信息保存在特殊的 CPU 寄存器中。</li>
 <li>启动一个汇编代码例程保存通用寄存器和其他易失的信息，以免被操作系统破坏。这个例程将操作系统作为一个函数来调用。</li>
 <li>当操作系统发现一个缺页中断时，尝试发现需要哪个虚拟页面。通常一个硬件寄存器包含了这一信息，如果没有的话，操作系统必须检索程序计数器，取出这条指令，用软件分析这条指令，看看它在缺页中断时正在做什么。</li>
 <li>一旦知道了发生缺页中断的虚拟地址，操作系统检查这个地址是否有效，并检查存取与保护是否一致。如果不一致，向进程发出一个信号或杀掉该进程。如果地址有效且没有保护错误发生，系统则检查是否有空闲页框。如果没有空闲页框，执行页面置换算法寻找一个页面来淘汰。</li>
-<li>如果选择的页框 “脏” 了，安排该页写回磁盘，并发生一次上下文切换，挂起产生缺页中断的进程，让其他进程运行直至磁盘传输结束。无论如何，该页框被标记为忙，以免因为其他原因而被其他进程占用。</li>
-<li>一旦页框 “干净” 后（无论是立刻还是在写回磁盘后），操作系统查找所需页面在磁盘上的地址，通过磁盘操作将其装入。该页面被装入后，产生缺页中断的进程仍然被挂起，并且如果有其他可运行的用户进程，则选择另一个用户进程运行。</li>
+<li>如果选择的页框“脏”了，安排该页写回磁盘，并发生一次上下文切换，挂起产生缺页中断的进程，让其他进程运行直至磁盘传输结束。无论如何，该页框被标记为忙，以免因为其他原因而被其他进程占用。</li>
+<li>一旦页框“干净”后（无论是立刻还是在写回磁盘后），操作系统查找所需页面在磁盘上的地址，通过磁盘操作将其装入。该页面被装入后，产生缺页中断的进程仍然被挂起，并且如果有其他可运行的用户进程，则选择另一个用户进程运行。</li>
 <li>当磁盘中断发生时，表明该页已经被装入，页表已经更新可以反映它的位置，页框也被标记为正常状态。</li>
 <li>恢复发生缺页中断指令以前的状态，程序计数器重新指向这条指令。</li>
 <li>调度引发缺页中断的进程，操作系统返回调用它的汇编语言例程。</li>
 <li>该例程恢复寄存器和其他状态信息</li>
 </ol>
-<h3 id="与其他中断区别"><a href="#与其他中断区别" class="headerlink" title="与其他中断区别"></a>与其他中断区别</h3><p>在请求分页系统中，可以通过查询页表中的状态位来确定所要访问的页面是否存在于内存中。每当所要访问的页面不在内存时，会产生一次缺页中断，此时操作系统会根据页表中的外存地址在外存中找到所缺的一页，将其调入内存。<br>缺页本身是一种中断，与一般的中断一样，需要经过 4 个处理步骤： </p>
+<h3><span id="与其他中断区别">与其他中断区别 </span></h3><p> 在请求分页系统中，可以通过查询页表中的状态位来确定所要访问的页面是否存在于内存中。每当所要访问的页面不在内存时，会产生一次缺页中断，此时操作系统会根据页表中的外存地址在外存中找到所缺的一页，将其调入内存。<br>缺页本身是一种中断，与一般的中断一样，需要经过 4 个处理步骤： </p>
 <ol>
 <li>保护 CPU 现场 </li>
 <li>分析中断原因 </li>
@@ -187,8 +209,8 @@ if (autoChangeMode === '1') {
 <li>一条指令在执行期间，可能产生多次缺页中断 </li>
 <li>缺页中断返回时，执行产生中断的那一条指令，而一般的中断返回时，执行下一条指令</li>
 </ol>
-<h2 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h2><p>进程运行过程中，如果发生缺页中断，而此时内存中有没有空闲的物理块是，为了能够把所缺的页面装入内存，系统必须从内存中选择一页调出到磁盘的对换区。但此时应该把那个页面换出，则需要根据一定的页面置换算法（Page Replacement Algorithm) 来确定。</p>
-<h3 id="最佳置换（Optimal，-OPT"><a href="#最佳置换（Optimal，-OPT" class="headerlink" title="最佳置换（Optimal， OPT)"></a>最佳置换（Optimal， OPT)</h3><p>置换以后不再被访问，或者在将来最迟才被回访的页面，缺页中断率最低。但是该算法需要依据以后各业的使用情况，而当一个进程还未运行完成是，很难估计哪一个页面是以后不再使用或在最长时间以后才会用到的页面。所以该算法是不能实现的。但该算法仍然有意义，作为很亮其他算法优劣的一个标准。</p>
+<h2><span id="页面置换算法">页面置换算法 </span></h2><p> 进程运行过程中，如果发生缺页中断，而此时内存中有没有空闲的物理块是，为了能够把所缺的页面装入内存，系统必须从内存中选择一页调出到磁盘的对换区。但此时应该把那个页面换出，则需要根据一定的页面置换算法（Page Replacement Algorithm)来确定。</p>
+<h3><span id="最佳置换optimal-opt">最佳置换（Optimal， OPT)</span></h3><p>置换以后不再被访问，或者在将来最迟才被回访的页面，缺页中断率最低。但是该算法需要依据以后各业的使用情况，而当一个进程还未运行完成是，很难估计哪一个页面是以后不再使用或在最长时间以后才会用到的页面。所以该算法是不能实现的。但该算法仍然有意义，作为很亮其他算法优劣的一个标准。</p>
 <p>最佳置换采用固定分配局部置换的策略，嘉定系统为某进程在内存中分配了 3 个物理块，页面访问顺序为 2、3、2、1、5、2、4、5、3、2、5、2。假定系统未采用预调页策略，即未事先调入任何页面。进程运行时，一次将 2、3、1 三个页面调入内存，发生 3 次缺页中断。当第一次访问页面 5 时，产生第 4 次缺页中断，根据 OPT 算法，淘汰页面 1，因为它在以后不会在使用了；第 5 次缺页中断时，淘汰页面 2，因为它在 5、3、2 三个页面中，是在将来最迟才会被页面访问的页面。以此类推：<br>注意：第 4 次中断时将最后不会访问的 1 剔除，将最后才访问的 3 放入最下面的内存块中，以后的调度过程中，最后不会访问或最后才被访问的页面总是放在最下面的内存块中。内存块从上到下依次存放最先访问的页面。<br>中断次数为 6，缺页中断率为 6/12*100% = 50%。</p>
 <div class="table-container">
 <table>
@@ -272,7 +294,7 @@ if (autoChangeMode === '1') {
 </tbody>
 </table>
 </div>
-<h3 id="先进先出置换算法（First-In-First-Out-FIFO"><a href="#先进先出置换算法（First-In-First-Out-FIFO" class="headerlink" title="先进先出置换算法（First In First Out, FIFO)"></a>先进先出置换算法（First In First Out, FIFO)</h3><p>FIFO 置换最先调入内存的页面，即置换在内存中驻留时间最久的页面。按照进入内存的先后次序排列成队列，从队尾进入，从队首删除。但是该算法会淘汰经常访问的页面，不适应进程实际运行的规律，目前已经很少使用。</p>
+<h3><span id="先进先出置换算法first-in-first-out-fifo">先进先出置换算法（First In First Out, FIFO)</span></h3><p>FIFO 置换最先调入内存的页面，即置换在内存中驻留时间最久的页面。按照进入内存的先后次序排列成队列，从队尾进入，从队首删除。但是该算法会淘汰经常访问的页面，不适应进程实际运行的规律，目前已经很少使用。</p>
 <p>以 OPT 算例为例子。 中断次数为 6，缺页中断率为 9/12*100% = 75%。</p>
 <div class="table-container">
 <table>
@@ -357,7 +379,7 @@ if (autoChangeMode === '1') {
 </tbody>
 </table>
 </div>
-<h4 id="Belady-异常"><a href="#Belady-异常" class="headerlink" title="Belady 异常"></a>Belady 异常</h4><p>一般来说，分配给进程的物理块越多，运行时的缺页次数应该越少，使用 FIFO 时，可能存在相反情况，分配 4 个物理块的缺页竟然比 3 个物理块的缺页次数还多！<br>例如：进程访问顺序为 0、2、1、3、0、2、4、0、2、1、3、4。<br>M=3 时，缺页中断 9 次。缺页中断率 9/12*100% = 75%。</p>
+<h4><span id="belady-异常">Belady 异常 </span></h4><p> 一般来说，分配给进程的物理块越多，运行时的缺页次数应该越少，使用 FIFO 时，可能存在相反情况，分配 4 个物理块的缺页竟然比 3 个物理块的缺页次数还多！<br>例如：进程访问顺序为 0、2、1、3、0、2、4、0、2、1、3、4。<br>M=3 时，缺页中断 9 次。缺页中断率 9/12*100% = 75%。</p>
 <div class="table-container">
 <table>
 <thead>
@@ -539,7 +561,7 @@ if (autoChangeMode === '1') {
 </tbody>
 </table>
 </div>
-<h3 id="最近最久未使用置换算法（Least-Recently-Used，-LRU）"><a href="#最近最久未使用置换算法（Least-Recently-Used，-LRU）" class="headerlink" title="最近最久未使用置换算法（Least Recently Used， LRU）"></a>最近最久未使用置换算法（Least Recently Used， LRU）</h3><p>LRU 的思想是置换最近一段时间以来最长时间未访问过的页面。根据程序局部性原理，刚被访问的页面，可能马上又要被访问；而较长时间内没有被访问的页面，可能最近不会被访问。 LRU 算法普偏地适用于各种类型的程序，但是系统要时时刻刻对各页的访问历史情况加以记录和更新，开销太大，因此 LRU 算法必须要有硬件的支持。</p>
+<h3><span id="最近最久未使用置换算法least-recently-used-lru">最近最久未使用置换算法（Least Recently Used， LRU）</span></h3><p>LRU 的思想是置换最近一段时间以来最长时间未访问过的页面。根据程序局部性原理，刚被访问的页面，可能马上又要被访问；而较长时间内没有被访问的页面，可能最近不会被访问。 LRU 算法普偏地适用于各种类型的程序，但是系统要时时刻刻对各页的访问历史情况加以记录和更新，开销太大，因此 LRU 算法必须要有硬件的支持。</p>
 <p>以 OPT 算例为例子。中断次数为 6，缺页中断率为 7/12*100% = 58.3%。</p>
 <div class="table-container">
 <table>
@@ -623,26 +645,28 @@ if (autoChangeMode === '1') {
 </tbody>
 </table>
 </div>
-<p>堆栈实现 LRU：<br>系统使用特殊的堆栈来存放内存中每一个页面的页号。每当访问一页时就调整一次，即把被访问页面的页号从栈中移出再压入栈顶。因此，栈顶始终是最新被访问页面的页号，栈底始终是最近最久未被访问的页号。当发生缺页中断时，总是淘汰栈底页号所对应的页面。 </p>
-</div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%86%85%E5%AD%98/">内存</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/08/26/4YQgSrM9IkBnwfF.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2017/11/02/%E8%BF%90%E7%BB%B4/%E8%BF%90%E7%BB%B4%E4%B9%8B%E7%94%B3%E8%AF%B7Let's%20Encrypt%E8%AF%81%E4%B9%A6/"><img class="prev-cover" data-lazy-src="https://i.loli.net/2020/08/28/AVEwqnomz7lsyke.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">申请 Let's Encrypt 证书来实现网站 HTTPS 化</div></div></a></div><div class="next-post pull-right"><a href="/2017/10/15/OS/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E8%99%9A%E6%8B%9F%E5%AD%98%E5%82%A8%E5%99%A8/"><img class="next-cover" data-lazy-src="https://i.loli.net/2020/08/29/1hGuYMmkf5246sj.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">操作系统虚拟存储器机制</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2017/10/15/OS/操作系统之虚拟存储器/" title="操作系统虚拟存储器机制"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/29/1hGuYMmkf5246sj.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2017.10.15</div><div class="relatedPosts_title">操作系统虚拟存储器机制</div></div></a></div><div class="relatedPosts_item"><a href="/2017/10/11/组成原理/组成原理之内存/" title="内存的工作原理"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/22/pePJMKDAr7o4OQ3.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2017.10.11</div><div class="relatedPosts_title">内存的工作原理</div></div></a></div><div class="relatedPosts_item"><a href="/2017/10/12/OS/操作系统之内存管理/" title="操作系统内存管理"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/26/HWvNBdxX4I5FGVM.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2017.10.12</div><div class="relatedPosts_title">操作系统内存管理</div></div></a></div></div></div></article></main><footer id="footer" style="background-image: url(https://i.loli.net/2020/08/26/4YQgSrM9IkBnwfF.png)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2015 - 2020 By maywzh</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script>function panguFn () {
-  if (typeof pangu === 'object') pangu.spacingElementById('content-inner')
-  else {
-    $.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js', () => {
-      pangu.spacingElementById('content-inner')
-    })
-  }
-}
+<p>堆栈实现 LRU：<br>系统使用特殊的堆栈来存放内存中每一个页面的页号。每当访问一页时就调整一次，即把被访问页面的页号从栈中移出再压入栈顶。因此，栈顶始终是最新被访问页面的页号，栈底始终是最近最久未被访问的页号。当发生缺页中断时，总是淘汰栈底页号所对应的页面。</p>
 
-function panguInit () {
-  if (false){
-    GLOBAL_CONFIG_SITE.isPost && panguFn()
-  } else {
-    panguFn()
-  }
-}
+            </div>
+            <!-- Post Comments -->
+            
+        </div>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
+</div>
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
 
-document.addEventListener('DOMContentLoaded', panguFn)</script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
-  document.body.style.overflow = 'auto';
-  document.getElementById('loading-box').classList.add("loaded")
-}
-window.addEventListener('load',endLoading)</script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
+
+
+
+
+</html>

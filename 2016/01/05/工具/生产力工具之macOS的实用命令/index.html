@@ -1,271 +1,299 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>macOS 生产力之 ——Terminal 命令 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/09/azcPZ9tATyW4weI.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>macOS 生产力之——Terminal 命令</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>记录下常用的 macOS 命令。<br><a id="more"></a></p>
-<p>&nbsp;</p>
-<h2><span id="open-打开文件-目录或执行程序">open - 打开文件、目录或执行程序 </span></h2><p><code>open</code> 其实等同于我们在 GUI 下面执行双击命令</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">open</span> /Applications/Dictionary.app <span class="token comment">#Dictionary 应用 </span>
-<span class="token function">open</span> ~/Movies <span class="token comment"># 开当前用户 Movies 目录</span>
+        </div>
+    </nav>
 
-<span class="token function">touch</span> ~/1.txt <span class="token comment"># 创建 1.txt</span>
-<span class="token function">open</span> -e ~/1.txt <span class="token comment"># 打开 1.txt 并用 TextEdit 编辑</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">macOS 生产力之 ——Terminal 命令</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 5, 2016&nbsp;&nbsp;14:29:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>记录下常用的 macOS 命令。<br><a id="more"></a></p>
+<p>&nbsp;</p>
+<h2 id="open-打开文件、目录或执行程序"><a href="#open-打开文件、目录或执行程序" class="headerlink" title="open - 打开文件、目录或执行程序"></a>open - 打开文件、目录或执行程序</h2><p><code>open</code> 其实等同于我们在 GUI 下面执行双击命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">open /Applications/Dictionary.app <span class="comment">#Dictionary 应用 </span></span><br><span class="line">open ~/Movies <span class="comment"># 开当前用户 Movies 目录 </span></span><br><span class="line"></span><br><span class="line">touch ~/1.txt <span class="comment"># 创建 1.txt</span></span><br><span class="line">open -e ~/1.txt <span class="comment"># 打开 1.txt 并用 TextEdit 编辑 </span></span><br></pre></td></tr></table></figure>
 <p>我们也可以直接把文件夹拖入 Terminal 就会在命令行直接出现该文件夹路径。</p>
 <p>&nbsp;</p>
-<h2><span id="say-文字转语音">say - 文字转语音 </span></h2><p><code>say</code> 是命令行上的 VoiceOver：</p>
-<pre class="line-numbers language-none"><code class="language-none">$ say &quot;Never trust a computer you can&#39;t lift.&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>用 <code>-f</code> 选项朗读特定文本文件，<code>-o</code>选项将朗读结果存为音频文件而不是播放：</p>
-<pre class="line-numbers language-none"><code class="language-none">$ say -f mynovel.txt -o myaudiobook.aiff<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p><code>say</code>命令也可以用于在脚本中播放警告或提示可以在系统设置（System Preferences）的字典和语音（Dictation &amp; Speech）选项中调整系统的语音选项甚至是语音的语言。</p>
+<h2 id="say-文字转语音"><a href="#say-文字转语音" class="headerlink" title="say - 文字转语音"></a>say - 文字转语音</h2><p><code>say</code> 是命令行上的 VoiceOver：</p>
+<figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">$ </span>say <span class="comment">&quot;Never trust a computer you can&#x27;t lift.&quot;</span></span><br></pre></td></tr></table></figure>
+<p>用 <code>-f</code> 选项朗读特定文本文件，<code>-o</code> 选项将朗读结果存为音频文件而不是播放：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> say <span class="operator">-f</span> mynovel.txt <span class="literal">-o</span> myaudiobook.aiff</span><br></pre></td></tr></table></figure>
+<p><code>say</code> 命令也可以用于在脚本中播放警告或提示可以在系统设置（System Preferences）的字典和语音（Dictation &amp; Speech）选项中调整系统的语音选项甚至是语音的语言。</p>
 <p>&nbsp;</p>
-<h2><span id="screencapture-截图">screencapture - 截图 </span></h2><p><code>screencapture</code> 实际上就是命令行上的 Grab.app。</p>
+<h2 id="screencapture-截图"><a href="#screencapture-截图" class="headerlink" title="screencapture - 截图"></a>screencapture - 截图</h2><p><code>screencapture</code> 实际上就是命令行上的 Grab.app。</p>
 <p>全屏幕截图，并保存为 image.png，作为新邮件的附件：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ screencapture -C -M image.png <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screencapture -C -M image.png </span><br></pre></td></tr></table></figure>
 <p>鼠标选择抓取范围并复制到剪贴板：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ screencapture -c -W<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screencapture -c -W</span><br></pre></td></tr></table></figure>
 <p>延迟 10 秒截屏，用 preview.app 打开</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ screencapture -T <span class="token number">10</span> -P image.png<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screencapture -T 10 -P image.png</span><br></pre></td></tr></table></figure>
 <p>鼠标选择抓取范围保存到 image.pdf 文件</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ screencapture -s -t pdf image.pdf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>更多用法可以参阅<code>screencapture --help</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screencapture -s -t pdf image.pdf</span><br></pre></td></tr></table></figure>
+<p>更多用法可以参阅 <code>screencapture --help</code>。</p>
 <p>&nbsp;</p>
-<h2><span id="pbcopypbpaste-直接与系统剪贴板交互">pbcopy/pbpaste - 直接与系统剪贴板交互 </span></h2><p> 在命令行拷贝到系统剪贴板一般是用鼠标选中需要的部分然后 <kbd>⌘</kbd>+<kbd>c</kbd>，反之从系统剪贴板粘贴到命令行则是<kbd>⌘</kbd>+<kbd>v</kbd>。但这样效率并不高，macOS 提供了<code>pbcopy</code> 和<code>pbpaste</code>工具来进行命令行和系统剪贴板的交互。</p>
+<h2 id="pbcopy-pbpaste-直接与系统剪贴板交互"><a href="#pbcopy-pbpaste-直接与系统剪贴板交互" class="headerlink" title="pbcopy/pbpaste - 直接与系统剪贴板交互"></a>pbcopy/pbpaste - 直接与系统剪贴板交互</h2><p>在命令行拷贝到系统剪贴板一般是用鼠标选中需要的部分然后 &lt; kbd&gt;⌘&lt;/kbd&gt;+<kbd>c</kbd>，反之从系统剪贴板粘贴到命令行则是 &lt; kbd&gt;⌘&lt;/kbd&gt;+<kbd>v</kbd>。但这样效率并不高，macOS 提供了 <code>pbcopy</code> 和 <code>pbpaste</code> 工具来进行命令行和系统剪贴板的交互。</p>
 <p>利用管道符来传递待拷贝内容到 pbcopy 命令</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">ls</span> ~ <span class="token operator">|</span> pbcopy <span class="token comment"># 把 ls ~ 的结果拷贝到系统剪贴板 </span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls ~ | pbcopy <span class="comment"># 把 ls ~ 的结果拷贝到系统剪贴板 </span></span><br></pre></td></tr></table></figure>
 <p>也可以利用重定向符号来传递内容</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ pbcopy <span class="token operator">&lt;</span> blogpost.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pbcopy &lt; blogpost.txt</span><br></pre></td></tr></table></figure>
 <p>我们也可以多个命令组合起来实现一个复杂的操作，如访问 Google 拷贝其徽标</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">curl</span> http://www.google.com/doodles<span class="token punctuation">\</span>#oodles/archive <span class="token operator">|</span> <span class="token function">grep</span> -A5 <span class="token string">'latest-doodle on'</span> <span class="token operator">|</span> <span class="token function">grep</span> <span class="token string">'img src'</span> <span class="token operator">|</span> <span class="token function">sed</span> s/.*<span class="token string">'&lt;img src="\/\/'</span>/<span class="token string">''</span>/ <span class="token operator">|</span> <span class="token function">sed</span> s/<span class="token string">'"alt=".*'</span>/<span class="token string">''</span>/ <span class="token operator">|</span> pbcopy<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl http://www.google.com/doodles\<span class="comment">#oodles/archive | grep -A5 &#x27;latest-doodle on&#x27; | grep &#x27;img src&#x27; | sed s/.*&#x27;&lt;img src=&quot;\/\/&#x27;/&#x27;&#x27;/ | sed s/&#x27;&quot; alt=&quot;.*&#x27;/&#x27;&#x27;/ | pbcopy</span></span><br></pre></td></tr></table></figure>
 <p>利用管道语法可以选取要拷贝的内容，我们也可以利用 pbcopy 和 pbpaste 来实现自动化工作流，例如抓取 <a href="api.github.com">Github 的 api</a> 到本地的文件</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">curl</span> https://api.github.com <span class="token operator">|</span> pbcopy <span class="token operator">&amp;&amp;</span> pbpaste <span class="token operator">>></span> ~/api.json<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl https://api.github.com | pbcopy &amp;&amp; pbpaste &gt;&gt; ~/api.json</span><br></pre></td></tr></table></figure>
 <p>&nbsp;</p>
-<h2><span id="mdfind-命令行上的-spotlight">mdfind - 命令行上的 Spotlight</span></h2><p>类似于 Spotlight，<code>mdfind</code>可以实现自定义查找，例如文件内容匹配和元数据查找。</p>
-<p><code>mdfind</code>还提供更多的搜索选项。例如 <code>-onlyin</code> 选项可以约束搜索范围为一个目录：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ mdfind -onlyin ~/Documents essay<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p><code>mdfind</code>的索引数据库在后台自动更新。</p>
+<h2 id="mdfind-命令行上的-Spotlight"><a href="#mdfind-命令行上的-Spotlight" class="headerlink" title="mdfind - 命令行上的 Spotlight"></a>mdfind - 命令行上的 Spotlight</h2><p>类似于 Spotlight，<code>mdfind</code> 可以实现自定义查找，例如文件内容匹配和元数据查找。</p>
+<p><code>mdfind</code> 还提供更多的搜索选项。例如 <code>-onlyin</code> 选项可以约束搜索范围为一个目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mdfind -onlyin ~/Documents essay</span><br></pre></td></tr></table></figure>
+<p><code>mdfind</code> 的索引数据库在后台自动更新。</p>
 <p>&nbsp;</p>
-<h2><span id="launchctl-macos-启动脚本">launchctl - macOS 启动脚本 </span></h2><p><code>launchctl</code> 管理 OS X 的启动脚本和定时服务。类似于 linux 的 cron。</p>
+<h2 id="launchctl-macOS-启动脚本"><a href="#launchctl-macOS-启动脚本" class="headerlink" title="launchctl - macOS 启动脚本"></a>launchctl - macOS 启动脚本</h2><p><code>launchctl</code> 管理 OS X 的启动脚本和定时服务。类似于 linux 的 cron。</p>
 <p>显示当前的启动脚本</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ launchctl list<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ launchctl list</span><br></pre></td></tr></table></figure>
 <p>开机自启动 apache 服务器：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> launchctl load -w /System/Library/LaunchDaemons/org.apache.httpd.plist<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo launchctl load -w /System/Library/LaunchDaemons/org.apache.httpd.plist</span><br></pre></td></tr></table></figure>
 <p>停止正在运行的 apache 服务</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> launchctl unload /System/Library/LaunchDaemons/org.apache.httpd.plist <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo launchctl unload /System/Library/LaunchDaemons/org.apache.httpd.plist </span><br></pre></td></tr></table></figure>
 <p>停止并取消开机启动的 apache 服务</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist </span><br></pre></td></tr></table></figure>
 <p>Launchd 脚本存储位置：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">~/Library/LaunchAgents    
-/Library/LaunchAgents          
-/Library/LaunchDaemons
-/System/Library/LaunchAgents
-/System/Library/LaunchDaemons<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>启动脚本的格式可以参考 <a target="_blank" rel="noopener" href="http://paul.annesley.cc/2012/09/mac-os-x-launchd-is-cool/"> 这篇 blog</a>，或苹果开发者中心的 <a target="_blank" rel="noopener" href="https://developer.apple.com/library/mac/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html"> 文章 </a>。也可以使用<a target="_blank" rel="noopener" href="http://www.peterborgapps.com/lingon/">Lingon</a> 应用来完全取代命令行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~/Library/LaunchAgents    </span><br><span class="line">/Library/LaunchAgents          </span><br><span class="line">/Library/LaunchDaemons</span><br><span class="line">/System/Library/LaunchAgents</span><br><span class="line">/System/Library/LaunchDaemons</span><br></pre></td></tr></table></figure>
+<p>启动脚本的格式可以参考 <a target="_blank" rel="noopener" href="http://paul.annesley.cc/2012/09/mac-os-x-launchd-is-cool/">这篇 blog</a>，或苹果开发者中心的 <a target="_blank" rel="noopener" href="https://developer.apple.com/library/mac/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html">文章</a>。也可以使用 <a target="_blank" rel="noopener" href="http://www.peterborgapps.com/lingon/">Lingon</a> 应用来完全取代命令行。</p>
 
-            </div>
-            <!-- Post Comments -->
-            
-            
-    <!-- 使用 valine -->
-<div id="comment">
-    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
-<script>
-    new Valine({
-        el: '#comment' ,
-        notify: false,
-        verify: false,
-        app_id: '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
-        app_key: 'UrBohelQ00fEUxu5npX46rtL',
-        placeholder: 'Just go go',
-        pageSize: '10',
-        avatar: 'mm',
-        avatar_cdn: 'https://gravatar.loli.net/avatar/'
-    });
-</script>
-</div>
-<style>
-   #comment{
-        padding: 2pc;
-    }
-</style>
-
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
-    
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Terminal/"># Terminal</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2016/01/13/%E8%BF%90%E7%BB%B4/%E8%BF%90%E7%BB%B4%E4%B9%8BjsDelivr%E4%BD%BF%E7%94%A8/">用 jsDelivr 来改善网站响应速度</a>
+            
+            
+            <a class="next" rel="next" href="/2015/12/25/git/git%E7%AC%94%E8%AE%B0%E4%B9%8B%E4%BB%A3%E7%90%86/">GitHub 使用代理</a>
+            
+        </section>
+
+
+    </article>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

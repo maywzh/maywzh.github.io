@@ -1,304 +1,259 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta name="author" content="maywzh">
+
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>简析一致性哈希算法及其实现 | 0x01 MAYSTORY </title>
+
+
     
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
-	    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
-
-
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
-</nav>
-
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/23/IpUDYCiftrGVm2N.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>简析一致性哈希算法及其实现</h2>
-                </a>
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <h2><span id="场景">场景 </span></h2><p> 业务中有 N 台 redis 缓存服务器 [0, N-1]，那么对于任意一个关键字 key 的请求，我们都是做一个对 key 哈希值取模的请求分发。前台请求被分发到编号 (hash(key)%N) 这台服务器上。理想状态下，这样的缓存命中率是很高的。但当因为业务需求而增删服务节点数，例如添加一台服务器。那么原来被分配到 k 号服务器的现在会被分到 (k-1) 号服务器。这个时候几乎所有的缓存全部会被 miss 掉，造成极大的业务压力。</p>
-<p><strong>一致性哈希算法的目的就是，当后台增删节点时，旧的数据能够依旧计算到原来的服务器，而新数据能够按新的哈希算法分配到新服务器。</strong></p>
-<a id="more"></a>
-<h2><span id="原理">原理 </span></h2><p> 一致性哈希算法把 N 个服务节点映射到一个环上。对每个服务节点的 key 值进行 hash 计算，获得一个长度为 N 的数组，再把数组首尾相连，获得一个环。我们对所有的请求节点 key 作 hash 计算，会落入该环的某一个弧段，我们可以设定每个弧段上的请求节点都以顺时针最近的 Node 作为服务节点。这样增加或减少服务节点，那影响的也只是一个弧段上的请求节点，而其他弧段上的请求节点则不受影响。</p>
-<p>这实际上就是把映射环增大了。减少了数据映射关系的变动，不会像 hash(i)%N 那样带来全局的变动。</p>
-<p>如果某一个弧段上的节点密度很大，导致单个服务节点过载，即热点数据问题，那我们可以在这个弧段上增加一个服务节点就可以分担压力。</p>
-<h2><span id="改进">改进 </span></h2><h3><span id="雪崩效应"> 雪崩效应 </span></h3><p> 上述的算法有一个弊端，就是如果某个服务节点因为过载而 down 掉，那么原本分配在它上面的负载都会被分配到顺时针下一台服务器上去，那么下一台服务器也会 down 掉，依次类推，所有的服务器最终都会挂掉。这就是雪崩效应。</p>
-<p>为了解决雪崩效应，最好的办法就是，当一个服务节点挂掉的时候，分配在上面的流量被其他的服务节点共同分担。这样才能保证整个集群的可用性。因此，可以采用 <strong> 虚拟节点 </strong> 的方式来改进算法。</p>
-<h3><span id="虚拟节点">虚拟节点 </span></h3><p> 这里把每个服务器分为两个副本节点，每个副本节点负责一个更精细的环，如图可以得知，如果 A 挂掉了，那么原本分配给 A 的两个小环的流量会被 D 和 C 来分摊。实际上我们可以通过增加副本节点的数量来提高算法的均衡性。</p>
-<h2><span id="实现代码">实现代码</span></h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment">#! /usr/bin/env python</span>
-<span class="token comment"># -*- coding:utf8 -*-</span>
-
-<span class="token keyword">import</span> md5
-
-<span class="token keyword">class</span> <span class="token class-name">HashRing</span><span class="token punctuation">(</span><span class="token builtin">object</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> nodes<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span> replicas<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token triple-quoted-string string">"""
-        创建一个 hash 环
-        :nodes 
-            节点 
-        :replicas
-            每个服务节点的副本数
-        """</span>
-
-        self<span class="token punctuation">.</span>replicas <span class="token operator">=</span> replicas
-        self<span class="token punctuation">.</span>ring <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-        self<span class="token punctuation">.</span>_sorted_keys <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-        <span class="token keyword">if</span> nodes<span class="token punctuation">:</span>
-            <span class="token keyword">for</span> node <span class="token keyword">in</span> nodes<span class="token punctuation">:</span>
-                self<span class="token punctuation">.</span>add_node<span class="token punctuation">(</span>node<span class="token punctuation">)</span>
-
-    <span class="token keyword">def</span> <span class="token function">add_node</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> node<span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token triple-quoted-string string">"""把一个服务节点加入 hash 环"""</span>
-        <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>replicas<span class="token punctuation">)</span><span class="token punctuation">:</span>
-            key <span class="token operator">=</span> self<span class="token punctuation">.</span>gen_key<span class="token punctuation">(</span><span class="token string">"%s:%s"</span> <span class="token operator">%</span> <span class="token punctuation">(</span>node<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">)</span>
-            self<span class="token punctuation">.</span>ring<span class="token punctuation">[</span>key<span class="token punctuation">]</span> <span class="token operator">=</span> node
-            self<span class="token punctuation">.</span>_sorted_keys<span class="token punctuation">.</span>append<span class="token punctuation">(</span>key<span class="token punctuation">)</span>
-
-        self<span class="token punctuation">.</span>_sorted_keys<span class="token punctuation">.</span>sort<span class="token punctuation">(</span><span class="token punctuation">)</span>
-
-    <span class="token keyword">def</span> <span class="token function">remove_node</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> node<span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token triple-quoted-string string">"""从 hash 环删除一个服务节点"""</span>
-        <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>replicas<span class="token punctuation">)</span><span class="token punctuation">:</span>
-            key <span class="token operator">=</span> self<span class="token punctuation">.</span>gen_key<span class="token punctuation">(</span><span class="token string">"%s:%s"</span> <span class="token operator">%</span> <span class="token punctuation">(</span>node<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">)</span>
-            <span class="token keyword">del</span> self<span class="token punctuation">.</span>ring<span class="token punctuation">[</span>key<span class="token punctuation">]</span>
-            self<span class="token punctuation">.</span>_sorted_keys<span class="token punctuation">.</span>remove<span class="token punctuation">(</span>key<span class="token punctuation">)</span>
-
-    <span class="token keyword">def</span> <span class="token function">get_node_keys</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> node<span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token triple-quoted-string string">"""获取一个服务节点的所有副本的虚拟 key"""</span>
-        keys <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-        <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>replicas<span class="token punctuation">)</span><span class="token punctuation">:</span>
-            key <span class="token operator">=</span> self<span class="token punctuation">.</span>gen_key<span class="token punctuation">(</span><span class="token string">"%s:%s"</span> <span class="token operator">%</span> <span class="token punctuation">(</span>node<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">)</span>
-            keys<span class="token punctuation">.</span>append<span class="token punctuation">(</span>key<span class="token punctuation">)</span>
-        <span class="token keyword">return</span> key
-
-    <span class="token keyword">def</span> <span class="token function">get_node</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> string_key<span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token triple-quoted-string string">"""对于给定的 key 获取对应的服务节点，返回节点"""</span>
-        <span class="token keyword">return</span> self<span class="token punctuation">.</span>get_node_pos<span class="token punctuation">(</span>string_key<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
-
-    <span class="token keyword">def</span> <span class="token function">get_node_pos</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> string_key<span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token triple-quoted-string string">"""对于给定的 key 获取对应的服务节点，返回节点和位置"""</span>
-        <span class="token keyword">if</span> <span class="token keyword">not</span> self<span class="token punctuation">.</span>ring<span class="token punctuation">:</span>
-            <span class="token keyword">return</span> <span class="token boolean">None</span><span class="token punctuation">,</span> <span class="token boolean">None</span>
-
-        key <span class="token operator">=</span> self<span class="token punctuation">.</span>gen_key<span class="token punctuation">(</span>string_key<span class="token punctuation">)</span>
-        nodes <span class="token operator">=</span> self<span class="token punctuation">.</span>_sorted_keys
-        <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token builtin">len</span><span class="token punctuation">(</span>nodes<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-            node <span class="token operator">=</span> nodes<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
-            <span class="token keyword">if</span> key <span class="token operator">&lt;=</span> node<span class="token punctuation">:</span>
-                <span class="token keyword">return</span> self<span class="token punctuation">.</span>ring<span class="token punctuation">[</span>node<span class="token punctuation">]</span><span class="token punctuation">,</span> i
-
-        <span class="token keyword">return</span> self<span class="token punctuation">.</span>ring<span class="token punctuation">[</span>nodes<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">0</span>
-
-    <span class="token keyword">def</span> <span class="token function">get_nodes</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> string_key<span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token triple-quoted-string string">"""
-        对于一个给定的 key ，返回一个
-        Given a string key it returns the nodes as a generator that can hold the key.
-        The generator is never ending and iterates through the ring starting at the correct position.
-        """</span>
-        <span class="token keyword">if</span> <span class="token keyword">not</span> self<span class="token punctuation">.</span>ring<span class="token punctuation">:</span>
-            <span class="token keyword">yield</span> <span class="token boolean">None</span>
-
-        node<span class="token punctuation">,</span> pos <span class="token operator">=</span> self<span class="token punctuation">.</span>get_node_pos<span class="token punctuation">(</span>string_key<span class="token punctuation">)</span>
-        <span class="token keyword">for</span> key <span class="token keyword">in</span> self<span class="token punctuation">.</span>_sorted_keys<span class="token punctuation">:</span>
-            <span class="token keyword">yield</span> self<span class="token punctuation">.</span>ring<span class="token punctuation">[</span>key<span class="token punctuation">]</span>
-
-    <span class="token keyword">def</span> <span class="token function">gen_key</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> key<span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token triple-quoted-string string">"""以 md5 算法来进行 hash(key)运算"""</span>
-        m <span class="token operator">=</span> md5<span class="token punctuation">.</span>new<span class="token punctuation">(</span><span class="token punctuation">)</span>
-        m<span class="token punctuation">.</span>update<span class="token punctuation">(</span>key<span class="token punctuation">)</span>
-        <span class="token keyword">return</span> <span class="token builtin">long</span><span class="token punctuation">(</span>m<span class="token punctuation">.</span>hexdigest<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-            </div>
-            <!-- Post Comments -->
-            
-            
-    <!-- 使用 valine -->
-<div id="comment">
-    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
-<script>
-    new Valine({
-        el: '#comment' ,
-        notify: false,
-        verify: false,
-        app_id: '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
-        app_key: 'UrBohelQ00fEUxu5npX46rtL',
-        placeholder: 'Just go go',
-        pageSize: '10',
-        avatar: 'mm',
-        avatar_cdn: 'https://gravatar.loli.net/avatar/'
-    });
-</script>
-</div>
-<style>
-   #comment{
-        padding: 2pc;
-    }
-</style>
-
-            
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
+    </nav>
+
     
-    <span id="busuanzi_container_site_pv"> 2020 </span>
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
     
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
 </div>
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">简析一致性哈希算法及其实现</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 4, 2017&nbsp;&nbsp;23:36:27</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>业务中有 N 台 redis 缓存服务器 [0, N-1]，那么对于任意一个关键字 key 的请求，我们都是做一个对 key 哈希值取模的请求分发。前台请求被分发到编号 (hash (key)% N) 这台服务器上。理想状态下，这样的缓存命中率是很高的。但当因为业务需求而增删服务节点数，例如添加一台服务器。那么原来被分配到 k 号服务器的现在会被分到 (k-1) 号服务器。这个时候几乎所有的缓存全部会被 miss 掉，造成极大的业务压力。</p>
+<p><strong> 一致性哈希算法的目的就是，当后台增删节点时，旧的数据能够依旧计算到原来的服务器，而新数据能够按新的哈希算法分配到新服务器。</strong></p>
+<a id="more"></a>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>一致性哈希算法把 N 个服务节点映射到一个环上。对每个服务节点的 key 值进行 hash 计算，获得一个长度为 N 的数组，再把数组首尾相连，获得一个环。我们对所有的请求节点 key 作 hash 计算，会落入该环的某一个弧段，我们可以设定每个弧段上的请求节点都以顺时针最近的 Node 作为服务节点。这样增加或减少服务节点，那影响的也只是一个弧段上的请求节点，而其他弧段上的请求节点则不受影响。</p>
+<p>这实际上就是把映射环增大了。减少了数据映射关系的变动，不会像 hash (i)% N 那样带来全局的变动。</p>
+<p>如果某一个弧段上的节点密度很大，导致单个服务节点过载，即热点数据问题，那我们可以在这个弧段上增加一个服务节点就可以分担压力。</p>
+<h2 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h2><h3 id="雪崩效应"><a href="#雪崩效应" class="headerlink" title="雪崩效应"></a>雪崩效应</h3><p>上述的算法有一个弊端，就是如果某个服务节点因为过载而 down 掉，那么原本分配在它上面的负载都会被分配到顺时针下一台服务器上去，那么下一台服务器也会 down 掉，依次类推，所有的服务器最终都会挂掉。这就是雪崩效应。</p>
+<p>为了解决雪崩效应，最好的办法就是，当一个服务节点挂掉的时候，分配在上面的流量被其他的服务节点共同分担。这样才能保证整个集群的可用性。因此，可以采用 <strong> 虚拟节点 </strong> 的方式来改进算法。</p>
+<h3 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h3><p>这里把每个服务器分为两个副本节点，每个副本节点负责一个更精细的环，如图可以得知，如果 A 挂掉了，那么原本分配给 A 的两个小环的流量会被 D 和 C 来分摊。实际上我们可以通过增加副本节点的数量来提高算法的均衡性。</p>
+<h2 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#! /usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding:utf8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> md5</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HashRing</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, nodes=None, replicas=<span class="number">3</span></span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        创建一个 hash 环 </span></span><br><span class="line"><span class="string">        :nodes </span></span><br><span class="line"><span class="string">            节点 </span></span><br><span class="line"><span class="string">        :replicas</span></span><br><span class="line"><span class="string">            每个服务节点的副本数 </span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        self.replicas = replicas</span><br><span class="line">        self.ring = &#123;&#125;</span><br><span class="line">        self._sorted_keys = []</span><br><span class="line">        <span class="keyword">if</span> nodes:</span><br><span class="line">            <span class="keyword">for</span> node <span class="keyword">in</span> nodes:</span><br><span class="line">                self.add_node (node)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_node</span>(<span class="params">self, node</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        把一个服务节点加入 hash 环 </span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range (<span class="number">0</span>, self.replicas):</span><br><span class="line">            key = self.gen_key (<span class="string">&quot;% s:% s&quot;</span> % (node, i))</span><br><span class="line">            self.ring [key] = node</span><br><span class="line">            self._sorted_keys.append (key)</span><br><span class="line"></span><br><span class="line">        self._sorted_keys.sort ()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove_node</span>(<span class="params">self, node</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        从 hash 环删除一个服务节点 </span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range (<span class="number">0</span>, self.replicas):</span><br><span class="line">            key = self.gen_key (<span class="string">&quot;% s:% s&quot;</span> % (node, i))</span><br><span class="line">            <span class="keyword">del</span> self.ring [key]</span><br><span class="line">            self._sorted_keys.remove (key)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_node_keys</span>(<span class="params">self, node</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        获取一个服务节点的所有副本的虚拟 key</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        keys = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range (<span class="number">0</span>, self.replicas):</span><br><span class="line">            key = self.gen_key (<span class="string">&quot;% s:% s&quot;</span> % (node, i))</span><br><span class="line">            keys.append (key)</span><br><span class="line">        <span class="keyword">return</span> key</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_node</span>(<span class="params">self, string_key</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">		对于给定的 key 获取对应的服务节点，返回节点 </span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> self.get_node_pos (string_key)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_node_pos</span>(<span class="params">self, string_key</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        对于给定的 key 获取对应的服务节点，返回节点和位置 </span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.ring:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        key = self.gen_key (string_key)</span><br><span class="line">        nodes = self._sorted_keys</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range (<span class="number">0</span>, len (nodes)):</span><br><span class="line">            node = nodes [i]</span><br><span class="line">            <span class="keyword">if</span> key &lt;= node:</span><br><span class="line">                <span class="keyword">return</span> self.ring [node], i</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> self.ring [nodes [<span class="number">0</span>]], <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_nodes</span>(<span class="params">self, string_key</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        对于一个给定的 key ，返回一个 </span></span><br><span class="line"><span class="string">        Given a string key it returns the nodes as a generator that can hold the key.</span></span><br><span class="line"><span class="string">        The generator is never ending and iterates through the ring starting at the correct position.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.ring:</span><br><span class="line">            <span class="keyword">yield</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        node, pos = self.get_node_pos (string_key)</span><br><span class="line">        <span class="keyword">for</span> key <span class="keyword">in</span> self._sorted_keys:</span><br><span class="line">            <span class="keyword">yield</span> self.ring [key]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">gen_key</span>(<span class="params">self, key</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">		以 md5 算法来进行 hash (key) 运算 </span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        m = md5.new ()</span><br><span class="line">        m.update (key)</span><br><span class="line">        <span class="keyword">return</span> long (m.hexdigest (), <span class="number">16</span>)</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2017/04/19/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/">编程模型之事件循环</a>
+            
+            
+            <a class="next" rel="next" href="/2017/04/03/Redis/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E8%A7%A3%E7%AD%94/">Redis 面试题解答</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+    </div>
+</footer>
+    </div>
 </body>
-
-
-
-
-
 </html>

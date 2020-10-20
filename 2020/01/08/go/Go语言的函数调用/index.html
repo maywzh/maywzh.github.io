@@ -1,271 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.1.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
-  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-<link rel="stylesheet" href="/css/main.css">
+<meta name="author" content="maywzh">
 
 
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
-  </script>
-
-  <meta name="description" content="函数是 Go 语言中的一等公民，理解和掌握函数的调用过程是我们深入学习 Go 无法跳过的，本节将从函数的调用惯例和参数的传递方法两个方面分别介绍函数的执行过程。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Go语言的函数调用">
-<meta property="og:url" content="https://io.maywzh.com/2020/01/08/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/index.html">
-<meta property="og:site_name" content="Cult I.O.">
-<meta property="og:description" content="函数是 Go 语言中的一等公民，理解和掌握函数的调用过程是我们深入学习 Go 无法跳过的，本节将从函数的调用惯例和参数的传递方法两个方面分别介绍函数的执行过程。">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/siN1dErocqeCAXb.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/JRUEtl4yHBY6TXq.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/VY1tQJNkSi94sDv.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/DIEtN3Tvl764BZi.png">
-<meta property="article:published_time" content="2020-01-08T10:14:08.000Z">
-<meta property="article:modified_time" content="2020-09-30T11:49:35.813Z">
-<meta property="article:author" content="maywzh">
-<meta property="article:tag" content="Go">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/09/04/siN1dErocqeCAXb.png">
-
-<link rel="canonical" href="https://io.maywzh.com/2020/01/08/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/">
+<meta name="subtitle" content="0x01 MAYSTORY">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'en'
-  };
-</script>
-
-  <title>Go语言的函数调用 | Cult I.O.</title>
-  
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
-    <script data-pjax>
-      if (CONFIG.hostname === location.hostname) {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-119246999-4');
-      }
-    </script>
+<meta name="description" content="Namasday.">
 
 
+<meta name="keywords" content="Tech Blogs">
 
 
+<title>Go语言的函数调用 | 0x01 MAYSTORY </title>
 
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
-
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">Cult I.O.</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-      <p class="site-subtitle" itemprop="description">Namasday.</p>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
-    </div>
-  </div>
-</div>
-
-
-
-
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
-  </ul>
-</nav>
-
-
-
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
-           placeholder="Searching..." spellcheck="false"
-           type="search" class="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
-  </div>
-</div>
-
-    </div>
-  </div>
-
-</div>
-    </header>
 
     
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-  <div class="reading-progress-bar"></div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
     
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2020/01/08/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/myavatar.jpg">
-      <meta itemprop="name" content="maywzh">
-      <meta itemprop="description" content="Namasday.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cult I.O.">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          Go语言的函数调用
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020.01.08 18:14:08" itemprop="dateCreated datePublished" datetime="2020-01-08T18:14:08+08:00">2020.01.08</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/01/08/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Go语言的函数调用" title="Views">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  
-
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
         </div>
-      </header>
+    </nav>
 
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
 
-      
-        <p>函数是 Go 语言中的一等公民，理解和掌握函数的调用过程是我们深入学习 Go 无法跳过的，本节将从函数的调用惯例和参数的传递方法两个方面分别介绍函数的执行过程。</p>
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Go语言的函数调用</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 8, 2020&nbsp;&nbsp;18:14:08</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>函数是 Go 语言中的一等公民，理解和掌握函数的调用过程是我们深入学习 Go 无法跳过的，本节将从函数的调用惯例和参数的传递方法两个方面分别介绍函数的执行过程。</p>
 <a id="more"></a>
 <h2 id="调用惯例"><a href="#调用惯例" class="headerlink" title="调用惯例"></a>调用惯例</h2><p>无论是系统级编程语言 C 和 Go，还是脚本语言 Ruby 和 Python，这些编程语言在调用函数时往往都使用相同的语法：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">somefunction(arg0, arg1)</span><br></pre></td></tr></table></figure>
@@ -287,7 +221,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">main:</span><br><span class="line">	pushq	%rbp</span><br><span class="line">	movq	%rsp, %rbp</span><br><span class="line">	subq	$<span class="number">16</span>, %rsp     <span class="comment">// 为参数传递申请 16 字节的栈空间</span></span><br><span class="line">	movl	$<span class="number">8</span>, <span class="number">8</span>(%rsp)   <span class="comment">// 传递第 8 个参数</span></span><br><span class="line">	movl	$<span class="number">7</span>, (%rsp)    <span class="comment">// 传递第 7 个参数</span></span><br><span class="line">	movl	$<span class="number">6</span>, %r9d</span><br><span class="line">	movl	$<span class="number">5</span>, %r8d</span><br><span class="line">	movl	$<span class="number">4</span>, %ecx</span><br><span class="line">	movl	$<span class="number">3</span>, %edx</span><br><span class="line">	movl	$<span class="number">2</span>, %esi</span><br><span class="line">	movl	$<span class="number">1</span>, %edi</span><br><span class="line">	call	my_function</span><br></pre></td></tr></table></figure>
 <p><code>main</code> 函数调用 <code>my_function</code> 时，前六个参数是使用 edi、esi、edx、ecx、r8d 和 r9d 六个寄存器传递的。寄存器的使用顺序也是调用惯例的一部分，函数的第一个参数一定会使用 edi 寄存器，第二个参数使用 esi 寄存器，以此类推。</p>
 <p>最后的两个参数与前面的完全不同，调用方 <code>main</code> 函数通过传递这两个参数，图 4-1 展示了 <code>main</code> 函数在调用 <code>my_function</code> 前的栈信息：</p>
-<p><img data-src="https://i.loli.net/2020/09/04/siN1dErocqeCAXb.png" alt="c-function-call-stack"></p>
+<p><img src="https://i.loli.net/2020/09/04/siN1dErocqeCAXb.png" alt="c-function-call-stack"></p>
 <p>上图中 rbp 寄存器的作用是存储函数调用栈的基址指针，即属于 <code>main</code> 函数的栈空间的起始位置，而另一个寄存器 rsp 存储的是 <code>main</code> 函数调用栈结束的位置，这两个寄存器共同表示了一个函数的栈空间。</p>
 <p>在调用 <code>my_function</code> 之前，<code>main</code> 函数通过 <code>subq $16, %rsp</code> 指令分配了 16 个字节的栈地址，随后将第六个以上的参数按照从右到左的顺序存入栈中，即第八个和第七个，余下的六个参数会通过寄存器传递，接下来运行的 <code>call my_function</code> 指令会调用 <code>my_function</code> 函数：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">my_function:</span><br><span class="line">	pushq	%rbp</span><br><span class="line">	movq	%rsp, %rbp</span><br><span class="line">	movl	%edi, <span class="number">-4</span>(%rbp)    <span class="comment">// rbp-4 = edi = 1</span></span><br><span class="line">	movl	%esi, <span class="number">-8</span>(%rbp)    <span class="comment">// rbp-8 = esi = 2</span></span><br><span class="line">	...</span><br><span class="line">	movl	<span class="number">-8</span>(%rbp), %eax    <span class="comment">// eax = 2</span></span><br><span class="line">	movl	<span class="number">-4</span>(%rbp), %edx    <span class="comment">// edx = 1</span></span><br><span class="line">	addl	%eax, %edx        <span class="comment">// edx = eax + edx = 3</span></span><br><span class="line">	...</span><br><span class="line">	movl	<span class="number">16</span>(%rbp), %eax    <span class="comment">// eax = 7</span></span><br><span class="line">	addl	%eax, %edx        <span class="comment">// edx = eax + edx = 28</span></span><br><span class="line">	movl	<span class="number">24</span>(%rbp), %eax    <span class="comment">// eax = 8</span></span><br><span class="line">	addl	%edx, %eax        <span class="comment">// edx = eax + edx = 36</span></span><br><span class="line">	popq	%rbp</span><br></pre></td></tr></table></figure>
@@ -306,7 +240,7 @@
 </blockquote>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;</span>.main STEXT size=<span class="number">68</span> args=<span class="number">0x0</span> locals=<span class="number">0x28</span></span><br><span class="line">	<span class="number">0x0000</span> <span class="number">00000</span> (main.<span class="keyword">go</span>:<span class="number">7</span>)	MOVQ	(TLS), CX</span><br><span class="line">	<span class="number">0x0009</span> <span class="number">00009</span> (main.<span class="keyword">go</span>:<span class="number">7</span>)	CMPQ	SP, <span class="number">16</span>(CX)</span><br><span class="line">	<span class="number">0x000d</span> <span class="number">00013</span> (main.<span class="keyword">go</span>:<span class="number">7</span>)	JLS	<span class="number">61</span></span><br><span class="line">	<span class="number">0x000f</span> <span class="number">00015</span> (main.<span class="keyword">go</span>:<span class="number">7</span>)	SUBQ	$<span class="number">40</span>, SP      <span class="comment">// 分配 40 字节栈空间</span></span><br><span class="line">	<span class="number">0x0013</span> <span class="number">00019</span> (main.<span class="keyword">go</span>:<span class="number">7</span>)	MOVQ	BP, <span class="number">32</span>(SP)   <span class="comment">// 将基址指针存储到栈上</span></span><br><span class="line">	<span class="number">0x0018</span> <span class="number">00024</span> (main.<span class="keyword">go</span>:<span class="number">7</span>)	LEAQ	<span class="number">32</span>(SP), BP</span><br><span class="line">	<span class="number">0x001d</span> <span class="number">00029</span> (main.<span class="keyword">go</span>:<span class="number">8</span>)	MOVQ	$<span class="number">66</span>, (SP)    <span class="comment">// 第一个参数</span></span><br><span class="line">	<span class="number">0x0025</span> <span class="number">00037</span> (main.<span class="keyword">go</span>:<span class="number">8</span>)	MOVQ	$<span class="number">77</span>, <span class="number">8</span>(SP)   <span class="comment">// 第二个参数</span></span><br><span class="line">	<span class="number">0x002e</span> <span class="number">00046</span> (main.<span class="keyword">go</span>:<span class="number">8</span>)	CALL	<span class="string">&quot;&quot;</span>.myFunction(SB)</span><br><span class="line">	<span class="number">0x0033</span> <span class="number">00051</span> (main.<span class="keyword">go</span>:<span class="number">9</span>)	MOVQ	<span class="number">32</span>(SP), BP</span><br><span class="line">	<span class="number">0x0038</span> <span class="number">00056</span> (main.<span class="keyword">go</span>:<span class="number">9</span>)	ADDQ	$<span class="number">40</span>, SP</span><br><span class="line">	<span class="number">0x003c</span> <span class="number">00060</span> (main.<span class="keyword">go</span>:<span class="number">9</span>)	RET</span><br></pre></td></tr></table></figure>
 <p>根据 <code>main</code> 函数生成的汇编指令，我们可以分析出 <code>main</code> 函数调用 <code>myFunction</code> 之前的栈情况：</p>
-<p><img data-src="https://i.loli.net/2020/09/04/JRUEtl4yHBY6TXq.png" alt="golang-function-call-stack-before-calling"></p>
+<p><img src="https://i.loli.net/2020/09/04/JRUEtl4yHBY6TXq.png" alt="golang-function-call-stack-before-calling"></p>
 <p><code>main</code> 函数通过 <code>SUBQ $40, SP</code> 指令一共在栈上分配了 40 字节的内存空间：</p>
 <div class="table-container">
 <table>
@@ -340,7 +274,7 @@
 <p>当我们准备好函数的入参之后，会调用汇编指令 <code>CALL &quot;&quot;.myFunction(SB)</code>，这个指令首先会将 <code>main</code> 的返回地址存入栈中，然后改变当前的栈指针 SP 并开始执行 <code>myFunction</code> 的汇编指令：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;</span>.myFunction STEXT nosplit size=<span class="number">49</span> args=<span class="number">0x20</span> locals=<span class="number">0x0</span></span><br><span class="line">	<span class="number">0x0000</span> <span class="number">00000</span> (main.<span class="keyword">go</span>:<span class="number">3</span>)	MOVQ	$<span class="number">0</span>, <span class="string">&quot;&quot;</span>.~r2+<span class="number">24</span>(SP) <span class="comment">// 初始化第一个返回值</span></span><br><span class="line">	<span class="number">0x0009</span> <span class="number">00009</span> (main.<span class="keyword">go</span>:<span class="number">3</span>)	MOVQ	$<span class="number">0</span>, <span class="string">&quot;&quot;</span>.~r3+<span class="number">32</span>(SP) <span class="comment">// 初始化第二个返回值</span></span><br><span class="line">	<span class="number">0x0012</span> <span class="number">00018</span> (main.<span class="keyword">go</span>:<span class="number">4</span>)	MOVQ	<span class="string">&quot;&quot;</span>.a+<span class="number">8</span>(SP), AX    <span class="comment">// AX = 66</span></span><br><span class="line">	<span class="number">0x0017</span> <span class="number">00023</span> (main.<span class="keyword">go</span>:<span class="number">4</span>)	ADDQ	<span class="string">&quot;&quot;</span>.b+<span class="number">16</span>(SP), AX   <span class="comment">// AX = AX + 77 = 143</span></span><br><span class="line">	<span class="number">0x001c</span> <span class="number">00028</span> (main.<span class="keyword">go</span>:<span class="number">4</span>)	MOVQ	AX, <span class="string">&quot;&quot;</span>.~r2+<span class="number">24</span>(SP) <span class="comment">// (24)SP = AX = 143</span></span><br><span class="line">	<span class="number">0x0021</span> <span class="number">00033</span> (main.<span class="keyword">go</span>:<span class="number">4</span>)	MOVQ	<span class="string">&quot;&quot;</span>.a+<span class="number">8</span>(SP), AX    <span class="comment">// AX = 66</span></span><br><span class="line">	<span class="number">0x0026</span> <span class="number">00038</span> (main.<span class="keyword">go</span>:<span class="number">4</span>)	SUBQ	<span class="string">&quot;&quot;</span>.b+<span class="number">16</span>(SP), AX   <span class="comment">// AX = AX - 77 = -11</span></span><br><span class="line">	<span class="number">0x002b</span> <span class="number">00043</span> (main.<span class="keyword">go</span>:<span class="number">4</span>)	MOVQ	AX, <span class="string">&quot;&quot;</span>.~r3+<span class="number">32</span>(SP) <span class="comment">// (32)SP = AX = -11</span></span><br><span class="line">	<span class="number">0x0030</span> <span class="number">00048</span> (main.<span class="keyword">go</span>:<span class="number">4</span>)	RET</span><br></pre></td></tr></table></figure>
 <p>从上述的汇编代码中我们可以看出，当前函数在执行时首先会将 <code>main</code> 函数中预留的两个返回值地址置成 <code>int</code> 类型的默认值 0，然后根据栈的相对位置获取参数并进行加减操作并将值存回栈中，在 <code>myFunction</code> 函数返回之间，栈中的数据如图 4-3 所示：</p>
-<p><img data-src="https://i.loli.net/2020/09/04/VY1tQJNkSi94sDv.png" alt="golang-function-call-stack-before-return"></p>
+<p><img src="https://i.loli.net/2020/09/04/VY1tQJNkSi94sDv.png" alt="golang-function-call-stack-before-return"></p>
 <p>在 <code>myFunction</code> 返回之后，<code>main</code> 函数会通过以下的指令来恢复栈基址指针并销毁已经失去作用的 40 字节的栈空间：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x0033</span> <span class="number">00051</span> (main.<span class="keyword">go</span>:<span class="number">9</span>)    MOVQ    <span class="number">32</span>(SP), BP</span><br><span class="line"><span class="number">0x0038</span> <span class="number">00056</span> (main.<span class="keyword">go</span>:<span class="number">9</span>)    ADDQ    $<span class="number">40</span>, SP</span><br><span class="line"><span class="number">0x003c</span> <span class="number">00060</span> (main.<span class="keyword">go</span>:<span class="number">9</span>)    RET</span><br></pre></td></tr></table></figure>
 <p>通过分析 Go 语言编译后的汇编指令，我们发现 Go 语言使用栈传递参数和接收返回值，所以它只需要在栈上多分配一些内存就可以返回多个值。</p>
@@ -384,7 +318,7 @@
 <p>如果我们将上述代码简化成如下所示的代码片段并使用 <code>go tool compile</code> 进行编译会得到如下的结果：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MyStruct <span class="keyword">struct</span> &#123;</span><br><span class="line">	i <span class="keyword">int</span></span><br><span class="line">	j <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">myFunction</span><span class="params">(ms *MyStruct)</span> *<span class="title">MyStruct</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> ms</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$ <span class="keyword">go</span> tool compile -S -N -l main.<span class="keyword">go</span></span><br><span class="line"><span class="string">&quot;&quot;</span>.myFunction STEXT nosplit size=<span class="number">20</span> args=<span class="number">0x10</span> locals=<span class="number">0x0</span></span><br><span class="line">	<span class="number">0x0000</span> <span class="number">00000</span> (main.<span class="keyword">go</span>:<span class="number">8</span>)	MOVQ	$<span class="number">0</span>, <span class="string">&quot;&quot;</span>.~r1+<span class="number">16</span>(SP) <span class="comment">// 初始化返回值</span></span><br><span class="line">	<span class="number">0x0009</span> <span class="number">00009</span> (main.<span class="keyword">go</span>:<span class="number">9</span>)	MOVQ	<span class="string">&quot;&quot;</span>.ms+<span class="number">8</span>(SP), AX   <span class="comment">// 复制引用</span></span><br><span class="line">	<span class="number">0x000e</span> <span class="number">00014</span> (main.<span class="keyword">go</span>:<span class="number">9</span>)	MOVQ	AX, <span class="string">&quot;&quot;</span>.~r1+<span class="number">16</span>(SP) <span class="comment">// 返回引用</span></span><br><span class="line">	<span class="number">0x0013</span> <span class="number">00019</span> (main.<span class="keyword">go</span>:<span class="number">9</span>)	RET</span><br></pre></td></tr></table></figure>
 <p>在这段汇编语言中我们发现当参数是指针时，也会使用 <code>MOVQ &quot;&quot;.ms+8(SP), AX</code> 指令对引用进行复制，然后将复制后的指针作为返回值传递回调用方。</p>
-<p><img data-src="https://i.loli.net/2020/09/04/DIEtN3Tvl764BZi.png" alt="golang-pointer-as-argument"></p>
+<p><img src="https://i.loli.net/2020/09/04/DIEtN3Tvl764BZi.png" alt="golang-pointer-as-argument"></p>
 <p>所以将指针作为参数传入某一个函数时，在函数内部会对指针进行复制，也就是会同时出现两个指针指向原有的内存空间，所以 Go 语言中『传指针』也是传值。</p>
 <h3 id="传值"><a href="#传值" class="headerlink" title="传值"></a>传值</h3><p>当我们对 Go 语言中大多数常见的数据结构进行验证之后，其实就能够推测出 Go 语言在传递参数时其实使用的就是传值的方式，接收方收到参数时会对这些参数进行复制；了解到这一点之后，在传递数组或者内存占用非常大的结构体时，我们在一些函数中应该尽量使用指针作为参数类型来避免发生大量数据的拷贝而影响性能。</p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这一节我们详细分析了 Go 语言的调用惯例，包括传递参数和返回值的过程和原理。Go 通过栈传递函数的参数和返回值，在调用函数之前会在栈上为返回值分配合适的内存空间，随后将入参从右到左按顺序压栈并拷贝参数，返回值会被存储到调用方预留好的栈空间上，我们可以简单总结出以下几条规则：</p>
@@ -394,364 +328,54 @@
 <li>调用函数时都是传值，接收方会对入参进行复制再计算；</li>
 </ol>
 
-    </div>
-
-    
-    
-    
-        
-
-  <div class="followme">
-    <p>Welcome to my other publishing channels</p>
-
-    <div class="social-list">
-
-        <div class="social-item">
-          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
-            <span class="icon">
-              <i class="fab fa-twitter"></i>
-            </span>
-
-            <span class="label">Twitter</span>
-          </a>
         </div>
 
-        <div class="social-item">
-          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
-            <span class="icon">
-              <i class="fab fa-telegram"></i>
-            </span>
-
-            <span class="label">Telegram</span>
-          </a>
-        </div>
-
-        <div class="social-item">
-          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
-            <span class="icon">
-              <i class="fab fa-weibo"></i>
-            </span>
-
-            <span class="label">Weibo</span>
-          </a>
-        </div>
-    </div>
-  </div>
-
-
-      <footer class="post-footer">
-          
-          <div class="post-tags">
-              <a href="/tags/Go/" rel="tag"><i class="fa fa-tag"></i> Go</a>
-          </div>
-
         
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Go/"># Go</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/01/10/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E8%B0%83%E5%BA%A6%E6%9C%BA%E5%88%B6/">Go语言的调度器</a>
+            
+            
+            <a class="next" rel="next" href="/2020/01/06/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2/">Go语言的字符串</a>
+            
+        </section>
 
 
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2020/01/06/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="prev" title="Go语言的字符串">
-      <i class="fa fa-chevron-left"></i> Go语言的字符串
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/01/10/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E8%B0%83%E5%BA%A6%E6%9C%BA%E5%88%B6/" rel="next" title="Go语言的调度器">
-      Go语言的调度器 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          Table of Contents
-        </li>
-        <li class="sidebar-nav-overview">
-          Overview
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E6%83%AF%E4%BE%8B"><span class="nav-number">1.</span> <span class="nav-text">调用惯例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#C-%E8%AF%AD%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">C 语言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Go-%E8%AF%AD%E8%A8%80"><span class="nav-number">1.2.</span> <span class="nav-text">Go 语言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%80%83"><span class="nav-number">1.3.</span> <span class="nav-text">思考</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92"><span class="nav-number">2.</span> <span class="nav-text">参数传递</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E5%9E%8B%E5%92%8C%E6%95%B0%E7%BB%84"><span class="nav-number">2.1.</span> <span class="nav-text">整型和数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E5%92%8C%E6%8C%87%E9%92%88"><span class="nav-number">2.2.</span> <span class="nav-text">结构体和指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E5%80%BC"><span class="nav-number">2.3.</span> <span class="nav-text">传值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="maywzh"
-      src="/uploads/myavatar.jpg">
-  <p class="site-author-name" itemprop="name">maywzh</p>
-  <div class="site-description" itemprop="description">Namasday.</div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">111</span>
-          <span class="site-state-item-name">posts</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
-        <span class="site-state-item-count">15</span>
-        <span class="site-state-item-name">categories</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">50</span>
-        <span class="site-state-item-name">tags</span></a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
-      </span>
-  </div>
-
-
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-
-<div class="copyright">
-  
-  &copy; 
-  <span itemprop="copyrightYear">2020</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
+    </article>
 </div>
 
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
         
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
-
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/pjax/pjax.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-  <script>
-var pjax = new Pjax({
-  selectors: [
-    'head title',
-    '#page-configurations',
-    '.content-wrap',
-    '.post-toc-wrap',
-    '.languages',
-    '#pjax'
-  ],
-  switches: {
-    '.post-toc-wrap': Pjax.switches.innerHTML
-  },
-  analytics: false,
-  cacheBust: false,
-  scrollTo : !CONFIG.bookmark.enable
-});
-
-window.addEventListener('pjax:success', () => {
-  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
-    var code = element.text || element.textContent || element.innerHTML || '';
-    var parent = element.parentNode;
-    parent.removeChild(element);
-    var script = document.createElement('script');
-    if (element.id) {
-      script.id = element.id;
-    }
-    if (element.className) {
-      script.className = element.className;
-    }
-    if (element.type) {
-      script.type = element.type;
-    }
-    if (element.src) {
-      script.src = element.src;
-      // Force synchronous loading of peripheral JS.
-      script.async = false;
-    }
-    if (element.dataset.pjax !== undefined) {
-      script.dataset.pjax = '';
-    }
-    if (code !== '') {
-      script.appendChild(document.createTextNode(code));
-    }
-    parent.appendChild(script);
-  });
-  NexT.boot.refresh();
-  // Define Motion Sequence & Bootstrap Motion.
-  if (CONFIG.motion.enable) {
-    NexT.motion.integrator
-      .init()
-      .add(NexT.motion.middleWares.subMenu)
-      .add(NexT.motion.middleWares.postList)
-      .bootstrap();
-  }
-  NexT.utils.updateSidebarPosition();
-});
-</script>
-
-
-
-
-  
-
-
-
-
-  
-<script src="/js/local-search.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div id="pjax">
-  
-
-  
-
-  
-
-
-<script>
-NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
-  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
-    var GUEST = ['nick', 'mail', 'link'];
-    var guest = 'nick,mail,link';
-    guest = guest.split(',').filter(item => {
-      return GUEST.includes(item);
-    });
-    new Valine({
-      el         : '#valine-comments',
-      verify     : false,
-      notify     : false,
-      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
-      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
-      placeholder: "Just go go",
-      avatar     : 'mm',
-      meta       : guest,
-      pageSize   : '10' || 10,
-      visitor    : true,
-      lang       : '' || 'zh-cn',
-      path       : location.pathname,
-      recordIP   : true,
-      serverURLs : ''
-    });
-  }, window.Valine);
-});
-</script>
-
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+        
+        <span> | <img src="http://www.beian.gov.cn/img/ghs.png" style="width:16px;"><a href="http://www.beian.gov.cn/"
+                target="_blank">赣公网安备36040302000263号</a></span>
+        
+    </div>
+</footer>
     </div>
 </body>
 </html>

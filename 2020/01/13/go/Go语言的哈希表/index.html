@@ -1,299 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.1.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
-  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-<link rel="stylesheet" href="/css/main.css">
+<meta name="author" content="maywzh">
 
 
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
-  </script>
-
-  <meta name="description" content="很多编程语言都实现了哈希表这种 数据结构，例如 Java的Map，Python的Set，Java的 Object等等。但他们的底层原理都有所不同。哈希表是一种以空间换时间的数据结构，它的查找的时间复杂度为O(n)。它根据键直接访问内存存储位置。我们结合哈希表的原理探索一下Go中的哈希——Map。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Go语言的哈希表">
-<meta property="og:url" content="https://io.maywzh.com/2020/01/13/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8/index.html">
-<meta property="og:site_name" content="Cult I.O.">
-<meta property="og:description" content="很多编程语言都实现了哈希表这种 数据结构，例如 Java的Map，Python的Set，Java的 Object等等。但他们的底层原理都有所不同。哈希表是一种以空间换时间的数据结构，它的查找的时间复杂度为O(n)。它根据键直接访问内存存储位置。我们结合哈希表的原理探索一下Go中的哈希——Map。">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/4keU1Kiw6AqtWM3.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/VepMsj8D2Q7rgPF.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/y2R9jbHzApUl5KN.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/473thb6OaIZz9Sg.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/xVQlw6abu2vjZAz.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/e1ykREfm7TXKPJF.png">
-<meta property="og:image" content="https://img.draveness.me/2019-12-30-15777168478811-hmap-and-buckets.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/ZHbqORLj6hmgN2K.png">
-<meta property="og:image" content="https://img.draveness.me/2019-12-30-15777168478823-hashtable-overflow-bucket.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/OkjylzLq4FM57n3.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/F1VxHTbfNpuQl4o.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/dWYKxN8PgSXV1fE.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/04/j8GoTZ4Ob6cV5Aa.png">
-<meta property="article:published_time" content="2020-01-13T09:47:37.000Z">
-<meta property="article:modified_time" content="2020-09-30T11:49:35.814Z">
-<meta property="article:author" content="maywzh">
-<meta property="article:tag" content="Go">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/09/04/4keU1Kiw6AqtWM3.png">
-
-<link rel="canonical" href="https://io.maywzh.com/2020/01/13/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8/">
+<meta name="subtitle" content="0x01 MAYSTORY">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'en'
-  };
-</script>
-
-  <title>Go语言的哈希表 | Cult I.O.</title>
-  
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
-    <script data-pjax>
-      if (CONFIG.hostname === location.hostname) {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-119246999-4');
-      }
-    </script>
+<meta name="description" content="Namasday.">
 
 
+<meta name="keywords" content="Tech Blogs">
 
 
+<title>Go语言的哈希表 | 0x01 MAYSTORY </title>
 
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
-
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">Cult I.O.</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-      <p class="site-subtitle" itemprop="description">Namasday.</p>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
-    </div>
-  </div>
-</div>
-
-
-
-
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
-  </ul>
-</nav>
-
-
-
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
-           placeholder="Searching..." spellcheck="false"
-           type="search" class="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
-  </div>
-</div>
-
-    </div>
-  </div>
-
-</div>
-    </header>
 
     
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-  <div class="reading-progress-bar"></div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
 
     
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2020/01/13/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/myavatar.jpg">
-      <meta itemprop="name" content="maywzh">
-      <meta itemprop="description" content="Namasday.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cult I.O.">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          Go语言的哈希表
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020.01.13 17:47:37" itemprop="dateCreated datePublished" datetime="2020-01-13T17:47:37+08:00">2020.01.13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/01/13/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Go语言的哈希表" title="Views">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  
-
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
         </div>
-      </header>
+    </nav>
 
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
 
-      
-        <p>很多编程语言都实现了哈希表这种 数据结构，例如 Java的Map，Python的Set，Java的 Object等等。但他们的底层原理都有所不同。哈希表是一种以空间换时间的数据结构，它的查找的时间复杂度为<code>O(n)</code>。它根据键直接访问内存存储位置。我们结合哈希表的原理探索一下Go中的哈希——Map。</p>
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Go语言的哈希表</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 13, 2020&nbsp;&nbsp;17:47:37</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>很多编程语言都实现了哈希表这种 数据结构，例如 Java的Map，Python的Set，Java的 Object等等。但他们的底层原理都有所不同。哈希表是一种以空间换时间的数据结构，它的查找的时间复杂度为<code>O(n)</code>。它根据键直接访问内存存储位置。我们结合哈希表的原理探索一下Go中的哈希——Map。</p>
 <a id="more"></a>
 <h2 id="哈希原理"><a href="#哈希原理" class="headerlink" title="哈希原理"></a>哈希原理</h2><p>哈希表是计算机科学中的最重要数据结构之一，这不仅因为它 <code>O(1)</code> 的读写性能非常优秀，还因为它提供了键值之间的映射。想要实现一个性能优异的哈希表，需要注意两个关键点 —— 哈希函数和冲突解决方法。</p>
 <p>实现哈希表的关键点在于如何选择哈希函数，哈希函数的选择在很大程度上能够决定哈希表的读写性能，在理想情况下，哈希函数应该能够将不同键映射到不同的索引上，这要求<strong>哈希函数输出范围大于输入范围</strong>，但是由于键的数量会远远大于映射的范围，所以在实际使用时，这个理想的结果是不可能实现的。</p>
-<p><img data-src="https://i.loli.net/2020/09/04/4keU1Kiw6AqtWM3.png" alt="perfect-hash-function"></p>
+<p><img src="https://i.loli.net/2020/09/04/4keU1Kiw6AqtWM3.png" alt="perfect-hash-function"></p>
 <p>比较实际的方式是让哈希函数的结果能够尽可能的均匀分布，然后通过工程上的手段解决哈希碰撞的问题，但是哈希的结果一定要尽可能均匀，结果不均匀的哈希函数会造成更多的冲突并导致更差的读写性能。</p>
-<p><img data-src="https://i.loli.net/2020/09/04/VepMsj8D2Q7rgPF.png" alt="bad-hash-function"></p>
+<p><img src="https://i.loli.net/2020/09/04/VepMsj8D2Q7rgPF.png" alt="bad-hash-function"></p>
 <p>在一个使用结果较为均匀的哈希函数中，哈希的增删改查都需要 <code>O(1)</code> 的时间复杂度，但是非常不均匀的哈希函数会导致所有的操作都会占用最差 <code>O(n)</code> 的复杂度，所以在哈希表中使用好的哈希函数是至关重要的。</p>
 <h3 id="冲突解决"><a href="#冲突解决" class="headerlink" title="冲突解决"></a>冲突解决</h3><p>就像我们之前所提到的，在通常情况下，哈希函数输入的范围一定会远远大于输出的范围，所以在使用哈希表时一定会遇到冲突，哪怕我们使用了完美的哈希函数，当输入的键足够多最终也会造成冲突。</p>
 <p>然而我们的哈希函数往往都是不完美的，输出的范围是有限的，所以一定会发生哈希碰撞，这时就需要一些方法来解决哈希碰撞的问题，常见方法的就是开放寻址法和拉链法。</p>
 <h4 id="开放寻址法"><a href="#开放寻址法" class="headerlink" title="开放寻址法"></a>开放寻址法</h4><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Open_addressing">开放寻址法</a>是一种在哈希表中解决哈希碰撞的方法，这种方法的核心思想是<strong>对数组中的元素依次探测和比较以判断目标键值对是否存在于哈希表中</strong>，如果我们使用开放寻址法来实现哈希表，那么在支撑哈希表的数据结构就是数组，不过因为数组的长度有限，存储 <code>(author, draven)</code> 这个键值对时会从如下的索引开始遍历：</p>
 <p>当我们向当前哈希表写入新的数据时发生了冲突，就会将键值对写入到下一个不为空的位置：</p>
-<p><img data-src="https://i.loli.net/2020/09/04/y2R9jbHzApUl5KN.png" alt="open-addressing-and-set"></p>
+<p><img src="https://i.loli.net/2020/09/04/y2R9jbHzApUl5KN.png" alt="open-addressing-and-set"></p>
 <p>如上图所示，当 Key3 与已经存入哈希表中的两个键值对 Key1 和 Key2 发生冲突时，Key3 会被写入 Key2 后面的空闲内存中；当我们再去读取 Key3 对应的值时就会先对键进行哈希并取模，这会帮助我们找到 Key1，因为 Key1 与我们期望的键 Key3 不匹配，所以会继续查找后面的元素，直到内存为空或者找到目标元素。</p>
-<p><img data-src="https://i.loli.net/2020/09/04/473thb6OaIZz9Sg.png" alt="open-addressing-and-get"></p>
+<p><img src="https://i.loli.net/2020/09/04/473thb6OaIZz9Sg.png" alt="open-addressing-and-get"></p>
 <p>当需要查找某个键对应的值时，就会从索引的位置开始对数组进行线性探测，找到目标键值对或者空内存就意味着这一次查询操作的结束。</p>
 <p>开放寻址法中对性能影响最大的就是<strong>装载因子</strong>，它是数组中元素的数量与数组大小的比值，随着装载因子的增加，线性探测的平均用时就会逐渐增加，这会同时影响哈希表的读写性能，当装载率超过 70% 之后，哈希表的性能就会急剧下降，而一旦装载率达到 100%，整个哈希表就会完全失效，这时查找和插入任意元素的时间复杂度都是 𝑂(𝑛)O(n) 的，它们可能需要遍历数组中全部的元素，所以在实现哈希表时一定要时刻关注装载因子的变化。</p>
 <h4 id="拉链法"><a href="#拉链法" class="headerlink" title="拉链法"></a>拉链法</h4><p>与开放地址法相比，拉链法是哈希表中最常见的实现方法，大多数的编程语言都用拉链法实现哈希表，它的实现比较开放地址法稍微复杂一些，但是平均查找的长度也比较短，各个用于存储节点的内存都是动态申请的，可以节省比较多的存储空间。</p>
 <p>实现拉链法一般会使用数组加上链表，不过有一些语言会在拉链法的哈希中引入红黑树以优化性能（例如Java 1.8的 <code>LinkedHashMap</code>），拉链法会使用链表数组作为哈希底层的数据结构，我们可以将它看成一个可以扩展的『二维数组』：</p>
-<p><img data-src="https://i.loli.net/2020/09/04/xVQlw6abu2vjZAz.png" alt="separate-chaing-and-set"></p>
+<p><img src="https://i.loli.net/2020/09/04/xVQlw6abu2vjZAz.png" alt="separate-chaing-and-set"></p>
 <p>如上图所示，当我们需要将一个键值对 <code>(Key6, Value6)</code> 写入哈希表时，键值对中的键 <code>Key6</code> 都会先经过一个哈希函数，哈希函数返回的哈希会帮助我们选择一个桶，和开放地址法一样，选择桶的方式就是直接对哈希返回的结果取模：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index := hash(<span class="string">&quot;Key6&quot;</span>) % array.<span class="built_in">len</span></span><br></pre></td></tr></table></figure>
 <p>选择了 2 号桶之后就可以遍历当前桶中的链表了，在遍历链表的过程中会遇到以下两种情况：</p>
@@ -302,7 +227,7 @@
 <li>没有找到键相同的键值对 —— 在链表的末尾追加新键值对；</li>
 </ol>
 <p>将键值对写入哈希之后，要通过某个键在其中获取映射的值，就会经历如下的过程：</p>
-<p><img data-src="https://i.loli.net/2020/09/04/e1ykREfm7TXKPJF.png" alt="separate-chaing-and-get"></p>
+<p><img src="https://i.loli.net/2020/09/04/e1ykREfm7TXKPJF.png" alt="separate-chaing-and-get"></p>
 <p>Key11 展示了一个键在哈希表中不存在的例子，当哈希表发现它命中 4 号桶时，它会依次遍历桶中的链表，然而遍历到链表的末尾也没有找到期望的键，所以哈希表中没有该键对应的值。</p>
 <p>在一个性能比较好的哈希表中，每一个桶中都应该有 0~1 个元素，有时会有 2~3 个，很少会超过这个数量，计算哈希、定位桶和遍历链表三个过程是哈希表读写操作的主要开销，使用拉链法实现的哈希也有装载因子这一概念：</p>
 <figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">装载因子 :</span>=<span class="string"> 元素数量 / 桶数量</span></span><br></pre></td></tr></table></figure>
@@ -315,7 +240,7 @@
 <li><code>hash0</code> 是哈希的种子，它能为哈希函数的结果引入随机性，这个值在创建哈希表时确定，并在调用哈希函数时作为参数传入；</li>
 <li><code>oldbuckets</code> 是哈希在扩容时用于保存之前 <code>buckets</code> 的字段，它的大小是当前 <code>buckets</code> 的一半；</li>
 </ol>
-<p><img data-src="https://img.draveness.me/2019-12-30-15777168478811-hmap-and-buckets.png" alt="hmap-and-buckets"></p>
+<p><img src="https://img.draveness.me/2019-12-30-15777168478811-hmap-and-buckets.png" alt="hmap-and-buckets"></p>
 <p><strong>图 3-12 哈希表的数据结构</strong></p>
 <p>如上图所示哈希表 <code>hmap</code> 的桶就是 <code>bmap</code>，每一个 <code>bmap</code> 都能存储 8 个键值对，当哈希表中存储的数据过多，单个桶无法装满时就会使用 <code>extra.overflow</code> 中桶存储溢出的数据。上述两种不同的桶在内存中是连续存储的，我们在这里将它们分别称为正常桶和溢出桶，上图中黄色的 <code>bmap</code> 就是正常桶，绿色的 <code>bmap</code> 是溢出桶，溢出桶是在 Go 语言还使用 C 语言实现时就使用的设计，由于它能够减少扩容的频率所以一直使用至今。</p>
 <p>这个桶的结构体 <code>bmap</code> 在 Go 语言源代码中的定义只包含一个简单的 <code>tophash</code> 字段，<code>tophash</code> 存储了键的哈希的高 8 位，通过比较不同键的哈希的高 8 位可以减少访问键值对次数以提高性能：</p>
@@ -363,7 +288,7 @@
 <p><a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L394-L450"><code>runtime.mapaccess1</code></a> 函数会先通过哈希表设置的哈希函数、种子获取当前键对应的哈希，再通过 <code>bucketMask</code> 和 <code>add</code> 函数拿到该键值对所在的桶序号和哈希最上面的 8 位数字。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mapaccess1</span><span class="params">(t *maptype, h *hmap, key unsafe.Pointer)</span> <span class="title">unsafe</span>.<span class="title">Pointer</span></span> &#123;</span><br><span class="line">	alg := t.key.alg</span><br><span class="line">	hash := alg.hash(key, <span class="keyword">uintptr</span>(h.hash0))</span><br><span class="line">	m := bucketMask(h.B)</span><br><span class="line">	b := (*bmap)(add(h.buckets, (hash&amp;m)*<span class="keyword">uintptr</span>(t.bucketsize)))</span><br><span class="line">	top := tophash(hash)</span><br><span class="line">bucketloop:</span><br><span class="line">	<span class="keyword">for</span> ; b != <span class="literal">nil</span>; b = b.overflow(t) &#123;</span><br><span class="line">		<span class="keyword">for</span> i := <span class="keyword">uintptr</span>(<span class="number">0</span>); i &lt; bucketCnt; i++ &#123;</span><br><span class="line">			<span class="keyword">if</span> b.tophash[i] != top &#123;</span><br><span class="line">				<span class="keyword">if</span> b.tophash[i] == emptyRest &#123;</span><br><span class="line">					<span class="keyword">break</span> bucketloop</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125;</span><br><span class="line">			k := add(unsafe.Pointer(b), dataOffset+i*<span class="keyword">uintptr</span>(t.keysize))</span><br><span class="line">			<span class="keyword">if</span> alg.equal(key, k) &#123;</span><br><span class="line">				v := add(unsafe.Pointer(b), dataOffset+bucketCnt*<span class="keyword">uintptr</span>(t.keysize)+i*<span class="keyword">uintptr</span>(t.valuesize))</span><br><span class="line">				<span class="keyword">return</span> v</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> unsafe.Pointer(&amp;zeroVal[<span class="number">0</span>])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在 <code>bucketloop</code> 循环中，哈希会依次遍历正常桶和溢出桶中的数据，它会比较这 8 位数字和桶中存储的 <code>tophash</code>，每一个桶都存储键对应的 <code>tophash</code>，每一次读写操作都会与桶中所有的 <code>tophash</code> 进行比较，用于选择桶序号的是哈希的最低几位，而用于加速访问的是哈希的高 8 位，这种设计能够减少同一个桶中有大量相等 <code>tophash</code> 的概率。</p>
-<p><img data-src="https://i.loli.net/2020/09/04/ZHbqORLj6hmgN2K.png" alt="hashtable-mapaccess"></p>
+<p><img src="https://i.loli.net/2020/09/04/ZHbqORLj6hmgN2K.png" alt="hashtable-mapaccess"></p>
 <p><strong>图 3-13 访问哈希表中的数据</strong></p>
 <p>如上图所示，每一个桶都是一整片的内存空间，当发现桶中的 <code>tophash</code> 与传入键的 <code>tophash</code> 匹配之后，我们会通过指针和偏移量获取哈希中存储的键 <code>keys[0]</code> 并与 <code>key</code> 比较，如果两者相同就会获取目标值的指针 <code>values[0]</code> 并返回。</p>
 <p>另一个同样用于访问哈希表中数据的 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L452-L508"><code>runtime.mapaccess2</code></a> 只是在 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L394-L450"><code>runtime.mapaccess1</code></a> 的基础上多返回了一个标识键值对是否存在的布尔值：</p>
@@ -375,7 +300,7 @@
 <p>然后通过遍历比较桶中存储的 <code>tophash</code> 和键的哈希，如果找到了相同结果就会获取目标位置的地址并返回，其中 <code>inserti</code> 表示目标元素的在桶中的索引，<code>insertk</code> 和 <code>val</code> 分别表示键值对的地址，获得目标地址之后会直接通过算术计算进行寻址获得键值对 <code>k</code> 和 <code>val</code>：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">var</span> inserti *<span class="keyword">uint8</span></span><br><span class="line">	<span class="keyword">var</span> insertk unsafe.Pointer</span><br><span class="line">	<span class="keyword">var</span> val unsafe.Pointer</span><br><span class="line">bucketloop:</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">for</span> i := <span class="keyword">uintptr</span>(<span class="number">0</span>); i &lt; bucketCnt; i++ &#123;</span><br><span class="line">			<span class="keyword">if</span> b.tophash[i] != top &#123;</span><br><span class="line">				<span class="keyword">if</span> isEmpty(b.tophash[i]) &amp;&amp; inserti == <span class="literal">nil</span> &#123;</span><br><span class="line">					inserti = &amp;b.tophash[i]</span><br><span class="line">					insertk = add(unsafe.Pointer(b), dataOffset+i*<span class="keyword">uintptr</span>(t.keysize))</span><br><span class="line">					val = add(unsafe.Pointer(b), dataOffset+bucketCnt*<span class="keyword">uintptr</span>(t.keysize)+i*<span class="keyword">uintptr</span>(t.valuesize))</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> b.tophash[i] == emptyRest &#123;</span><br><span class="line">					<span class="keyword">break</span> bucketloop</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125;</span><br><span class="line">			k := add(unsafe.Pointer(b), dataOffset+i*<span class="keyword">uintptr</span>(t.keysize))</span><br><span class="line">			<span class="keyword">if</span> !alg.equal(key, k) &#123;</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125;</span><br><span class="line">			val = add(unsafe.Pointer(b), dataOffset+bucketCnt*<span class="keyword">uintptr</span>(t.keysize)+i*<span class="keyword">uintptr</span>(t.valuesize))</span><br><span class="line">			<span class="keyword">goto</span> done</span><br><span class="line">		&#125;</span><br><span class="line">		ovf := b.overflow(t)</span><br><span class="line">		<span class="keyword">if</span> ovf == <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">		b = ovf</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 <p>在上述的 for 循环中会依次遍历正常桶和溢出桶中存储的数据，整个过程会依次判断 <code>tophash</code> 是否相等、<code>key</code> 是否相等，遍历结束后会从循环中跳出。</p>
-<p><img data-src="https://img.draveness.me/2019-12-30-15777168478823-hashtable-overflow-bucket.png" alt="hashtable-overflow-bucket"></p>
+<p><img src="https://img.draveness.me/2019-12-30-15777168478823-hashtable-overflow-bucket.png" alt="hashtable-overflow-bucket"></p>
 <p>如果当前桶已经满了，哈希会调用 <code>newoverflow</code> 函数创建新桶或者使用 <code>hmap</code> 预先在 <code>noverflow</code> 中创建好的桶来保存数据，新创建的桶不仅会被追加到已有桶的末尾，还会增加哈希表的 <code>noverflow</code> 计数器。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">if</span> inserti == <span class="literal">nil</span> &#123;</span><br><span class="line">		newb := h.newoverflow(t, b)</span><br><span class="line">		inserti = &amp;newb.tophash[<span class="number">0</span>]</span><br><span class="line">		insertk = add(unsafe.Pointer(newb), dataOffset)</span><br><span class="line">		val = add(insertk, bucketCnt*<span class="keyword">uintptr</span>(t.keysize))</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	typedmemmove(t.key, insertk, key)</span><br><span class="line">	*inserti = top</span><br><span class="line">	h.count++</span><br><span class="line"></span><br><span class="line">done:</span><br><span class="line">	<span class="keyword">return</span> val</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果当前键值对在哈希中不存在，哈希为新键值对规划存储的内存地址，通过 <code>typedmemmove</code> 将键移动到对应的内存空间中并返回键对应值的地址 <code>val</code>，如果当前键值对在哈希中存在，那么就会直接返回目标区域的内存地址。哈希并不会在 <code>mapassign</code> 这个运行时函数中将值拷贝到桶中，该函数只会返回内存地址，真正的赋值操作是在编译期间插入的：</p>
@@ -393,17 +318,17 @@
 <p>扩容的入口是 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L1017-L1058"><code>runtime.hashGrow</code></a> 函数：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">hashGrow</span><span class="params">(t *maptype, h *hmap)</span></span> &#123;</span><br><span class="line">	bigger := <span class="keyword">uint8</span>(<span class="number">1</span>)</span><br><span class="line">	<span class="keyword">if</span> !overLoadFactor(h.count+<span class="number">1</span>, h.B) &#123;</span><br><span class="line">		bigger = <span class="number">0</span></span><br><span class="line">		h.flags |= sameSizeGrow</span><br><span class="line">	&#125;</span><br><span class="line">	oldbuckets := h.buckets</span><br><span class="line">	newbuckets, nextOverflow := makeBucketArray(t, h.B+bigger, <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line">	h.B += bigger</span><br><span class="line">	h.flags = flags</span><br><span class="line">	h.oldbuckets = oldbuckets</span><br><span class="line">	h.buckets = newbuckets</span><br><span class="line">	h.nevacuate = <span class="number">0</span></span><br><span class="line">	h.noverflow = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">	h.extra.oldoverflow = h.extra.overflow</span><br><span class="line">	h.extra.overflow = <span class="literal">nil</span></span><br><span class="line">	h.extra.nextOverflow = nextOverflow</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>哈希在扩容的过程中会通过 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/dcd3b2c173b77d93be1c391e3b5f932e0779fb1f/src/runtime/map.go#L344-L387"><code>runtime.makeBucketArray</code></a> 创建一组新桶和预创建的溢出桶，随后将原有的桶数组设置到 <code>oldbuckets</code> 上并将新的空桶设置到 <code>buckets</code> 上，溢出桶也使用了相同的逻辑进行更新，下图展示了触发扩容后的哈希：</p>
-<p><img data-src="https://i.loli.net/2020/09/04/OkjylzLq4FM57n3.png" alt="hashtable-hashgrow"></p>
+<p><img src="https://i.loli.net/2020/09/04/OkjylzLq4FM57n3.png" alt="hashtable-hashgrow"></p>
 <p>我们在 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L1017-L1058"><code>runtime.hashGrow</code></a> 中还看不出来等量扩容和翻倍扩容的太多区别，等量扩容创建的新桶数量只是和旧桶一样，该函数中只是创建了新的桶，并没有对数据进行拷贝和转移，哈希表的数据迁移的过程在是 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L1128-L1240"><code>runtime.evacuate</code></a> 函数中完成的，它会对传入桶中的元素进行『再分配』。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">evacuate</span><span class="params">(t *maptype, h *hmap, oldbucket <span class="keyword">uintptr</span>)</span></span> &#123;</span><br><span class="line">	b := (*bmap)(add(h.oldbuckets, oldbucket*<span class="keyword">uintptr</span>(t.bucketsize)))</span><br><span class="line">	newbit := h.noldbuckets()</span><br><span class="line">	<span class="keyword">if</span> !evacuated(b) &#123;</span><br><span class="line">		<span class="keyword">var</span> xy [<span class="number">2</span>]evacDst</span><br><span class="line">		x := &amp;xy[<span class="number">0</span>]</span><br><span class="line">		x.b = (*bmap)(add(h.buckets, oldbucket*<span class="keyword">uintptr</span>(t.bucketsize)))</span><br><span class="line">		x.k = add(unsafe.Pointer(x.b), dataOffset)</span><br><span class="line">		x.v = add(x.k, bucketCnt*<span class="keyword">uintptr</span>(t.keysize))</span><br><span class="line"></span><br><span class="line">		y := &amp;xy[<span class="number">1</span>]</span><br><span class="line">		y.b = (*bmap)(add(h.buckets, (oldbucket+newbit)*<span class="keyword">uintptr</span>(t.bucketsize)))</span><br><span class="line">		y.k = add(unsafe.Pointer(y.b), dataOffset)</span><br><span class="line">		y.v = add(y.k, bucketCnt*<span class="keyword">uintptr</span>(t.keysize))</span><br></pre></td></tr></table></figure>
 <p><a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L1128-L1240"><code>runtime.evacuate</code></a> 函数会将一个旧桶中的数据分流到两个新桶，所以它会创建两个用于保存分配上下文的 <code>evacDst</code> 结构体，这两个结构体分别指向了一个新桶：</p>
-<p><img data-src="https://i.loli.net/2020/09/04/F1VxHTbfNpuQl4o.png" alt="hashtable-evacuate-destination"></p>
+<p><img src="https://i.loli.net/2020/09/04/F1VxHTbfNpuQl4o.png" alt="hashtable-evacuate-destination"></p>
 <p>如果这是一等量扩容，旧桶与新桶之间是一对一的关系，所以两个 <code>evacDst</code> 结构体只会初始化一个，当哈希表的容量翻倍时，每个旧桶的元素会都被分流到新创建的两个桶中，我们仔细分析一下分流元素的逻辑：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">		<span class="keyword">for</span> ; b != <span class="literal">nil</span>; b = b.overflow(t) &#123;</span><br><span class="line">			k := add(unsafe.Pointer(b), dataOffset)</span><br><span class="line">			v := add(k, bucketCnt*<span class="keyword">uintptr</span>(t.keysize))</span><br><span class="line">			<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; bucketCnt; i, k, v = i+<span class="number">1</span>, add(k, <span class="keyword">uintptr</span>(t.keysize)), add(v, <span class="keyword">uintptr</span>(t.valuesize)) &#123;</span><br><span class="line">				top := b.tophash[i]</span><br><span class="line">				k2 := k</span><br><span class="line">				<span class="keyword">var</span> useY <span class="keyword">uint8</span></span><br><span class="line">				hash := t.key.alg.hash(k2, <span class="keyword">uintptr</span>(h.hash0))</span><br><span class="line">				<span class="keyword">if</span> hash&amp;newbit != <span class="number">0</span> &#123;</span><br><span class="line">					useY = <span class="number">1</span></span><br><span class="line">				&#125;</span><br><span class="line">				b.tophash[i] = evacuatedX + useY</span><br><span class="line">				dst := &amp;xy[useY]</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> dst.i == bucketCnt &#123;</span><br><span class="line">					dst.b = h.newoverflow(t, dst.b)</span><br><span class="line">					dst.i = <span class="number">0</span></span><br><span class="line">					dst.k = add(unsafe.Pointer(dst.b), dataOffset)</span><br><span class="line">					dst.v = add(dst.k, bucketCnt*<span class="keyword">uintptr</span>(t.keysize))</span><br><span class="line">				&#125;</span><br><span class="line">				dst.b.tophash[dst.i&amp;(bucketCnt<span class="number">-1</span>)] = top</span><br><span class="line">				typedmemmove(t.key, dst.k, k)</span><br><span class="line">				typedmemmove(t.elem, dst.v, v)</span><br><span class="line">				dst.i++</span><br><span class="line">				dst.k = add(dst.k, <span class="keyword">uintptr</span>(t.keysize))</span><br><span class="line">				dst.v = add(dst.v, <span class="keyword">uintptr</span>(t.valuesize))</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>只使用哈希函数是不能定位到具体某一个桶的，哈希函数只会返回很长的哈希，例如：<code>b72bfae3f3285244c4732ce457cca823bc189e0b</code>，我们还需一些方法将哈希映射到具体的桶上，在很多时候我们都会使用取模或者位操作来获取桶的编号，假如当前哈希中包含 4 个桶，那么它的桶掩码就是 <code>0b11(3)</code>，使用位操作就会得到 3， 我们就会在 3 号桶中存储该数据：</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0xb72bfae3f3285244c4732ce457cca823bc189e0b</span> &amp; 0b11 <span class="comment">#=&gt; 0</span></span><br></pre></td></tr></table></figure>
 <p>如果新的哈希表有 8 个桶，在大多数情况下，原来经过桶掩码 <code>0b11</code> 结果为 3 的数据会因为桶掩码增加了一位编程 <code>0b111</code> 而分流到新的 3 号和 7 号桶，所有数据也都会被 <code>typedmemmove</code> 拷贝到目标桶中：</p>
-<p><img data-src="https://i.loli.net/2020/09/04/dWYKxN8PgSXV1fE.png" alt="hashtable-bucket-evacuate"></p>
+<p><img src="https://i.loli.net/2020/09/04/dWYKxN8PgSXV1fE.png" alt="hashtable-bucket-evacuate"></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L1128-L1240"><code>runtime.evacuate</code></a> 最后会调用 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L1242-L1264"><code>runtime.advanceEvacuationMark</code></a> 增加哈希的 <code>nevacuate</code> 计数器，在所有的旧桶都被分流后清空哈希的 <code>oldbuckets</code> 和 <code>oldoverflow</code> 字段：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">advanceEvacuationMark</span><span class="params">(h *hmap, t *maptype, newbit <span class="keyword">uintptr</span>)</span></span> &#123;</span><br><span class="line">	h.nevacuate++</span><br><span class="line">	stop := h.nevacuate + <span class="number">1024</span></span><br><span class="line">	<span class="keyword">if</span> stop &gt; newbit &#123;</span><br><span class="line">		stop = newbit</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> h.nevacuate != stop &amp;&amp; bucketEvacuated(t, h, h.nevacuate) &#123;</span><br><span class="line">		h.nevacuate++</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> h.nevacuate == newbit &#123; <span class="comment">// newbit == # of oldbuckets</span></span><br><span class="line">		h.oldbuckets = <span class="literal">nil</span></span><br><span class="line">		<span class="keyword">if</span> h.extra != <span class="literal">nil</span> &#123;</span><br><span class="line">			h.extra.oldoverflow = <span class="literal">nil</span></span><br><span class="line">		&#125;</span><br><span class="line">		h.flags &amp;^= sameSizeGrow</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>之前在分析哈希表访问函数 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L394-L450"><code>runtime.mapaccess1</code></a> 时其实省略了扩容期间获取键值对的逻辑，当哈希表的 <code>oldbuckets</code> 存在时，就会先定位到旧桶并在该桶没有被分流时从中获取键值对。</p>
@@ -414,7 +339,7 @@
 <p>当然除了写入操作之外，删除操作也会在哈希表扩容期间触发 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L1104-L1113"><code>runtime.growWork</code></a>，触发的方式和代码与这里的逻辑几乎完全相同，都是计算当前值所在的桶，然后对该桶中的元素进行拷贝。</p>
 <p>我们简单总结一下哈希表的扩容设计和原理，哈希在存储元素过多时会触发扩容操作，每次都会将桶的数量翻倍，整个扩容过程并不是原子的，而是通过 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L1104-L1113"><code>runtime.growWork</code></a> 增量触发的，在扩容期间访问哈希表时会使用旧桶，向哈希表写入数据时会触发旧桶元素的分流；除了这种正常的扩容之外，为了解决大量写入、删除造成的内存泄漏问题，哈希引入了 <code>sameSizeGrow</code> 这一机制，在出现较多溢出桶时会对哈希进行『内存整理』减少对空间的占用。</p>
 <h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p>如果想要删除哈希中的元素，就需要使用 Go 语言中的 <code>delete</code> 关键字，这个关键字的唯一作用就是将某一个键对应的元素从哈希表中删除，无论是该键对应的值是否存在，这个内建的函数都不会返回任何的结果。</p>
-<p><img data-src="https://i.loli.net/2020/09/04/j8GoTZ4Ob6cV5Aa.png" alt="hashtable-delete"></p>
+<p><img src="https://i.loli.net/2020/09/04/j8GoTZ4Ob6cV5Aa.png" alt="hashtable-delete"></p>
 <p>在编译期间，<code>delete</code> 关键字会被转换成操作为 <code>ODELETE</code> 的节点，而 <code>ODELETE</code> 会被 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/4d5bb9c60905b162da8b767a8a133f6b4edcaa65/src/cmd/compile/internal/gc/walk.go#L439-L1532">cmd/compile/internal/gc.walkexpr</a> 转换成 <code>mapdelete</code> 函数簇中的一个，包括 <code>mapdelete</code>、<code>mapdelete_faststr</code>、<code>mapdelete_fast32</code> 和 <code>mapdelete_fast64</code>：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">walkexpr</span><span class="params">(n *Node, init *Nodes)</span> *<span class="title">Node</span></span> &#123;</span><br><span class="line">	<span class="keyword">switch</span> n.Op &#123;</span><br><span class="line">	<span class="keyword">case</span> ODELETE:</span><br><span class="line">		init.AppendNodes(&amp;n.Ninit)</span><br><span class="line">		map_ := n.List.First()</span><br><span class="line">		key := n.List.Second()</span><br><span class="line">		map_ = walkexpr(map_, init)</span><br><span class="line">		key = walkexpr(key, init)</span><br><span class="line"></span><br><span class="line">		t := map_.Type</span><br><span class="line">		fast := mapfast(t)</span><br><span class="line">		<span class="keyword">if</span> fast == mapslow &#123;</span><br><span class="line">			key = nod(OADDR, key, <span class="literal">nil</span>)</span><br><span class="line">		&#125;</span><br><span class="line">		n = mkcall1(mapfndel(mapdelete[fast], t), <span class="literal">nil</span>, init, typename(t), map_, key)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这些函数的实现其实差不多，我们来分析其中的 <a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/36f30ba289e31df033d100b2adb4eaf557f05a34/src/runtime/map.go#L685-L791"><code>runtime.mapdelete</code></a> 函数，哈希表的删除逻辑与写入逻辑非常相似，只是触发哈希的删除需要使用关键字，如果在删除期间遇到了哈希表的扩容，就会对即将操作的桶进行分流，分流结束之后会找到桶中的目标元素完成键值对的删除工作。</p>
@@ -427,364 +352,54 @@
 <li><a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/#fnref:5">Separate Chaining: Concept, Advantages &amp; Disadvantages</a></li>
 </ul>
 
-    </div>
-
-    
-    
-    
-        
-
-  <div class="followme">
-    <p>Welcome to my other publishing channels</p>
-
-    <div class="social-list">
-
-        <div class="social-item">
-          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
-            <span class="icon">
-              <i class="fab fa-twitter"></i>
-            </span>
-
-            <span class="label">Twitter</span>
-          </a>
         </div>
 
-        <div class="social-item">
-          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
-            <span class="icon">
-              <i class="fab fa-telegram"></i>
-            </span>
-
-            <span class="label">Telegram</span>
-          </a>
-        </div>
-
-        <div class="social-item">
-          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
-            <span class="icon">
-              <i class="fab fa-weibo"></i>
-            </span>
-
-            <span class="label">Weibo</span>
-          </a>
-        </div>
-    </div>
-  </div>
-
-
-      <footer class="post-footer">
-          
-          <div class="post-tags">
-              <a href="/tags/Go/" rel="tag"><i class="fa fa-tag"></i> Go</a>
-          </div>
-
         
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Go/"># Go</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/">Go语言的并发原理</a>
+            
+            
+            <a class="next" rel="next" href="/2020/01/11/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%8E%A5%E5%8F%A3/">Go语言的接口</a>
+            
+        </section>
 
 
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2020/01/11/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%8E%A5%E5%8F%A3/" rel="prev" title="Go语言的接口">
-      <i class="fa fa-chevron-left"></i> Go语言的接口
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" rel="next" title="Go语言的并发原理">
-      Go语言的并发原理 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          Table of Contents
-        </li>
-        <li class="sidebar-nav-overview">
-          Overview
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">哈希原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3"><span class="nav-number">1.1.</span> <span class="nav-text">冲突解决</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E6%94%BE%E5%AF%BB%E5%9D%80%E6%B3%95"><span class="nav-number">1.1.1.</span> <span class="nav-text">开放寻址法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%89%E9%93%BE%E6%B3%95"><span class="nav-number">1.1.2.</span> <span class="nav-text">拉链法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E9%9D%A2%E9%87%8F"><span class="nav-number">3.1.</span> <span class="nav-text">字面量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6"><span class="nav-number">3.2.</span> <span class="nav-text">运行时</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E6%93%8D%E4%BD%9C"><span class="nav-number">4.</span> <span class="nav-text">读写操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE"><span class="nav-number">4.1.</span> <span class="nav-text">访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%85%A5"><span class="nav-number">4.2.</span> <span class="nav-text">写入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%AE%B9"><span class="nav-number">4.3.</span> <span class="nav-text">扩容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-number">4.4.</span> <span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="maywzh"
-      src="/uploads/myavatar.jpg">
-  <p class="site-author-name" itemprop="name">maywzh</p>
-  <div class="site-description" itemprop="description">Namasday.</div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">111</span>
-          <span class="site-state-item-name">posts</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
-        <span class="site-state-item-count">15</span>
-        <span class="site-state-item-name">categories</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">50</span>
-        <span class="site-state-item-name">tags</span></a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
-      </span>
-  </div>
-
-
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-
-<div class="copyright">
-  
-  &copy; 
-  <span itemprop="copyrightYear">2020</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
+    </article>
 </div>
 
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
         
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
-
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/pjax/pjax.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-  <script>
-var pjax = new Pjax({
-  selectors: [
-    'head title',
-    '#page-configurations',
-    '.content-wrap',
-    '.post-toc-wrap',
-    '.languages',
-    '#pjax'
-  ],
-  switches: {
-    '.post-toc-wrap': Pjax.switches.innerHTML
-  },
-  analytics: false,
-  cacheBust: false,
-  scrollTo : !CONFIG.bookmark.enable
-});
-
-window.addEventListener('pjax:success', () => {
-  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
-    var code = element.text || element.textContent || element.innerHTML || '';
-    var parent = element.parentNode;
-    parent.removeChild(element);
-    var script = document.createElement('script');
-    if (element.id) {
-      script.id = element.id;
-    }
-    if (element.className) {
-      script.className = element.className;
-    }
-    if (element.type) {
-      script.type = element.type;
-    }
-    if (element.src) {
-      script.src = element.src;
-      // Force synchronous loading of peripheral JS.
-      script.async = false;
-    }
-    if (element.dataset.pjax !== undefined) {
-      script.dataset.pjax = '';
-    }
-    if (code !== '') {
-      script.appendChild(document.createTextNode(code));
-    }
-    parent.appendChild(script);
-  });
-  NexT.boot.refresh();
-  // Define Motion Sequence & Bootstrap Motion.
-  if (CONFIG.motion.enable) {
-    NexT.motion.integrator
-      .init()
-      .add(NexT.motion.middleWares.subMenu)
-      .add(NexT.motion.middleWares.postList)
-      .bootstrap();
-  }
-  NexT.utils.updateSidebarPosition();
-});
-</script>
-
-
-
-
-  
-
-
-
-
-  
-<script src="/js/local-search.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div id="pjax">
-  
-
-  
-
-  
-
-
-<script>
-NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
-  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
-    var GUEST = ['nick', 'mail', 'link'];
-    var guest = 'nick,mail,link';
-    guest = guest.split(',').filter(item => {
-      return GUEST.includes(item);
-    });
-    new Valine({
-      el         : '#valine-comments',
-      verify     : false,
-      notify     : false,
-      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
-      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
-      placeholder: "Just go go",
-      avatar     : 'mm',
-      meta       : guest,
-      pageSize   : '10' || 10,
-      visitor    : true,
-      lang       : '' || 'zh-cn',
-      path       : location.pathname,
-      recordIP   : true,
-      serverURLs : ''
-    });
-  }, window.Valine);
-});
-</script>
-
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+        
+        <span> | <img src="http://www.beian.gov.cn/img/ghs.png" style="width:16px;"><a href="http://www.beian.gov.cn/"
+                target="_blank">赣公网安备36040302000263号</a></span>
+        
+    </div>
+</footer>
     </div>
 </body>
 </html>

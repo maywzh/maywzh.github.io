@@ -3589,150 +3589,6 @@
       </tags>
   </entry>
   <entry>
-    <title>分布式协议之Raft算法</title>
-    <url>/2017/09/28/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%AE%AE%E4%B9%8BRaft%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<p>Raft是一种分布式共识算法。相对于之前的Paxos协议，它的设计易于理解。它解决了即使面对故障也使多个服务器在共享状态上达成一致的问题。共享状态通常是复制日志支持的数据结构。只要大多数服务器都处于运行状态，我们就需要系统能够完全运行。</p>
-<p>Raft通过选举集群中的一位leader来工作。leader负责接受client请求并管理将日志复制到其他服务器。数据仅在一个方向上流动：从leader流向其他服务器。</p>
-<a id="more"></a>
-<p>Raft将共识分解为三个子问题：</p>
-<ul>
-<li>leader选举：如果现有leader失败，则需要选举一名新leader。</li>
-<li>日志复制：leader需要通过复制使所有服务器的日志与其自己的服务器保持同步。</li>
-<li>安全性：如果其中一台服务器已在特定索引上提交了日志条目，则其他任何服务器都无法对该索引应用其他日志条目。</li>
-</ul>
-<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>每个服务器都处于以下三种状态之一：leader，follower或candidate。</p>
-<p><img src="https://i.loli.net/2020/09/09/xoBVRrGPyQzFDAY.png" alt="oN6xZLkKQrVnaWWlp7I8w9aep2NNgMz5fR9D"></p>
-<blockquote>
-<p>在正常操作中，只有一个leader，其他所有服务器都是follower。follower是被动的：他们自己不发出请求，而只是响应leader和candidate的请求。leader处理所有客户请求（如果客户联系follower，则follower将其重定向到leader）。第三种状态，candidate，用于选举新leader。</p>
-</blockquote>
-<p>Raft将时间分为任意长度，每个长度以选举开始。如果candidate赢得选举，则在剩余任期中仍将是leader。如果表决分裂，则该任期在没有leader的情况下结束。</p>
-<p><strong>term号</strong>单调增加。每个服务器存储当前的term编号，该编号也在每次通信中交换。</p>
-<blockquote>
-<p>..如果一台服务器的当前期限小于另一台服务器，则它将其当前期限更新为较大的值。如果candidate或leader发现其任期已过时，它将立即恢复为follower状态。如果服务器收到带有过期条款编号的请求，则该服务器将拒绝该请求。</p>
-</blockquote>
-<p>Raft利用两个远程过程调用（RPC）来执行其基本操作。</p>
-<p>candidate在选举期间使用RequestVotes<br>leader将AppendEntries用于复制日志条目，并用作检测信号（检查服务器是否已启动的信号-它不包含任何日志条目）</p>
-<h2 id="leader选举"><a href="#leader选举" class="headerlink" title="leader选举"></a>leader选举</h2><p>leader定期向其follower发送心跳，以保持权威。当follower在等待leader的心跳后超时时，将触发leader选举。该follower转换为candidate状态并增加其任期编号。在为自己投票之后，它与集群中的其他进程并行地发出RequestVotes RPC。可能有以下三种结果：</p>
-<ol>
-<li>candidate从大多数服务器中获得选票并成为leader。然后，它将心跳消息发送给集群中的其他人以建立权限。</li>
-<li>如果其他candidate收到AppendEntries RPC，他们将检查term号。如果term号大于自己的term号，则他们接受服务器作为leader并返回到follower状态。如果term号数量较小，则他们拒绝RPC，并且仍然是candidate。</li>
-<li>candidate既不输也不赢。如果同时有多个服务器成为candidate服务器，则可以在没有明显多数的情况下进行表决。在这种情况下，其中一名candidate超时后便会开始新的选举。</li>
-</ol>
-<blockquote>
-<p>Raft使用随机的选举超时来确保分割票很少发生，并且可以快速解决。为了避免一票分裂，首先从固定间隔（例如150-300毫秒）中随机选择选举超时。这样会分散服务器，因此在大多数情况下，只有一台服务器会超时；它会赢得选举并在其他任何服务器超时之前发送心跳信号。使用相同的机制来处理拆分投票。每位candidate在选举开始时都会重新启动其随机选举超时时间，并等待该超时时间过去后才开始下一次选举；这减少了在新选举中再次进行分裂表决的可能性。</p>
-</blockquote>
-<h2 id="日志复制"><a href="#日志复制" class="headerlink" title="日志复制"></a>日志复制</h2><p>client请求现在假定为仅写。每个请求都包含一个命令，该命令理想地由所有服务器的复制状态机执行。leader收到客户请求后，会将其作为新条目添加到自己的日志中。日志中的每个条目：</p>
-<ul>
-<li>包含client指定的命令</li>
-<li>有一个索引来标识日志中条目的位置（索引从1开始）</li>
-<li>有一个term号可以从逻辑上识别条目的写入时</li>
-</ul>
-<p>它需要将条目复制到所有follower节点，以保持日志一致。leader将AppendEntries RPC并行发布到所有其他服务器。leader将重试此操作，直到所有follower安全地复制新条目为止。</p>
-<p>当条目由创建它的leader复制到大多数服务器时，就被视为已提交。所有以前的条目，包括由早期leader创建的条目，也都视为已提交。负责人一旦提交就执行该条目，并将结果返回给client。</p>
-<p>leader在其日志中维护它知道要提交的最高索引，并将其与AppendEntries RPC一起发送给其follower。一旦follower发现条目已提交，它将按顺序将条目应用于其状态机。</p>
-<p>Raft 维护以下属性，它们共同构成了日志匹配属性。</p>
-<ul>
-<li>如果不同日志中的两个条目具有相同的索引和term，那么它们存储的是同一个命令。</li>
-<li>如果不同日志中的两个条目具有相同的索引和term，那么在前面的所有条目中，日志是相同的。</li>
-</ul>
-<p>当发送AppendEntries RPC时，leader包括紧接在新条目之前的条目的term号和索引。如果follower在自己的日志中找不到与该条目匹配的条目，它就会拒绝附加新条目的请求。</p>
-<p>这种一致性检查可以让leader得出这样的结论：每当AppendEntries从follower成功返回时，它们的日志都是相同的，直到RPC中包含的索引。</p>
-<p>但是在面对leader崩溃的情况下，leader和follower的日志可能会变得不一致。</p>
-<blockquote>
-<p> 在Raft中，leader通过强制follower的日志复制自己的日志来处理不一致的情况。这意味着，follower日志中的冲突条目将被leader日志中的条目覆盖。</p>
-</blockquote>
-<p>leader试图找到其日志与follower日志相匹配的最后一个索引，删除多余的条目（如果有），并添加新的条目。</p>
-<blockquote>
-<p>leader为每个follower维护一个nextIndex，它是leader将发送给该follower的下一个日志条目的索引。当leader第一次上电时，它将所有的 nextIndex 值初始化为其日志中最后一条后的索引。</p>
-</blockquote>
-<p>每当AppendRPC返回一个follower失败时，leader就会递减nextIndex，并发出另一个AppendEntries RPC。最终，nextIndex会达到一个值，在这个值上，日志会趋于一致。当这种情况发生时，AppendEntries将会成功，它可以从leader的日志中删除无关的条目（如果有的话），并添加新的条目（如果有的话）。因此，从一个follower成功的AppendEntries可以保证leader的日志与它一致。</p>
-<blockquote>
-<p>通过这种机制，leader在上电时不需要采取任何特殊的操作来恢复日志一致性。它只需开始正常的操作，日志就会自动收敛，以应对Append-Entries一致性检查的失败。leader从不覆盖或删除自己日志中的条目。</p>
-</blockquote>
-<h2 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h2><p>Raft确保一个term的leader在其日志中承诺了以前所有term的条目。<br>Raft确保一个term的leader在其日志中已经提交了以前所有term的条目。这是为了确保所有的日志是一致的，并且状态机执行相同的命令集。</p>
-<p>在leader选举期间，RequestVote RPC包含了candidate的日志信息。如果投票者发现它的日志比candidate的更新，它就不会投给它。</p>
-<p>Raft 通过比较两个日志中最后条目的索引和term来确定哪个日志更及时。如果日志的最后条目有不同的term，那么term较晚的日志更及时。如果两个日志的最后条目有相同的term，那么哪个日志更长，哪个日志就更最新。</p>
-<h2 id="集群成员"><a href="#集群成员" class="headerlink" title="集群成员"></a>集群成员</h2><p>为了使配置变更机制安全，在过渡期间必须没有任何一点可以让两个leader在同一term内当选。不幸的是，任何服务器直接从旧配置切换到新配置的方法都是不安全的。<br>Raft使用了一个两阶段的方法来改变集群成员。首先，它切换到一个称为联合共识的中间配置。然后，一旦这一点被满足，它就会切换到新的配置。</p>
-<p>联合共识允许各个服务器在不同的时间在配置之间转换，而不影响安全。此外，联合共识还允许集群在整个配置变化过程中继续服务于client请求。<br>联合共识将新旧配置结合起来，具体如下。</p>
-<ul>
-<li>日志条目被复制到两个配置中的所有服务器上。</li>
-<li>任何新旧服务器都可以成为leader。</li>
-<li>协议要求新老组合分别获得多数票。</li>
-</ul>
-<p>当leader收到配置变更消息时，它会存储并复制加入共识<code>C&lt;old，new&gt;</code>的条目。服务器总是使用其日志中的最新配置来做决策，即使它没有被提交。当联合共识被提交时，只有日志中含有<code>C&lt;old，new&gt;</code>的服务器才能成为leader。</p>
-<p>现在，leader可以安全地创建一个描述<code>C&lt;new&gt;</code>的日志条目，并将其复制到集群中。同样，这个配置一旦被看到，就会在每个服务器上生效。当新配置在<code>C&lt;new&gt;</code>的规则下提交后，旧配置就无关紧要了，不在新配置中的服务器可以被关闭。</p>
-<h2 id="图解"><a href="#图解" class="headerlink" title="图解"></a>图解</h2><p>见<a href="http://thesecretlivesofdata.com/raft/">Raft协议图解</a></p>
-]]></content>
-      <categories>
-        <category>分布式</category>
-      </categories>
-      <tags>
-        <tag>分布式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>分布式系统理论之CAP定理</title>
-    <url>/2017/09/20/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%B9%8BCAP%E5%AE%9A%E7%90%86/</url>
-    <content><![CDATA[<h2 id="什么是CAP定理"><a href="#什么是CAP定理" class="headerlink" title="什么是CAP定理"></a>什么是CAP定理</h2><blockquote>
-<p>CAP由<a href="https://en.wikipedia.org/wiki/Eric_Brewer_(scientist">Eric Brewer</a>)在2000年PODC会议上提出，是Eric Brewer在Inktomi期间研发搜索引擎、分布式web缓存时得出的关于数据一致性(consistency)、服务可用性(availability)、分区容错性(partition-tolerance)的猜想：</p>
-<p>It is impossible for a web service to provide the three following guarantees : Consistency, Availability and Partition-tolerance.</p>
-</blockquote>
-<p>C 代表 Consistency 一致性， A 代表 Availability 可用性， P 代表 partition-tolerance 分区容错性。<br><a id="more"></a></p>
-<ul>
-<li><strong>数据一致性</strong>(consistency)：如果系统对一个写操作返回成功，那么之后的读请求都必须读到这个新数据；如果返回失败，那么所有读操作都不能读到这个数据，对调用者而言数据具有强一致性(strong consistency) (又叫原子性 atomic、线性一致性 linearizable consistency)</li>
-<li><strong>服务可用性</strong>(availability)：所有读写请求在一定时间内得到响应，可终止、不会一直等待</li>
-<li><strong>分区容错性</strong>(partition-tolerance)：在网络分区的情况下，被分隔的节点仍能正常对外服务</li>
-</ul>
-<p>在某时刻如果满足AP，分隔的节点同时对外服务但不能相互通信，将导致状态不一致，即不能满足C；如果满足CP，网络分区的情况下为达成C，请求只能一直等待，即不满足A；如果要满足CA，在一定时间内要达到节点状态一致，要求不能出现网络分区，则不能满足P。即C、A、P三者最多只能满足其中两个。</p>
-<h2 id="论证"><a href="#论证" class="headerlink" title="论证"></a>论证</h2><p>如图所示，是我们证明CAP的基本场景，网络中有两个节点N1和N2，可以简单的理解N1和N2分别是两台计算机，他们之间网络可以连通，N1中有一个应用程序A，和一个数据库V，N2也有一个应用程序B和一个数据库V。现在，A和B是分布式系统的两个部分，V是分布式系统的数据存储的两个子数据库。</p>
-<p><img src="https://i.loli.net/2020/08/22/aOhnCg5yRKJikSm.jpg" alt="fb6d8e8e-1cc2-4ab2-8691-6010d8a4c0cd"></p>
-<p>在满足一致性的时候，N1和N2中的数据是一样的，V0=V0。<br>在满足可用性的时候，用户不管是请求N1或者N2，都会得到立即响应。<br>在满足分区容错性的情况下，N1和N2有任何一方宕机，或者网络不通的时候，都不会影响N1和N2彼此之间的正常运作。</p>
-<p>如图所示，这是分布式系统正常运转的流程，用户向N1机器请求数据更新，程序A更新数据库V0为V1。分布式系统将数据进行同步操作M，将V1同步的N2中V0，使得N2中的数据V0也更新为V1，N2中的数据再响应N2的请求。</p>
-<p><img src="https://i.loli.net/2020/08/22/Vul7CZY5i4AxeH8.jpg" alt="04910e6c-a768-4b8c-b9a0-0149006803d4"></p>
-<p>根据CAP原则定义，系统的一致性、可用性和分区容错性细分如下：</p>
-<p>一致性：N1和N2的数据库V之间的数据是否完全一样。<br>可用性：N1和N2的对外部的请求能否做出正常的响应。<br>分区容错性：N1和N2之间的网络是否互通。</p>
-<p>这是正常运作的场景，也是理想的场景。作为一个分布式系统，它和单机系统的最大区别，就在于网络。现在假设一种极端情况，N1和N2之间的网络断开了，我们要支持这种网络异常。相当于要满足分区容错性，能不能同时满足一致性和可用性呢？还是说要对他们进行取舍？</p>
-<p><img src="https://i.loli.net/2020/08/22/oBEMSxLCYl98QfU.jpg" alt="bcf62eb4-d42e-4380-95de-dd4bdad228d8"></p>
-<p>假设在N1和N2之间网络断开的时候，有用户向N1发送数据更新请求，那N1中的数据V0将被更新为V1。由于网络是断开的，所以分布式系统同步操作M，所以N2中的数据依旧是V0。这个时候，有用户向N2发送数据读取请求，由于数据还没有进行同步，应用程序没办法立即给用户返回最新的数据V1，怎么办呢？<br>这里有两种选择：</p>
-<p>第一：牺牲数据一致性，保证可用性。响应旧的数据V0给用户。<br>第二：牺牲可用性，保证数据一致性。阻塞等待，直到网络连接恢复，数据更新操作M完成之后，再给用户响应最新的数据V1。</p>
-<p>这个过程，证明了要满足分区容错性的分布式系统，只能在一致性和可用性两者中，选择其中一个。</p>
-<h2 id="权衡-Trade-off"><a href="#权衡-Trade-off" class="headerlink" title="权衡 Trade-off"></a>权衡 Trade-off</h2><p>通过CAP理论，我们知道无法同时满足一致性、可用性和分区容错性这三个特性，那要舍弃哪个呢？</p>
-<h3 id="CA-without-P"><a href="#CA-without-P" class="headerlink" title="CA without P"></a>CA without P</h3><p>如果不要求P（不允许分区），则C（强一致性）和A（可用性）是可以保证的。但其实分区不是你想不想的问题，而是始终会存在，因此CA的系统更多的是允许分区后各子系统依然保持CA。</p>
-<h3 id="CP-without-A"><a href="#CP-without-A" class="headerlink" title="CP without A"></a>CP without A</h3><p>如果不要求A（可用），相当于每个请求都需要在Server之间强一致，而P（分区）会导致同步时间无限延长，如此CP也是可以保证的。很多传统的数据库分布式事务都属于这种模式。</p>
-<h3 id="AP-wihtout-C"><a href="#AP-wihtout-C" class="headerlink" title="AP wihtout C"></a>AP wihtout C</h3><p>要高可用并允许分区，则需放弃一致性。一旦分区发生，节点之间可能会失去联系，为了高可用，每个节点只能用本地数据提供服务，而这样会导致全局数据的不一致性。现在众多的NoSQL都属于此类。</p>
-<h3 id="最终一致性"><a href="#最终一致性" class="headerlink" title="最终一致性"></a>最终一致性</h3><p>根据CAP定理，我们要不是选择C（一致性）而放弃A（可用性），就是反过来。但现实世界的情况，往往不是这么地非黑即白。依照不同的商业逻辑与使用情境，在两者间取得平衡的设计是非常普遍的。<br>举例来说，对于C（一致性）而言，我们把CAP定理所定义的一致性称为<strong>强一致性（strong consistency）</strong>。适合处理像是金钱、付款这种对资料同步高度要求的任务。但相对的，扩展性、可用性就会比较局限（想像一下，若数据库的数量持续地增加，同步所有数据的成本也会不断上升）。<br>与强一致性相对的是所谓的最终一致性（eventually consistency）。当使用者更新某笔资料时，也许因为网路暂时中断或延迟，没有即时同步到另一个资料库。我们还是让其他使用者可以继续存取资料（不是最新的也没关系），但最终，我们保证这笔资料一定会同步（最后的结果还是对的）。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我们从但一系统开始，随着流量增长，演变为分布式系统架构。在分布式系统架构下，会遇到网络问题导致的数据分区。CAP定理就是用来探讨在这种情况下，系统在设计上必须做出的取舍。其中CA的系统对于CAP定理意义不大，于是我们分别探讨CP和AP的情况。</p>
-<p>对于某些特殊情况，例如对于涉及到钱财这样不能有一丝让步的场景，C必须保证。网络发生故障宁可停止服务，这是保证CA，舍弃P。貌似这几年国内银行业发生了不下10起事故，但影响面不大，报到也不多，广大群众知道的少。还有一种是保证CP，舍弃A，例如网络故障时只读不写。</p>
-]]></content>
-      <categories>
-        <category>分布式</category>
-      </categories>
-      <tags>
-        <tag>分布式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>简析一致性哈希算法及其实现</title>
-    <url>/2017/04/04/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%B9%8B%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>业务中有N台redis缓存服务器 [0, N-1]，那么对于任意一个关键字key的请求，我们都是做一个对key哈希值取模的请求分发。前台请求被分发到编号(hash(key)%N)这台服务器上。理想状态下，这样的缓存命中率是很高的。但当因为业务需求而增删服务节点数，例如添加一台服务器。那么原来被分配到k号服务器的现在会被分到(k-1)号服务器。这个时候几乎所有的缓存全部会被miss掉，造成极大的业务压力。</p>
-<p><strong>一致性哈希算法的目的就是，当后台增删节点时，旧的数据能够依旧计算到原来的服务器，而新数据能够按新的哈希算法分配到新服务器。</strong></p>
-<a id="more"></a>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>一致性哈希算法把N个服务节点映射到一个环上。对每个服务节点的key值进行hash计算，获得一个长度为N的数组，再把数组首尾相连，获得一个环。我们对所有的请求节点key作hash计算，会落入该环的某一个弧段，我们可以设定每个弧段上的请求节点都以顺时针最近的Node作为服务节点。这样增加或减少服务节点，那影响的也只是一个弧段上的请求节点，而其他弧段上的请求节点则不受影响。</p>
-<p>这实际上就是把映射环增大了。减少了数据映射关系的变动，不会像hash(i)%N那样带来全局的变动。</p>
-<p>如果某一个弧段上的节点密度很大，导致单个服务节点过载，即热点数据问题，那我们可以在这个弧段上增加一个服务节点就可以分担压力。</p>
-<h2 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h2><h3 id="雪崩效应"><a href="#雪崩效应" class="headerlink" title="雪崩效应"></a>雪崩效应</h3><p>上述的算法有一个弊端，就是如果某个服务节点因为过载而down掉，那么原本分配在它上面的负载都会被分配到顺时针下一台服务器上去，那么下一台服务器也会down掉，依次类推，所有的服务器最终都会挂掉。这就是雪崩效应。</p>
-<p>为了解决雪崩效应，最好的办法就是，当一个服务节点挂掉的时候，分配在上面的流量被其他的服务节点共同分担。这样才能保证整个集群的可用性。因此，可以采用<strong>虚拟节点</strong>的方式来改进算法。</p>
-<h3 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h3><p>这里把每个服务器分为两个副本节点，每个副本节点负责一个更精细的环，如图可以得知，如果A挂掉了，那么原本分配给A的两个小环的流量会被D和C来分摊。实际上我们可以通过增加副本节点的数量来提高算法的均衡性。</p>
-<h2 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#! /usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding:utf8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> md5</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HashRing</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, nodes=None, replicas=<span class="number">3</span></span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        创建一个hash环</span></span><br><span class="line"><span class="string">        :nodes </span></span><br><span class="line"><span class="string">            节点 </span></span><br><span class="line"><span class="string">        :replicas</span></span><br><span class="line"><span class="string">            每个服务节点的副本数</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        self.replicas = replicas</span><br><span class="line">        self.ring = &#123;&#125;</span><br><span class="line">        self._sorted_keys = []</span><br><span class="line">        <span class="keyword">if</span> nodes:</span><br><span class="line">            <span class="keyword">for</span> node <span class="keyword">in</span> nodes:</span><br><span class="line">                self.add_node(node)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_node</span>(<span class="params">self, node</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        把一个服务节点加入hash环</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, self.replicas):</span><br><span class="line">            key = self.gen_key(<span class="string">&quot;%s:%s&quot;</span> % (node, i))</span><br><span class="line">            self.ring[key] = node</span><br><span class="line">            self._sorted_keys.append(key)</span><br><span class="line"></span><br><span class="line">        self._sorted_keys.sort()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove_node</span>(<span class="params">self, node</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        从hash环删除一个服务节点</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, self.replicas):</span><br><span class="line">            key = self.gen_key(<span class="string">&quot;%s:%s&quot;</span> % (node, i))</span><br><span class="line">            <span class="keyword">del</span> self.ring[key]</span><br><span class="line">            self._sorted_keys.remove(key)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_node_keys</span>(<span class="params">self, node</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        获取一个服务节点的所有副本的虚拟key</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        keys = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, self.replicas):</span><br><span class="line">            key = self.gen_key(<span class="string">&quot;%s:%s&quot;</span> % (node, i))</span><br><span class="line">            keys.append(key)</span><br><span class="line">        <span class="keyword">return</span> key</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_node</span>(<span class="params">self, string_key</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">		对于给定的key 获取对应的服务节点，返回节点</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> self.get_node_pos(string_key)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_node_pos</span>(<span class="params">self, string_key</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        对于给定的key 获取对应的服务节点，返回节点和位置</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.ring:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        key = self.gen_key(string_key)</span><br><span class="line">        nodes = self._sorted_keys</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(nodes)):</span><br><span class="line">            node = nodes[i]</span><br><span class="line">            <span class="keyword">if</span> key &lt;= node:</span><br><span class="line">                <span class="keyword">return</span> self.ring[node], i</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> self.ring[nodes[<span class="number">0</span>]], <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_nodes</span>(<span class="params">self, string_key</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        对于一个给定的key ，返回一个</span></span><br><span class="line"><span class="string">        Given a string key it returns the nodes as a generator that can hold the key.</span></span><br><span class="line"><span class="string">        The generator is never ending and iterates through the ring starting at the correct position.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.ring:</span><br><span class="line">            <span class="keyword">yield</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        node, pos = self.get_node_pos(string_key)</span><br><span class="line">        <span class="keyword">for</span> key <span class="keyword">in</span> self._sorted_keys:</span><br><span class="line">            <span class="keyword">yield</span> self.ring[key]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">gen_key</span>(<span class="params">self, key</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">		以md5算法来进行hash(key)运算</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        m = md5.new()</span><br><span class="line">        m.update(key)</span><br><span class="line">        <span class="keyword">return</span> long(m.hexdigest(), <span class="number">16</span>)</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>分布式</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>JavaScript中的this</title>
     <url>/2016/10/30/javascript/JavaScript%E4%B8%AD%E7%9A%84this/</url>
     <content><![CDATA[<p>我们由一段代码开始本文的主题。</p>
@@ -4259,6 +4115,150 @@
       </categories>
       <tags>
         <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>分布式协议之Raft算法</title>
+    <url>/2017/09/28/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%AE%AE%E4%B9%8BRaft%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<p>Raft是一种分布式共识算法。相对于之前的Paxos协议，它的设计易于理解。它解决了即使面对故障也使多个服务器在共享状态上达成一致的问题。共享状态通常是复制日志支持的数据结构。只要大多数服务器都处于运行状态，我们就需要系统能够完全运行。</p>
+<p>Raft通过选举集群中的一位leader来工作。leader负责接受client请求并管理将日志复制到其他服务器。数据仅在一个方向上流动：从leader流向其他服务器。</p>
+<a id="more"></a>
+<p>Raft将共识分解为三个子问题：</p>
+<ul>
+<li>leader选举：如果现有leader失败，则需要选举一名新leader。</li>
+<li>日志复制：leader需要通过复制使所有服务器的日志与其自己的服务器保持同步。</li>
+<li>安全性：如果其中一台服务器已在特定索引上提交了日志条目，则其他任何服务器都无法对该索引应用其他日志条目。</li>
+</ul>
+<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>每个服务器都处于以下三种状态之一：leader，follower或candidate。</p>
+<p><img src="https://i.loli.net/2020/09/09/xoBVRrGPyQzFDAY.png" alt="oN6xZLkKQrVnaWWlp7I8w9aep2NNgMz5fR9D"></p>
+<blockquote>
+<p>在正常操作中，只有一个leader，其他所有服务器都是follower。follower是被动的：他们自己不发出请求，而只是响应leader和candidate的请求。leader处理所有客户请求（如果客户联系follower，则follower将其重定向到leader）。第三种状态，candidate，用于选举新leader。</p>
+</blockquote>
+<p>Raft将时间分为任意长度，每个长度以选举开始。如果candidate赢得选举，则在剩余任期中仍将是leader。如果表决分裂，则该任期在没有leader的情况下结束。</p>
+<p><strong>term号</strong>单调增加。每个服务器存储当前的term编号，该编号也在每次通信中交换。</p>
+<blockquote>
+<p>..如果一台服务器的当前期限小于另一台服务器，则它将其当前期限更新为较大的值。如果candidate或leader发现其任期已过时，它将立即恢复为follower状态。如果服务器收到带有过期条款编号的请求，则该服务器将拒绝该请求。</p>
+</blockquote>
+<p>Raft利用两个远程过程调用（RPC）来执行其基本操作。</p>
+<p>candidate在选举期间使用RequestVotes<br>leader将AppendEntries用于复制日志条目，并用作检测信号（检查服务器是否已启动的信号-它不包含任何日志条目）</p>
+<h2 id="leader选举"><a href="#leader选举" class="headerlink" title="leader选举"></a>leader选举</h2><p>leader定期向其follower发送心跳，以保持权威。当follower在等待leader的心跳后超时时，将触发leader选举。该follower转换为candidate状态并增加其任期编号。在为自己投票之后，它与集群中的其他进程并行地发出RequestVotes RPC。可能有以下三种结果：</p>
+<ol>
+<li>candidate从大多数服务器中获得选票并成为leader。然后，它将心跳消息发送给集群中的其他人以建立权限。</li>
+<li>如果其他candidate收到AppendEntries RPC，他们将检查term号。如果term号大于自己的term号，则他们接受服务器作为leader并返回到follower状态。如果term号数量较小，则他们拒绝RPC，并且仍然是candidate。</li>
+<li>candidate既不输也不赢。如果同时有多个服务器成为candidate服务器，则可以在没有明显多数的情况下进行表决。在这种情况下，其中一名candidate超时后便会开始新的选举。</li>
+</ol>
+<blockquote>
+<p>Raft使用随机的选举超时来确保分割票很少发生，并且可以快速解决。为了避免一票分裂，首先从固定间隔（例如150-300毫秒）中随机选择选举超时。这样会分散服务器，因此在大多数情况下，只有一台服务器会超时；它会赢得选举并在其他任何服务器超时之前发送心跳信号。使用相同的机制来处理拆分投票。每位candidate在选举开始时都会重新启动其随机选举超时时间，并等待该超时时间过去后才开始下一次选举；这减少了在新选举中再次进行分裂表决的可能性。</p>
+</blockquote>
+<h2 id="日志复制"><a href="#日志复制" class="headerlink" title="日志复制"></a>日志复制</h2><p>client请求现在假定为仅写。每个请求都包含一个命令，该命令理想地由所有服务器的复制状态机执行。leader收到客户请求后，会将其作为新条目添加到自己的日志中。日志中的每个条目：</p>
+<ul>
+<li>包含client指定的命令</li>
+<li>有一个索引来标识日志中条目的位置（索引从1开始）</li>
+<li>有一个term号可以从逻辑上识别条目的写入时</li>
+</ul>
+<p>它需要将条目复制到所有follower节点，以保持日志一致。leader将AppendEntries RPC并行发布到所有其他服务器。leader将重试此操作，直到所有follower安全地复制新条目为止。</p>
+<p>当条目由创建它的leader复制到大多数服务器时，就被视为已提交。所有以前的条目，包括由早期leader创建的条目，也都视为已提交。负责人一旦提交就执行该条目，并将结果返回给client。</p>
+<p>leader在其日志中维护它知道要提交的最高索引，并将其与AppendEntries RPC一起发送给其follower。一旦follower发现条目已提交，它将按顺序将条目应用于其状态机。</p>
+<p>Raft 维护以下属性，它们共同构成了日志匹配属性。</p>
+<ul>
+<li>如果不同日志中的两个条目具有相同的索引和term，那么它们存储的是同一个命令。</li>
+<li>如果不同日志中的两个条目具有相同的索引和term，那么在前面的所有条目中，日志是相同的。</li>
+</ul>
+<p>当发送AppendEntries RPC时，leader包括紧接在新条目之前的条目的term号和索引。如果follower在自己的日志中找不到与该条目匹配的条目，它就会拒绝附加新条目的请求。</p>
+<p>这种一致性检查可以让leader得出这样的结论：每当AppendEntries从follower成功返回时，它们的日志都是相同的，直到RPC中包含的索引。</p>
+<p>但是在面对leader崩溃的情况下，leader和follower的日志可能会变得不一致。</p>
+<blockquote>
+<p> 在Raft中，leader通过强制follower的日志复制自己的日志来处理不一致的情况。这意味着，follower日志中的冲突条目将被leader日志中的条目覆盖。</p>
+</blockquote>
+<p>leader试图找到其日志与follower日志相匹配的最后一个索引，删除多余的条目（如果有），并添加新的条目。</p>
+<blockquote>
+<p>leader为每个follower维护一个nextIndex，它是leader将发送给该follower的下一个日志条目的索引。当leader第一次上电时，它将所有的 nextIndex 值初始化为其日志中最后一条后的索引。</p>
+</blockquote>
+<p>每当AppendRPC返回一个follower失败时，leader就会递减nextIndex，并发出另一个AppendEntries RPC。最终，nextIndex会达到一个值，在这个值上，日志会趋于一致。当这种情况发生时，AppendEntries将会成功，它可以从leader的日志中删除无关的条目（如果有的话），并添加新的条目（如果有的话）。因此，从一个follower成功的AppendEntries可以保证leader的日志与它一致。</p>
+<blockquote>
+<p>通过这种机制，leader在上电时不需要采取任何特殊的操作来恢复日志一致性。它只需开始正常的操作，日志就会自动收敛，以应对Append-Entries一致性检查的失败。leader从不覆盖或删除自己日志中的条目。</p>
+</blockquote>
+<h2 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h2><p>Raft确保一个term的leader在其日志中承诺了以前所有term的条目。<br>Raft确保一个term的leader在其日志中已经提交了以前所有term的条目。这是为了确保所有的日志是一致的，并且状态机执行相同的命令集。</p>
+<p>在leader选举期间，RequestVote RPC包含了candidate的日志信息。如果投票者发现它的日志比candidate的更新，它就不会投给它。</p>
+<p>Raft 通过比较两个日志中最后条目的索引和term来确定哪个日志更及时。如果日志的最后条目有不同的term，那么term较晚的日志更及时。如果两个日志的最后条目有相同的term，那么哪个日志更长，哪个日志就更最新。</p>
+<h2 id="集群成员"><a href="#集群成员" class="headerlink" title="集群成员"></a>集群成员</h2><p>为了使配置变更机制安全，在过渡期间必须没有任何一点可以让两个leader在同一term内当选。不幸的是，任何服务器直接从旧配置切换到新配置的方法都是不安全的。<br>Raft使用了一个两阶段的方法来改变集群成员。首先，它切换到一个称为联合共识的中间配置。然后，一旦这一点被满足，它就会切换到新的配置。</p>
+<p>联合共识允许各个服务器在不同的时间在配置之间转换，而不影响安全。此外，联合共识还允许集群在整个配置变化过程中继续服务于client请求。<br>联合共识将新旧配置结合起来，具体如下。</p>
+<ul>
+<li>日志条目被复制到两个配置中的所有服务器上。</li>
+<li>任何新旧服务器都可以成为leader。</li>
+<li>协议要求新老组合分别获得多数票。</li>
+</ul>
+<p>当leader收到配置变更消息时，它会存储并复制加入共识<code>C&lt;old，new&gt;</code>的条目。服务器总是使用其日志中的最新配置来做决策，即使它没有被提交。当联合共识被提交时，只有日志中含有<code>C&lt;old，new&gt;</code>的服务器才能成为leader。</p>
+<p>现在，leader可以安全地创建一个描述<code>C&lt;new&gt;</code>的日志条目，并将其复制到集群中。同样，这个配置一旦被看到，就会在每个服务器上生效。当新配置在<code>C&lt;new&gt;</code>的规则下提交后，旧配置就无关紧要了，不在新配置中的服务器可以被关闭。</p>
+<h2 id="图解"><a href="#图解" class="headerlink" title="图解"></a>图解</h2><p>见<a href="http://thesecretlivesofdata.com/raft/">Raft协议图解</a></p>
+]]></content>
+      <categories>
+        <category>分布式</category>
+      </categories>
+      <tags>
+        <tag>分布式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>分布式系统理论之CAP定理</title>
+    <url>/2017/09/20/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%B9%8BCAP%E5%AE%9A%E7%90%86/</url>
+    <content><![CDATA[<h2 id="什么是CAP定理"><a href="#什么是CAP定理" class="headerlink" title="什么是CAP定理"></a>什么是CAP定理</h2><blockquote>
+<p>CAP由<a href="https://en.wikipedia.org/wiki/Eric_Brewer_(scientist">Eric Brewer</a>)在2000年PODC会议上提出，是Eric Brewer在Inktomi期间研发搜索引擎、分布式web缓存时得出的关于数据一致性(consistency)、服务可用性(availability)、分区容错性(partition-tolerance)的猜想：</p>
+<p>It is impossible for a web service to provide the three following guarantees : Consistency, Availability and Partition-tolerance.</p>
+</blockquote>
+<p>C 代表 Consistency 一致性， A 代表 Availability 可用性， P 代表 partition-tolerance 分区容错性。<br><a id="more"></a></p>
+<ul>
+<li><strong>数据一致性</strong>(consistency)：如果系统对一个写操作返回成功，那么之后的读请求都必须读到这个新数据；如果返回失败，那么所有读操作都不能读到这个数据，对调用者而言数据具有强一致性(strong consistency) (又叫原子性 atomic、线性一致性 linearizable consistency)</li>
+<li><strong>服务可用性</strong>(availability)：所有读写请求在一定时间内得到响应，可终止、不会一直等待</li>
+<li><strong>分区容错性</strong>(partition-tolerance)：在网络分区的情况下，被分隔的节点仍能正常对外服务</li>
+</ul>
+<p>在某时刻如果满足AP，分隔的节点同时对外服务但不能相互通信，将导致状态不一致，即不能满足C；如果满足CP，网络分区的情况下为达成C，请求只能一直等待，即不满足A；如果要满足CA，在一定时间内要达到节点状态一致，要求不能出现网络分区，则不能满足P。即C、A、P三者最多只能满足其中两个。</p>
+<h2 id="论证"><a href="#论证" class="headerlink" title="论证"></a>论证</h2><p>如图所示，是我们证明CAP的基本场景，网络中有两个节点N1和N2，可以简单的理解N1和N2分别是两台计算机，他们之间网络可以连通，N1中有一个应用程序A，和一个数据库V，N2也有一个应用程序B和一个数据库V。现在，A和B是分布式系统的两个部分，V是分布式系统的数据存储的两个子数据库。</p>
+<p><img src="https://i.loli.net/2020/08/22/aOhnCg5yRKJikSm.jpg" alt="fb6d8e8e-1cc2-4ab2-8691-6010d8a4c0cd"></p>
+<p>在满足一致性的时候，N1和N2中的数据是一样的，V0=V0。<br>在满足可用性的时候，用户不管是请求N1或者N2，都会得到立即响应。<br>在满足分区容错性的情况下，N1和N2有任何一方宕机，或者网络不通的时候，都不会影响N1和N2彼此之间的正常运作。</p>
+<p>如图所示，这是分布式系统正常运转的流程，用户向N1机器请求数据更新，程序A更新数据库V0为V1。分布式系统将数据进行同步操作M，将V1同步的N2中V0，使得N2中的数据V0也更新为V1，N2中的数据再响应N2的请求。</p>
+<p><img src="https://i.loli.net/2020/08/22/Vul7CZY5i4AxeH8.jpg" alt="04910e6c-a768-4b8c-b9a0-0149006803d4"></p>
+<p>根据CAP原则定义，系统的一致性、可用性和分区容错性细分如下：</p>
+<p>一致性：N1和N2的数据库V之间的数据是否完全一样。<br>可用性：N1和N2的对外部的请求能否做出正常的响应。<br>分区容错性：N1和N2之间的网络是否互通。</p>
+<p>这是正常运作的场景，也是理想的场景。作为一个分布式系统，它和单机系统的最大区别，就在于网络。现在假设一种极端情况，N1和N2之间的网络断开了，我们要支持这种网络异常。相当于要满足分区容错性，能不能同时满足一致性和可用性呢？还是说要对他们进行取舍？</p>
+<p><img src="https://i.loli.net/2020/08/22/oBEMSxLCYl98QfU.jpg" alt="bcf62eb4-d42e-4380-95de-dd4bdad228d8"></p>
+<p>假设在N1和N2之间网络断开的时候，有用户向N1发送数据更新请求，那N1中的数据V0将被更新为V1。由于网络是断开的，所以分布式系统同步操作M，所以N2中的数据依旧是V0。这个时候，有用户向N2发送数据读取请求，由于数据还没有进行同步，应用程序没办法立即给用户返回最新的数据V1，怎么办呢？<br>这里有两种选择：</p>
+<p>第一：牺牲数据一致性，保证可用性。响应旧的数据V0给用户。<br>第二：牺牲可用性，保证数据一致性。阻塞等待，直到网络连接恢复，数据更新操作M完成之后，再给用户响应最新的数据V1。</p>
+<p>这个过程，证明了要满足分区容错性的分布式系统，只能在一致性和可用性两者中，选择其中一个。</p>
+<h2 id="权衡-Trade-off"><a href="#权衡-Trade-off" class="headerlink" title="权衡 Trade-off"></a>权衡 Trade-off</h2><p>通过CAP理论，我们知道无法同时满足一致性、可用性和分区容错性这三个特性，那要舍弃哪个呢？</p>
+<h3 id="CA-without-P"><a href="#CA-without-P" class="headerlink" title="CA without P"></a>CA without P</h3><p>如果不要求P（不允许分区），则C（强一致性）和A（可用性）是可以保证的。但其实分区不是你想不想的问题，而是始终会存在，因此CA的系统更多的是允许分区后各子系统依然保持CA。</p>
+<h3 id="CP-without-A"><a href="#CP-without-A" class="headerlink" title="CP without A"></a>CP without A</h3><p>如果不要求A（可用），相当于每个请求都需要在Server之间强一致，而P（分区）会导致同步时间无限延长，如此CP也是可以保证的。很多传统的数据库分布式事务都属于这种模式。</p>
+<h3 id="AP-wihtout-C"><a href="#AP-wihtout-C" class="headerlink" title="AP wihtout C"></a>AP wihtout C</h3><p>要高可用并允许分区，则需放弃一致性。一旦分区发生，节点之间可能会失去联系，为了高可用，每个节点只能用本地数据提供服务，而这样会导致全局数据的不一致性。现在众多的NoSQL都属于此类。</p>
+<h3 id="最终一致性"><a href="#最终一致性" class="headerlink" title="最终一致性"></a>最终一致性</h3><p>根据CAP定理，我们要不是选择C（一致性）而放弃A（可用性），就是反过来。但现实世界的情况，往往不是这么地非黑即白。依照不同的商业逻辑与使用情境，在两者间取得平衡的设计是非常普遍的。<br>举例来说，对于C（一致性）而言，我们把CAP定理所定义的一致性称为<strong>强一致性（strong consistency）</strong>。适合处理像是金钱、付款这种对资料同步高度要求的任务。但相对的，扩展性、可用性就会比较局限（想像一下，若数据库的数量持续地增加，同步所有数据的成本也会不断上升）。<br>与强一致性相对的是所谓的最终一致性（eventually consistency）。当使用者更新某笔资料时，也许因为网路暂时中断或延迟，没有即时同步到另一个资料库。我们还是让其他使用者可以继续存取资料（不是最新的也没关系），但最终，我们保证这笔资料一定会同步（最后的结果还是对的）。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我们从但一系统开始，随着流量增长，演变为分布式系统架构。在分布式系统架构下，会遇到网络问题导致的数据分区。CAP定理就是用来探讨在这种情况下，系统在设计上必须做出的取舍。其中CA的系统对于CAP定理意义不大，于是我们分别探讨CP和AP的情况。</p>
+<p>对于某些特殊情况，例如对于涉及到钱财这样不能有一丝让步的场景，C必须保证。网络发生故障宁可停止服务，这是保证CA，舍弃P。貌似这几年国内银行业发生了不下10起事故，但影响面不大，报到也不多，广大群众知道的少。还有一种是保证CP，舍弃A，例如网络故障时只读不写。</p>
+]]></content>
+      <categories>
+        <category>分布式</category>
+      </categories>
+      <tags>
+        <tag>分布式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>简析一致性哈希算法及其实现</title>
+    <url>/2017/04/04/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%B9%8B%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>业务中有N台redis缓存服务器 [0, N-1]，那么对于任意一个关键字key的请求，我们都是做一个对key哈希值取模的请求分发。前台请求被分发到编号(hash(key)%N)这台服务器上。理想状态下，这样的缓存命中率是很高的。但当因为业务需求而增删服务节点数，例如添加一台服务器。那么原来被分配到k号服务器的现在会被分到(k-1)号服务器。这个时候几乎所有的缓存全部会被miss掉，造成极大的业务压力。</p>
+<p><strong>一致性哈希算法的目的就是，当后台增删节点时，旧的数据能够依旧计算到原来的服务器，而新数据能够按新的哈希算法分配到新服务器。</strong></p>
+<a id="more"></a>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>一致性哈希算法把N个服务节点映射到一个环上。对每个服务节点的key值进行hash计算，获得一个长度为N的数组，再把数组首尾相连，获得一个环。我们对所有的请求节点key作hash计算，会落入该环的某一个弧段，我们可以设定每个弧段上的请求节点都以顺时针最近的Node作为服务节点。这样增加或减少服务节点，那影响的也只是一个弧段上的请求节点，而其他弧段上的请求节点则不受影响。</p>
+<p>这实际上就是把映射环增大了。减少了数据映射关系的变动，不会像hash(i)%N那样带来全局的变动。</p>
+<p>如果某一个弧段上的节点密度很大，导致单个服务节点过载，即热点数据问题，那我们可以在这个弧段上增加一个服务节点就可以分担压力。</p>
+<h2 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h2><h3 id="雪崩效应"><a href="#雪崩效应" class="headerlink" title="雪崩效应"></a>雪崩效应</h3><p>上述的算法有一个弊端，就是如果某个服务节点因为过载而down掉，那么原本分配在它上面的负载都会被分配到顺时针下一台服务器上去，那么下一台服务器也会down掉，依次类推，所有的服务器最终都会挂掉。这就是雪崩效应。</p>
+<p>为了解决雪崩效应，最好的办法就是，当一个服务节点挂掉的时候，分配在上面的流量被其他的服务节点共同分担。这样才能保证整个集群的可用性。因此，可以采用<strong>虚拟节点</strong>的方式来改进算法。</p>
+<h3 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h3><p>这里把每个服务器分为两个副本节点，每个副本节点负责一个更精细的环，如图可以得知，如果A挂掉了，那么原本分配给A的两个小环的流量会被D和C来分摊。实际上我们可以通过增加副本节点的数量来提高算法的均衡性。</p>
+<h2 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#! /usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding:utf8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> md5</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HashRing</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, nodes=None, replicas=<span class="number">3</span></span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        创建一个hash环</span></span><br><span class="line"><span class="string">        :nodes </span></span><br><span class="line"><span class="string">            节点 </span></span><br><span class="line"><span class="string">        :replicas</span></span><br><span class="line"><span class="string">            每个服务节点的副本数</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        self.replicas = replicas</span><br><span class="line">        self.ring = &#123;&#125;</span><br><span class="line">        self._sorted_keys = []</span><br><span class="line">        <span class="keyword">if</span> nodes:</span><br><span class="line">            <span class="keyword">for</span> node <span class="keyword">in</span> nodes:</span><br><span class="line">                self.add_node(node)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_node</span>(<span class="params">self, node</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        把一个服务节点加入hash环</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, self.replicas):</span><br><span class="line">            key = self.gen_key(<span class="string">&quot;%s:%s&quot;</span> % (node, i))</span><br><span class="line">            self.ring[key] = node</span><br><span class="line">            self._sorted_keys.append(key)</span><br><span class="line"></span><br><span class="line">        self._sorted_keys.sort()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove_node</span>(<span class="params">self, node</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        从hash环删除一个服务节点</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, self.replicas):</span><br><span class="line">            key = self.gen_key(<span class="string">&quot;%s:%s&quot;</span> % (node, i))</span><br><span class="line">            <span class="keyword">del</span> self.ring[key]</span><br><span class="line">            self._sorted_keys.remove(key)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_node_keys</span>(<span class="params">self, node</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        获取一个服务节点的所有副本的虚拟key</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        keys = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, self.replicas):</span><br><span class="line">            key = self.gen_key(<span class="string">&quot;%s:%s&quot;</span> % (node, i))</span><br><span class="line">            keys.append(key)</span><br><span class="line">        <span class="keyword">return</span> key</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_node</span>(<span class="params">self, string_key</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">		对于给定的key 获取对应的服务节点，返回节点</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> self.get_node_pos(string_key)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_node_pos</span>(<span class="params">self, string_key</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        对于给定的key 获取对应的服务节点，返回节点和位置</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.ring:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        key = self.gen_key(string_key)</span><br><span class="line">        nodes = self._sorted_keys</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(nodes)):</span><br><span class="line">            node = nodes[i]</span><br><span class="line">            <span class="keyword">if</span> key &lt;= node:</span><br><span class="line">                <span class="keyword">return</span> self.ring[node], i</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> self.ring[nodes[<span class="number">0</span>]], <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_nodes</span>(<span class="params">self, string_key</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        对于一个给定的key ，返回一个</span></span><br><span class="line"><span class="string">        Given a string key it returns the nodes as a generator that can hold the key.</span></span><br><span class="line"><span class="string">        The generator is never ending and iterates through the ring starting at the correct position.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.ring:</span><br><span class="line">            <span class="keyword">yield</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        node, pos = self.get_node_pos(string_key)</span><br><span class="line">        <span class="keyword">for</span> key <span class="keyword">in</span> self._sorted_keys:</span><br><span class="line">            <span class="keyword">yield</span> self.ring[key]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">gen_key</span>(<span class="params">self, key</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">		以md5算法来进行hash(key)运算</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        m = md5.new()</span><br><span class="line">        m.update(key)</span><br><span class="line">        <span class="keyword">return</span> long(m.hexdigest(), <span class="number">16</span>)</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>分布式</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
       </tags>
   </entry>
   <entry>
@@ -5884,77 +5884,6 @@ Tot \leq cn^d\cdot \sum_{j=0}^{log_b^n}(\frac{a}{b^d})^j</script><h3 id="应用�
       </tags>
   </entry>
   <entry>
-    <title>HTTPS原理解析</title>
-    <url>/2016/11/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/</url>
-    <content><![CDATA[<p>HTTP协议是明文传输，它简单易于理解，但同时也带来了安全性问题，在复杂的网络环境中，HTTP流量几乎是在裸奔，可以轻易被监听，为了解决这个问题，人们提出了HTTP over SSL即HTTPS，即通过ssl隧道来传输HTTP流量，这样加密了HTTP数据包，实现了传输链路上的安全性。相比于HTTP，HTTPS在TCP层上多了一个SSL/TLS层。</p>
-<p><img src="http://blog.upyun.com/wp-content/uploads/2017/03/httpvshttps.png" alt="img"></p>
-<h2 id="HTTPS的通信过程"><a href="#HTTPS的通信过程" class="headerlink" title="HTTPS的通信过程"></a>HTTPS的通信过程</h2><h3 id="SSL-TLS"><a href="#SSL-TLS" class="headerlink" title="SSL/TLS"></a>SSL/TLS</h3><blockquote>
-<p>SSL（Secure Socket Layer，安全套接字层）：1994年为 Netscape 所研发，SSL 协议位于 TCP/IP 协议与各种应用层协议之间，为数据通讯提供安全支持。</p>
-<p>TLS（Transport Layer Security，传输层安全）：其前身是 SSL，它最初的几个版本（SSL 1.0、SSL 2.0、SSL 3.0）由网景公司开发，1999 年从 3.1 开始被 IETF 标准化并改名，发展至今已经有 TLS 1.0、TLS 1.1、TLS 1.2 三个版本。SSL3.0 和 TLS1.0 由于存在安全漏洞，已经很少被使用到。TLS 1.3 改动会比较大，目前还在草案阶段，目前使用最广泛的是 TLS 1.1、TLS 1.2。</p>
-</blockquote>
-<p>可以简单认为SSL与TLS是描述的同一种协议，本文中不做区分，SSL/TLS是为了在TCP连接上添加一个加密隧道来加密通信流量，可以确保通信流量安全无法解密。</p>
-<h3 id="图解"><a href="#图解" class="headerlink" title="图解"></a>图解</h3><p>由于HTTPS的TLS层是在TCP上的，所以与HTTP一样，在建立TLS连接之前必须先TCP三次握手</p>
-<p>HTTPS的通信过程可以由下图简单表示。</p>
-<h3 id="步骤详解"><a href="#步骤详解" class="headerlink" title="步骤详解"></a>步骤详解</h3><h4 id="0x01-ClientHello"><a href="#0x01-ClientHello" class="headerlink" title="0x01 ClientHello"></a>0x01 ClientHello</h4><ol>
-<li>ClientHello。 首先https请求是基于http的，也就是基于tcp的，所以先得建立tcp三次握手，这个就不说了，然后tcp握手后是SSL层的握手，也就是图中的ClientHello消息，client发送本地最新的TLS版本、算法组合的一个集合和其他很多辅助的信息，并且生成一个随机数A。</li>
-</ol>
-<p>   <img src="https:////upload-images.jianshu.io/upload_images/2000804-900ab967d4c437d5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000" alt="img"></p>
-<p>   ClientHello.png</p>
-<p>   可以看到随机数（</p>
-   <figure class="highlight arcade"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Random</span></span><br></pre></td></tr></table></figure>
-<p>   ）是一个GMT UNIX时间加上一串随机字节，算法组合（</p>
-   <figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Cipher Suite</span></span><br></pre></td></tr></table></figure>
-<p>   ）有26种。还有ClientHello并不是我随便叫叫的，真的叫ClientHello😢……</p>
-<ol>
-<li>ServerHello。Server收到这些信息后比对自己的TLS版本，选择其中低的一个作为返回，并且从算法组合的集合中选出一种合适的组合，然后同样也生成一个随机数B，一起打包到ServerHello中传回给Client。内容如图（<code>ServerHello.png</code>）：</li>
-</ol>
-<p>   <img src="https:////upload-images.jianshu.io/upload_images/2000804-84e576eff565ee07.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000" alt="img"></p>
-<p>   ServerHello.png</p>
-<p>   同样ServerHello也不是随便叫的，可以看到随机数格式和ClientHello一样，并且这里选出了一种CipherSuite算法组合。</p>
-<ol>
-<li>Certificatie,ServerHelloDone。服务端在选出沟通策略之后将自己的证书信息告诉Client端（<code>Certificate</code>），通知Client关于秘钥更新的信息（<code>ServerkeyExchange</code>），接下去就看你的了，并且表示该发的都发给你了，我的Hello结束了（<code>ServerHelloDone</code>）。</li>
-</ol>
-<p>   <img src="https:////upload-images.jianshu.io/upload_images/2000804-d472cf46f4216b0b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000" alt="img"></p>
-<p>   Certificate-ServerHelloDone.png</p>
-<ol>
-<li><p>Client收到2，3步的信息后先验证证书是不是合法的，包括它的颁发机构，域名匹配，有限期限等，这个具体的过程就不探究了，只要知道这些步骤就行了。</p>
-</li>
-<li><p>证书验证通过之后，生成随机数C1,然后用证书内容中的公钥通过服务器选择的非对称加密算法加密，得出为C2。</p>
-</li>
-<li><p>由之前的三个随机数A、B、C1通过一个伪随机函数再生成一个D，<strong>注意！这个是最终http真正使用的加密秘钥！！！</strong>。</p>
-</li>
-<li><p>由D再次通过伪随机函数生成一个秘钥组，包含6个秘钥，假设为P1,P2,P3,P4,P5,P6。</p>
-</li>
-<li><p>ClientKeyExchange。通知Server秘钥相关的信息，发送第5步中算出的C2给Server端。</p>
-</li>
-<li><p>Client端发送ClientKeyExchange之后，计算之前所有与Server端交互消息的hash值，假设为client_hash1，用步骤7中得到的其中一个P1进行加密，结果为E。</p>
-</li>
-<li><p>Server端收到C2后用私钥结合非对称算法解密C2，得到C1。</p>
-</li>
-<li><p>同样的Server端也根据A、B、C1由伪随机函数生成D(<strong>最终的加密秘钥！！！</strong>),再由D得出秘组钥（P1-P6），因为这里涉及到的算法都是一样的，所以得出的秘钥也是一样的。</p>
-</li>
-<li><p>Server端计算之前所有和Client端交互消息的hash值，假设为server_hash2，大家可能发现了，11、12跟Client端的6、7、9过程一致，只是少了9中的P1加密过程。</p>
-</li>
-<li><p>这个时候Client端会发送ChangeCipherSpec消息和EncryptedHandshakeMessage消息，通知Server端接下去使用选定的加密策略来通信了，并且将第9步中的E传给了Server。（这里几个步骤的顺序只是为了好理解一点而这样排列，实际两条线是独立在处理信息的，所以先后顺序不能保证）</p>
-</li>
-<li><p>这个时候Client会再次计算之前握手消息的hash值，得出结果client_hash2。</p>
-</li>
-<li><p>Server在收到EncryptedHandshakeMessage消息带过来的E之后，利用步骤11中的P1解密E，由于加密算法和P1都是相同的，所以这里还原出了client_hash1，然后与步骤12中的server_hash2比对，如果一样说明之前的几条协商秘钥的消息都被对方正确无误的理解了。</p>
-</li>
-<li><p>Server端再次对之前的消息做hash值，得出server_hash2，用P2进行加密结果为F，然后通过ChangeCipherSpec-EncryptedHandshakeMessage消息传给Client端。</p>
-</li>
-<li><p>Client收到Server的消息后根据P2解密F还原得出server_hash2，与client_hash2比对如果一致，则认为之前的交互过程都是正确无误且被对方理解的。至此，整个握手过程就结束了，之后的http数据报就会被之前确定的加密策略和加密秘钥D进行加密传输了。</p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>HTTP/HTTPS</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>TCP三次握手的底层逻辑</title>
     <url>/2018/02/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BTCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91/</url>
     <content><![CDATA[<p>TCP三次握手是基础中的基础，所有工程师都对此熟悉不过。但这里的三次往往被忽视，究竟为何TCP需要三次握手？本文中，我们探讨TCP三次握手的底层逻辑。</p>
@@ -6026,6 +5955,77 @@ Tot \leq cn^d\cdot \sum_{j=0}^{log_b^n}(\frac{a}{b^d})^j</script><h3 id="应用�
       </categories>
       <tags>
         <tag>TCP/IP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HTTPS原理解析</title>
+    <url>/2016/11/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/</url>
+    <content><![CDATA[<p>HTTP协议是明文传输，它简单易于理解，但同时也带来了安全性问题，在复杂的网络环境中，HTTP流量几乎是在裸奔，可以轻易被监听，为了解决这个问题，人们提出了HTTP over SSL即HTTPS，即通过ssl隧道来传输HTTP流量，这样加密了HTTP数据包，实现了传输链路上的安全性。相比于HTTP，HTTPS在TCP层上多了一个SSL/TLS层。</p>
+<p><img src="http://blog.upyun.com/wp-content/uploads/2017/03/httpvshttps.png" alt="img"></p>
+<h2 id="HTTPS的通信过程"><a href="#HTTPS的通信过程" class="headerlink" title="HTTPS的通信过程"></a>HTTPS的通信过程</h2><h3 id="SSL-TLS"><a href="#SSL-TLS" class="headerlink" title="SSL/TLS"></a>SSL/TLS</h3><blockquote>
+<p>SSL（Secure Socket Layer，安全套接字层）：1994年为 Netscape 所研发，SSL 协议位于 TCP/IP 协议与各种应用层协议之间，为数据通讯提供安全支持。</p>
+<p>TLS（Transport Layer Security，传输层安全）：其前身是 SSL，它最初的几个版本（SSL 1.0、SSL 2.0、SSL 3.0）由网景公司开发，1999 年从 3.1 开始被 IETF 标准化并改名，发展至今已经有 TLS 1.0、TLS 1.1、TLS 1.2 三个版本。SSL3.0 和 TLS1.0 由于存在安全漏洞，已经很少被使用到。TLS 1.3 改动会比较大，目前还在草案阶段，目前使用最广泛的是 TLS 1.1、TLS 1.2。</p>
+</blockquote>
+<p>可以简单认为SSL与TLS是描述的同一种协议，本文中不做区分，SSL/TLS是为了在TCP连接上添加一个加密隧道来加密通信流量，可以确保通信流量安全无法解密。</p>
+<h3 id="图解"><a href="#图解" class="headerlink" title="图解"></a>图解</h3><p>由于HTTPS的TLS层是在TCP上的，所以与HTTP一样，在建立TLS连接之前必须先TCP三次握手</p>
+<p>HTTPS的通信过程可以由下图简单表示。</p>
+<h3 id="步骤详解"><a href="#步骤详解" class="headerlink" title="步骤详解"></a>步骤详解</h3><h4 id="0x01-ClientHello"><a href="#0x01-ClientHello" class="headerlink" title="0x01 ClientHello"></a>0x01 ClientHello</h4><ol>
+<li>ClientHello。 首先https请求是基于http的，也就是基于tcp的，所以先得建立tcp三次握手，这个就不说了，然后tcp握手后是SSL层的握手，也就是图中的ClientHello消息，client发送本地最新的TLS版本、算法组合的一个集合和其他很多辅助的信息，并且生成一个随机数A。</li>
+</ol>
+<p>   <img src="https:////upload-images.jianshu.io/upload_images/2000804-900ab967d4c437d5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000" alt="img"></p>
+<p>   ClientHello.png</p>
+<p>   可以看到随机数（</p>
+   <figure class="highlight arcade"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Random</span></span><br></pre></td></tr></table></figure>
+<p>   ）是一个GMT UNIX时间加上一串随机字节，算法组合（</p>
+   <figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Cipher Suite</span></span><br></pre></td></tr></table></figure>
+<p>   ）有26种。还有ClientHello并不是我随便叫叫的，真的叫ClientHello😢……</p>
+<ol>
+<li>ServerHello。Server收到这些信息后比对自己的TLS版本，选择其中低的一个作为返回，并且从算法组合的集合中选出一种合适的组合，然后同样也生成一个随机数B，一起打包到ServerHello中传回给Client。内容如图（<code>ServerHello.png</code>）：</li>
+</ol>
+<p>   <img src="https:////upload-images.jianshu.io/upload_images/2000804-84e576eff565ee07.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000" alt="img"></p>
+<p>   ServerHello.png</p>
+<p>   同样ServerHello也不是随便叫的，可以看到随机数格式和ClientHello一样，并且这里选出了一种CipherSuite算法组合。</p>
+<ol>
+<li>Certificatie,ServerHelloDone。服务端在选出沟通策略之后将自己的证书信息告诉Client端（<code>Certificate</code>），通知Client关于秘钥更新的信息（<code>ServerkeyExchange</code>），接下去就看你的了，并且表示该发的都发给你了，我的Hello结束了（<code>ServerHelloDone</code>）。</li>
+</ol>
+<p>   <img src="https:////upload-images.jianshu.io/upload_images/2000804-d472cf46f4216b0b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000" alt="img"></p>
+<p>   Certificate-ServerHelloDone.png</p>
+<ol>
+<li><p>Client收到2，3步的信息后先验证证书是不是合法的，包括它的颁发机构，域名匹配，有限期限等，这个具体的过程就不探究了，只要知道这些步骤就行了。</p>
+</li>
+<li><p>证书验证通过之后，生成随机数C1,然后用证书内容中的公钥通过服务器选择的非对称加密算法加密，得出为C2。</p>
+</li>
+<li><p>由之前的三个随机数A、B、C1通过一个伪随机函数再生成一个D，<strong>注意！这个是最终http真正使用的加密秘钥！！！</strong>。</p>
+</li>
+<li><p>由D再次通过伪随机函数生成一个秘钥组，包含6个秘钥，假设为P1,P2,P3,P4,P5,P6。</p>
+</li>
+<li><p>ClientKeyExchange。通知Server秘钥相关的信息，发送第5步中算出的C2给Server端。</p>
+</li>
+<li><p>Client端发送ClientKeyExchange之后，计算之前所有与Server端交互消息的hash值，假设为client_hash1，用步骤7中得到的其中一个P1进行加密，结果为E。</p>
+</li>
+<li><p>Server端收到C2后用私钥结合非对称算法解密C2，得到C1。</p>
+</li>
+<li><p>同样的Server端也根据A、B、C1由伪随机函数生成D(<strong>最终的加密秘钥！！！</strong>),再由D得出秘组钥（P1-P6），因为这里涉及到的算法都是一样的，所以得出的秘钥也是一样的。</p>
+</li>
+<li><p>Server端计算之前所有和Client端交互消息的hash值，假设为server_hash2，大家可能发现了，11、12跟Client端的6、7、9过程一致，只是少了9中的P1加密过程。</p>
+</li>
+<li><p>这个时候Client端会发送ChangeCipherSpec消息和EncryptedHandshakeMessage消息，通知Server端接下去使用选定的加密策略来通信了，并且将第9步中的E传给了Server。（这里几个步骤的顺序只是为了好理解一点而这样排列，实际两条线是独立在处理信息的，所以先后顺序不能保证）</p>
+</li>
+<li><p>这个时候Client会再次计算之前握手消息的hash值，得出结果client_hash2。</p>
+</li>
+<li><p>Server在收到EncryptedHandshakeMessage消息带过来的E之后，利用步骤11中的P1解密E，由于加密算法和P1都是相同的，所以这里还原出了client_hash1，然后与步骤12中的server_hash2比对，如果一样说明之前的几条协商秘钥的消息都被对方正确无误的理解了。</p>
+</li>
+<li><p>Server端再次对之前的消息做hash值，得出server_hash2，用P2进行加密结果为F，然后通过ChangeCipherSpec-EncryptedHandshakeMessage消息传给Client端。</p>
+</li>
+<li><p>Client收到Server的消息后根据P2解密F还原得出server_hash2，与client_hash2比对如果一致，则认为之前的交互过程都是正确无误且被对方理解的。至此，整个握手过程就结束了，之后的http数据报就会被之前确定的加密策略和加密秘钥D进行加密传输了。</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>HTTP/HTTPS</tag>
       </tags>
   </entry>
   <entry>
@@ -8628,8 +8628,8 @@ Tot \leq cn^d\cdot \sum_{j=0}^{log_b^n}(\frac{a}{b^d})^j</script><h3 id="应用�
         <category>算法</category>
       </categories>
       <tags>
-        <tag>算法</tag>
         <tag>JavaScript</tag>
+        <tag>算法</tag>
       </tags>
   </entry>
   <entry>

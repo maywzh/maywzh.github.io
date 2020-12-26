@@ -4,7 +4,6 @@ categories: 计算机组成原理
 comments: false
 date: 2017-10-10 11:33:47
 tags: 
-  - CPU
   - 组成原理
 thumbnail: https://i.loli.net/2020/08/22/BcVx7dMTu5tUFnK.jpg
 cover: https://i.loli.net/2020/08/22/BcVx7dMTu5tUFnK.jpg

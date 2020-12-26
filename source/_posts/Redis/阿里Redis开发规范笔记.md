@@ -2,8 +2,8 @@
 title: (转载)阿里Redis开发规范笔记
 categories: 数据库
 comments: false
-thumbnail: https://i.loli.net/2020/09/03/rmHZdE9TpyWg7DK.jpg
-cover: https://i.loli.net/2020/09/03/rmHZdE9TpyWg7DK.jpg
+thumbnail: https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png
+cover: https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png
 date: 2017-01-08 14:18:48
 tags:
   - Redis

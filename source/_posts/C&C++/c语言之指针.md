@@ -1,12 +1,12 @@
 ---
-title: 理解c语言中的指针
+title: 理解C语言中的指针
 categories: 编程
 comments: false
 date: 2015-10-16 21:28:11
 tags:
   - C/C++
-thumbnail: https://i.loli.net/2020/08/23/BxKw7Ck12O8zpjJ.jpg
-cover: https://i.loli.net/2020/08/23/BxKw7Ck12O8zpjJ.jpg
+thumbnail: https://i.loli.net/2020/12/26/EF75JsTN1iBZKSf.png
+cover: https://i.loli.net/2020/12/26/EF75JsTN1iBZKSf.png
 ---
 
 在考虑指针的问题之前，首先我们来回顾一下如何定义一个变量。

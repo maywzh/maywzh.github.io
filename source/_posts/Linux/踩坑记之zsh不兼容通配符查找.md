@@ -5,8 +5,9 @@ comments: true
 date: 2017-09-01 17:17:04
 tags:
   - zsh
-thumbnail: https://i.loli.net/2020/09/01/48RV5Srk2mXHYG1.jpg
-cover: https://i.loli.net/2020/09/01/48RV5Srk2mXHYG1.jpg
+  - Terminal
+thumbnail: https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png
+cover: https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png
 ---
 
 这是在进行certbot通配符ssl证书申请时候发生的坑。

@@ -2,8 +2,8 @@
 title: 密码学之Diffie-Hellman密钥交换
 categories: 密码学
 comments: false
-thumbnail: https://i.loli.net/2020/09/11/dZQSnTFhgxkplMJ.jpg
-cover: https://i.loli.net/2020/09/11/dZQSnTFhgxkplMJ.jpg
+thumbnail: https://i.loli.net/2020/12/26/7GS4AQuvIziBUd9.png
+cover: https://i.loli.net/2020/12/26/7GS4AQuvIziBUd9.png
 mathjax: true
 date: 2019-10-10 01:00:25
 tags:

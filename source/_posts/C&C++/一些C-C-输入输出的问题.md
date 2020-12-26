@@ -1,9 +1,9 @@
 ---
-title: 一些C++输入输出的问题
+title: 一些C/C++输入输出的问题
 categories: 编程
 comments: false
-thumbnail: https://i.loli.net/2020/08/23/BxKw7Ck12O8zpjJ.jpg
-cover: https://i.loli.net/2020/08/23/BxKw7Ck12O8zpjJ.jpg
+thumbnail: https://i.loli.net/2020/12/26/EF75JsTN1iBZKSf.png
+cover: https://i.loli.net/2020/12/26/EF75JsTN1iBZKSf.png
 mathjax: false
 date: 2015-09-02 20:52:00
 tags:

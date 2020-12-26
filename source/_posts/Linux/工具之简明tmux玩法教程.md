@@ -5,8 +5,9 @@ comments: false
 date: 2017-01-09 02:30:21
 tags:
   - 工具
-thumbnail: https://i.loli.net/2020/08/29/a3KEq6D5kzCJsRg.jpg
-cover: https://i.loli.net/2020/08/29/a3KEq6D5kzCJsRg.jpg
+  - Terminal
+thumbnail: https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png
+cover: https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png
 ---
 
 # [猫哥_kaiye | 编程笔记](https://www.cnblogs.com/kaiye/)

@@ -2,8 +2,8 @@
 title: Java线上CPU、磁盘、内存、网络排障指南
 categories: DevOps
 comments: false
-thumbnail: https://i.loli.net/2020/09/10/5DI4tzSwbuQgFif.jpg
-cover: https://i.loli.net/2020/09/10/5DI4tzSwbuQgFif.jpg
+thumbnail: https://i.loli.net/2020/12/26/5ZCbq2VJFgy4EU8.png
+cover: https://i.loli.net/2020/12/26/5ZCbq2VJFgy4EU8.png
 mathjax: false
 date: 2016-11-15 15:53:54
 tags:

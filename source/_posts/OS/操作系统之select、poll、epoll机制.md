@@ -6,8 +6,8 @@ date: 2018-01-29 00:19:46
 tags:
   - Linux
   - I/O
-thumbnail: https://i.loli.net/2020/08/29/ZrVGm1ju6eQApMO.jpg
-cover: https://i.loli.net/2020/08/29/ZrVGm1ju6eQApMO.jpg
+thumbnail: https://i.loli.net/2020/12/26/OYf6MmgL1IvqFAh.png
+cover: https://i.loli.net/2020/12/26/OYf6MmgL1IvqFAh.png
 ---
 
 IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。与多进程和多线程技术相比，I/O多路复用技术的最大优势是系统开销小，系统不必创建进程/线程，也不必维护这些进程/线程，从而大大减小了系统的开销。

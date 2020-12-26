@@ -1,12 +1,12 @@
 ---
-title: macOS生产力之——Terminal命令
+title: 常用的macOS命令行命令
 author: maywzh
 tags:
   - Terminal
 categories: 工具
 date: 2016-01-05 14:29:00
-thumbnail: https://i.loli.net/2020/09/09/azcPZ9tATyW4weI.png
-cover: https://i.loli.net/2020/09/09/azcPZ9tATyW4weI.png
+thumbnail: https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png
+cover: https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png
 ---
 记录下常用的macOS命令。
 <!--more-->

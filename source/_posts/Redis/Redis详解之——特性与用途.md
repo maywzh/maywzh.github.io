@@ -5,8 +5,8 @@ comments: false
 date: 2018-03-04 19:13:49
 tags:
   - Redis
-thumbnail: https://i.loli.net/2020/08/28/txIJVifd9a8mlzY.png
-cover: https://i.loli.net/2020/08/28/txIJVifd9a8mlzY.png
+thumbnail: https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png
+cover: https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png
 ---
 
 `Redis` 是一个使用 `ANSI C` 编写的开源、支持 **网络**、基于 **内存**、**单线程模型**、**可选持久性** 的 **键值对存储数据库**。Redis是一个K-V的非关系型数据库（NoSQL），常见的NoSQL数据库有：K-V数据库如Redis、Memcached，列式数据库如大数据组件HBase，文档数据库如mongoDB。Redis应用广泛，尤其是被作为缓存使用。

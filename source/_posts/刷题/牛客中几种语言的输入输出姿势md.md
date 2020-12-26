@@ -1,17 +1,15 @@
 ---
-title: 牛客中几种语言的输入输出姿势
+title: 刷题几种语言的输入输出姿势
 categories: 刷题
 comments: false
-thumbnail: https://i.loli.net/2020/09/06/8ApetyPcsJanqLV.jpg
-cover: https://i.loli.net/2020/09/06/8ApetyPcsJanqLV.jpg
-date: 2020-04-06 16:24:42
+thumbnail: https://i.loli.net/2020/12/26/yVnfD9bgNOcrWPL.png
+cover: https://i.loli.net/2020/12/26/yVnfD9bgNOcrWPL.png
+date: 2015-09-10 16:24:42
 tags:
   - Go
   - Java
   - Python
 ---
-
-有些坑爹公司考试居然要自己处理输入输出 ，哎。。。。
 
 总结一波自己常用的Python、Java、Golang的输入输出技巧。
 

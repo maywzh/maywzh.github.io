@@ -6,8 +6,8 @@ date: 2015-06-21 16:55:51
 tags:
   - Linux
   - Terminal
-thumbnail: https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png
-cover: https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png
+thumbnail: https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png
+cover: https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png
 ---
 
 ## wget - web get

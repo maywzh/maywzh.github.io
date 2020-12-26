@@ -2,8 +2,8 @@
 title: Go语言数组与切片
 categories: 编程
 comments: false
-thumbnail: https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg
-cover: https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg
+thumbnail: https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png
+cover: https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png
 date: 2020-01-05 15:47:08
 tags:
   - Go

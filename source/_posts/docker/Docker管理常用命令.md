@@ -2,8 +2,8 @@
 title: Docker管理常用命令
 categories: DevOps
 comments: false
-thumbnail: https://i.loli.net/2020/08/29/W4Mmi1SLqHOtcpb.png
-cover: https://i.loli.net/2020/08/29/W4Mmi1SLqHOtcpb.png
+thumbnail: https://i.loli.net/2020/12/26/hpkCK6VX5cfJqDi.png
+cover: https://i.loli.net/2020/12/26/hpkCK6VX5cfJqDi.png
 date: 2017-09-08 14:25:13
 tags:
   - Docker

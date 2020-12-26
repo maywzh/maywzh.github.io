@@ -2,8 +2,8 @@
 title: Go语言的调度器
 categories: 编程
 comments: false
-thumbnail: https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg
-cover: https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg
+thumbnail: https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png
+cover: https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png
 mathjax: false
 date: 2020-01-10 00:11:19
 tags:

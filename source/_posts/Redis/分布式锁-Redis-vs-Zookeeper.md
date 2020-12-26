@@ -2,8 +2,8 @@
 title: '分布式锁:Redis vs. Zookeeper'
 categories: 系统设计
 comments: false
-thumbnail: https://i.loli.net/2020/09/08/S1dpotKYcvBOiH9.jpg
-cover: https://i.loli.net/2020/09/08/S1dpotKYcvBOiH9.jpg
+thumbnail: https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png
+cover: https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png
 date: 2017-06-08 14:30:01
 tags:
   - Redis

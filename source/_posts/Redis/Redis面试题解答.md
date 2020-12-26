@@ -2,8 +2,8 @@
 title: Redis面试题解答
 categories: 数据库
 comments: false
-thumbnail: 'https://i.loli.net/2020/09/03/rmHZdE9TpyWg7DK.jpg'
-cover: 'https://i.loli.net/2020/09/03/rmHZdE9TpyWg7DK.jpg'
+thumbnail: https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png
+cover: https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png
 date: 2017-04-03 09:02:00
 updated: 2019-03-23 11:08:00
 tags:

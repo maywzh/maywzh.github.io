@@ -5,8 +5,6 @@ comments: false
 date: 2018-02-28 21:40:10
 tags:
   - I/O
-  - Linux
-  - 操作系统
 thumbnail: https://i.loli.net/2020/08/28/jogd2NXQ5MuIvKc.png
 cover: https://i.loli.net/2020/08/28/jogd2NXQ5MuIvKc.png
 ---

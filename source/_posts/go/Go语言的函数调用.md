@@ -2,8 +2,8 @@
 title: Go语言的函数调用
 categories: 编程
 comments: false
-thumbnail: https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg
-cover: https://i.loli.net/2020/09/04/vY4eq6OIRotf19l.jpg
+thumbnail: https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png
+cover: https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png
 date: 2020-01-08 18:14:08
 tags:
   - Go

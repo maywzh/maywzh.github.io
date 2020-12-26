@@ -6,8 +6,8 @@ tags:
   - Terminal
 comments: false
 date: 2015-08-21 21:04:01
-thumbnail: https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png
-cover: https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png
+thumbnail: https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png
+cover: https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png
 ---
 
 free工具用来查看系统可用内存

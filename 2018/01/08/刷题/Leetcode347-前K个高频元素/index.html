@@ -1,320 +1,241 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
 
-<meta name="author" content="maywzh">
+	    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
 
-
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
-
-
-<title>Leetcode347. 前 K 个高频元素 | 0x01 MAYSTORY </title>
-
-
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-    "HTML-CSS": {
-        preferredFont: "TeX",
-        availableFonts: ["STIX","TeX"],
-        linebreaks: { automatic:true },
-        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
-    },
-    tex2jax: {
-        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
-        processEscapes: true,
-        ignoreClass: "tex2jax_ignore|dno",
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-        equationNumbers: { autoNumber: "AMS" },
-        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
-        Macros: { href: "{}" }
-    },
-    messageStyle: "none"
-    });
-</script>
-<!-- 给MathJax元素添加has-jax class -->
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Queue(function() {
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
         var all = MathJax.Hub.getAllJax(), i;
-        for(i=0; i < all.length; i += 1) {
-            all[i].SourceElement().parentNode.className += ' has-jax';
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
         }
-    });
-</script>
-<!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
 
-    
-    
-    
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
 <meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
 
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
+<!-- Layouts -->
 
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
 </header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
-</script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-</script>
-    
-
-    
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">Leetcode347. 前 K 个高频元素</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
-
-                    
-                        <span class="post-time">
-                        Date: <a href="#">January 8, 2018&nbsp;&nbsp;2:11:29</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E5%88%B7%E9%A2%98/">刷题</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
-
-        <div class="post-content">
-            <a id="more"></a>
-<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><h3 id="347-前-K-个高频元素"><a href="#347-前-K-个高频元素" class="headerlink" title="347. 前 K 个高频元素"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/top-k-frequent-elements/">347. 前 K 个高频元素</a></h3><p>Difficulty: <strong> 中等 </strong></p>
-<p>给定一个非空的整数数组，返回其中出现频率前 <strong>k</strong> 高的元素。</p>
-<p><strong> 示例 1:</strong></p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> 输入: nums = [<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>], k = <span class="number">2</span></span><br><span class="line"> 输出: [<span class="number">1</span>,<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
-<p><strong> 示例 2:</strong></p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> 输入: nums = [<span class="number">1</span>], k = <span class="number">1</span></span><br><span class="line"> 输出: [<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
-<p><strong> 提示：</strong></p>
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/02/A7PJcl2btayUY1K.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>Leetcode347.前K个高频元素</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <a id="more"></a>
+<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><h3 id="347-前-K-个高频元素"><a href="#347-前-K-个高频元素" class="headerlink" title="347. 前 K 个高频元素"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/top-k-frequent-elements/">347. 前 K 个高频元素</a></h3><p>Difficulty: <strong>中等</strong></p>
+<p>给定一个非空的整数数组，返回其中出现频率前 <strong>k</strong>高的元素。</p>
+<p><strong>示例 1:</strong></p>
+<pre class="line-numbers language-none"><code class="language-none">输入: nums &#x3D; [1,1,1,2,2,3], k &#x3D; 2
+输出: [1,2]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>示例 2:</strong></p>
+<pre class="line-numbers language-none"><code class="language-none">输入: nums &#x3D; [1], k &#x3D; 1
+输出: [1]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>提示：</strong></p>
 <ul>
-<li>你可以假设给定的 k 总是合理的，且 $1\leq k\leq m$, m 为数组中不相同的元素的个数。</li>
-<li>你的算法的时间复杂度 <strong> 必须 </strong> 优于 $O (nlogn)$ , n 是数组的大小。</li>
+<li>你可以假设给定的 k 总是合理的，且$1\leq k\leq m$, m为数组中不相同的元素的个数。</li>
+<li>你的算法的时间复杂度<strong>必须</strong>优于 $O(nlogn)$ , n是数组的大小。</li>
 <li>题目数据保证答案唯一，换句话说，数组中前 k 个高频元素的集合是唯一的。</li>
 <li>你可以按任意顺序返回答案。</li>
 </ul>
-<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>遍历数组，记录每个数字出现的次数，保存在哈希表中，这样的时间复杂度为 $O (n)$。</p>
-<p>我们只需要找出这个哈希表中值最大的 k 个。</p>
+<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>遍历数组，记录每个数字出现的次数，保存在哈希表中，这样的时间复杂度为$O(n)$。</p>
+<p>我们只需要找出这个哈希表中值最大的k个。</p>
 <p>在这里我们可以用堆来排序。建立一个小顶堆，遍历出现次数数组。</p>
 <ul>
-<li>堆元素个数小于 k，入堆</li>
-<li>堆元素等于 k，检查堆顶与当前出现次数的大小，堆顶更大，则至少有 k 个数字出现次数比当前值大，舍弃当前值，否则弹出堆顶，插入当前值到堆。</li>
+<li>堆元素个数小于k，入堆</li>
+<li>堆元素等于k，检查堆顶与当前出现次数的大小，堆顶更大，则至少有k个数字出现次数比当前值大，舍弃当前值，否则弹出堆顶，插入当前值到堆。</li>
 </ul>
-<p>遍历完成后，堆中元素纪委出现次数数组前 k 大的值。</p>
-<p>遍历数组，用哈希表的记录时间为 $O (n)$，遍历出现次数数组，建立大小为 k 的堆，每次堆操作为时间复杂度为 $O (logk)$，n 次操作为 $O (nlogk)$，总时间复杂度为 $O (n)+O (nlogk)=O (n)$</p>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">topKFrequent</span><span class="params">(nums []<span class="keyword">int</span>, k <span class="keyword">int</span>)</span> []<span class="title">int</span></span> &#123;</span><br><span class="line">    occurrences := <span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">int</span>&#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> _, num := <span class="keyword">range</span> nums &#123;</span><br><span class="line">        occurrences [num]++</span><br><span class="line">    &#125;</span><br><span class="line">    h := &amp;IHeap&#123;&#125;</span><br><span class="line">    heap.Init (h)</span><br><span class="line">    <span class="keyword">for</span> key, value := <span class="keyword">range</span> occurrences &#123;</span><br><span class="line">        heap.Push (h, [<span class="number">2</span>]<span class="keyword">int</span>&#123;key, value&#125;)</span><br><span class="line">        <span class="keyword">if</span> h.Len () &gt; k &#123;</span><br><span class="line">            heap.Pop (h)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ret := <span class="built_in">make</span>([]<span class="keyword">int</span>, k)</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; k; i++ &#123;</span><br><span class="line">        ret [k - i - <span class="number">1</span>] = heap.Pop (h).([<span class="number">2</span>]<span class="keyword">int</span>)[<span class="number">0</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> IHeap [][<span class="number">2</span>]<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(h IHeap)</span> <span class="title">Len</span><span class="params">()</span> <span class="title">int</span></span>           &#123; <span class="keyword">return</span> <span class="built_in">len</span>(h) &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(h IHeap)</span> <span class="title">Less</span><span class="params">(i, j <span class="keyword">int</span>)</span> <span class="title">bool</span></span> &#123; <span class="keyword">return</span> h [i][<span class="number">1</span>] &lt; h [j][<span class="number">1</span>] &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(h IHeap)</span> <span class="title">Swap</span><span class="params">(i, j <span class="keyword">int</span>)</span></span>      &#123; h [i], h [j] = h [j], h [i] &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(h *IHeap)</span> <span class="title">Push</span><span class="params">(x <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">    *h = <span class="built_in">append</span>(*h, x.([<span class="number">2</span>]<span class="keyword">int</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>遍历完成后，堆中元素纪委出现次数数组前k大的值。</p>
+<p>遍历数组，用哈希表的记录时间为$O(n)$，遍历出现次数数组，建立大小为k的堆，每次堆操作为时间复杂度为$O(logk)$，n次操作为$O(nlogk)$，总时间复杂度为$O(n)+O(nlogk)=O(n)$</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">topKFrequent</span><span class="token punctuation">(</span>nums <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">,</span> k <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span> <span class="token punctuation">&#123;</span>
+    occurrences <span class="token operator">:=</span> <span class="token keyword">map</span><span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+    <span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> num <span class="token operator">:=</span> <span class="token keyword">range</span> nums <span class="token punctuation">&#123;</span>
+        occurrences<span class="token punctuation">[</span>num<span class="token punctuation">]</span><span class="token operator">++</span>
+    <span class="token punctuation">&#125;</span>
+    h <span class="token operator">:=</span> <span class="token operator">&amp;</span>IHeap<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+    heap<span class="token punctuation">.</span><span class="token function">Init</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span>
+    <span class="token keyword">for</span> key<span class="token punctuation">,</span> value <span class="token operator">:=</span> <span class="token keyword">range</span> occurrences <span class="token punctuation">&#123;</span>
+        heap<span class="token punctuation">.</span><span class="token function">Push</span><span class="token punctuation">(</span>h<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">&#123;</span>key<span class="token punctuation">,</span> value<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> h<span class="token punctuation">.</span><span class="token function">Len</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> k <span class="token punctuation">&#123;</span>
+            heap<span class="token punctuation">.</span><span class="token function">Pop</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+    ret <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">,</span> k<span class="token punctuation">)</span>
+    <span class="token keyword">for</span> i <span class="token operator">:=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> k<span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
+        ret<span class="token punctuation">[</span>k <span class="token operator">-</span> i <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> heap<span class="token punctuation">.</span><span class="token function">Pop</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">return</span> ret
+<span class="token punctuation">&#125;</span>
 
+<span class="token keyword">type</span> IHeap <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token builtin">int</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>h IHeap<span class="token punctuation">)</span> <span class="token function">Len</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token builtin">int</span>           <span class="token punctuation">&#123;</span> <span class="token keyword">return</span> <span class="token function">len</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span> <span class="token punctuation">&#125;</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>h IHeap<span class="token punctuation">)</span> <span class="token function">Less</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> j <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token builtin">bool</span> <span class="token punctuation">&#123;</span> <span class="token keyword">return</span> h<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span> h<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token punctuation">&#125;</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>h IHeap<span class="token punctuation">)</span> <span class="token function">Swap</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> j <span class="token builtin">int</span><span class="token punctuation">)</span>      <span class="token punctuation">&#123;</span> h<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> h<span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">=</span> h<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">,</span> h<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token punctuation">&#125;</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>h <span class="token operator">*</span>IHeap<span class="token punctuation">)</span> <span class="token function">Push</span><span class="token punctuation">(</span>x <span class="token keyword">interface</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token operator">*</span>h <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span><span class="token operator">*</span>h<span class="token punctuation">,</span> x<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+            </div>
+            <!-- Post Comments -->
+            
         </div>
-
-        
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
-                    
-                        <a href="/tags/%E5%A0%86/"># 堆</a>
-                    
-                        <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/"># 哈希表</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2018/01/28/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">编程之并发编程</a>
-            
-            
-            <a class="next" rel="next" href="/2018/01/08/%E5%88%B7%E9%A2%98/Leetcode300-%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/">Leetcode300. 最长上升子序列</a>
-            
-        </section>
-
-
-    </article>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
 </div>
-
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
-        
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-        
-        <span> | <img src="https://pic3.zhimg.com/80/v2-d0289dc0a46fc5b15b3363ffa78cf6c7.png" style="width:16px;"><a
-                href="http://www.beian.gov.cn/" target="_blank">赣公网安备36040302000263号</a></span>
-        
-    </div>
-</footer>
     </div>
 </body>
+
+
+
+
+
 </html>

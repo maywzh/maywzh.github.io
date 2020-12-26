@@ -1,269 +1,258 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
 
-<meta name="author" content="maywzh">
+	    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
 
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
-
-
-<title>如何理解 Linux 权限系统 | 0x01 MAYSTORY </title>
-
-
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
 <meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
 
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
+<!-- Layouts -->
 
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
 </header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
-</script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-</script>
-    
-
-    
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">如何理解 Linux 权限系统</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
-
-                    
-                        <span class="post-time">
-                        Date: <a href="#">April 9, 2015&nbsp;&nbsp;11:41:59</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/DevOps/">DevOps</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
-
-        <div class="post-content">
-            <p>最近一直在处理服务器上的 issue，中间遇到最多的的就是 <code>Permission denied</code> 问题，这就是权限问题。今天就来整理一下 Linux 文件权限系统的知识，从根本上填掉这个坑。</p>
-<h2 id="Linux-文件权限"><a href="#Linux-文件权限" class="headerlink" title="Linux 文件权限"></a>Linux 文件权限</h2><p><strong>Linux 中，目录和文件都被视为文件。</strong>Linux 中每个文件都有其属性与权限。我们可以使用 <code>ls</code> 命令来查看</p>
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/23/SwyGODBgvRrI67x.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>如何理解Linux权限系统</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <p>最近一直在处理服务器上的issue，中间遇到最多的的就是<code>Permission denied</code>问题，这就是权限问题。今天就来整理一下Linux文件权限系统的知识，从根本上填掉这个坑。</p>
+<h2 id="Linux-文件权限"><a href="#Linux-文件权限" class="headerlink" title="Linux 文件权限"></a>Linux 文件权限</h2><p><strong>Linux中，目录和文件都被视为文件。</strong>Linux中每个文件都有其属性与权限。我们可以使用<code>ls</code>命令来查看</p>
 <a id="more"></a>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls -al</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">ls</span> -al<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>可以看到，每个文件的最前面都有一个文件类型和权限描述。后面分别是文件链接数，文件拥有者，文件用户组，文件最后修改日期和名称。<code>.</code> 代表当前目录 <code>..</code> 代表上一级目录。</p>
-<h3 id="第一栏：-文件类型和权限"><a href="#第一栏：-文件类型和权限" class="headerlink" title="第一栏： 文件类型和权限"></a>第一栏： 文件类型和权限</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> maywzh@M-Ubuntu  /bin  ls -al</span><br><span class="line">total 13412</span><br><span class="line">drwxr-xr-x  2 root root    4096 Sep 24 19:19 .</span><br><span class="line">drwxr-xr-x 24 root root    4096 Oct  4 06:12 ..</span><br><span class="line">-rwxr-xr-x  1 root root 1113504 Apr  5 02:30 bash</span><br><span class="line">-rwxr-xr-x  1 root root  748968 Aug 29 15:57 brltty</span><br><span class="line">-rwxr-xr-x  1 root root   34888 Jan 30  2017 bunzip2</span><br><span class="line">-rwxr-xr-x  1 root root 2022480 Dec 13  2017 busybox</span><br><span class="line">-rwxr-xr-x  1 root root   34888 Jan 30  2017 bzcat</span><br><span class="line">lrwxrwxrwx  1 root root       6 Sep 13 18:35 bzcmp -&gt; bzdiff</span><br><span class="line">-rwxr-xr-x  1 root root    2140 Jan 30  2017 bzdiff</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>我们来观察一下第一栏的类型权限描述符，总共有 10 个字符。</p>
+<h3 id="第一栏：-文件类型和权限"><a href="#第一栏：-文件类型和权限" class="headerlink" title="第一栏： 文件类型和权限"></a>第一栏： 文件类型和权限</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"> maywzh@M-Ubuntu  /bin  <span class="token function">ls</span> -al
+total <span class="token number">13412</span>
+drwxr-xr-x  <span class="token number">2</span> root root    <span class="token number">4096</span> Sep <span class="token number">24</span> <span class="token number">19</span>:19 <span class="token builtin class-name">.</span>
+drwxr-xr-x <span class="token number">24</span> root root    <span class="token number">4096</span> Oct  <span class="token number">4</span> 06:12 <span class="token punctuation">..</span>
+-rwxr-xr-x  <span class="token number">1</span> root root <span class="token number">1113504</span> Apr  <span class="token number">5</span> 02:30 <span class="token function">bash</span>
+-rwxr-xr-x  <span class="token number">1</span> root root  <span class="token number">748968</span> Aug <span class="token number">29</span> <span class="token number">15</span>:57 brltty
+-rwxr-xr-x  <span class="token number">1</span> root root   <span class="token number">34888</span> Jan <span class="token number">30</span>  <span class="token number">2017</span> bunzip2
+-rwxr-xr-x  <span class="token number">1</span> root root <span class="token number">2022480</span> Dec <span class="token number">13</span>  <span class="token number">2017</span> busybox
+-rwxr-xr-x  <span class="token number">1</span> root root   <span class="token number">34888</span> Jan <span class="token number">30</span>  <span class="token number">2017</span> bzcat
+lrwxrwxrwx  <span class="token number">1</span> root root       <span class="token number">6</span> Sep <span class="token number">13</span> <span class="token number">18</span>:35 bzcmp -<span class="token operator">></span> bzdiff
+-rwxr-xr-x  <span class="token number">1</span> root root    <span class="token number">2140</span> Jan <span class="token number">30</span>  <span class="token number">2017</span> bzdiff
+<span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们来观察一下第一栏的类型权限描述符，总共有10个字符。</p>
 <ul>
-<li><p>第一个字符代表文件的类型：目录、文件、链接文件、设备等等。</p>
+<li><p>第一个字符代表文件的类型: 目录、文件、链接文件、设备等等。</p>
 <ul>
-<li>当为 [ d ] 则是目录，例如 <a target="_blank" rel="noopener" href="https://wizardforcel.gitbooks.io/vbird-linux-basic-4e/Text/index.html#table2.1.1">上表</a> 文件名为 “.config” 的那一行；</li>
-<li>当为 [ - ] 则是文件，例如 <a target="_blank" rel="noopener" href="https://wizardforcel.gitbooks.io/vbird-linux-basic-4e/Text/index.html#table2.1.1">上表</a> 文件名为 “initial-setup-ks.cfg” 那一行；</li>
-<li>若是 [ l ] 则表示为链接文件（link file）；</li>
-<li>若是 [ b ] 则表示为设备文件里面的可供储存的周边设备（可随机存取设备）；</li>
-<li>若是 [ c ] 则表示为设备文件里面的序列埠设备，例如键盘、鼠标（一次性读取设备）。</li>
+<li>当为[ d ]则是目录，例如<a target="_blank" rel="noopener" href="https://wizardforcel.gitbooks.io/vbird-linux-basic-4e/Text/index.html#table2.1.1">上表</a>文件名为“.config”的那一行；</li>
+<li>当为[ - ]则是文件，例如<a target="_blank" rel="noopener" href="https://wizardforcel.gitbooks.io/vbird-linux-basic-4e/Text/index.html#table2.1.1">上表</a>文件名为“initial-setup-ks.cfg”那一行；</li>
+<li>若是[ l ]则表示为链接文件（link file）；</li>
+<li>若是[ b ]则表示为设备文件里面的可供储存的周边设备（可随机存取设备）；</li>
+<li>若是[ c ]则表示为设备文件里面的序列埠设备，例如键盘、鼠标（一次性读取设备）。</li>
 </ul>
 </li>
-<li><p>接下来的字符，三个为一组，分为三组。为 <code>[r/-][w/-][x/-]</code> 的组合。<code>[ r ]</code> 代表可读（read）、<code>[ w ]</code> 代表可写（write）、<code>[ x ]</code> 代表可执行（execute）。 这三个权限的位置不会改变，如果没有权限，就会出现减号 <code>[ - ]</code>。</p>
+<li><p>接下来的字符，三个为一组，分为三组。为<code>[r/-][w/-][x/-]</code>的组合。<code>[ r ]</code>代表可读（read）、<code>[ w ]</code>代表可写（write）、<code>[ x ]</code>代表可执行（execute）。 这三个权限的位置不会改变，如果没有权限，就会出现减号<code>[ - ]</code>。</p>
 <ul>
-<li>第一组为 “文件拥有者权限”，例如上面的 <code>bash</code> 的文件拥有者为 <code>root</code>。</li>
-<li>第二组为 “本群组账号权限”，例如上面的 <code>bash</code> 的文件群组为 <code>root</code>。</li>
-<li>第三组为 “非本人非本群组其他帐号的权限”。</li>
+<li>第一组为“文件拥有者权限”，例如上面的<code>bash</code>的文件拥有者为<code>root</code>。</li>
+<li>第二组为“本群组账号权限”，例如上面的<code>bash</code>的文件群组为<code>root</code>。</li>
+<li>第三组为“非本人非本群组其他帐号的权限”。</li>
 </ul>
 </li>
-<li><p><strong> 也可以用三个数字来代表权限，我们可以把每组的权限组合写成一个二进制数字，1 代表有权限，0 代表无权限。</strong></p>
-<p><strong> 例如 <code>r-x</code>-&gt;<code>101</code>，再把这个 101 二进制数转换为十进制的 5，这样我们用三个十进制数即可代表一个文件的权限配置。例如 rw-r-xr— 就可以写成 <code>654</code>。</strong></p>
+<li><p><strong>也可以用三个数字来代表权限，我们可以把每组的权限组合写成一个二进制数字，1代表有权限，0代表无权限。</strong></p>
+<p><strong>例如 <code>r-x</code>-&gt;<code>101</code>，再把这个101二进制数转换为十进制的5，这样我们用三个十进制数即可代表一个文件的权限配置。例如 rw-r-xr—就可以写成<code>654</code>。</strong></p>
 <h4 id=""><a href="#" class="headerlink" title=" "></a> </h4></li>
 </ul>
-<h3 id="第二栏：-文件名链接数"><a href="#第二栏：-文件名链接数" class="headerlink" title="第二栏： 文件名链接数"></a>第二栏： 文件名链接数</h3><p>每个文件的元信息实际上是记录在 i-node 中的，文件名只是别名而已。目录树却使用文件名来记录。每个文件名都会连接到一个 i-node，但每个 i-node 却可以链接不止一个文件名。</p>
-<p>这一栏记录的就是对应的 i-node 连接到了多少个不同的文件名。</p>
-<h3 id="第三、四栏：-文件拥有者和群组"><a href="#第三、四栏：-文件拥有者和群组" class="headerlink" title="第三、四栏： 文件拥有者和群组"></a>第三、四栏： 文件拥有者和群组</h3><h3 id="第五栏：文件容量大小"><a href="#第五栏：文件容量大小" class="headerlink" title="第五栏：文件容量大小"></a>第五栏：文件容量大小</h3><p>默认单位为 Byte</p>
-<h3 id="第六栏：文件创建日期或最新修改日期"><a href="#第六栏：文件创建日期或最新修改日期" class="headerlink" title="第六栏：文件创建日期或最新修改日期"></a>第六栏：文件创建日期或最新修改日期</h3><h3 id="第七栏：文件名"><a href="#第七栏：文件名" class="headerlink" title="第七栏：文件名"></a>第七栏：文件名</h3><p>如果文件名前面多一个 <code>.</code> 则代表该文件为隐藏文件。可用 <code>ls -a</code> 来显示隐藏文件</p>
-<h2 id="改变文件属性与权限"><a href="#改变文件属性与权限" class="headerlink" title="改变文件属性与权限"></a>改变文件属性与权限</h2><h3 id="改变文件的权限-chmod-命令"><a href="#改变文件的权限-chmod-命令" class="headerlink" title="改变文件的权限 - chmod 命令"></a>改变文件的权限 - <code>chmod</code> 命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#u-user g-group o-others a-all + 添加 - 去除 = 设定 </span></span><br><span class="line">chmod u+x,g+w file <span class="comment"># 为 file 的拥有者加上可执行的权限，群组加上可写的权限 </span></span><br><span class="line">chmod u=rwx,g=rw,o=r file <span class="comment"># 设置 file 的拥有者可读可写可执行，群组可读可写，其他人可读 </span></span><br><span class="line">chmod u=764 file <span class="comment"># 设置 file 的拥有者可读可写可执行 (7=rwx), 群组可读可栖 (6=rw-)，其他人可读 (4=r--)</span></span><br><span class="line">chmod a+x <span class="comment"># 设置 u g o 都可以执行 </span></span><br><span class="line">chmod o-r <span class="comment"># 去除其他人的读权限 </span></span><br></pre></td></tr></table></figure>
-<h3 id="改变文件的拥有者和群组-chown-命令"><a href="#改变文件的拥有者和群组-chown-命令" class="headerlink" title="改变文件的拥有者和群组 - chown 命令"></a>改变文件的拥有者和群组 - <code>chown</code> 命令</h3><p>用法</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chown user1 file <span class="comment"># 把 file 的拥有者设定为 user1 </span></span><br><span class="line">chown -R user1 dir <span class="comment"># 把 dir 目录下所有文件以及次目录文件的拥有者都设置为 user1</span></span><br><span class="line">chown -R user1:group1 file <span class="comment"># 把 file 的拥有者设定为 user1 群组设置为 group1</span></span><br></pre></td></tr></table></figure>
-<p>被改变的用户必须在用户账户配置文件 <code>/etc/passed</code> 中存在</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[maywzh@M-Ubuntu] ~$ cat /etc/passwd</span><br><span class="line">scin:x:4:534:sync:/bin:/bin/sync</span><br><span class="line">games:x:5:34:games:/usr/games:/usr/sbin/nologin</span><br></pre></td></tr></table></figure>
-<p><code>/etc/passwd</code> 的每个用户组一条记录占据一行，记录格式 <code>用户名：口令：用户标识号：组标识号：注释性描述：主目录：登录 Shell</code></p>
+<h3 id="第二栏：-文件名链接数"><a href="#第二栏：-文件名链接数" class="headerlink" title="第二栏： 文件名链接数"></a>第二栏： 文件名链接数</h3><p>每个文件的元信息实际上是记录在i-node中的，文件名只是别名而已。目录树却使用文件名来记录。每个文件名都会连接到一个i-node，但每个i-node却可以链接不止一个文件名。</p>
+<p>这一栏记录的就是对应的i-node连接到了多少个不同的文件名。</p>
+<h3 id="第三、四栏：-文件拥有者和群组"><a href="#第三、四栏：-文件拥有者和群组" class="headerlink" title="第三、四栏： 文件拥有者和群组"></a>第三、四栏： 文件拥有者和群组</h3><h3 id="第五栏：文件容量大小"><a href="#第五栏：文件容量大小" class="headerlink" title="第五栏：文件容量大小"></a>第五栏：文件容量大小</h3><p>默认单位为Byte</p>
+<h3 id="第六栏：文件创建日期或最新修改日期"><a href="#第六栏：文件创建日期或最新修改日期" class="headerlink" title="第六栏：文件创建日期或最新修改日期"></a>第六栏：文件创建日期或最新修改日期</h3><h3 id="第七栏：文件名"><a href="#第七栏：文件名" class="headerlink" title="第七栏：文件名"></a>第七栏：文件名</h3><p>如果文件名前面多一个<code>.</code>则代表该文件为隐藏文件。可用<code>ls -a</code>来显示隐藏文件</p>
+<h2 id="改变文件属性与权限"><a href="#改变文件属性与权限" class="headerlink" title="改变文件属性与权限"></a>改变文件属性与权限</h2><h3 id="改变文件的权限-chmod命令"><a href="#改变文件的权限-chmod命令" class="headerlink" title="改变文件的权限 - chmod命令"></a>改变文件的权限 - <code>chmod</code>命令</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#u-user g-group o-others a-all +添加 -去除 =设定 </span>
+<span class="token function">chmod</span> u+x,g+w <span class="token function">file</span> <span class="token comment">#为file的拥有者加上可执行的权限，群组加上可写的权限</span>
+<span class="token function">chmod</span> <span class="token assign-left variable">u</span><span class="token operator">=</span>rwx,g<span class="token operator">=</span>rw,o<span class="token operator">=</span>r <span class="token function">file</span> <span class="token comment">#设置file的拥有者可读可写可执行，群组可读可写，其他人可读</span>
+<span class="token function">chmod</span> <span class="token assign-left variable">u</span><span class="token operator">=</span><span class="token number">764</span> <span class="token function">file</span> <span class="token comment">#设置file的拥有者可读可写可执行(7=rwx),群组可读可栖(6=rw-)，其他人可读(4=r--)</span>
+<span class="token function">chmod</span> a+x <span class="token comment">#设置u g o 都可以执行</span>
+<span class="token function">chmod</span> o-r <span class="token comment">#去除其他人的读权限</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="改变文件的拥有者和群组-chown命令"><a href="#改变文件的拥有者和群组-chown命令" class="headerlink" title="改变文件的拥有者和群组 - chown命令"></a>改变文件的拥有者和群组 - <code>chown</code>命令</h3><p>用法</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">chown</span> user1 <span class="token function">file</span> <span class="token comment"># 把file的拥有者设定为user1 </span>
+<span class="token function">chown</span> -R user1 <span class="token function">dir</span> <span class="token comment"># 把dir目录下所有文件以及次目录文件的拥有者都设置为user1</span>
+<span class="token function">chown</span> -R user1:group1 <span class="token function">file</span> <span class="token comment"># 把file的拥有者设定为user1 群组设置为group1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>被改变的用户必须在用户账户配置文件<code>/etc/passed</code>中存在</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>maywzh@M-Ubuntu<span class="token punctuation">]</span> ~$ <span class="token function">cat</span> /etc/passwd
+scin:x:4:534:sync:/bin:/bin/sync
+games:x:5:34:games:/usr/games:/usr/sbin/nologin<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><code>/etc/passwd</code>的每个用户组一条记录占据一行，记录格式<code>用户名:口令:用户标识号:组标识号:注释性描述:主目录:登录Shell</code></p>
 <ul>
-<li><p>用户名 (login_name)：是代表用户账号的字符串</p>
+<li><p>用户名(login_name)：是代表用户账号的字符串</p>
 </li>
-<li><p>口令 (passwd)：这个字段存放是用户口令的加密串。为了安全起见，目前许多 Linux 系统（如 SVR4）都使用了 shadow 技术，把真正的加密后的用户口令字存放到 <code>/etc/shadow</code> 文件中，而在 <code>/etc/passwd</code> 文件的口令字段中只存放一个特殊的字符，例如 “x” 或者 “*”。</p>
+<li><p>口令(passwd)：这个字段存放是用户口令的加密串。为了安全起见，目前许多Linux系统（如SVR4）都使用了shadow技术，把真正的加密后的用户口令字存放到<code>/etc/shadow</code>文件中，而在<code>/etc/passwd</code>文件的口令字段中只存放一个特殊的字符，例如“x”或者“*”。</p>
 </li>
-<li><p>用户标识号 (UID)：系统内部用它来标识用户。一般情况下它与用户名是一一对应的。如果几个用户名对应的用户标识号是一样的，系统内部将把它们视为同一个用户，但是它们可以有不同的口令、不同的主目录以及不同的登录 Shell 等。取值范围是 0-65535。0 是超级用户 root 的标识号，1-99 由系统保留，作为管理账号，普通用户的标识号从 100 开始。在 Linux 系统中，这个界限是 500。</p>
+<li><p>用户标识号(UID)：系统内部用它来标识用户。一般情况下它与用户名是一一对应的。如果几个用户名对应的用户标识号是一样的，系统内部将把它们视为同一个用户，但是它们可以有不同的口令、不同的主目录以及不同的登录Shell等。取值范围是0-65535。0是超级用户root的标识号，1-99由系统保留，作为管理账号，普通用户的标识号从100开始。在Linux系统中，这个界限是500。</p>
 </li>
-<li><p>组标识号 (GID)：字段记录的是用户所属的用户组。它对应着 /etc/group 文件中的一条记录。</p>
+<li><p>组标识号(GID)：字段记录的是用户所属的用户组。它对应着/etc/group文件中的一条记录。</p>
 </li>
-<li><p>注释性描述 (users)：字段记录着用户的一些个人情况。</p>
+<li><p>注释性描述(users)：字段记录着用户的一些个人情况。</p>
 </li>
-<li><p>主目录 (home_directory)：也就是用户的起始工作目录，它是用户在登录到系统之后所处的目录。在大多数系统中，各用户的主目录都被组织在同一个特定的目录下，而用户主目录的名称就是该用户的登录名。各用户对自己的主目录有读、写、执行（搜索）权限，其他用户对此目录的访问权限则根据具体情况设置。</p>
+<li><p>主目录(home_directory)：也就是用户的起始工作目录，它是用户在登录到系统之后所处的目录。在大多数系统中，各用户的主目录都被组织在同一个特定的目录下，而用户主目录的名称就是该用户的登录名。各用户对自己的主目录有读、写、执行（搜索）权限，其他用户对此目录的访问权限则根据具体情况设置。</p>
 </li>
-<li><p>登录 Shell (Shell)：用户登录后，要启动一个 Shell 进程，负责将用户的操作传给内核，常见有 sh,bash,zsh 等。不指定 Shell，那么系统使用 /bin/sh。用户的登录 Shell 可以指定为某个特定的程序。利用这一特点，我们可以限制用户只能运行指定的应用程序，在该应用程序运行结束后，用户就自动退出了系统。有些 Linux 系统要求只有那些在系统中登记了的程序才能出现在这个字段中。例如可以为 git 只配置 git 程序的权限。</p>
+<li><p>登录Shell(Shell)：用户登录后，要启动一个Shell进程，负责将用户的操作传给内核，常见有sh,bash,zsh等。不指定Shell，那么系统使用/bin/sh。用户的登录Shell可以指定为某个特定的程序。利用这一特点，我们可以限制用户只能运行指定的应用程序，在该应用程序运行结束后，用户就自动退出了系统。有些Linux系统要求只有那些在系统中登记了的程序才能出现在这个字段中。例如可以为git只配置git程序的权限。</p>
 </li>
 </ul>
-<h3 id="改变文件所属群组-chgrp-命令"><a href="#改变文件所属群组-chgrp-命令" class="headerlink" title="改变文件所属群组 - chgrp 命令"></a>改变文件所属群组 - chgrp 命令</h3><p>用法</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chgrp group1 file <span class="comment"># 把 file 的群组设定为 group1</span></span><br><span class="line">chgrp -R group1 dir <span class="comment"># 把 dir 目录下所有文件以及次目录文件的群组都设置为 group1</span></span><br></pre></td></tr></table></figure>
-<p>被改变的群组必须在群组配置文件 <code>/etc/group</code> 中存在</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[maywzh@M-Ubuntu] ~$ cat /etc/group</span><br><span class="line">tester:x:500:linuxsir</span><br><span class="line">charger:x:134:syslog,maywzh</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p><code>/etc/group</code> 的每个用户组一条记录占据一行，记录格式 <code>group_name:passwd:GID:user_list</code></p>
-<p>第一字段：用户组名称；<br>第二字段：用户组密码； x 表示未设密码<br>第三字段：GID 该用户组下的用户包括用户列表中的用户 GID 为该 GID 的用户，通过 <code>/etc/passwd</code> 查看<br>第四字段：用户列表，每个用户之间用，号分割；本字段可以为空；如果字段为空表示用户组为 GID 的用户名； </p>
+<h3 id="改变文件所属群组-chgrp命令"><a href="#改变文件所属群组-chgrp命令" class="headerlink" title="改变文件所属群组 - chgrp命令"></a>改变文件所属群组 - chgrp命令</h3><p>用法</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">chgrp</span> group1 <span class="token function">file</span> <span class="token comment"># 把file的群组设定为group1</span>
+<span class="token function">chgrp</span> -R group1 <span class="token function">dir</span> <span class="token comment"># 把dir目录下所有文件以及次目录文件的群组都设置为group1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>被改变的群组必须在群组配置文件<code>/etc/group</code>中存在</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>maywzh@M-Ubuntu<span class="token punctuation">]</span> ~$ <span class="token function">cat</span> /etc/group
+tester:x:500:linuxsir
+charger:x:134:syslog,maywzh
+<span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>/etc/group</code>的每个用户组一条记录占据一行，记录格式<code>group_name:passwd:GID:user_list</code></p>
+<p>第一字段：用户组名称；<br>第二字段：用户组密码； x表示未设密码<br>第三字段：GID 该用户组下的用户包括用户列表中的用户GID为该GID的用户,通过<code>/etc/passwd</code>查看<br>第四字段：用户列表，每个用户之间用,号分割；本字段可以为空；如果字段为空表示用户组为GID的用户名； </p>
 <p>对应的命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gpasswd –a username groupname <span class="comment"># 把某用户加入到某个组中 </span></span><br><span class="line">gpasswd –d username groupname <span class="comment"># 把组中的某个用户删除 </span></span><br><span class="line">smbpasswd –a username          <span class="comment"># 在 SMB 中加入用户 </span></span><br><span class="line">smbpasswd –x username          <span class="comment"># 在 SMB 中删除用户 </span></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">gpasswd –a username groupname <span class="token comment">#把某用户加入到某个组中</span>
+gpasswd –d username groupname <span class="token comment">#把组中的某个用户删除</span>
+smbpasswd –a username          <span class="token comment">#在SMB中加入用户</span>
+smbpasswd –x username          <span class="token comment">#在 SMB中删除用户</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="详解权限"><a href="#详解权限" class="headerlink" title="详解权限"></a>详解权限</h2><h3 id="读-r"><a href="#读-r" class="headerlink" title="读 - r"></a>读 - r</h3><p>文件：读取文件的实际内容。</p>
-<p>目录：可以查询该目录下的文件名数据，使用 <code>ls</code> 命令把该目录内容列表显示出来。</p>
-<h3 id="写-w"><a href="#写-w" class="headerlink" title="写 - w"></a>写 - w</h3><p>文件：可以编辑、新增或者是修改该文件的内容但不含删除该文件。<code>w</code> 主要都是针对 “文件的内容” 而言，与文件文件名的存在与否没有关系，因为文件记录的是实际的数据。</p>
+<p>目录：可以查询该目录下的文件名数据，使用<code>ls</code>命令把该目录内容列表显示出来。</p>
+<h3 id="写-w"><a href="#写-w" class="headerlink" title="写 - w"></a>写 - w</h3><p>文件: 可以编辑、新增或者是修改该文件的内容但不含删除该文件。<code>w</code>主要都是针对“文件的内容”而言，与文件文件名的存在与否没有关系，因为文件记录的是实际的数据。</p>
 <p>目录：表示可以修改目录结构清单的权限，即</p>
 <ul>
 <li>创建新的文件与目录；</li>
@@ -271,9 +260,9 @@
 <li>将已存在的文件或目录进行更名；</li>
 <li>搬移该目录内的文件、目录位置。</li>
 </ul>
-<h3 id="执行-x"><a href="#执行-x" class="headerlink" title="执行 - x"></a>执行 - x</h3><p>文件：Linux 中文件是否能被执行就是由 <code>x</code> 这个字段来指定。</p>
-<p>目录：代表使用者是否能进入该目录作为工作目录，即 <code>cd</code> 到这个目录的权限。</p>
-<p>例：假设现在在系统使用 may 这个帐号，那么这个帐号针对 /dir1, /dir1/file1, /dir2 这三个文件名来说，分别需要 “哪些最小的权限” 才能达成各项任务？</p>
+<h3 id="执行-x"><a href="#执行-x" class="headerlink" title="执行 - x"></a>执行 - x</h3><p>文件：Linux中文件是否能被执行就是由<code>x</code>这个字段来指定。</p>
+<p>目录：代表使用者是否能进入该目录作为工作目录，即<code>cd</code>到这个目录的权限。</p>
+<p>例：假设现在在系统使用 may 这个帐号，那么这个帐号针对 /dir1, /dir1/file1, /dir2 这三个文件名来说，分别需要“哪些最小的权限”才能达成各项任务？</p>
 <div class="table-container">
 <table>
 <thead>
@@ -324,56 +313,54 @@
 </tbody>
 </table>
 </div>
-<p>上面的表格当中，很多时候 /dir1 都不必有 r 。这是因为我们知道 /dir1 是个目录，类似于抽屉。那个抽屉的 r 代表 “这个抽屉里面有灯光”， 所以能看到抽屉内的所有数据名称 （非内容）。但我们已经知道里面的数据放在哪个地方，所以可以不需要灯光摸黑拿到该数据。 因此，上面很多动作中，你只要具有 x 即可。r 是非必备的！只是，没有 r 的话，使用 [tab] 时，就无法自动补全文件名。</p>
+<p>上面的表格当中，很多时候 /dir1 都不必有 r 。这是因为我们知道 /dir1 是个目录，类似于抽屉。那个抽屉的 r 代表“这个抽屉里面有灯光”， 所以能看到抽屉内的所有数据名称 （非内容）。但我们已经知道里面的数据放在哪个地方，所以可以不需要灯光摸黑拿到该数据。 因此，上面很多动作中，你只要具有 x 即可。r 是非必备的！只是，没有 r 的话，使用 [tab] 时，就无法自动补全文件名。</p>
 
-        </div>
-
-        
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/Linux/"># Linux</a>
-                    
-                        
-                </span>
             </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2015/05/12/Linux/Linux%E5%B8%B8%E7%94%A8%E7%BD%91%E7%BB%9C%E5%B7%A5%E5%85%B7/">Linux 常用网络命令</a>
+            <!-- Post Comments -->
             
             
-            <a class="next" rel="next" href="/2015/02/11/MySQL/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8BMysql%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Mysql 的常用命令</a>
-            
-        </section>
-
-
-    </article>
+    <!-- 使用 valine -->
+<div id="comment">
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#comment' ,
+        notify: false,
+        verify: false,
+        app_id: '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+        app_key: 'UrBohelQ00fEUxu5npX46rtL',
+        placeholder: 'Just go go',
+        pageSize: '10',
+        avatar: 'mm',
+        avatar_cdn: 'https://gravatar.loli.net/avatar/'
+    });
+</script>
 </div>
+<style>
+   #comment{
+        padding: 2pc;
+    }
+</style>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
             
-        </span>
-        
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-        
-        <span> | <img src="https://pic3.zhimg.com/80/v2-d0289dc0a46fc5b15b3363ffa78cf6c7.png" style="width:16px;"><a
-                href="http://www.beian.gov.cn/" target="_blank">赣公网安备36040302000263号</a></span>
-        
-    </div>
-</footer>
+        </div>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
+</div>
     </div>
 </body>
+
+
+
+
+
 </html>

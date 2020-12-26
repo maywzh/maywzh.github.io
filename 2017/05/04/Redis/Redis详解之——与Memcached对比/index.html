@@ -1,211 +1,173 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
 
-<meta name="author" content="maywzh">
+	    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
 
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
-
-
-<title>如何比较 Redis 与 Memcached | 0x01 MAYSTORY </title>
-
-
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
 <meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
 
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
+<!-- Layouts -->
 
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
 </header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
-</script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-</script>
-    
-
-    
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">如何比较 Redis 与 Memcached</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
-
-                    
-                        <span class="post-time">
-                        Date: <a href="#">May 4, 2017&nbsp;&nbsp;23:46:00</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
-
-        <div class="post-content">
-            <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p>Redis 与 Memcached 的比较相当多，首先我们比较一下他们的介绍。</p>
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/09/rS9BaJ7xjWc83kC.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>如何比较Redis与Memcached</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p>Redis与Memcached的比较相当多，首先我们比较一下他们的介绍。</p>
 <blockquote>
 <p>Memcached：一款完全开源、高性能的、分布式的内存系统；</p>
-<p>Redis：一个开源的、Key-Value 型、基于内存运行并支持持久化的 NoSQL 数据库；</p>
+<p>Redis：一个开源的、Key-Value型、基于内存运行并支持持久化的NoSQL数据库；</p>
 </blockquote>
 <a id="more"></a>
-<p>可以发现，Memcached 更侧重于高性能内存 / 缓存系统，而 Redis 则支持持久化，主打数据库功能，兼可作缓存系统（性能也很高）。</p>
+<p>可以发现，Memcached更侧重于高性能内存/缓存系统，而Redis则支持持久化，主打数据库功能，兼可作缓存系统（性能也很高）。</p>
 <p>下面有一个更加详细的比较表</p>
 <div class="table-container">
 <table>
@@ -220,7 +182,7 @@
 <tr>
 <td style="text-align:left">类型</td>
 <td style="text-align:left">1. 支持内存 <br />2. 非关系型数据库</td>
-<td style="text-align:left">1. 支持内存 <br />2. key-value 形式 &lt; br /&gt;3. 缓存系统</td>
+<td style="text-align:left">1. 支持内存 <br />2. key-value形式<br />3. 缓存系统</td>
 </tr>
 <tr>
 <td style="text-align:left">数据存储类型</td>
@@ -229,18 +191,18 @@
 </tr>
 <tr>
 <td style="text-align:left">查询操作</td>
-<td style="text-align:left">1. 批量操作 &lt; br /&gt;2. 支持事务 &lt; br /&gt;3. 每个类型 CRUD 不同</td>
-<td style="text-align:left">CRUD 和少量其他命令</td>
+<td style="text-align:left">1. 批量操作<br />2. 支持事务<br />3. 每个类型CRUD不同</td>
+<td style="text-align:left">CRUD和少量其他命令</td>
 </tr>
 <tr>
 <td style="text-align:left">附加功能</td>
-<td style="text-align:left">1. 发布 / 订阅模式 &lt; br /&gt;2. 主从分区 &lt; br /&gt;3. 序列化支持 &lt; br /&gt;4. 脚本支持</td>
+<td style="text-align:left">1. 发布/订阅模式<br />2. 主从分区<br />3. 序列化支持<br />4. 脚本支持</td>
 <td style="text-align:left">多线程服务支持</td>
 </tr>
 <tr>
 <td style="text-align:left">网络模型</td>
-<td style="text-align:left">单进程 IO 复用模型</td>
-<td style="text-align:left">多进程非阻塞 IO 模型</td>
+<td style="text-align:left">单进程IO复用模型</td>
+<td style="text-align:left">多进程非阻塞IO模型</td>
 </tr>
 <tr>
 <td style="text-align:left">事件库</td>
@@ -255,85 +217,81 @@
 </tbody>
 </table>
 </div>
-<h2 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h2><p><strong>Memcached 是多线程非阻塞 IO 复用的网络模型 </strong>，它由负责监听的主线程和子线程 worker 组成。主线程监听网络连接，每当接受到网络请求，将连接描述字传递给 worker 线程进行读写 IO 操作。Memcached 的网络层使用 libevent 封装的事件库。但多线程不可避免地会有缓存一致性和锁等问题，这里面带来了性能损耗。</p>
-<p><strong>Redis 是单线程 IO 复用模型 </strong>，自己封装了一个简单的 AeEvent 事件处理框架，主要实现了 epoll, kqueue 和 select，对于单纯只有 IO 操作的业务场景来说，单线程可以将速度优势发挥到最大，但对于一些消耗 CPU 资源的计算性的操作例如 redis 提供的排序和聚合等，单线程模型施加会严重影响整体吞吐量，CPU 计算过程中，整个 IO 调度都是被阻塞的。</p>
-<p>我们可以粗略得出结论，<strong> 在高并发场景的压力下，多线程非阻塞式 IO 的 Memcached 表现会更加优异。</strong></p>
-<h2 id="内存管理机制"><a href="#内存管理机制" class="headerlink" title="内存管理机制"></a>内存管理机制</h2><p>Memcached 和 Redis 都是由 C 语言开发，他们都是自主实现内存模型。</p>
-<p>Memcached 的内存模式是 Slab Allocation。它有以下几个特点：</p>
+<h2 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h2><p><strong>Memcached是多线程非阻塞IO复用的网络模型</strong>，它由负责监听的主线程和子线程worker组成。主线程监听网络连接，每当接受到网络请求，将连接描述字传递给worker线程进行读写IO操作。Memcached的网络层使用libevent封装的事件库。但多线程不可避免地会有缓存一致性和锁等问题，这里面带来了性能损耗。</p>
+<p><strong>Redis是单线程IO复用模型</strong>，自己封装了一个简单的AeEvent事件处理框架，主要实现了epoll, kqueue和select，对于单纯只有IO操作的业务场景来说，单线程可以将速度优势发挥到最大，但对于一些消耗CPU资源的计算性的操作例如redis提供的排序和聚合等，单线程模型施加会严重影响整体吞吐量，CPU计算过程中，整个IO调度都是被阻塞的。</p>
+<p>我们可以粗略得出结论，<strong>在高并发场景的压力下，多线程非阻塞式IO的Memcached表现会更加优异。</strong></p>
+<h2 id="内存管理机制"><a href="#内存管理机制" class="headerlink" title="内存管理机制"></a>内存管理机制</h2><p>Memcached和Redis都是由C语言开发，他们都是自主实现内存模型。</p>
+<p>Memcached的内存模式是Slab Allocation。它有以下几个特点：</p>
 <ol>
-<li>Memcached 存储数据的最小单位是 chunk，这种设计是为了避免内存碎片的问题。chunk 的大小可以通过 Factor 来管理。</li>
-<li><p>Slab 和 Page 用于承装不同尺寸的 chunk。</p>
+<li>Memcached存储数据的最小单位是chunk，这种设计是为了避免内存碎片的问题。chunk的大小可以通过Factor来管理。</li>
+<li><p>Slab和Page用于承装不同尺寸的chunk。</p>
 </li>
-<li><p>不同尺寸 chunk 最终进入一个 slab_class 进行管理，便于访问。</p>
+<li><p>不同尺寸chunk最终进入一个slab_class进行管理，便于访问。</p>
 </li>
 </ol>
-<p>数据访问流程，用户在 slab_class 找到合适尺寸的 slab，再通过某种方式找到 chunk，保证数据进入一个合适大小的 chunk 中存储，防止内存浪费。</p>
-<p>相对于 Memecached，Redis 的内存管理要相对简单。</p>
-<p>Redis 每一个数据块都是根据数据类型和大小来分配，每一块数据的元数据存入内存块头部。分配内存时，redis 调用 malloc 后返回首地址指针 <code>real_ptr</code>。redis 将内存块的大小 size 存入头部，size 本身所占据的内存大小是固定为 sizeof (typeof (size))。根据这个可以推算存储的数据的内存指针 <code>ret_ptr</code>。释放内存时，通过 <code>ret_ptr</code> 来推算 <code>real_ptr</code> 再调用 free 函数释放内存。</p>
-<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>Memcacehd 预分配内存池，用不同大小的内存单元来管理内存，数据选择合适的内存单元来存储。这样节省了申请 / 释放内存的开销，减少了内存碎片产生，但依然会带来内存空间浪费。Memcached 通过这种方式来最大化内存管理性能，是时间优先策略。</p>
-<p>Redis 按需申请内存，Redis 会把带过期时间的数据单独存放在一起，这些数据是临时数据，临时数据会根据缓存过期策略来进行剔除。非临时数据则永远不会剔除。Redis 更好地利用了内存空间，是空间优先策略。</p>
-<h2 id="数据一致性"><a href="#数据一致性" class="headerlink" title="数据一致性"></a>数据一致性</h2><p>Redis 提供了事务，这种事务并非真正的事务实现。而且这种事务性操作容易造成线程阻塞。Memcached 会返回操作的结果，不会影响其他数据。</p>
-<h2 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h2><p>Memcached 本身不支持集群，但它可以通过客户端来实现集群操作。它通过客户端上的程序库来封装了对集群服务器访问的接口，使得用户看起来似乎是在操作一个节点。客户端的程序通过 hash 算法来选择 memcached 节点，然后去访问对应的节点。</p>
-<p>Redis 支持集群。各个节点之间通过二进制协议进行通信，节点与客户端之间通过 ascii 协议进行通信。</p>
+<p>数据访问流程，用户在slab_class找到合适尺寸的slab，再通过某种方式找到chunk，保证数据进入一个合适大小的chunk中存储，防止内存浪费。</p>
+<p>相对于Memecached，Redis的内存管理要相对简单。</p>
+<p>Redis每一个数据块都是根据数据类型和大小来分配，每一块数据的元数据存入内存块头部。分配内存时，redis调用malloc后返回首地址指针<code>real_ptr</code>。redis将内存块的大小size存入头部，size本身所占据的内存大小是固定为sizeof(typeof(size))。根据这个可以推算存储的数据的内存指针<code>ret_ptr</code>。释放内存时，通过<code>ret_ptr</code>来推算<code>real_ptr</code>再调用free函数释放内存。</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>Memcacehd预分配内存池，用不同大小的内存单元来管理内存，数据选择合适的内存单元来存储。这样节省了申请/释放内存的开销，减少了内存碎片产生，但依然会带来内存空间浪费。Memcached通过这种方式来最大化内存管理性能，是时间优先策略。</p>
+<p>Redis按需申请内存，Redis会把带过期时间的数据单独存放在一起，这些数据是临时数据，临时数据会根据缓存过期策略来进行剔除。非临时数据则永远不会剔除。Redis更好地利用了内存空间，是空间优先策略。</p>
+<h2 id="数据一致性"><a href="#数据一致性" class="headerlink" title="数据一致性"></a>数据一致性</h2><p>Redis提供了事务，这种事务并非真正的事务实现。而且这种事务性操作容易造成线程阻塞。Memcached会返回操作的结果，不会影响其他数据。</p>
+<h2 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h2><p>Memcached本身不支持集群，但它可以通过客户端来实现集群操作。它通过客户端上的程序库来封装了对集群服务器访问的接口，使得用户看起来似乎是在操作一个节点。客户端的程序通过hash算法来选择memcached节点，然后去访问对应的节点。</p>
+<p>Redis支持集群。各个节点之间通过二进制协议进行通信，节点与客户端之间通过ascii协议进行通信。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li><p>如果业务更加侧重性能的高效性，对持久化要求不高，那么应该优先选择 Memcached。</p>
-<p>具体到业务有服务器的实时配置、存储 json 字符串等等。</p>
+<li><p>如果业务更加侧重性能的高效性，对持久化要求不高，那么应该优先选择Memcached。</p>
+<p>具体到业务有服务器的实时配置、存储json字符串等等。</p>
 </li>
-<li><p>对持久化有高需求，追求多类型数据支持，选择 Redis。</p>
+<li><p>对持久化有高需求，追求多类型数据支持，选择Redis。</p>
 <p>具体到业务有排行榜类应用、社交关系存储、数据排重等等。</p>
 </li>
 </ol>
 
-        </div>
-
-        
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/%E7%BC%93%E5%AD%98/"># 缓存</a>
-                    
-                        <a href="/tags/Web/"># Web</a>
-                    
-                        
-                </span>
             </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2017/05/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BTCP%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/">了解 tcp 拥塞控制</a>
+            <!-- Post Comments -->
             
             
-            <a class="next" rel="next" href="/2017/04/19/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/">编程模型之事件循环</a>
-            
-        </section>
-
-
-    </article>
+    <!-- 使用 valine -->
+<div id="comment">
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#comment' ,
+        notify: false,
+        verify: false,
+        app_id: '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+        app_key: 'UrBohelQ00fEUxu5npX46rtL',
+        placeholder: 'Just go go',
+        pageSize: '10',
+        avatar: 'mm',
+        avatar_cdn: 'https://gravatar.loli.net/avatar/'
+    });
+</script>
 </div>
+<style>
+   #comment{
+        padding: 2pc;
+    }
+</style>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
             
-        </span>
-        
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-        
-        <span> | <img src="https://pic3.zhimg.com/80/v2-d0289dc0a46fc5b15b3363ffa78cf6c7.png" style="width:16px;"><a
-                href="http://www.beian.gov.cn/" target="_blank">赣公网安备36040302000263号</a></span>
-        
-    </div>
-</footer>
+        </div>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
+</div>
     </div>
 </body>
+
+
+
+
+
 </html>

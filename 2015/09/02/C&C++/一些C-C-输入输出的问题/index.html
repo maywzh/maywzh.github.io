@@ -1,274 +1,236 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
 
-<meta name="author" content="maywzh">
+	    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
 
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
-
-
-<title>一些 C/C++ 输入输出的问题 | 0x01 MAYSTORY </title>
-
-
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
 <meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
 
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
+<!-- Layouts -->
 
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
 </header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
-</script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-</script>
-    
-
-    
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">一些 C/C++ 输入输出的问题</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
-
-                    
-                        <span class="post-time">
-                        Date: <a href="#">September 2, 2015&nbsp;&nbsp;20:52:00</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
-
-        <div class="post-content">
-            <p>总结 C/C++ 的 IO 的一些问题。</p>
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/12/26/EF75JsTN1iBZKSf.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>一些C/C++输入输出的问题</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <p>总结C/C++的IO的一些问题。</p>
 <a id="more"></a>
-<h2 id="cin-的-“-gt-gt-”-函数返回值是什么？"><a href="#cin-的-“-gt-gt-”-函数返回值是什么？" class="headerlink" title="cin 的 “&gt;&gt;” 函数返回值是什么？"></a>cin 的 “&gt;&gt;” 函数返回值是什么？</h2><blockquote>
-<p>为什么用 while (cin&gt;&gt;a) 一直跳不出循环？</p>
+<h2 id="cin的”-gt-gt-”函数返回值是什么"><a href="#cin的”-gt-gt-”函数返回值是什么" class="headerlink" title="cin的”&gt;&gt;”函数返回值是什么?"></a>cin的”&gt;&gt;”函数返回值是什么?</h2><blockquote>
+<p>为什么用while(cin&gt;&gt;a)一直跳不出循环？</p>
 </blockquote>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a;</span><br><span class="line"><span class="keyword">while</span> (<span class="built_in">cin</span> &gt;&gt; a)&#123;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>&gt;&gt;</code> 是一个被重载过的运算符，它本质上是调用函数 <code>operator&gt;&gt;(cin)</code>，这个重载函数的返回值类型为 <code>istream&amp;</code>，返回值通常就是输入流 <code>cin</code> 本身，<code>cin</code> 是定义在 <code>std</code> 空间中的标准输入流变量。如果没有遇到错误输入或者文件末尾（EOF），<code>cin</code> 就一直有效，当然就跳不出 while 循环。当你在键盘上输入 <code>Ctrl+Z</code>，再按 Enter 键，就等同于输入遇到了文件末尾 EOF，遇到 EOF 后，<code>&gt;&gt;</code> 函数的返回值是 0，就能结束 while 循环了。</p>
-<h2 id="scanf-的返回值是什么？"><a href="#scanf-的返回值是什么？" class="headerlink" title="scanf 的返回值是什么？"></a>scanf 的返回值是什么？</h2><blockquote>
-<p> <code>while (scanf (&quot;% d % d&quot;,&amp;a,&amp;b))&#123; &#125;</code> 为何是死循环？遇到文件结束符 EOF 也跳不出循环？</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int a;
+while (cin &gt;&gt; a)&#123;
+  
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>&gt;&gt;</code>是一个被重载过的运算符，它本质上是调用函数<code>operator&gt;&gt;(cin)</code>，这个重载函数的返回值类型为<code>istream&amp;</code>，返回值通常就是输入流<code>cin</code>本身, <code>cin</code>是定义在<code>std</code>空间中的标准输入流变量。如果没有遇到错误输入或者文件末尾（EOF），<code>cin</code>就一直有效，当然就跳不出while循环。当你在键盘上输入<code>Ctrl+Z</code>，再按Enter键，就等同于输入遇到了文件末尾EOF，遇到EOF后，<code>&gt;&gt;</code>函数的返回值是0，就能结束while循环了。</p>
+<h2 id="scanf的返回值是什么？"><a href="#scanf的返回值是什么？" class="headerlink" title="scanf的返回值是什么？"></a>scanf的返回值是什么？</h2><blockquote>
+<p> <code>while(scanf(&quot;%d %d&quot;,&amp;a,&amp;b))&#123; &#125;</code>为何是死循环？遇到文件结束符EOF也跳不出循环？</p>
 </blockquote>
-<p><code>scanf</code> 是函数，这和 <code>cin</code> 不同，<code>cin</code> 是一个类，而 <code>&gt;&gt;</code> 是 <code>cin</code> 类中的函数。<code>scanf</code> 返回的是成功输入数据的个数，例如 <code>scanf (”% d % d&quot;,&amp;a,&amp;b)</code>成功输入两个数，返回值就是 2，<code>scanf (&quot;% d&quot;,&amp;a)</code>成功输入一个数，返回值就是 1。当遇到文件末尾时，<code>scanf</code> 函数返回值是 EOF。<br>EOF 是一个宏，标准规定 EOF 必须是一个 int 类型的负数，编译器通常令 EOF 的值为 - 1。因此，想要跳出循环，要写成 <code>while ( scanf (&quot;% d % d&quot;,&amp;a,&amp;b) !=EOF)&#123; &#125;</code>。</p>
+<p><code>scanf</code>是函数，这和<code>cin</code>不同，<code>cin</code>是一个类，而<code>&gt;&gt;</code>是<code>cin</code>类中的函数。<code>scanf</code>返回的是成功输入数据的个数，例如<code>scanf(”%d %d&quot;,&amp;a,&amp;b)</code>成功输入两个数，返回值就是2，<code>scanf(&quot;%d&quot;,&amp;a)</code>成功输入一个数，返回值就是1。当遇到文件末尾时，<code>scanf</code>函数返回值是EOF。<br>EOF是一个宏，标准规定EOF必须是一个int类型的负数，编译器通常令EOF的值为-1。因此，想要跳出循环，要写成<code>while( scanf(&quot;%d %d&quot;,&amp;a,&amp;b) !=EOF)&#123; &#125;</code>。</p>
 <h2 id="输入的数据什么时候才会进入缓冲区？"><a href="#输入的数据什么时候才会进入缓冲区？" class="headerlink" title="输入的数据什么时候才会进入缓冲区？"></a>输入的数据什么时候才会进入缓冲区？</h2><blockquote>
-<p>为什么 <code>cin</code> 只输入 1 个或几个数，在键盘上输入了多个（超过几个）数之后，控制台输入界面仍然不停止？</p>
+<p>为什么<code>cin</code>只输入1个或几个数，在键盘上输入了多个（超过几个）数之后，控制台输入界面仍然不停止？</p>
 </blockquote>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a,b;</span><br><span class="line"><span class="built_in">cin</span>&gt;&gt;a&gt;&gt;b;</span><br></pre></td></tr></table></figure>
-<p>调用 <code>cin</code> 的 <code>&gt;&gt;</code> 函数时，程序就等着用户按键，<strong> 直到用户按下回车键，包换换行符在内的这一行数据才被放入缓冲区中，形成输入流 </strong>，提取符 <code>&gt;&gt;</code> 才能从中提取数据。也就是说，没按下回车键之前，在键盘上输入的数据都还没被放入缓冲区只是在控制台上显示出你按下的数据了而已，这也是为什么输错了的时候还能按退格键删除数据然后重新输入。<br>以上面程序为例，当在键盘上输入了超过 2 个字符时，其他字符也会被保留在缓冲区中，等待后面程序中的 <code>cin&gt;&gt;</code> 读取，若后面程序中再出现 <code>cin&gt;&gt;c</code> 之类的，程序也不会出现控制台等待用户输入，而是直接读取缓冲区中剩下的数据，直到缓冲区中的字符读完后，才等待用户按键。</p>
-<h2 id="getchar-函数的返回值是什么？"><a href="#getchar-函数的返回值是什么？" class="headerlink" title="getchar () 函数的返回值是什么？"></a>getchar () 函数的返回值是什么？</h2><blockquote>
-<p>使用 getchar () 函数，我明明输入的是数字 1，怎么输入的是 49？</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int a,b;
+cin&gt;&gt;a&gt;&gt;b;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>调用<code>cin</code>的<code>&gt;&gt;</code>函数时，程序就等着用户按键，<strong>直到用户按下回车键，包换换行符在内的这一行数据才被放入缓冲区中，形成输入流</strong>，提取符<code>&gt;&gt;</code>才能从中提取数据。也就是说，没按下回车键之前，在键盘上输入的数据都还没被放入缓冲区只是在控制台上显示出你按下的数据了而已，这也是为什么输错了的时候还能按退格键删除数据然后重新输入。<br>以上面程序为例，当在键盘上输入了超过2个字符时，其他字符也会被保留在缓冲区中，等待后面程序中的<code>cin&gt;&gt;</code>读取，若后面程序中再出现<code>cin&gt;&gt;c</code>之类的，程序也不会出现控制台等待用户输入，而是直接读取缓冲区中剩下的数据，直到缓冲区中的字符读完后，才等待用户按键。</p>
+<h2 id="getchar-函数的返回值是什么？"><a href="#getchar-函数的返回值是什么？" class="headerlink" title="getchar()函数的返回值是什么？"></a>getchar()函数的返回值是什么？</h2><blockquote>
+<p>使用getchar()函数，我明明输入的是数字1，怎么输入的是49？</p>
 </blockquote>
-<p><code>getchar ()</code> 函数会从 stdin 中读入一个字符（空格回车等空白符它也不会跳过，通通都读），并返回一个 int 型数据，返回的是输入字符的 ASCII 码。也就是说，输入数字 1，它返回的是数字 1 的 ASCII 码 49，输入字符 A，它返回的是字符 A 的 ASCII 码 65，你输入空格，它返回的是空格的 ASCII 码 32。一般都是用 <code>getchar ()</code> 来判断是否已经到了一行末尾，因为它换行符也读。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> n;</span><br><span class="line">  scanf_s (<span class="string">&quot;% d&quot;</span>, &amp;n);</span><br><span class="line">  <span class="keyword">int</span> a,b,c,d,e;</span><br><span class="line">  a=getchar ();</span><br><span class="line">  b=getchar ();</span><br><span class="line">  c=getchar ();</span><br><span class="line">  d=getchar ();</span><br><span class="line">  e=getchar ();</span><br><span class="line"> 	<span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;n:&quot;</span>&lt;&lt;n&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;a:&quot;</span>&lt;&lt;a&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;b:&quot;</span>&lt;&lt;b&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;c:&quot;</span>&lt;&lt;c&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;d:&quot;</span>&lt;&lt;d&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;e:&quot;</span>&lt;&lt;e&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//input:</span></span><br><span class="line"><span class="comment">//3 AB 7 1 2↩︎</span></span><br><span class="line"><span class="comment">//output:</span></span><br><span class="line"><span class="comment">//n:3</span></span><br><span class="line"><span class="comment">//a:32</span></span><br><span class="line"><span class="comment">//b:65</span></span><br><span class="line"><span class="comment">//c:66</span></span><br><span class="line"><span class="comment">//d:32</span></span><br><span class="line"><span class="comment">//e:55</span></span><br></pre></td></tr></table></figure>
+<p><code>getchar()</code>函数会从stdin中读入一个字符（空格回车等空白符它也不会跳过，通通都读），并返回一个int型数据，返回的是输入字符的ASCII码。也就是说，输入数字1，它返回的是数字1的ASCII码49，输入字符A，它返回的是字符A的ASCII码65，你输入空格，它返回的是空格的ASCII码32。一般都是用<code>getchar()</code>来判断是否已经到了一行末尾，因为它换行符也读。</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int main()&#123;
+  int n;
+  scanf_s(&quot;%d&quot;, &amp;n);
+  int a,b,c,d,e;
+  a&#x3D;getchar();
+  b&#x3D;getchar();
+  c&#x3D;getchar();
+  d&#x3D;getchar();
+  e&#x3D;getchar();
+ 	cout&lt;&lt;&quot;n:&quot;&lt;&lt;n&lt;&lt;endl;
+  cout&lt;&lt;&quot;a:&quot;&lt;&lt;a&lt;&lt;endl;
+  cout&lt;&lt;&quot;b:&quot;&lt;&lt;b&lt;&lt;endl;
+  cout&lt;&lt;&quot;c:&quot;&lt;&lt;c&lt;&lt;endl;
+  cout&lt;&lt;&quot;d:&quot;&lt;&lt;d&lt;&lt;endl;
+  cout&lt;&lt;&quot;e:&quot;&lt;&lt;e&lt;&lt;endl;
+&#125;
+&#x2F;&#x2F; input:
+&#x2F;&#x2F;3 AB 7 1 2↩︎
+&#x2F;&#x2F; output:
+&#x2F;&#x2F;n:3
+&#x2F;&#x2F;a:32
+&#x2F;&#x2F;b:65
+&#x2F;&#x2F;c:66
+&#x2F;&#x2F;d:32
+&#x2F;&#x2F;e:55<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
+            </div>
+            <!-- Post Comments -->
+            
         </div>
-
-        
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/C-C/"># C/C++</a>
-                    
-                        
-                </span>
-            </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2015/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/IP%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB/">IP 地址分类</a>
-            
-            
-            <a class="next" rel="next" href="/2015/08/29/git/git%E7%AC%94%E8%AE%B0%E4%B9%8Bignore/">git 笔记之 ignore</a>
-            
-        </section>
-
-
-    </article>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
 </div>
-
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
-        
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-        
-        <span> | <img src="https://pic3.zhimg.com/80/v2-d0289dc0a46fc5b15b3363ffa78cf6c7.png" style="width:16px;"><a
-                href="http://www.beian.gov.cn/" target="_blank">赣公网安备36040302000263号</a></span>
-        
-    </div>
-</footer>
     </div>
 </body>
+
+
+
+
+
 </html>

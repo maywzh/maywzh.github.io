@@ -1,280 +1,258 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
+	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
+	
+	    <title>
+    Cultoy
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="maywzh" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
 
-<meta name="author" content="maywzh">
+	    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
 
 
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
-
-
-<title>用 jsDelivr 来改善网站响应速度 | 0x01 MAYSTORY </title>
-
-
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
 <meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
 
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
+<!-- Layouts -->
 
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">MAYWZH</a>
 </header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
-    }
-</script>
-        <div class="main">
-            <div class="container">
-    
-    
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special">
+	<ul class="menu links">
+		<!-- Homepage  主页  -->
+		<li>
+			<a href="/" rel="nofollow">Home</a>
+		</li>
+		<!-- categories_name  分类   -->
+		
+		<li class="active">
+			<a href="#s1">Category</a>
+			<ul class="submenu">
+				<li>
+					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+			</ul>
+		</li>
+		
+		<!-- archives  归档   -->
+		
+		<li class="active">
+			<a href="#s1">Archive</a>
+			<ul class="submenu">
+				<li>
+					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
+			</ul>
+		</li>
+		
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
+		<!-- Pages 自定义   -->
+		
+		<li>
+			<a href="/tags/" title="Tags">
+				Tags
+			</a>
+		</li>
+		
+		<li>
+			<a href="/about/" title="About">
+				About
+			</a>
+		</li>
+		
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
+	</ul>
+	<!-- icons 图标   -->
+	<ul class="icons">
+		
+		<li>
+			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
+				<i class="icon fa fa-search"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-twitter"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
+				<i class="icon fa fa-github"></i>
+			</a>
+		</li>
+		
+	</ul>
+</nav>
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-</script>
-    
-
-    
-    <article class="post-wrap">
-        <header class="post-header">
-            <h1 class="post-title">用 jsDelivr 来改善网站响应速度</h1>
-            
-                <div class="post-meta">
-                    
-                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
-                    
-
-                    
-                        <span class="post-time">
-                        Date: <a href="#">January 13, 2016&nbsp;&nbsp;2:46:27</a>
-                        </span>
-                    
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/DevOps/">DevOps</a>
-                            
-                        </span>
-                    
-                </div>
-            
-        </header>
-
-        <div class="post-content">
-            <p>今天树莓派上的服务检测脚本忽然告警了，博客出现了大量资源 down 掉的情况，赶紧上线查看，页面都刷不出来，原来是 <code>cdn.bootcss.com</code> 这个 CDN down 掉了，我的 <code>jquery</code>,<code>fontawesome</code> 等 JS 库还有一些 CSS 库都引用这个 CDN 导致页面崩坏。坑爹呢  (；￣Д￣）</p>
-<p>我心中顿时出现了一个解决方案，维护一个 CDN 列表，然后服务器上跑一个性能监测脚本，对这些 CDN 进行可达性和性能测试，然后在网站里去根据这个脚本动态修改依赖的 CDN。</p>
-<p>等等好像有什么问题，服务器上进行性能监测好像没啥卵用啊，我们要保证客户端可达，这个好像是 CDN 要做的工作啊。</p>
-<p>难道要在客户端去跑这个脚本？ =͟͟͞͞(꒪⌓꒪*) 算了算了还是搜一个靠谱的 CDN 吧。</p>
-<p>在 StackOverflow 搜索了一下发现有人推荐 <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/">jsDelivr</a> 作为 CDN。</p>
+        <div id="main">
+            <div class="post_page_title_img"
+                style="height: 25rem;background-image: url(https://i.loli.net/2020/08/29/cu2LtW3lp5joKHq.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
+                    <h2>用jsDelivr来改善网站响应速度</h2>
+                </a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <p>今天树莓派上的服务检测脚本忽然告警了，博客出现了大量资源down掉的情况，赶紧上线查看，页面都刷不出来，原来是<code>cdn.bootcss.com</code>这个CDN down掉了，我的<code>jquery</code>,<code>fontawesome</code>等JS库还有一些CSS库都引用这个CDN导致页面崩坏。坑爹呢  (；￣Д￣）</p>
+<p>我心中顿时出现了一个解决方案，维护一个CDN列表，然后服务器上跑一个性能监测脚本，对这些CDN进行可达性和性能测试，然后在网站里去根据这个脚本动态修改依赖的CDN。</p>
+<p>等等好像有什么问题，服务器上进行性能监测好像没啥卵用啊，我们要保证客户端可达，这个好像是CDN要做的工作啊。</p>
+<p>难道要在客户端去跑这个脚本？ =͟͟͞͞(꒪⌓꒪*) 算了算了还是搜一个靠谱的CDN吧。</p>
+<p>在StackOverflow搜索了一下发现有人推荐<a target="_blank" rel="noopener" href="https://www.jsdelivr.com/">jsDelivr</a>作为CDN。</p>
 <p>试验了一下，发现效果相当给力。推荐一下～</p>
 <a id="more"></a>
 <h2 id="What-is-jsDelivr"><a href="#What-is-jsDelivr" class="headerlink" title="What is jsDelivr"></a>What is jsDelivr</h2><blockquote>
 <p>jsDelivr - Open Source CDN free fast and reliable</p>
 </blockquote>
-<p>它是一个高性能的 CDN，通过</p>
+<p>它是一个高性能的CDN，通过</p>
 <h2 id="How-it-work"><a href="#How-it-work" class="headerlink" title="How it work"></a>How it work</h2><p>官网上有一张原理的简要介绍</p>
 <p><img src="https://www.jsdelivr.com/img/network/infographics.png?v=d4a4024db2475bb20dc7a8166d98130a51606502" alt="img"></p>
-<p>jsDelivr 通过多个 CDN 服务商对全球用户提供高性能的内容分发服务，其中对中国线路做了特别优化。整个大陆地区有超过 600 个边缘节点。默认使用 <a target="_blank" rel="noopener" href="https://www.cedexis.com/">cedexis</a> 提供的智能负载均衡服务来进行 CDN 选择，如果 cedexis 挂掉，则默认选择 StackPath CDN 或 CloudFlare CDN。如果请求内容未命中 jsDelivr 的缓存，则去上游的 Amazon S3 对象存储服务查找资源，Amazon S3 服务也会同步最终来自于 npm 和 Github 的源文件。如果 Amazon S3 服务 down 掉，jsDelivr 则把请求直接转发给存储源文件的 npm 和 github。</p>
-<p>总之，jsDelivr 有众多的边缘服务节点，对中国大陆服务友好，并有宕机备份解决方案，保证了 CDN 的可达性和性能。</p>
-<h2 id="Performance-test"><a href="#Performance-test" class="headerlink" title="Performance test"></a>Performance test</h2><p>我们利用 <a target="_blank" rel="noopener" href="http://www.17ce.com/site">17ce</a> 这个测速工具来测量 jsDelivr 的性能。</p>
+<p>jsDelivr通过多个CDN服务商对全球用户提供高性能的内容分发服务，其中对中国线路做了特别优化。整个大陆地区有超过600个边缘节点。默认使用<a target="_blank" rel="noopener" href="https://www.cedexis.com/">cedexis</a>提供的智能负载均衡服务来进行CDN选择，如果cedexis挂掉，则默认选择StackPath CDN或CloudFlare CDN。如果请求内容未命中jsDelivr的缓存，则去上游的Amazon S3对象存储服务查找资源，Amazon S3服务也会同步最终来自于npm和Github的源文件。如果Amazon S3服务down掉，jsDelivr则把请求直接转发给存储源文件的npm和github。</p>
+<p>总之，jsDelivr有众多的边缘服务节点，对中国大陆服务友好，并有宕机备份解决方案，保证了CDN的可达性和性能。</p>
+<h2 id="Performance-test"><a href="#Performance-test" class="headerlink" title="Performance test"></a>Performance test</h2><p>我们利用<a target="_blank" rel="noopener" href="http://www.17ce.com/site">17ce</a>这个测速工具来测量jsDelivr的性能。</p>
 <p>速度还是相当给力的。</p>
-<h2 id="How-to-use"><a href="#How-to-use" class="headerlink" title="How to use"></a>How to use</h2><p>jsDelivr 提供了三种 CDN 服务方式：npm，github 和 wordpress。我们着重讲讲 github 的方式。</p>
-<p>github 方式</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//load any GitHub release or commit</span><br><span class="line">//note: we recommend using npm for projects that support it</span><br><span class="line">https://cdn.jsdelivr.net/gh/user/repo@version/file</span><br><span class="line"></span><br><span class="line">//load jQuery v3.2.1</span><br><span class="line">https://cdn.jsdelivr.net/gh/jquery/jquery@3.2.1/dist/jquery.min.js</span><br><span class="line"></span><br><span class="line">//use a version range instead of a specific version</span><br><span class="line">https://cdn.jsdelivr.net/gh/jquery/jquery@3.2/dist/jquery.min.js</span><br><span class="line">https://cdn.jsdelivr.net/gh/jquery/jquery@3/dist/jquery.min.js</span><br><span class="line"></span><br><span class="line">//omit the version completely to get the latest one</span><br><span class="line">//you should NOT use this in production</span><br><span class="line">https://cdn.jsdelivr.net/gh/jquery/jquery/dist/jquery.min.js</span><br><span class="line"></span><br><span class="line">//add &quot;.min&quot; to any JS/CSS file to get a minified version</span><br><span class="line">//if one doesn&#x27;t exist, we&#x27;ll generate it for you</span><br><span class="line">https://cdn.jsdelivr.net/gh/jquery/jquery@3.2.1/src/core.min.js</span><br><span class="line"></span><br><span class="line">//add/at the end to get a directory listing</span><br><span class="line">https://cdn.jsdelivr.net/gh/jquery/jquery/</span><br></pre></td></tr></table></figure>
-<p>例如我们想要 <code>pangu</code> 的版本号为 3.3.0 的 <code>pangu.min.js</code> 插件的 CDN 地址，那么我们去 <a target="_blank" rel="noopener" href="https://github.com/vinta/pangu.js">pangu 的 github 页面</a>，</p>
-<p>从 commits 历史或 releases 中查找 3.3.0 版本，查看文件并搜索 <code>pangu.min.js</code> 的相对路径</p>
-<p>其路径是 <code>dist/browser/pangu.min.js</code>，根据作者名称和 repo 名分别是 <code>vinta/pangu.js</code>。所以引用路径是</p>
+<h2 id="How-to-use"><a href="#How-to-use" class="headerlink" title="How to use"></a>How to use</h2><p>jsDelivr提供了三种CDN服务方式：npm，github和wordpress。我们着重讲讲github的方式。</p>
+<p>github方式</p>
+<pre class="line-numbers language-html" data-language="html"><code class="language-html">// load any GitHub release or commit
+// note: we recommend using npm for projects that support it
+https://cdn.jsdelivr.net/gh/user/repo@version/file
+
+// load jQuery v3.2.1
+https://cdn.jsdelivr.net/gh/jquery/jquery@3.2.1/dist/jquery.min.js
+
+// use a version range instead of a specific version
+https://cdn.jsdelivr.net/gh/jquery/jquery@3.2/dist/jquery.min.js
+https://cdn.jsdelivr.net/gh/jquery/jquery@3/dist/jquery.min.js
+
+// omit the version completely to get the latest one
+// you should NOT use this in production
+https://cdn.jsdelivr.net/gh/jquery/jquery/dist/jquery.min.js
+
+// add ".min" to any JS/CSS file to get a minified version
+// if one doesn't exist, we'll generate it for you
+https://cdn.jsdelivr.net/gh/jquery/jquery@3.2.1/src/core.min.js
+
+// add / at the end to get a directory listing
+https://cdn.jsdelivr.net/gh/jquery/jquery/<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>例如我们想要<code>pangu</code>的版本号为3.3.0的<code>pangu.min.js</code>插件的CDN地址，那么我们去<a target="_blank" rel="noopener" href="https://github.com/vinta/pangu.js">pangu的github页面</a>，</p>
+<p>从commits历史或releases中查找3.3.0版本，查看文件并搜索<code>pangu.min.js</code>的相对路径</p>
+<p>其路径是<code>dist/browser/pangu.min.js</code>，根据作者名称和repo 名分别是<code>vinta/pangu.js</code>。所以引用路径是</p>
 <p><code>https://cdn.jsdelivr.net/gh/vinta/pangu.js@3.3.0/dist/browser/pangu.min.js</code>，我们也可以对这个地址测速。</p>
 <p>awesome！把它放在我们项目的配置文件中即可。</p>
 
-        </div>
-
-        
-        <section class="post-tags">
-            <div>
-                <span>Tag(s):</span>
-                <span class="tag">
-                    
-                    
-                        <a href="/tags/CDN/"># CDN</a>
-                    
-                        <a href="/tags/Web/"># Web</a>
-                    
-                        
-                </span>
             </div>
-            <div>
-                <a href="javascript:window.history.back();">back</a>
-                <span>· </span>
-                <a href="/">home</a>
-            </div>
-        </section>
-        <section class="post-nav">
-            
-                <a class="prev" rel="prev" href="/2016/01/16/Linux/Linux%E9%87%8D%E7%9A%84tcpdump%E6%8A%93%E5%8C%85mysql%E9%AA%8C%E8%AF%81%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B/">tcpdump 抓包 mysql 验证三次握手</a>
+            <!-- Post Comments -->
             
             
-            <a class="next" rel="next" href="/2016/01/05/%E5%B7%A5%E5%85%B7/%E7%94%9F%E4%BA%A7%E5%8A%9B%E5%B7%A5%E5%85%B7%E4%B9%8BmacOS%E7%9A%84%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/">常用的 macOS 命令行命令</a>
-            
-        </section>
-
-
-    </article>
+    <!-- 使用 valine -->
+<div id="comment">
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#comment' ,
+        notify: false,
+        verify: false,
+        app_id: '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+        app_key: 'UrBohelQ00fEUxu5npX46rtL',
+        placeholder: 'Just go go',
+        pageSize: '10',
+        avatar: 'mm',
+        avatar_cdn: 'https://gravatar.loli.net/avatar/'
+    });
+</script>
 </div>
+<style>
+   #comment{
+        padding: 2pc;
+    }
+</style>
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
             
-        </span>
-        
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-        
-        <span> | <img src="https://pic3.zhimg.com/80/v2-d0289dc0a46fc5b15b3363ffa78cf6c7.png" style="width:16px;"><a
-                href="http://www.beian.gov.cn/" target="_blank">赣公网安备36040302000263号</a></span>
-        
-    </div>
-</footer>
+        </div>
+        <!-- Copyright 版权 start -->
+        <div id="copyright">
+    <ul>
+        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
+    </ul>
+    
+    <span id="busuanzi_container_site_pv"> 2020 </span>
+    
+</div>
     </div>
 </body>
+
+
+
+
+
 </html>

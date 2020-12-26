@@ -1,241 +1,296 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
-    
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-	    
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Nginx是一款轻量级的Web服务器、反向代理服务器，由于它的内存占用少，启动极快，高并发能力强，在互联网项目中广泛应用。这里实践一下nginx的配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx配置初步">
+<meta property="og:url" content="https://io.maywzh.com/2016/10/10/Nginx/Nginx%E9%85%8D%E7%BD%AE%E5%88%9D%E6%AD%A5/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="Nginx是一款轻量级的Web服务器、反向代理服务器，由于它的内存占用少，启动极快，高并发能力强，在互联网项目中广泛应用。这里实践一下nginx的配置">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2016-10-10T00:10:25.000Z">
+<meta property="article:modified_time" content="2020-12-26T09:04:45.881Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Nginx">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://io.maywzh.com/2016/10/10/Nginx/Nginx%E9%85%8D%E7%BD%AE%E5%88%9D%E6%AD%A5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Nginx配置初步 | Cult I.O.</title>
   
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
     </script>
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"></head>
-
-<!-- Layouts -->
 
 
 
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
 
 
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
 </nav>
 
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/10/LrbA5CJ3DulWSTU.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>Nginx配置初步</h2>
-                </a>
-            </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>Nginx是一款轻量级的Web服务器、反向代理服务器，由于它的内存占用少，启动极快，高并发能力强，在互联网项目中广泛应用。这里实践一下nginx的配置</p>
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2016/10/10/Nginx/Nginx%E9%85%8D%E7%BD%AE%E5%88%9D%E6%AD%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Nginx配置初步
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016.10.10 08:10:25" itemprop="dateCreated datePublished" datetime="2016-10-10T08:10:25+08:00">2016.10.10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/10/10/Nginx/Nginx%E9%85%8D%E7%BD%AE%E5%88%9D%E6%AD%A5/" class="post-meta-item leancloud_visitors" data-flag-title="Nginx配置初步" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Nginx是一款轻量级的Web服务器、反向代理服务器，由于它的内存占用少，启动极快，高并发能力强，在互联网项目中广泛应用。这里实践一下nginx的配置</p>
 <a id="more"></a>
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>下载必要组件</p>
 <ul>
 <li><p>nginx下载地址</p>
-<pre class="line-numbers language-none"><code class="language-none">http:&#x2F;&#x2F;nginx.org&#x2F;en&#x2F;download.html<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span>nginx.org<span class="regexp">/en/</span>download.html</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>pcre库下载地址，nginx需要</p>
-<pre class="line-numbers language-none"><code class="language-none">http:&#x2F;&#x2F;sourceforge.net&#x2F;projects&#x2F;pcre&#x2F;files&#x2F;pcre&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span>sourceforge.net<span class="regexp">/projects/</span>pcre<span class="regexp">/files/</span>pcre/</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>zlib下载地址，nginx需要</p>
-<pre class="line-numbers language-none"><code class="language-none">http:&#x2F;&#x2F;www.zlib.net&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span>www.zlib.net/</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>openssl下载地址，nginx需要</p>
-<pre class="line-numbers language-none"><code class="language-none">https:&#x2F;&#x2F;github.com&#x2F;openssl&#x2F;openssl<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/openssl/</span>openssl</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>在同级目录下,解压安装zlib、openssl、pcre</p>
 <p>进入nginx目录，进行配置安装</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">./configure <span class="token punctuation">\</span>
- --prefix<span class="token operator">=</span>/usr/local/nginx <span class="token punctuation">\</span>
- --with-http_ssl_module <span class="token punctuation">\</span>
- --with-http_flv_module <span class="token punctuation">\</span>
- --with-http_stub_status_module <span class="token punctuation">\</span>
- --with-http_gzip_static_module <span class="token punctuation">\</span>
- --with-pcre<span class="token operator">=</span><span class="token punctuation">..</span>/pcre-8.39 <span class="token punctuation">\</span>
- --with-zlib<span class="token operator">=</span><span class="token punctuation">..</span>/zlib-1.2.8 <span class="token punctuation">\</span> 
- --with-openssl<span class="token operator">=</span><span class="token punctuation">..</span>/openssl-master<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">./configure \</span><br><span class="line"> --prefix=/usr/<span class="built_in">local</span>/nginx \</span><br><span class="line"> --with-http_ssl_module \</span><br><span class="line"> --with-http_flv_module \</span><br><span class="line"> --with-http_stub_status_module \</span><br><span class="line"> --with-http_gzip_static_module \</span><br><span class="line"> --with-pcre=../pcre-8.39 \</span><br><span class="line"> --with-zlib=../zlib-1.2.8 \ </span><br><span class="line"> --with-openssl=../openssl-master</span><br></pre></td></tr></table></figure>
 <p>下面可直接复制粘贴</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">./configure --prefix<span class="token operator">=</span>/usr/local/nginx --with-http_ssl_module --with-http_flv_module --with-http_stub_status_module --with-http_gzip_static_module --with-pcre<span class="token operator">=</span><span class="token punctuation">..</span>/pcre-8.39 --with-zlib<span class="token operator">=</span><span class="token punctuation">..</span>/zlib-1.2.8 --with-openssl<span class="token operator">=</span><span class="token punctuation">..</span>/openssl-master<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/<span class="built_in">local</span>/nginx --with-http_ssl_module --with-http_flv_module --with-http_stub_status_module --with-http_gzip_static_module --with-pcre=../pcre-8.39 --with-zlib=../zlib-1.2.8 --with-openssl=../openssl-master</span><br></pre></td></tr></table></figure>
 <p>编译安装</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">make</span> <span class="token operator">&amp;&amp;</span> <span class="token function">sudo</span> <span class="token function">make</span> <span class="token function">install</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &amp;&amp; sudo make install</span><br></pre></td></tr></table></figure>
 <p>Nginx会被安装在/usr/local/nginx目录下（也可以使用参数—prefix=指定自己需要的位置）， 安装成功后 /usr/local/nginx 目录下有四个子目录分别是：conf、html、logs、sbin 。 其中 Nginx 的配置文件存放于 conf/nginx.conf， bin文件是位于 sbin 目录下的 nginx 文件。 确保系统的 80 端口没被其他程序占用，运行 sbin/nginx 命令来启动 Nginx，</p>
 <p>启动nginx</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> /usr/local/nginx/sbin/nginx
-    <span class="token comment">#netstat -ano|grep 80</span>
-        tcp        <span class="token number">0</span>      <span class="token number">0</span> <span class="token number">0.0</span>.0.0:80              <span class="token number">0.0</span>.0.0:*               LISTEN      关闭 <span class="token punctuation">(</span><span class="token number">0.00</span>/0/0<span class="token punctuation">)</span>
-        unix  <span class="token number">17</span>     <span class="token punctuation">[</span> <span class="token punctuation">]</span>         数据报                <span class="token number">10801</span>    /dev/log<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo /usr/<span class="built_in">local</span>/nginx/sbin/nginx</span><br><span class="line">    <span class="comment">#netstat -ano|grep 80</span></span><br><span class="line">        tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      关闭 (0.00/0/0)</span><br><span class="line">        unix  17     [ ]         数据报                10801    /dev/<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
 <p>打开浏览器访问此机器的 IP，如果浏览器出现 Welcome to nginx! 则表示 Nginx 已经安装并运行成功</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 检查配置文件是否正确</span>
-/usr/local/sbin/nginx -t 
-<span class="token comment"># 可以看到编译选项</span>
-/usr/local/sbin/nginx -V
-<span class="token comment">#重启Nginx</span>
-<span class="token function">sudo</span> /usr/local/sbin/nginx -s reload
-<span class="token comment">#关闭Nginx</span>
-<span class="token function">sudo</span> /usr/local/sbin/nginx -s stop
-<span class="token comment">#优雅停止服务</span>
-<span class="token function">sudo</span> /usr/local/sbin/nginx -s quit
-<span class="token function">kill</span> -s SIGQUIT pid_master
-<span class="token function">kill</span> -s SIGWINCH pid_master<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查配置文件是否正确</span></span><br><span class="line">/usr/<span class="built_in">local</span>/sbin/nginx -t </span><br><span class="line"><span class="comment"># 可以看到编译选项</span></span><br><span class="line">/usr/<span class="built_in">local</span>/sbin/nginx -V</span><br><span class="line"><span class="comment">#重启Nginx</span></span><br><span class="line">sudo /usr/<span class="built_in">local</span>/sbin/nginx -s reload</span><br><span class="line"><span class="comment">#关闭Nginx</span></span><br><span class="line">sudo /usr/<span class="built_in">local</span>/sbin/nginx -s stop</span><br><span class="line"><span class="comment">#优雅停止服务</span></span><br><span class="line">sudo /usr/<span class="built_in">local</span>/sbin/nginx -s quit</span><br><span class="line"><span class="built_in">kill</span> -s SIGQUIT pid_master</span><br><span class="line"><span class="built_in">kill</span> -s SIGWINCH pid_master</span><br></pre></td></tr></table></figure>
 <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>nginx.conf配置文件,基本就分为以下几块：</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx">main
-<span class="token keyword">events</span>   <span class="token punctuation">&#123;</span>
-  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">&#125;</span>
-<span class="token keyword">http</span>        <span class="token punctuation">&#123;</span>
-  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-  <span class="token keyword">upstream</span> myproject <span class="token punctuation">&#123;</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token keyword">server</span>  <span class="token punctuation">&#123;</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token keyword">location</span> <span class="token punctuation">&#123;</span>
-        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token punctuation">&#125;</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token keyword">server</span>  <span class="token punctuation">&#123;</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token keyword">location</span> <span class="token punctuation">&#123;</span>
-        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token punctuation">&#125;</span>
-  <span class="token punctuation">&#125;</span>
-  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">main</span><br><span class="line"><span class="section">events</span>   &#123;</span><br><span class="line">  ....</span><br><span class="line">&#125;</span><br><span class="line"><span class="section">http</span>        &#123;</span><br><span class="line">  ....</span><br><span class="line">  <span class="attribute">upstream</span> myproject &#123;</span><br><span class="line">    .....</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="section">server</span>  &#123;</span><br><span class="line">    ....</span><br><span class="line">    <span class="section">location</span> &#123;</span><br><span class="line">        ....</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="section">server</span>  &#123;</span><br><span class="line">    ....</span><br><span class="line">    <span class="section">location</span> &#123;</span><br><span class="line">        ....</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>nginx配置文件主要分为六个区域：</p>
 <ul>
 <li>main(全局设置)</li>
@@ -250,11 +305,7 @@
 <li>main模块</li>
 </ul>
 <p>下面时一个main区域，他是一个全局的设置：</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">user</span> nobody nobody<span class="token punctuation">;</span>
-<span class="token keyword">worker_processes</span> <span class="token number">2</span><span class="token punctuation">;</span>
-<span class="token keyword">error_log</span>  <span class="token operator">/</span>usr<span class="token operator">/</span>local<span class="token operator">/</span>var<span class="token operator">/</span>log<span class="token operator">/</span>nginx<span class="token operator">/</span>error<span class="token punctuation">.</span>log  notice<span class="token punctuation">;</span>
-<span class="token keyword">pid</span>        <span class="token operator">/</span>usr<span class="token operator">/</span>local<span class="token operator">/</span>var<span class="token operator">/</span>run<span class="token operator">/</span>nginx<span class="token operator">/</span>nginx<span class="token punctuation">.</span><span class="token keyword">pid</span><span class="token punctuation">;</span>
-<span class="token keyword">worker_rlimit_nofile</span> <span class="token number">1024</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">user</span> nobody nobody;</span><br><span class="line"><span class="attribute">worker_processes</span> <span class="number">2</span>;</span><br><span class="line"><span class="attribute">error_log</span>  /usr/local/var/log/nginx/error.log  <span class="literal">notice</span>;</span><br><span class="line"><span class="attribute">pid</span>        /usr/local/var/run/nginx/nginx.pid;</span><br><span class="line"><span class="attribute">worker_rlimit_nofile</span> <span class="number">1024</span>;</span><br></pre></td></tr></table></figure>
 <p>user 来指定Nginx Worker进程运行用户以及用户组，默认由nobody账号运行。</p>
 <p>worker_processes来指定了Nginx要开启的子进程数。每个Nginx进程平均耗费10M~12M内存。根据经验，一般指定1个进程就足够了，如果是多核CPU，建议指定和CPU的数量一样的进程数即可。我这里写2，那么就会开启2个子进程，总共3个进程。</p>
 <p>error_log用来定义全局错误日志文件。日志输出级别有debug、info、notice、warn、error、crit可供选择，其中，debug输出日志最为最详细，而crit输出日志最少。</p>
@@ -264,41 +315,20 @@
 <li>events 模块</li>
 </ul>
 <p>events模块来用指定nginx的工作模式和工作模式及连接数上限，一般是这样：</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">events</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">use</span> epoll<span class="token punctuation">;</span> <span class="token comment">#Linux平台</span>
-    <span class="token keyword">worker_connections</span>  <span class="token number">1024</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">    <span class="attribute">use</span> <span class="literal">epoll</span>; <span class="comment">#Linux平台</span></span><br><span class="line">    <span class="attribute">worker_connections</span>  <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>use用来指定Nginx的工作模式。Nginx支持的工作模式有select、poll、kqueue、epoll、rtsig和/dev/poll。其中select和poll都是标准的工作模式，kqueue和epoll是高效的工作模式，不同的是epoll用在Linux平台上，而kqueue用在BSD系统中,对于Linux系统，epoll工作模式是首选。</p>
 <p>worker_connections用于定义Nginx每个进程的最大连接数，即接收前端的最大请求数，默认是1024。最大客户端连接数由worker_processes和worker_connections决定，即Max_clients=worker_processes<em>worker_connections，在作为反向代理时，Max_clients变为：Max_clients = worker_processes </em> worker_connections/4。 进程的最大连接数受Linux系统进程的最大打开文件数限制，在执行操作系统命令“ulimit -n 65536”后worker_connections的设置才能生效。</p>
 <ul>
 <li>http 模块</li>
 </ul>
 <p>http模块可以说是最核心的模块了，它负责HTTP服务器相关属性的配置，它里面的server和upstream子模块，至关重要，等到反向代理和负载均衡以及虚拟目录等会仔细说。</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">http</span><span class="token punctuation">&#123;</span>
-    <span class="token keyword">include</span>       mime<span class="token punctuation">.</span><span class="token keyword">types</span><span class="token punctuation">;</span>
-    <span class="token keyword">default_type</span>  application<span class="token operator">/</span>octet<span class="token operator">-</span>stream<span class="token punctuation">;</span>
-    <span class="token keyword">log_format</span>  main  <span class="token string">'$remote_addr - $remote_user [$time_local] "$request" '</span>
-                      <span class="token string">'$status $body_bytes_sent "$http_referer" '</span>
-                      <span class="token string">'"$http_user_agent" "$http_x_forwarded_for"'</span><span class="token punctuation">;</span>
-    <span class="token keyword">access_log</span>  <span class="token operator">/</span>usr<span class="token operator">/</span>local<span class="token operator">/</span>var<span class="token operator">/</span>log<span class="token operator">/</span>nginx<span class="token operator">/</span>access<span class="token punctuation">.</span>log  main<span class="token punctuation">;</span>
-    <span class="token keyword">sendfile</span>        on<span class="token punctuation">;</span>
-    <span class="token keyword">tcp_nopush</span>      on<span class="token punctuation">;</span>
-    <span class="token keyword">tcp_nodelay</span>     on<span class="token punctuation">;</span>
-    <span class="token keyword">keepalive_timeout</span>  <span class="token number">10</span><span class="token punctuation">;</span>
-    <span class="token comment">#gzip  on;</span>
-    <span class="token keyword">upstream</span> myproject <span class="token punctuation">&#123;</span>
-        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">server</span> <span class="token punctuation">&#123;</span>
-        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">http&#123;</span><br><span class="line">    <span class="attribute">include</span>       mime.types;</span><br><span class="line">    <span class="attribute">default_type</span>  application/octet-stream;</span><br><span class="line">    <span class="attribute">log_format</span>  main  <span class="string">&#x27;<span class="variable">$remote_addr</span> - <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] &quot;<span class="variable">$request</span>&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;<span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> &quot;<span class="variable">$http_referer</span>&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;&quot;<span class="variable">$http_user_agent</span>&quot; &quot;<span class="variable">$http_x_forwarded_for</span>&quot;&#x27;</span>;</span><br><span class="line">    <span class="attribute">access_log</span>  /usr/local/var/log/nginx/access.log  main;</span><br><span class="line">    <span class="attribute">sendfile</span>        <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">tcp_nopush</span>      <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">tcp_nodelay</span>     <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">keepalive_timeout</span>  <span class="number">10</span>;</span><br><span class="line">    <span class="comment">#gzip  on;</span></span><br><span class="line">    <span class="attribute">upstream</span> myproject &#123;</span><br><span class="line">        .....</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        ....</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>下面详细介绍下这段代码中每个配置选项的含义。</p>
 <p>include 来用设定文件的mime类型,类型在配置文件目录下的mime.type文件定义，来告诉nginx来识别文件类型。</p>
 <p>default_type设定了默认的类型为二进制流，也就是当文件类型未定义时使用这种方式，例如在没有配置asp 的locate 环境时，Nginx是不予解析的，此时，用浏览器访问asp文件就会出现下载了。</p>
 <p>log_format用于设置日志的格式，和记录哪些参数，这里设置为main，刚好用于access_log来纪录这种类型。</p>
 <p>main的类型日志如下：也可以增删部分参数。</p>
-<pre class="line-numbers language-none"><code class="language-none">127.0.0.1 - - [21&#x2F;Apr&#x2F;2015:18:09:54 +0800] &quot;GET &#x2F;index.php HTTP&#x2F;1.1&quot; 200 87151 &quot;-&quot; &quot;Mozilla&#x2F;5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;41.0.2272.76 Safari&#x2F;537.36&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0.0.1</span> - - <span class="string">[21/Apr/2015:18:09:54 +0800]</span> <span class="string">&quot;<span class="keyword">GET</span> /index.php HTTP/1.1&quot;</span> <span class="number">200</span> <span class="number">87151</span> <span class="string">&quot;-&quot;</span> <span class="string">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.76 Safari/537.36&quot;</span></span><br></pre></td></tr></table></figure>
 <p>access_log</p>
 <p>用来纪录每次的访问日志的文件地址，后面的main是日志的格式样式，对应于log_format的main。</p>
 <p>sendfile参数用于开启高效文件传输模式。将tcp_nopush和tcp_nodelay两个指令设置为on用于防止网络阻塞。</p>
@@ -308,17 +338,7 @@
 </ul>
 <p>sever 模块是http的子模块，它用来定一个虚拟主机，我们先讲最基本的配置，这些在后面再讲。</p>
 <p>我们看一下一个简单的server 是如何做的？</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">server</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">listen</span>       <span class="token number">8080</span><span class="token punctuation">;</span>
-        <span class="token keyword">server_name</span>  localhost <span class="token number">192.168</span><span class="token number">.12</span><span class="token number">.10</span> www<span class="token punctuation">.</span>yangyi<span class="token punctuation">.</span>com<span class="token punctuation">;</span>
-        <span class="token comment"># 全局定义，如果都是这一个目录，这样定义最简单。</span>
-        <span class="token keyword">root</span>   <span class="token operator">/</span>Users<span class="token operator">/</span>yangyi<span class="token operator">/</span>www<span class="token punctuation">;</span>
-        <span class="token keyword">index</span>  <span class="token keyword">index</span><span class="token punctuation">.</span>php <span class="token keyword">index</span><span class="token punctuation">.</span>html <span class="token keyword">index</span><span class="token punctuation">.</span>htm<span class="token punctuation">;</span> 
-        <span class="token keyword">charset</span> utf<span class="token operator">-</span><span class="token number">8</span><span class="token punctuation">;</span>
-        <span class="token keyword">access_log</span>  usr<span class="token operator">/</span>local<span class="token operator">/</span>var<span class="token operator">/</span>log<span class="token operator">/</span>host<span class="token punctuation">.</span>access<span class="token punctuation">.</span>log  main<span class="token punctuation">;</span>
-        aerror_log  usr<span class="token operator">/</span>local<span class="token operator">/</span>var<span class="token operator">/</span>log<span class="token operator">/</span>host<span class="token punctuation">.</span>error<span class="token punctuation">.</span>log  error<span class="token punctuation">;</span>
-        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span>       <span class="number">8080</span>;</span><br><span class="line">        <span class="attribute">server_name</span>  localhost <span class="number">192.168.12.10</span> www.yangyi.com;</span><br><span class="line">        <span class="comment"># 全局定义，如果都是这一个目录，这样定义最简单。</span></span><br><span class="line">        <span class="attribute">root</span>   /Users/yangyi/www;</span><br><span class="line">        <span class="attribute">index</span>  index.php index.html index.htm; </span><br><span class="line">        <span class="attribute">charset</span> utf-<span class="number">8</span>;</span><br><span class="line">        <span class="attribute">access_log</span>  usr/local/var/log/host.access.log  main;</span><br><span class="line">        <span class="attribute">aerror_log</span>  usr/local/var/log/host.<span class="literal">error</span>.log  <span class="literal">error</span>;</span><br><span class="line">        ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>server标志定义虚拟主机开始。</p>
 <p>listen用于指定虚拟主机的服务端口。</p>
 <p>server_name用来指定IP地址或者域名，多个域名之间用空格分开。</p>
@@ -332,48 +352,15 @@
 <p>location模块是nginx中用的最多的，也是最重要的模块了，什么负载均衡啊、反向代理啊、虚拟域名啊都与它相关。慢慢来讲：</p>
 <p>location 根据它字面意思就知道是来定位的，定位URL，解析URL，所以，它也提供了强大的正则匹配功能，也支持条件判断匹配，用户可以通过location指令实现Nginx对动、静态网页进行过滤处理。像我们的php环境搭建就是用到了它。</p>
 <p>我们先来看这个，设定默认首页和虚拟机目录。</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">location</span> <span class="token operator">/</span> <span class="token punctuation">&#123;</span>
-            <span class="token keyword">root</span>   <span class="token operator">/</span>Users<span class="token operator">/</span>yangyi<span class="token operator">/</span>www<span class="token punctuation">;</span>
-            <span class="token keyword">index</span>  <span class="token keyword">index</span><span class="token punctuation">.</span>php <span class="token keyword">index</span><span class="token punctuation">.</span>html <span class="token keyword">index</span><span class="token punctuation">.</span>htm<span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> / &#123;</span><br><span class="line">            <span class="attribute">root</span>   /Users/yangyi/www;</span><br><span class="line">            <span class="attribute">index</span>  index.php index.html index.htm;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
 <p>location /表示匹配访问根目录。</p>
 <p>root指令用于指定访问根目录时，虚拟主机的web目录，这个目录可以是相对路径（相对路径是相对于nginx的安装目录）。也可以是绝对路径。</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token comment">#反向代理配置</span>
-<span class="token keyword">location</span> <span class="token operator">/</span>itcast<span class="token operator">/</span> <span class="token punctuation">&#123;</span>
-           <span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token number">127.0</span><span class="token number">.0</span><span class="token number">.1</span><span class="token punctuation">:</span><span class="token number">12345</span><span class="token punctuation">;</span>
-           <span class="token keyword">proxy_set_header</span> X<span class="token operator">-</span>real<span class="token operator">-</span>ip <span class="token variable">$remote_addr</span><span class="token punctuation">;</span>
-           <span class="token keyword">proxy_set_header</span> Host <span class="token variable">$http_host</span><span class="token punctuation">;</span>
-       <span class="token punctuation">&#125;</span>
-
-
-<span class="token comment">#采用uwsgi方式</span>
-<span class="token keyword">location</span> <span class="token operator">/</span>python<span class="token operator">/</span> <span class="token punctuation">&#123;</span>
-           <span class="token keyword">include</span> uwsgi_params<span class="token punctuation">;</span>
-           uwsgi_pass <span class="token number">127.0</span><span class="token number">.0</span><span class="token number">.1</span><span class="token punctuation">:</span><span class="token number">33333</span><span class="token punctuation">;</span>
-       <span class="token punctuation">&#125;</span>
-
-
-
-  <span class="token comment">#访问nginx本机目录的文件</span>
-  <span class="token keyword">location</span> <span class="token operator">/</span> <span class="token punctuation">&#123;</span>
-          <span class="token keyword">root</span>   <span class="token operator">/</span>home<span class="token operator">/</span>itcast<span class="token operator">/</span>xwp<span class="token operator">/</span>itcast<span class="token operator">/</span><span class="token punctuation">;</span>
-          <span class="token keyword">index</span>  <span class="token keyword">index</span><span class="token punctuation">.</span>html <span class="token keyword">index</span><span class="token punctuation">.</span>htm<span class="token punctuation">;</span>
-      <span class="token punctuation">&#125;</span>
-
-  <span class="token keyword">location</span>  <span class="token operator">/</span>static<span class="token operator">/</span> <span class="token punctuation">&#123;</span>
-           <span class="token keyword">alias</span> <span class="token operator">/</span>var<span class="token operator">/</span>static<span class="token operator">/</span><span class="token punctuation">;</span>
-      <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#反向代理配置</span></span><br><span class="line"><span class="attribute">location</span> /itcast/ &#123;</span><br><span class="line">           <span class="attribute">proxy_pass</span> http://127.0.0.1:12345;</span><br><span class="line">           <span class="attribute">proxy_set_header</span> X-real-ip <span class="variable">$remote_addr</span>;</span><br><span class="line">           <span class="attribute">proxy_set_header</span> Host <span class="variable">$http_host</span>;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#采用uwsgi方式</span></span><br><span class="line"><span class="attribute">location</span> /python/ &#123;</span><br><span class="line">           <span class="attribute">include</span> uwsgi_params;</span><br><span class="line">           <span class="attribute">uwsgi_pass</span> <span class="number">127.0.0.1:33333</span>;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">#访问nginx本机目录的文件</span></span><br><span class="line">  <span class="attribute">location</span> / &#123;</span><br><span class="line">          <span class="attribute">root</span>   /home/itcast/xwp/itcast/;</span><br><span class="line">          <span class="attribute">index</span>  index.html index.htm;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">location</span>  /static/ &#123;</span><br><span class="line">           <span class="attribute">alias</span> /var/static/;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>upstram 模块</li>
 </ul>
 <p>upstream 模块负债负载均衡模块，通过一个简单的调度算法来实现客户端IP到后端服务器的负载均衡。我先学习怎么用，具体的使用实例以后再说。</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">upstream</span> test<span class="token punctuation">.</span>com<span class="token punctuation">&#123;</span>
-    <span class="token keyword">ip_hash</span><span class="token punctuation">;</span>
-    <span class="token keyword">server</span> <span class="token number">192.168</span><span class="token number">.123</span><span class="token number">.1</span><span class="token punctuation">:</span><span class="token number">80</span><span class="token punctuation">;</span>
-    <span class="token keyword">server</span> <span class="token number">192.168</span><span class="token number">.123</span><span class="token number">.2</span><span class="token punctuation">:</span><span class="token number">80</span> down<span class="token punctuation">;</span>
-    <span class="token keyword">server</span> <span class="token number">192.168</span><span class="token number">.123</span><span class="token number">.3</span><span class="token punctuation">:</span><span class="token number">8080</span>  max_fails<span class="token operator">=</span><span class="token number">3</span>  fail_timeout<span class="token operator">=</span><span class="token number">20</span>s<span class="token punctuation">;</span>
-    <span class="token keyword">server</span> <span class="token number">192.168</span><span class="token number">.123</span><span class="token number">.4</span><span class="token punctuation">:</span><span class="token number">8080</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">upstream</span> test.com&#123;</span><br><span class="line">    ip_hash;</span><br><span class="line">    <span class="attribute">server</span> <span class="number">192.168.123.1:80</span>;</span><br><span class="line">    <span class="attribute">server</span> <span class="number">192.168.123.2:80</span> down;</span><br><span class="line">    <span class="attribute">server</span> <span class="number">192.168.123.3:8080</span>  max_fails=<span class="number">3</span>  fail_timeout=<span class="number">20s</span>;</span><br><span class="line">    <span class="attribute">server</span> <span class="number">192.168.123.4:8080</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在上面的例子中，通过upstream指令指定了一个负载均衡器的名称test.com。这个名称可以任意指定，在后面需要的地方直接调用即可。</p>
 <p>里面是ip_hash这是其中的一种负载均衡调度算法。</p>
 <p>Nginx的负载均衡模块目前支持4种调度算法:</p>
@@ -401,205 +388,408 @@
 </ul>
 <h3 id="反向代理服务器的基本配置"><a href="#反向代理服务器的基本配置" class="headerlink" title="反向代理服务器的基本配置"></a>反向代理服务器的基本配置</h3><ol>
 <li><p>proxy_pass</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">proxy_pass</span> URL<span class="token punctuation">;</span>
-配置块 <span class="token keyword">location</span> <span class="token keyword">if</span>
-此配置将当前请求代理到URL参数指定的服务器上<span class="token punctuation">,</span>URL可以是主机名或者IP地址加PORT的形式
-<span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>localhost<span class="token punctuation">:</span><span class="token number">8000</span><span class="token punctuation">;</span>
-也可以结合负载均衡实用<span class="token operator">&lt;</span>负载均衡会说明这种情况<span class="token operator">></span>
-也可以吧<span class="token keyword">HTTP</span>转换成<span class="token keyword">HTTPS</span>
-<span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token number">192.168</span><span class="token number">.0</span><span class="token number">.1</span><span class="token punctuation">;</span>
-默认情况反向代理不转发请求中的Host头部<span class="token punctuation">,</span>如果需呀设置抓发头部
-    则 <span class="token keyword">proxy_set_header</span> Host <span class="token variable">$host</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_pass</span> URL;</span><br><span class="line">配置块 location if</span><br><span class="line">此配置将当前请求代理到URL参数指定的服务器上,URL可以是主机名或者IP地址加PORT的形式</span><br><span class="line"><span class="attribute">proxy_pass</span> http://localhost:8000;</span><br><span class="line">也可以结合负载均衡实用&lt;负载均衡会说明这种情况&gt;</span><br><span class="line">也可以吧HTTP转换成HTTPS</span><br><span class="line"><span class="attribute">proxy_pass</span> http://192.168.0.1;</span><br><span class="line">默认情况反向代理不转发请求中的Host头部,如果需呀设置抓发头部</span><br><span class="line">    则 proxy_set_header Host $host;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>proxy_method</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">proxy_method</span> method_name<span class="token punctuation">;</span>
-配置块 <span class="token keyword">http</span> <span class="token keyword">server</span> <span class="token keyword">location</span>
-此配置项表示转发时的协议方法名<span class="token punctuation">:</span>
-    <span class="token keyword">proxy_method</span> POST<span class="token punctuation">;</span>
-那么客户端发来的GET请求在转发时方法改为POST<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_method</span> method_name;</span><br><span class="line">配置块 http server location</span><br><span class="line">此配置项表示转发时的协议方法名:</span><br><span class="line">    <span class="attribute">proxy_method</span> POST;</span><br><span class="line">那么客户端发来的GET请求在转发时方法改为POST;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>proxy_hide_header</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">proxy_hide_header</span> header1<span class="token punctuation">;</span>
-配置块 <span class="token keyword">http</span> <span class="token keyword">server</span> <span class="token keyword">location</span><span class="token punctuation">;</span>
-Nginx会将上游服务器的响应转发给客户端<span class="token punctuation">,</span>但默认不转发<span class="token keyword">HTTP</span>头部字段<span class="token punctuation">(</span>Date <span class="token keyword">Server</span> X<span class="token operator">-</span>Pad X<span class="token operator">-</span>Accel<span class="token operator">-</span><span class="token operator">*</span> <span class="token punctuation">)</span>
-使用<span class="token keyword">proxy_hide_header</span>可以指定任意头部不能被转发
-<span class="token keyword">proxy_hide_header</span> Cache<span class="token operator">-</span>Control<span class="token punctuation">;</span>
-<span class="token keyword">proxy_hide_header</span> MicrosoftOfficeWebServer<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_hide_header</span> header1;</span><br><span class="line">配置块 http server location;</span><br><span class="line">Nginx会将上游服务器的响应转发给客户端,但默认不转发HTTP头部字段(Date Server X-Pad X-Accel-* )</span><br><span class="line">使用proxy_hide_header可以指定任意头部不能被转发</span><br><span class="line"><span class="attribute">proxy_hide_header</span> Cache-Control;</span><br><span class="line"><span class="attribute">proxy_hide_header</span> MicrosoftOfficeWebServer;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>proxy_pass_header</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">proxy_pass_header</span> header1<span class="token punctuation">;</span>
-配置块 <span class="token keyword">http</span> <span class="token keyword">server</span> <span class="token keyword">location</span>
-功能与 <span class="token keyword">proxy_hide_header</span>相反<span class="token punctuation">,</span>是设置哪些头部允许转发<span class="token punctuation">.</span>
-<span class="token keyword">proxy_pass_header</span> X<span class="token operator">-</span>Accel<span class="token operator">-</span>Redirect<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_pass_header</span> header1;</span><br><span class="line">配置块 http server location</span><br><span class="line">功能与 proxy_hide_header相反,是设置哪些头部允许转发.</span><br><span class="line"><span class="attribute">proxy_pass_header</span> X-Accel-Redirect;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>proxy_pass_request_body</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">proxy_pass_request_body</span> off<span class="token operator">|</span>on<span class="token punctuation">;</span>
-默认 on
-配置块 <span class="token keyword">http</span> <span class="token keyword">server</span> <span class="token keyword">location</span><span class="token punctuation">;</span>
-确定上游服务器是否向上游服务器转发<span class="token keyword">HTTP</span>包体<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_pass_request_body</span> <span class="literal">off</span>|<span class="literal">on</span>;</span><br><span class="line">默认 on</span><br><span class="line">配置块 http server location;</span><br><span class="line">确定上游服务器是否向上游服务器转发HTTP包体</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>proxy_pass_request_header</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx">proxy_pass_request_header on <span class="token operator">|</span> off<span class="token punctuation">;</span>
-默认on
-配置块 <span class="token keyword">http</span> <span class="token keyword">server</span> <span class="token keyword">location</span>
-确定是否转发<span class="token keyword">HTTP</span>头部<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_pass_request_header</span> <span class="literal">on</span> | <span class="literal">off</span>;</span><br><span class="line">默认on</span><br><span class="line">配置块 http server location</span><br><span class="line">确定是否转发HTTP头部</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>proxy_redirect</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">proxy_redirect</span> <span class="token punctuation">[</span>default <span class="token operator">|</span> off <span class="token operator">|</span>redirect <span class="token operator">|</span>replacement<span class="token punctuation">]</span>
-默认default
-配置块 <span class="token keyword">http</span> <span class="token keyword">server</span> <span class="token keyword">location</span>
-当上游服务响应时重定向或刷新<span class="token punctuation">(</span><span class="token keyword">HTTP</span> <span class="token number">301</span> <span class="token number">302</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token keyword">proxy_redirect</span>可以重设<span class="token keyword">HTTP</span>头部的<span class="token keyword">location</span>或refresh字段
-   
-<span class="token keyword">proxy_redirect</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>locahost<span class="token punctuation">:</span><span class="token number">8000</span><span class="token operator">/</span>two<span class="token operator">/</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>frontend<span class="token operator">/</span>one<span class="token operator">/</span><span class="token punctuation">;</span>
-上游响应<span class="token number">302</span><span class="token punctuation">,</span><span class="token keyword">location</span>是URI是<span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>locahost<span class="token punctuation">:</span><span class="token number">8000</span><span class="token operator">/</span>two<span class="token operator">/</span>some<span class="token operator">/</span>uri<span class="token operator">/</span>
-那是实际转发给客户端的是 <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>frontend<span class="token operator">/</span>one<span class="token operator">/</span>some<span class="token operator">/</span>uri<span class="token operator">/</span><span class="token punctuation">;</span>
-可以使用前面提到的ngx_http_core_module模块提供的变量 
-<span class="token keyword">proxy_redirect</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>locahost<span class="token punctuation">:</span><span class="token number">8000</span><span class="token operator">/</span>two<span class="token operator">/</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token variable">$host</span><span class="token punctuation">:</span>server_port<span class="token operator">/</span><span class="token punctuation">;</span>
-可以省略replacement参数的主机名部分<span class="token punctuation">,</span>这时候用虚拟主机名填充
-<span class="token keyword">proxy_redirect</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>locahost<span class="token punctuation">:</span><span class="token number">8000</span><span class="token operator">/</span>two<span class="token operator">/</span> <span class="token operator">/</span>one<span class="token operator">/</span><span class="token punctuation">;</span>
-   
-使用off参数的时候<span class="token punctuation">,</span>将使<span class="token keyword">location</span>和refresh的字段维持不变
-<span class="token keyword">proxy_redirect</span> off<span class="token punctuation">;</span>
-   
-如果使用的 <span class="token keyword">proxy_redirect</span> default<span class="token punctuation">;</span>
-下面两种配置是等效的
-    <span class="token keyword">location</span> <span class="token operator">/</span><span class="token punctuation">&#123;</span>
-        <span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token keyword">upstream</span><span class="token punctuation">:</span>port<span class="token operator">/</span>two<span class="token operator">/</span><span class="token punctuation">;</span>
-        <span class="token keyword">proxy_redirect</span> default<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">location</span> <span class="token operator">/</span><span class="token punctuation">&#123;</span>
-        <span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token keyword">upstream</span><span class="token punctuation">:</span>port<span class="token operator">/</span>two<span class="token operator">/</span><span class="token punctuation">;</span>
-        <span class="token keyword">proxy_redirect</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token keyword">upstream</span><span class="token punctuation">:</span>port<span class="token operator">/</span>two<span class="token operator">/</span> <span class="token operator">/</span>one<span class="token operator">/</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_redirect</span> [default | <span class="literal">off</span> |<span class="literal">redirect</span> |replacement]</span><br><span class="line">默认default</span><br><span class="line">配置块 http server location</span><br><span class="line">当上游服务响应时重定向或刷新(HTTP <span class="number">301</span> <span class="number">302</span>),proxy_redirect可以重设HTTP头部的location或refresh字段</span><br><span class="line">   </span><br><span class="line">proxy_redirect http://locahost:8000/two/ http://frontend/one/;</span><br><span class="line">上游响应302,location是URI是http://locahost:8000/two/some/uri/</span><br><span class="line">那是实际转发给客户端的是 http://frontend/one/some/uri/;</span><br><span class="line">可以使用前面提到的ngx_http_core_module模块提供的变量 </span><br><span class="line"><span class="attribute">proxy_redirect</span> http://locahost:8000/two/ http://<span class="variable">$host</span>:server_port/;</span><br><span class="line">可以省略replacement参数的主机名部分,这时候用虚拟主机名填充</span><br><span class="line"><span class="attribute">proxy_redirect</span> http://locahost:8000/two/ /one/;</span><br><span class="line">   </span><br><span class="line">使用off参数的时候,将使location和refresh的字段维持不变</span><br><span class="line"><span class="attribute">proxy_redirect</span> <span class="literal">off</span>;</span><br><span class="line">   </span><br><span class="line">如果使用的 proxy_redirect default;</span><br><span class="line">下面两种配置是等效的</span><br><span class="line">    <span class="attribute">location</span> /&#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://upstream:port/two/;</span><br><span class="line">        <span class="attribute">proxy_redirect</span> default;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="attribute">location</span> /&#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://upstream:port/two/;</span><br><span class="line">        <span class="attribute">proxy_redirect</span> http://upstream:port/two/ /one/;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>proxy_next_upstream</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx">    <span class="token keyword">proxy_next_upstream</span> <span class="token punctuation">[</span>error <span class="token operator">|</span><span class="token keyword">timeout</span> <span class="token operator">|</span>invalid_header <span class="token operator">|</span>http_500 <span class="token operator">|</span>http_502<span class="token operator">~</span><span class="token number">504</span> <span class="token operator">|</span>http_404 <span class="token operator">|</span> off<span class="token punctuation">]</span>
-    默认 <span class="token keyword">proxy_next_upstream</span> error <span class="token keyword">timeout</span><span class="token punctuation">;</span>
-    配置块 <span class="token keyword">http</span> <span class="token keyword">server</span> <span class="token keyword">location</span>
-
-    此配置表示上游一台服务器转发请求出现错误时<span class="token punctuation">,</span>继续换一套服务器处理这个请求
-    其参数用来说明在那些情况下继续选择下一台上游服务器转发请求<span class="token punctuation">.</span>
-    error 向上游发起连接 发送请求 读取响应时出错
-    <span class="token keyword">timeout</span> 发送请求或读取响应时出错
-    invalid_header 上游服务器发送的响应时不合法
-    http_500 上游响应<span class="token number">500</span>
-    http_502 上游响应<span class="token number">502</span>
-    http_503 上游响应<span class="token number">503</span>
-    http_504 上游响应<span class="token number">504</span>
-    http_404 上游响应<span class="token number">404</span>
-    off      关闭<span class="token keyword">proxy_next_upstream</span>功能 只要一出错就选择另外一台上游再次出发
-Nginx反向代理模块中还提供很多配置<span class="token punctuation">,</span>如设置连接的超时时间<span class="token punctuation">,</span>临时文件如何存储<span class="token punctuation">,</span>如何缓存上游服务器响应等功能<span class="token punctuation">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    <span class="attribute">proxy_next_upstream</span> [<span class="literal">error</span> |timeout |invalid_header |http_500 |http_502~<span class="number">504</span> |http_404 | <span class="literal">off</span>]</span><br><span class="line">    默认 proxy_next_upstream <span class="literal">error</span> timeout;</span><br><span class="line">    配置块 http server location</span><br><span class="line"></span><br><span class="line">    此配置表示上游一台服务器转发请求出现错误时,继续换一套服务器处理这个请求</span><br><span class="line">    其参数用来说明在那些情况下继续选择下一台上游服务器转发请求.</span><br><span class="line">    <span class="attribute">error</span> 向上游发起连接 发送请求 读取响应时出错</span><br><span class="line">    timeout 发送请求或读取响应时出错</span><br><span class="line">    invalid_header 上游服务器发送的响应时不合法</span><br><span class="line">    http_500 上游响应<span class="number">500</span></span><br><span class="line">    http_502 上游响应<span class="number">502</span></span><br><span class="line">    http_503 上游响应<span class="number">503</span></span><br><span class="line">    http_504 上游响应<span class="number">504</span></span><br><span class="line">    http_404 上游响应<span class="number">404</span></span><br><span class="line">    <span class="literal">off</span>      关闭proxy_next_upstream功能 只要一出错就选择另外一台上游再次出发</span><br><span class="line">Nginx反向代理模块中还提供很多配置,如设置连接的超时时间,临时文件如何存储,如何缓存上游服务器响应等功能.</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>可以通过阅读 ngx_http_proxy_module了解更多详细情况</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token comment">#sudo vim /usr/local/nginx/conf/nginx.conf </span>
-
-<span class="token keyword">server</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">listen</span>       <span class="token number">80</span><span class="token punctuation">;</span>
-    <span class="token keyword">server_name</span>  localhost<span class="token punctuation">;</span>
-    <span class="token keyword">location</span> <span class="token operator">/</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">#保证代理机器能访问到 下面的机器并装有nginx  在主机号为100的机器上有响应网页</span>
-    <span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token number">192.168</span><span class="token number">.1</span><span class="token number">.100</span><span class="token punctuation">;</span>
-    <span class="token keyword">root</span>   html<span class="token punctuation">;</span>
-    <span class="token keyword">index</span>  <span class="token keyword">index</span><span class="token punctuation">.</span>html <span class="token keyword">index</span><span class="token punctuation">.</span>htm<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-sudo <span class="token operator">/</span>usr<span class="token operator">/</span>local<span class="token operator">/</span>nginx<span class="token operator">/</span>sbin<span class="token operator">/</span>nginx <span class="token operator">-</span>s reload<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#sudo vim /usr/local/nginx/conf/nginx.conf </span></span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>  localhost;</span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">    <span class="comment">#保证代理机器能访问到 下面的机器并装有nginx  在主机号为100的机器上有响应网页</span></span><br><span class="line">    <span class="attribute">proxy_pass</span> http://192.168.1.100;</span><br><span class="line">    <span class="attribute">root</span>   html;</span><br><span class="line">    <span class="attribute">index</span>  index.html index.htm;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="attribute">sudo</span> /usr/local/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
 <p>加一些判断条件 获取到 对方请求的主机 防止别人代理到自己的主机上</p>
 <h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>负载均衡是由多台服务器以对称的方式组成一个服务器集合，每台服务器都具有等价的地位，都可以单独对外提供服务而无须其他服务器的辅助。通过某种负载分担技术，将外部发送来的请求按照事先设定分配算法分配到对称结构中的某一台服务器上，而接收到请求的服务器独立地回应客户的请求。</p>
 <p>均衡负载能够平均分配客户请求到服务器列阵，籍此提供快速获取重要数据，解决大量并发访问服务问题。</p>
 <ol>
 <li><p>upstream块</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">upstream</span> name <span class="token punctuation">&#123;</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">&#125;</span>
-配置块 <span class="token keyword">http</span>
-<span class="token keyword">upstream</span>块定义一个上游服务器的集群<span class="token punctuation">,</span>便于反向代理中的<span class="token keyword">proxy_pass</span>使用
-
-<span class="token keyword">upstream</span> mynet<span class="token punctuation">&#123;</span>
-    <span class="token keyword">server</span> www<span class="token punctuation">.</span>wopai1<span class="token punctuation">.</span>com<span class="token punctuation">;</span>
-    <span class="token keyword">server</span> www<span class="token punctuation">.</span>wopai2<span class="token punctuation">.</span>com<span class="token punctuation">;</span>
-    <span class="token keyword">server</span> www<span class="token punctuation">.</span>wopai3<span class="token punctuation">.</span>com<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-<span class="token keyword">server</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">location</span> <span class="token operator">/</span><span class="token punctuation">&#123;</span>
-        <span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>mynet<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">upstream name &#123;...&#125;</span><br><span class="line">配置块 http</span><br><span class="line">upstream块定义一个上游服务器的集群,便于反向代理中的proxy_pass使用</span><br><span class="line"></span><br><span class="line"><span class="attribute">upstream</span> mynet&#123;</span><br><span class="line">    <span class="attribute">server</span> www.wopai1.com;</span><br><span class="line">    <span class="attribute">server</span> www.wopai2.com;</span><br><span class="line">    <span class="attribute">server</span> www.wopai3.com;</span><br><span class="line">&#125;</span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">location</span> /&#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://mynet;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>server</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">server</span> name <span class="token punctuation">[</span>paramenters<span class="token punctuation">]</span>
-配置块<span class="token keyword">upstream</span>
-<span class="token keyword">server</span>配置项指定了一台上游服务器的名字<span class="token punctuation">,</span>可以是域名 IP地址端口 UNIX句柄
-weight<span class="token operator">=</span> number<span class="token punctuation">;</span>设置向这台服务器转发的权重<span class="token punctuation">,</span>默认为<span class="token number">1</span>
-max_fails<span class="token operator">=</span>number<span class="token punctuation">;</span>该选项域fail_timeout配合使用
-        指在fail_timeout时间段内如果转发上游失败超过number次就认为当前的fail_timeout时间内
-        这台服务器不可用<span class="token punctuation">,</span>max_fails默认为<span class="token number">1</span> 如果设置为<span class="token number">0</span> 表示不检查失败次数
-fail_timeout<span class="token operator">=</span>time<span class="token punctuation">;</span> fail_timeout表示该时间内转发多少次失败后就认为上游不可用<span class="token punctuation">.</span>默认<span class="token number">10</span>s
-down    表示上游服务器永久下线<span class="token punctuation">,</span>只能在<span class="token keyword">ip_hash</span>配置时才有效
-backup  在<span class="token keyword">ip_hash</span>配置时无效<span class="token punctuation">.</span>只有所有非备份机都失败<span class="token punctuation">,</span>才向上游备份服务器转发请求<span class="token punctuation">.</span>
-<span class="token keyword">upstream</span> mynet<span class="token punctuation">&#123;</span>
-    <span class="token keyword">server</span> www<span class="token punctuation">.</span>wopai1<span class="token punctuation">.</span>com weight<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">;</span>
-    <span class="token keyword">server</span> www<span class="token punctuation">.</span>wopai2<span class="token punctuation">.</span>com<span class="token punctuation">:</span><span class="token number">8081</span> max_fails<span class="token operator">=</span><span class="token number">3</span> fail_timeout<span class="token operator">=</span><span class="token number">300</span>s<span class="token punctuation">;</span>
-    <span class="token keyword">server</span> www<span class="token punctuation">.</span>wopai2<span class="token punctuation">.</span>com down<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">server</span> name [paramenters]</span><br><span class="line">配置块upstream</span><br><span class="line">server配置项指定了一台上游服务器的名字,可以是域名 IP地址端口 UNIX句柄</span><br><span class="line">weight= number;设置向这台服务器转发的权重,默认为1</span><br><span class="line">max_fails=number;该选项域fail_timeout配合使用</span><br><span class="line">        指在fail_timeout时间段内如果转发上游失败超过number次就认为当前的fail_timeout时间内</span><br><span class="line">        这台服务器不可用,max_fails默认为1 如果设置为0 表示不检查失败次数</span><br><span class="line">fail_timeout=time; fail_timeout表示该时间内转发多少次失败后就认为上游不可用.默认10s</span><br><span class="line"><span class="attribute">down</span>    表示上游服务器永久下线,只能在ip_hash配置时才有效</span><br><span class="line">backup  在ip_hash配置时无效.只有所有非备份机都失败,才向上游备份服务器转发请求.</span><br><span class="line">upstream mynet&#123;</span><br><span class="line">    <span class="attribute">server</span> www.wopai1.com weight=<span class="number">5</span>;</span><br><span class="line">    <span class="attribute">server</span> www.wopai2.com:<span class="number">8081</span> max_fails=<span class="number">3</span> fail_timeout=<span class="number">300s</span>;</span><br><span class="line">    <span class="attribute">server</span> www.wopai2.com down;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>ip_hash</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx">配置块 <span class="token keyword">upstream</span>
-希望来自某一个用户的请求始终落在固定的一台服务器上进行处理<span class="token punctuation">.</span>
-根据客户端的IP散列计算出一个key<span class="token punctuation">,</span>将key按照<span class="token keyword">upstream</span>集群中的上游服务器进行取模<span class="token punctuation">,</span>求得的值对应的主机接收转发请求<span class="token punctuation">.</span>
-<span class="token keyword">ip_hash</span>不可以与weight同时使用
-如果<span class="token keyword">upstream</span>配置中有一台服务器暂时不可用<span class="token punctuation">,</span>不能直接删除该配置<span class="token punctuation">,</span>而应该使用down标识<span class="token punctuation">.</span>
-<span class="token keyword">upstream</span> mynet<span class="token punctuation">&#123;</span>
-    <span class="token keyword">ip_hash</span><span class="token punctuation">;</span>
-    <span class="token keyword">server</span> www<span class="token punctuation">.</span>wowpai1<span class="token punctuation">.</span>top<span class="token punctuation">;</span>
-    <span class="token keyword">server</span> www<span class="token punctuation">.</span>wowpai2<span class="token punctuation">.</span>top<span class="token punctuation">;</span>  
-    <span class="token keyword">server</span> www<span class="token punctuation">.</span>wowpai3<span class="token punctuation">.</span>top down<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">配置块 upstream</span><br><span class="line">希望来自某一个用户的请求始终落在固定的一台服务器上进行处理.</span><br><span class="line">根据客户端的IP散列计算出一个key,将key按照upstream集群中的上游服务器进行取模,求得的值对应的主机接收转发请求.</span><br><span class="line">ip_hash不可以与weight同时使用</span><br><span class="line">如果upstream配置中有一台服务器暂时不可用,不能直接删除该配置,而应该使用down标识.</span><br><span class="line"><span class="attribute">upstream</span> mynet&#123;</span><br><span class="line">    ip_hash;</span><br><span class="line">    <span class="attribute">server</span> www.wowpai1.top;</span><br><span class="line">    <span class="attribute">server</span> www.wowpai2.top;  </span><br><span class="line">    <span class="attribute">server</span> www.wowpai3.top down;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>例子,服务器负载均衡基本配置,nginx中可以进行负载均衡的相关设置:</p>
-<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token keyword">upstream</span> my<span class="token punctuation">.</span>net<span class="token punctuation">&#123;</span>    <span class="token comment">#my.net是自定义的命名 在server结构中引用即可</span>
-
-<span class="token comment">#代理服务器为 两台机器192.168.22.136 192.168.22.147做负载均衡操作 </span>
-<span class="token comment">#两台机器上 可以跑apache负载功能更为强大的网页相关任务</span>
-
-<span class="token comment">#max_fails 表示尝试出错最大次数 即可认为该服务器 在fail_timeout时间内不可用</span>
-<span class="token comment"># server servername:port   servername可以写主机名 或者点分式IP</span>
-<span class="token keyword">server</span> <span class="token number">192.168</span><span class="token number">.22</span><span class="token number">.136</span><span class="token punctuation">:</span><span class="token number">80</span> max_fails<span class="token operator">=</span><span class="token number">1</span> fail_timeout<span class="token operator">=</span><span class="token number">300</span>s<span class="token punctuation">;</span>
-<span class="token keyword">server</span> <span class="token number">192.168</span><span class="token number">.22</span><span class="token number">.147</span><span class="token punctuation">:</span><span class="token number">80</span> max_fails<span class="token operator">=</span><span class="token number">1</span> fail_timeout<span class="token operator">=</span><span class="token number">300</span>s<span class="token punctuation">;</span>  
-<span class="token punctuation">&#125;</span>
-
-
-<span class="token keyword">server</span> <span class="token punctuation">&#123;</span>
-<span class="token keyword">listen</span>       <span class="token number">80</span><span class="token punctuation">;</span>
-<span class="token keyword">server_name</span>  localhost<span class="token punctuation">;</span> 
-<span class="token keyword">location</span> <span class="token operator">/</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">#upstream 块名</span>
-    <span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>my<span class="token punctuation">.</span>net<span class="token punctuation">;</span>
-    <span class="token keyword">root</span>   html<span class="token punctuation">;</span>
-    <span class="token keyword">index</span>  <span class="token keyword">index</span><span class="token punctuation">.</span>html <span class="token keyword">index</span><span class="token punctuation">.</span>htm<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">upstream</span> my.net&#123;    <span class="comment">#my.net是自定义的命名 在server结构中引用即可</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#代理服务器为 两台机器192.168.22.136 192.168.22.147做负载均衡操作 </span></span><br><span class="line"><span class="comment">#两台机器上 可以跑apache负载功能更为强大的网页相关任务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#max_fails 表示尝试出错最大次数 即可认为该服务器 在fail_timeout时间内不可用</span></span><br><span class="line"><span class="comment"># server servername:port   servername可以写主机名 或者点分式IP</span></span><br><span class="line"><span class="attribute">server</span> <span class="number">192.168.22.136:80</span> max_fails=<span class="number">1</span> fail_timeout=<span class="number">300s</span>;</span><br><span class="line"><span class="attribute">server</span> <span class="number">192.168.22.147:80</span> max_fails=<span class="number">1</span> fail_timeout=<span class="number">300s</span>;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line"><span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line"><span class="attribute">server_name</span>  localhost; </span><br><span class="line"><span class="attribute">location</span> / &#123;</span><br><span class="line">    <span class="comment">#upstream 块名</span></span><br><span class="line">    <span class="attribute">proxy_pass</span> http://my.net;</span><br><span class="line">    <span class="attribute">root</span>   html;</span><br><span class="line">    <span class="attribute">index</span>  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>动手开始配置才能慢慢上手nginx配置和使用。</p>
 
-            </div>
-            <!-- Post Comments -->
-            
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Nginx/" rel="tag"><i class="fa fa-tag"></i> Nginx</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/07/18/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B9%8B%E7%89%88%E6%9C%AC%E5%8F%B7/" rel="prev" title="如何理解版本号">
+      <i class="fa fa-chevron-left"></i> 如何理解版本号
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/10/17/javascript/Javascript%E4%B8%AD%E7%9A%84call%E3%80%81apply%E5%92%8Cbind/" rel="next" title="JavaScript中的call、apply和bind">
+      JavaScript中的call、apply和bind <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
     
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">反向代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.</span> <span class="nav-text">反向代理服务器的基本配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">4.</span> <span class="nav-text">负载均衡</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
 </div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
     </div>
 </body>
-
-
-
-
-
 </html>

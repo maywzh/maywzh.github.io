@@ -1,167 +1,278 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<link rel="bookmark" type="image/x-icon" href="/bitbug_favicon_64s.ico" />
-	<link rel="shortcut icon" href="/bitbug_favicon_64s.ico">
-	
-	    <title>
-    Cultoy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="maywzh" />
-    
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
-        }
-    </style>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/mslogo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/bitbug_favicon_128s.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/bitbug_favicon_64s.ico">
+  <link rel="mask-icon" href="/uploads/mslogo.png" color="#222">
 
-	    
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"io.maywzh.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="总结一下常用的简单MySQL命令。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql的常用命令">
+<meta property="og:url" content="https://io.maywzh.com/2015/02/11/MySQL/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8BMysql%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/index.html">
+<meta property="og:site_name" content="Cult I.O.">
+<meta property="og:description" content="总结一下常用的简单MySQL命令。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2015-02-11T04:16:14.000Z">
+<meta property="article:modified_time" content="2020-12-26T09:04:45.880Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="mysql">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://io.maywzh.com/2015/02/11/MySQL/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8BMysql%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Mysql的常用命令 | Cult I.O.</title>
   
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-4"></script>
+    <script data-pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-119246999-4');
+      }
     </script>
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.11.3/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/jquery.scrollex@0.2.1/jquery.scrollex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/maywzh/jquery.scrolly@0.0.1/dist/jquery.scrolly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ajlkn/skel@3.0.1/dist/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 5.1.1"></head>
-
-<!-- Layouts -->
 
 
 
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-
-<body class="is-loading">
-    <!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">MAYWZH</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special">
-	<ul class="menu links">
-		<!-- Homepage  主页  -->
-		<li>
-			<a href="/" rel="nofollow">Home</a>
-		</li>
-		<!-- categories_name  分类   -->
-		
-		<li class="active">
-			<a href="#s1">Category</a>
-			<ul class="submenu">
-				<li>
-					<a class="category-link" href="/categories/DevOps/">DevOps</a></li><li><a class="category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li><li><a class="category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></li><li><a class="category-link" href="/categories/%E5%9D%91/">坑</a></li><li><a class="category-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a></li><li><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li><a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li><a class="category-link" href="/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/">方法论</a></li><li><a class="category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li><li><a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li><a class="category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></li><li><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></li><li><a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-			</ul>
-		</li>
-		
-		<!-- archives  归档   -->
-		
-		<li class="active">
-			<a href="#s1">Archive</a>
-			<ul class="submenu">
-				<li>
-					<a class="archive-link" href="/archives/2020/">2020</a></li><li><a class="archive-link" href="/archives/2019/">2019</a></li><li><a class="archive-link" href="/archives/2018/">2018</a></li><li><a class="archive-link" href="/archives/2017/">2017</a></li><li><a class="archive-link" href="/archives/2016/">2016</a></li><li><a class="archive-link" href="/archives/2015/">2015</a>
-			</ul>
-		</li>
-		
-
-		<!-- Pages 自定义   -->
-		
-		<li>
-			<a href="/tags/" title="Tags">
-				Tags
-			</a>
-		</li>
-		
-		<li>
-			<a href="/about/" title="About">
-				About
-			</a>
-		</li>
-		
 
 
-	</ul>
-	<!-- icons 图标   -->
-	<ul class="icons">
-		
-		<li>
-			<a title="search" href="https://io.maywzh.com" target="_blank" rel="noopener">
-				<i class="icon fa fa-search"></i>
-			</a>
-		</li>
-		
-		
-		<li>
-			<a title="twitter" href="https://twitter.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-twitter"></i>
-			</a>
-		</li>
-		
-		<li>
-			<a title="github" href="https://github.com/maywzh" target="_blank" rel="noopener">
-				<i class="icon fa fa-github"></i>
-			</a>
-		</li>
-		
-	</ul>
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cult I.O.</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Namasday.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
 </nav>
 
-        <div id="main">
-            <div class="post_page_title_img"
-                style="height: 25rem;background-image: url(https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;">
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;">
-                    <h2>Mysql的常用命令</h2>
-                </a>
-            </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <p>总结一下常用的简单MySQL命令。</p>
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://io.maywzh.com/2015/02/11/MySQL/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8BMysql%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/myavatar.jpg">
+      <meta itemprop="name" content="maywzh">
+      <meta itemprop="description" content="Namasday.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cult I.O.">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mysql的常用命令
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2015.02.11 12:16:14" itemprop="dateCreated datePublished" datetime="2015-02-11T12:16:14+08:00">2015.02.11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2015/02/11/MySQL/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8BMysql%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="post-meta-item leancloud_visitors" data-flag-title="Mysql的常用命令" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2015/02/11/MySQL/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8BMysql%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2015/02/11/MySQL/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8BMysql%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>总结一下常用的简单MySQL命令。</p>
 <a id="more"></a>
 <h2 id="MySQL介绍"><a href="#MySQL介绍" class="headerlink" title="MySQL介绍"></a>MySQL介绍</h2><p>MySQL 为关系型数据库由一个或数个表格组成</p>
 <div class="table-container">
@@ -203,30 +314,11 @@
 </table>
 </div>
 <p><strong>表头(header)：</strong>每一列的名称；<br><strong>列(col)：</strong> 每一列用来描述表中所有数据项的某个属性；<br><strong>行(row)：</strong>每一行用来描述某个数据项的的所有属性；<br><strong>值(value)：</strong>行的具体信息, 每个值必须与该列的数据类型相同；</p>
-<h2 id="登录MySQL"><a href="#登录MySQL" class="headerlink" title="登录MySQL"></a>登录MySQL</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mysql -h <span class="token number">127.0</span>.0.1 -u username -p
-mysql -D dbname -h <span class="token function">hostname</span> -u username -p
-mysql<span class="token operator">></span> <span class="token builtin class-name">exit</span> 
-<span class="token comment"># 退出</span>
-mysql<span class="token operator">></span> quit <span class="token comment"># 退出</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="登录MySQL"><a href="#登录MySQL" class="headerlink" title="登录MySQL"></a>登录MySQL</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql -h 127.0.0.1 -u username -p</span><br><span class="line">mysql -D dbname -h hostname -u username -p</span><br><span class="line">mysql&gt; <span class="built_in">exit</span> </span><br><span class="line"><span class="comment"># 退出</span></span><br><span class="line">mysql&gt; quit <span class="comment"># 退出</span></span><br></pre></td></tr></table></figure>
 <h2 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h2><p>对于表的操作需要先进入库 use 库名；</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">database</span> testdb <span class="token keyword">character</span> <span class="token keyword">set</span> gbk<span class="token punctuation">;</span> <span class="token comment">-- 创建一个名为 testdb 的数据库，数据库字符编码指定为 gbk</span>
-<span class="token keyword">drop</span> <span class="token keyword">database</span> testdb<span class="token punctuation">;</span>  <span class="token comment">-- 删除 testdb</span>
-<span class="token keyword">show</span> <span class="token keyword">databases</span><span class="token punctuation">;</span>        <span class="token comment">-- 显示数据库列表。</span>
-<span class="token keyword">use</span> testdb<span class="token punctuation">;</span>      <span class="token comment">-- 选择创建的数据库people</span>
-<span class="token keyword">show</span> 表名<span class="token punctuation">;</span>       <span class="token comment">-- 显示samp_db下面所有的表名字</span>
-<span class="token keyword">describe</span> 表名<span class="token punctuation">;</span>   <span class="token comment">-- 显示数据表的结构</span>
-<span class="token keyword">delete</span> <span class="token keyword">from</span> 表名<span class="token punctuation">;</span> <span class="token comment">-- 清空表中记录</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">database</span> testdb <span class="built_in">character</span> <span class="keyword">set</span> gbk; <span class="comment">-- 创建一个名为 testdb 的数据库，数据库字符编码指定为 gbk</span></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">database</span> testdb;  <span class="comment">-- 删除 testdb</span></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">databases</span>;        <span class="comment">-- 显示数据库列表。</span></span><br><span class="line"><span class="keyword">use</span> testdb;      <span class="comment">-- 选择创建的数据库people</span></span><br><span class="line"><span class="keyword">show</span> 表名;       <span class="comment">-- 显示samp_db下面所有的表名字</span></span><br><span class="line"><span class="keyword">describe</span> 表名;   <span class="comment">-- 显示数据表的结构</span></span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> 表名; <span class="comment">-- 清空表中记录</span></span><br></pre></td></tr></table></figure>
 <h2 id="创建数据库表"><a href="#创建数据库表" class="headerlink" title="创建数据库表"></a>创建数据库表</h2><p>使用 create table 语句可完成对表的创建, create table 的常见形式:语法：create table 表名称(列声明)；</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span>users<span class="token punctuation">`</span> <span class="token punctuation">(</span>  
-<span class="token punctuation">`</span>id<span class="token punctuation">`</span>          <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span> <span class="token keyword">unsigned</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">AUTO_INCREMENT</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>  
-<span class="token punctuation">`</span>password<span class="token punctuation">`</span>    <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">32</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">DEFAULT</span> <span class="token string">''</span> <span class="token keyword">COMMENT</span> <span class="token string">'用户密码'</span><span class="token punctuation">,</span>  
-<span class="token punctuation">`</span>mobile<span class="token punctuation">`</span>         <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">DEFAULT</span> <span class="token string">''</span> <span class="token keyword">COMMENT</span> <span class="token string">'手机号码'</span><span class="token punctuation">,</span>  
-<span class="token punctuation">`</span>create_at<span class="token punctuation">`</span>      <span class="token keyword">timestamp</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span>      <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CURRENT_TIMESTAMP</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  
-<span class="token punctuation">`</span>update_at<span class="token punctuation">`</span>      <span class="token keyword">timestamp</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span>      <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CURRENT_TIMESTAMP</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span> <span class="token keyword">ON</span> <span class="token keyword">UPDATE</span> <span class="token keyword">CURRENT_TIMESTAMP</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  
-<span class="token comment">-- 创建唯一索引，不允许重复  </span>
-<span class="token keyword">UNIQUE</span> <span class="token keyword">INDEX</span> idx_user_mobile<span class="token punctuation">(</span><span class="token punctuation">`</span>mobile<span class="token punctuation">`</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8 
-<span class="token keyword">COMMENT</span><span class="token operator">=</span><span class="token string">'用户表'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`users`</span> (  </span><br><span class="line"><span class="string">`id`</span>          <span class="built_in">int</span>(<span class="number">100</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT primary <span class="keyword">key</span>,  </span><br><span class="line"><span class="string">`password`</span>    <span class="built_in">varchar</span>(<span class="number">32</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">COMMENT</span> <span class="string">&#x27;用户密码&#x27;</span>,  </span><br><span class="line"><span class="string">`mobile`</span>         <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">COMMENT</span> <span class="string">&#x27;手机号码&#x27;</span>,  </span><br><span class="line"><span class="string">`create_at`</span>      <span class="built_in">timestamp</span>(<span class="number">6</span>)      <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">CURRENT_TIMESTAMP</span>(<span class="number">6</span>),  </span><br><span class="line"><span class="string">`update_at`</span>      <span class="built_in">timestamp</span>(<span class="number">6</span>)      <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">CURRENT_TIMESTAMP</span>(<span class="number">6</span>) <span class="keyword">ON</span> <span class="keyword">UPDATE</span> <span class="keyword">CURRENT_TIMESTAMP</span>(<span class="number">6</span>),  </span><br><span class="line"><span class="comment">-- 创建唯一索引，不允许重复  </span></span><br><span class="line"><span class="keyword">UNIQUE</span> <span class="keyword">INDEX</span> idx_user_mobile(<span class="string">`mobile`</span>))</span><br><span class="line"><span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8 </span><br><span class="line"><span class="keyword">COMMENT</span>=<span class="string">&#x27;用户表&#x27;</span>;</span><br></pre></td></tr></table></figure>
 <p>数据类型的属性解释</p>
 <ul>
 <li><strong>NULL：</strong>数据列可包含NULL值；</li>
@@ -239,191 +331,424 @@ mysql<span class="token operator">></span> quit <span class="token comment"># �
 <li><strong>COMMENT：</strong>对表或者字段说明；</li>
 </ul>
 <h2 id="CRUD-增删查改"><a href="#CRUD-增删查改" class="headerlink" title="CRUD - 增删查改"></a>CRUD - 增删查改</h2><h3 id="SELECT-查"><a href="#SELECT-查" class="headerlink" title="SELECT 查"></a>SELECT 查</h3><p>SELECT 语句用于从表中选取数据。<br><strong>语法：SELECT 列名称 FROM 表名称</strong> — 选择特定的列<br><strong>语法：SELECT * FROM 表名称</strong> — 选择所有的列</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 表abc 两个 id  表abc中不包含 字段a=b 的 查询出来，只显示id</span>
-<span class="token keyword">SELECT</span> s<span class="token punctuation">.</span>id <span class="token keyword">from</span> station s <span class="token keyword">WHERE</span> id <span class="token operator">in</span> <span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span><span class="token number">14</span><span class="token punctuation">)</span> <span class="token operator">and</span> user_id <span class="token operator">not</span> <span class="token operator">in</span> <span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">-- 从表 Persons 选取 LastName 列的数据</span>
-<span class="token keyword">SELECT</span> LastName <span class="token keyword">FROM</span> Persons 
-<span class="token comment">-- 结果集中会自动去重复数据</span>
-<span class="token keyword">SELECT</span> <span class="token keyword">DISTINCT</span> Company <span class="token keyword">FROM</span> Orders
-<span class="token comment">-- 表 Persons 字段 Id_P 等于 Orders 字段 Id_P 的值，</span>
-<span class="token comment">-- 结果集显示 Persons表的 LastName、FirstName字段，Orders表的OrderNo字段</span>
-<span class="token keyword">SELECT</span> p<span class="token punctuation">.</span>LastName<span class="token punctuation">,</span> p<span class="token punctuation">.</span>FirstName<span class="token punctuation">,</span> o<span class="token punctuation">.</span>OrderNo <span class="token keyword">FROM</span> Persons p<span class="token punctuation">,</span> Orders o <span class="token keyword">WHERE</span> p<span class="token punctuation">.</span>Id_P <span class="token operator">=</span> o<span class="token punctuation">.</span>Id_P <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 表abc 两个 id  表abc中不包含 字段a=b 的 查询出来，只显示id</span></span><br><span class="line"><span class="keyword">SELECT</span> s.id <span class="keyword">from</span> station s <span class="keyword">WHERE</span> <span class="keyword">id</span> <span class="keyword">in</span> (<span class="number">13</span>,<span class="number">14</span>) <span class="keyword">and</span> user_id <span class="keyword">not</span> <span class="keyword">in</span> (<span class="number">4</span>);</span><br><span class="line"><span class="comment">-- 从表 Persons 选取 LastName 列的数据</span></span><br><span class="line"><span class="keyword">SELECT</span> LastName <span class="keyword">FROM</span> Persons </span><br><span class="line"><span class="comment">-- 结果集中会自动去重复数据</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> Company <span class="keyword">FROM</span> Orders</span><br><span class="line"><span class="comment">-- 表 Persons 字段 Id_P 等于 Orders 字段 Id_P 的值，</span></span><br><span class="line"><span class="comment">-- 结果集显示 Persons表的 LastName、FirstName字段，Orders表的OrderNo字段</span></span><br><span class="line"><span class="keyword">SELECT</span> p.LastName, p.FirstName, o.OrderNo <span class="keyword">FROM</span> Persons p, Orders o <span class="keyword">WHERE</span> p.Id_P = o.Id_P </span><br></pre></td></tr></table></figure>
 <h3 id="UPDATE-改"><a href="#UPDATE-改" class="headerlink" title="UPDATE 改"></a>UPDATE 改</h3><p>Update 语句用于修改表中的数据。<br>语法：UPDATE 表名称 SET 列名称 = 新值 WHERE 列名称 = 某值</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- update语句设置字段值为另一个结果取出来的字段</span>
-<span class="token comment">-- 从user2表中查到name为Micki对应的id，修改user中此id的name字段为user1表中id=1的表项的name字段</span>
-<span class="token keyword">update</span> <span class="token keyword">user</span> 
-<span class="token keyword">set</span> name <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">select</span> name <span class="token keyword">from</span> user1 <span class="token keyword">where</span> user1 <span class="token punctuation">.</span>id <span class="token operator">=</span> <span class="token number">1</span> <span class="token punctuation">)</span>
-<span class="token keyword">where</span> id <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">select</span> id <span class="token keyword">from</span> user2 <span class="token keyword">where</span> user2 <span class="token punctuation">.</span>name<span class="token operator">=</span><span class="token string">'Micki'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- update语句设置字段值为另一个结果取出来的字段</span></span><br><span class="line"><span class="comment">-- 从user2表中查到name为Micki对应的id，修改user中此id的name字段为user1表中id=1的表项的name字段</span></span><br><span class="line"><span class="keyword">update</span> <span class="keyword">user</span> </span><br><span class="line"><span class="keyword">set</span> <span class="keyword">name</span> = (<span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> user1 <span class="keyword">where</span> user1 .id = <span class="number">1</span> )</span><br><span class="line"><span class="keyword">where</span> <span class="keyword">id</span> = (<span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> user2 <span class="keyword">where</span> user2 .name=<span class="string">&#x27;Micki&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <h3 id="INSERT-增"><a href="#INSERT-增" class="headerlink" title="INSERT 增"></a>INSERT 增</h3><p>INSERT INTO 语句用于向表格中插入新的行。<br>语法：INSERT INTO 表名称 VALUES (值1, 值2,….)<br>语法：INSERT INTO 表名称 (列1, 列2,…) VALUES (值1, 值2,….)</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 向表 Persons 插入一条字段 FirstName = Andy 字段 Address = beijing</span>
-<span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> Persons <span class="token punctuation">(</span>FirstName<span class="token punctuation">,</span> Address<span class="token punctuation">)</span> <span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token string">'Andy'</span><span class="token punctuation">,</span> <span class="token string">'beijing'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 向表 Persons 插入一条字段 FirstName = Andy 字段 Address = beijing</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> Persons (FirstName, Address) <span class="keyword">VALUES</span> (<span class="string">&#x27;Andy&#x27;</span>, <span class="string">&#x27;beijing&#x27;</span>); </span><br></pre></td></tr></table></figure>
 <h3 id="DELETE-删"><a href="#DELETE-删" class="headerlink" title="DELETE 删"></a>DELETE 删</h3><p>DELETE 语句用于删除表中的行。<br>语法：DELETE FROM 表名称 WHERE 列名称 = 值</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 在不删除table_name表的情况下删除所有的行，清空表。</span>
-<span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> table_name
-<span class="token comment">-- 或者</span>
-<span class="token keyword">DELETE</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> table_name
-<span class="token comment">-- 删除 Person表字段 FirstName = 'Andy' </span>
-<span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> Person <span class="token keyword">WHERE</span> FirstName <span class="token operator">=</span> <span class="token string">'Andy'</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 在不删除table_name表的情况下删除所有的行，清空表。</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> table_name</span><br><span class="line"><span class="comment">-- 或者</span></span><br><span class="line"><span class="keyword">DELETE</span> * <span class="keyword">FROM</span> table_name</span><br><span class="line"><span class="comment">-- 删除 Person表字段 FirstName = &#x27;Andy&#x27; </span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> Person <span class="keyword">WHERE</span> FirstName = <span class="string">&#x27;Andy&#x27;</span> </span><br></pre></td></tr></table></figure>
 <h2 id="列处理"><a href="#列处理" class="headerlink" title="列处理"></a>列处理</h2><h3 id="COUNT"><a href="#COUNT" class="headerlink" title="COUNT"></a>COUNT</h3><p>COUNT 统计符合要求的表项数(行数)<br>语法：SELECT COUNT(“字段名”) FROM “表格名”;</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 表 stores 中 store_name 栏不是NULL的表项总数</span>
-<span class="token keyword">SELECT</span> <span class="token function">COUNT</span> <span class="token punctuation">(</span>Store_Name<span class="token punctuation">)</span> <span class="token keyword">FROM</span> stores <span class="token keyword">WHERE</span> store_name <span class="token operator">IS</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">;</span> 
-<span class="token comment">-- 获取 Persons 表的总数</span>
-<span class="token keyword">SELECT</span> <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> totals <span class="token keyword">FROM</span> Persons<span class="token punctuation">;</span>
-<span class="token comment">-- 获取表 station 字段 user_id 相同的总数</span>
-<span class="token keyword">SELECT</span> user_id<span class="token punctuation">,</span> <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> totals <span class="token keyword">FROM</span> station <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> user_id<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 表 stores 中 store_name 栏不是NULL的表项总数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">COUNT</span> (Store_Name) <span class="keyword">FROM</span> stores <span class="keyword">WHERE</span> store_name <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>; </span><br><span class="line"><span class="comment">-- 获取 Persons 表的总数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">COUNT</span>(<span class="number">1</span>) <span class="keyword">AS</span> totals <span class="keyword">FROM</span> Persons;</span><br><span class="line"><span class="comment">-- 获取表 station 字段 user_id 相同的总数</span></span><br><span class="line"><span class="keyword">SELECT</span> user_id, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> totals <span class="keyword">FROM</span> station <span class="keyword">GROUP</span> <span class="keyword">BY</span> user_id;</span><br></pre></td></tr></table></figure>
 <h3 id="MAX"><a href="#MAX" class="headerlink" title="MAX"></a>MAX</h3><p>MAX 函数返回一列中的最大值。NULL 值不包括在计算中。<br>语法：SELECT MAX(“字段名”) FROM “表格名”</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 列出表 orders 字段 OrderPrice 列最大值，</span>
-<span class="token comment">-- 结果集列不显示 OrderPrice 显示 LargestOrderPrice</span>
-<span class="token keyword">SELECT</span> <span class="token function">MAX</span><span class="token punctuation">(</span>OrderPrice<span class="token punctuation">)</span> <span class="token keyword">AS</span> LargestOrderPrice <span class="token keyword">FROM</span> orders<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 列出表 orders 字段 OrderPrice 列最大值，</span></span><br><span class="line"><span class="comment">-- 结果集列不显示 OrderPrice 显示 LargestOrderPrice</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">MAX</span>(OrderPrice) <span class="keyword">AS</span> LargestOrderPrice <span class="keyword">FROM</span> orders</span><br></pre></td></tr></table></figure>
 <h3 id="SUM"><a href="#SUM" class="headerlink" title="SUM"></a>SUM</h3><p>SUM 用于计算某一列的和。</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 计算 OrderPrice </span>
-<span class="token keyword">SELECT</span> <span class="token function">SUM</span><span class="token punctuation">(</span>OrderPrice<span class="token punctuation">)</span> <span class="token keyword">AS</span> totalprice <span class="token keyword">FROM</span> Orders<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 计算 OrderPrice </span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">SUM</span>(OrderPrice) <span class="keyword">AS</span> totalprice <span class="keyword">FROM</span> Orders</span><br></pre></td></tr></table></figure>
 <h2 id="WHERE-条件限定"><a href="#WHERE-条件限定" class="headerlink" title="WHERE - 条件限定"></a>WHERE - 条件限定</h2><p>WHERE 子句用于规定选择的标准。<br>语法：SELECT 列名称 FROM 表名称 WHERE 列 运算符 值</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 从表 Persons 中选出 Year 字段大于 1965 的数据</span>
-<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> Persons <span class="token keyword">WHERE</span> <span class="token keyword">Year</span><span class="token operator">></span><span class="token number">1965</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 从表 Persons 中选出 Year 字段大于 1965 的数据</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> Persons <span class="keyword">WHERE</span> <span class="keyword">Year</span>&gt;<span class="number">1965</span></span><br></pre></td></tr></table></figure>
 <h3 id="AND-和-OR"><a href="#AND-和-OR" class="headerlink" title="AND 和 OR"></a>AND 和 OR</h3><p>AND – 与； OR – 或；</p>
 <h3 id="NOT"><a href="#NOT" class="headerlink" title="NOT"></a>NOT</h3><p>NOT – 用于逻辑运算语句前</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SELECT</span> vend_id<span class="token punctuation">,</span> prod_name <span class="token keyword">FROM</span> Products <span class="token keyword">WHERE</span> <span class="token operator">NOT</span> vend_id <span class="token operator">=</span> <span class="token string">'DLL01'</span> <span class="token keyword">ORDER</span> <span class="token keyword">BY</span> prod_name<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> vend_id, prod_name <span class="keyword">FROM</span> Products <span class="keyword">WHERE</span> <span class="keyword">NOT</span> vend_id = <span class="string">&#x27;DLL01&#x27;</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> prod_name;</span><br></pre></td></tr></table></figure>
 <h3 id="IN"><a href="#IN" class="headerlink" title="IN"></a>IN</h3><p>IN – 在集合中</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 从表 Persons 选取 字段 LastName 等于 Amy、Beck</span>
-<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> Persons <span class="token keyword">WHERE</span> LastName <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token string">'Amy'</span><span class="token punctuation">,</span><span class="token string">'Beck'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 从表 Persons 选取 字段 LastName 等于 Amy、Beck</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> Persons <span class="keyword">WHERE</span> LastName <span class="keyword">IN</span> (<span class="string">&#x27;Amy&#x27;</span>,<span class="string">&#x27;Beck&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <h2 id="AS-别名"><a href="#AS-别名" class="headerlink" title="AS - 别名"></a>AS - 别名</h2><p>as – 别名</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 查找并设置把Employee表格别名为 emp</span>
-<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> Employee <span class="token keyword">AS</span> emp
-<span class="token comment">-- 命名一个表之后，可以在下面用 emp 代替 Employee.</span>
-<span class="token comment">-- 例如 </span>
-<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> emp<span class="token punctuation">.</span> <span class="token keyword">SELECT</span> <span class="token function">MAX</span><span class="token punctuation">(</span>OrderPrice<span class="token punctuation">)</span> <span class="token keyword">AS</span> LargestOrderPrice <span class="token keyword">FROM</span> Orders
-<span class="token comment">-- 列出表 Orders 字段 OrderPrice 列最大值，</span>
-<span class="token comment">-- 结果集列不显示 OrderPrice 显示 LargestOrderPrice </span>
-<span class="token comment">-- 显示表 users_profile 中的 name 列</span>
-<span class="token keyword">SELECT</span> t<span class="token punctuation">.</span>name <span class="token keyword">from</span> <span class="token punctuation">(</span><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">from</span> users_profile a<span class="token punctuation">)</span> <span class="token keyword">AS</span> t<span class="token punctuation">;</span> 
-<span class="token comment">-- 表 user_accounts 命名别名 ua，表 users_profile 命名别名 up</span>
-<span class="token comment">-- 满足条件 表 user_accounts 字段 id 等于 表 users_profile 字段 user_id-- 结果集只显示mobile、name两列</span>
-<span class="token keyword">SELECT</span> ua<span class="token punctuation">.</span>mobile<span class="token punctuation">,</span>up<span class="token punctuation">.</span>name <span class="token keyword">FROM</span> user_accounts <span class="token keyword">as</span> ua <span class="token keyword">INNER</span> <span class="token keyword">JOIN</span> users_profile <span class="token keyword">as</span> up <span class="token keyword">ON</span> ua<span class="token punctuation">.</span>id <span class="token operator">=</span> up<span class="token punctuation">.</span>user_id<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查找并设置把Employee表格别名为 emp</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> Employee <span class="keyword">AS</span> emp</span><br><span class="line"><span class="comment">-- 命名一个表之后，可以在下面用 emp 代替 Employee.</span></span><br><span class="line"><span class="comment">-- 例如 </span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> emp. <span class="keyword">SELECT</span> <span class="keyword">MAX</span>(OrderPrice) <span class="keyword">AS</span> LargestOrderPrice <span class="keyword">FROM</span> Orders</span><br><span class="line"><span class="comment">-- 列出表 Orders 字段 OrderPrice 列最大值，</span></span><br><span class="line"><span class="comment">-- 结果集列不显示 OrderPrice 显示 LargestOrderPrice </span></span><br><span class="line"><span class="comment">-- 显示表 users_profile 中的 name 列</span></span><br><span class="line"><span class="keyword">SELECT</span> t.name <span class="keyword">from</span> (<span class="keyword">SELECT</span> * <span class="keyword">from</span> users_profile a) <span class="keyword">AS</span> t; </span><br><span class="line"><span class="comment">-- 表 user_accounts 命名别名 ua，表 users_profile 命名别名 up</span></span><br><span class="line"><span class="comment">-- 满足条件 表 user_accounts 字段 id 等于 表 users_profile 字段 user_id-- 结果集只显示mobile、name两列</span></span><br><span class="line"><span class="keyword">SELECT</span> ua.mobile,up.name <span class="keyword">FROM</span> user_accounts <span class="keyword">as</span> ua <span class="keyword">INNER</span> <span class="keyword">JOIN</span> users_profile <span class="keyword">as</span> up <span class="keyword">ON</span> ua.id = up.user_id;</span><br></pre></td></tr></table></figure>
 <h2 id="ORDER-BY-结果排序"><a href="#ORDER-BY-结果排序" class="headerlink" title="ORDER BY - 结果排序"></a>ORDER BY - 结果排序</h2><p>ORDER BY – 语句用于根据指定的列对结果集进行排序。<br>DESC – 按照降序排序。<br>ASC – 按照升序排序（缺省默认）。</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- Company在表Orders中为字母，则会以字母顺序显示公司名称</span>
-<span class="token keyword">SELECT</span> Company<span class="token punctuation">,</span> OrderNumber <span class="token keyword">FROM</span> Orders <span class="token keyword">ORDER</span> <span class="token keyword">BY</span> Company 
-<span class="token comment">-- 后面跟上 DESC 则为降序显示</span>
-<span class="token keyword">SELECT</span> Company<span class="token punctuation">,</span> OrderNumber <span class="token keyword">FROM</span> Orders <span class="token keyword">ORDER</span> <span class="token keyword">BY</span> Company <span class="token keyword">DESC</span> 
-<span class="token comment">-- Company以降序显示公司名称，并OrderNumber以顺序显示</span>
-<span class="token keyword">SELECT</span> Company<span class="token punctuation">,</span> OrderNumber <span class="token keyword">FROM</span> Orders <span class="token keyword">ORDER</span> <span class="token keyword">BY</span> Company <span class="token keyword">DESC</span><span class="token punctuation">,</span> OrderNumber <span class="token keyword">ASC</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- Company在表Orders中为字母，则会以字母顺序显示公司名称</span></span><br><span class="line"><span class="keyword">SELECT</span> Company, OrderNumber <span class="keyword">FROM</span> Orders <span class="keyword">ORDER</span> <span class="keyword">BY</span> Company </span><br><span class="line"><span class="comment">-- 后面跟上 DESC 则为降序显示</span></span><br><span class="line"><span class="keyword">SELECT</span> Company, OrderNumber <span class="keyword">FROM</span> Orders <span class="keyword">ORDER</span> <span class="keyword">BY</span> Company <span class="keyword">DESC</span> </span><br><span class="line"><span class="comment">-- Company以降序显示公司名称，并OrderNumber以顺序显示</span></span><br><span class="line"><span class="keyword">SELECT</span> Company, OrderNumber <span class="keyword">FROM</span> Orders <span class="keyword">ORDER</span> <span class="keyword">BY</span> Company <span class="keyword">DESC</span>, OrderNumber <span class="keyword">ASC</span></span><br></pre></td></tr></table></figure>
 <h2 id="GROUP-BY-结果分组"><a href="#GROUP-BY-结果分组" class="headerlink" title="GROUP BY - 结果分组"></a>GROUP BY - 结果分组</h2><p>用于结果基于某一个属性聚合</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 获取表 station 字段 user_id 相同的总数</span>
-<span class="token keyword">SELECT</span> user_id<span class="token punctuation">,</span> <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> totals <span class="token keyword">FROM</span> station <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> user_id<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 获取表 station 字段 user_id 相同的总数</span></span><br><span class="line"><span class="keyword">SELECT</span> user_id, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> totals <span class="keyword">FROM</span> station <span class="keyword">GROUP</span> <span class="keyword">BY</span> user_id;</span><br></pre></td></tr></table></figure>
 <h2 id="JOIN-联合查询"><a href="#JOIN-联合查询" class="headerlink" title="JOIN - 联合查询"></a>JOIN - 联合查询</h2><p>用于根据两个或多个表中的列之间的关系，从这些表中查询数据。<br>JOIN：如果表中有至少一个匹配，则返回行<br>INNER JOIN：两表都必须匹配，返回两表的行。<br>LEFT JOIN：即使右表中没有匹配，也从左表返回所有的行<br>RIGHT JOIN：即使左表中没有匹配，也从右表返回所有的行<br>FULL JOIN：只要其中一个表中存在匹配，就返回行</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SELECT</span> Persons<span class="token punctuation">.</span>LastName<span class="token punctuation">,</span> Persons<span class="token punctuation">.</span>FirstName<span class="token punctuation">,</span> Orders<span class="token punctuation">.</span>OrderNo 
-<span class="token keyword">FROM</span> PersonsINNER <span class="token keyword">JOIN</span> OrdersON Persons<span class="token punctuation">.</span>Id_P <span class="token operator">=</span> Orders<span class="token punctuation">.</span>Id_PORDER <span class="token keyword">BY</span> Persons<span class="token punctuation">.</span>LastName<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> Persons.LastName, Persons.FirstName, Orders.OrderNo </span><br><span class="line"><span class="keyword">FROM</span> PersonsINNER <span class="keyword">JOIN</span> OrdersON Persons.Id_P = Orders.Id_PORDER <span class="keyword">BY</span> Persons.LastName;</span><br></pre></td></tr></table></figure>
 <h2 id="INDEX-索引"><a href="#INDEX-索引" class="headerlink" title="INDEX - 索引"></a>INDEX - 索引</h2><h3 id="普通索引-INDEX"><a href="#普通索引-INDEX" class="headerlink" title="普通索引(INDEX)"></a>普通索引(INDEX)</h3><p>语法：ALTER TABLE 表名字 ADD INDEX 索引名字 ( 字段名字 )</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- –直接创建索引</span>
-<span class="token keyword">CREATE</span> <span class="token keyword">INDEX</span> index_user <span class="token keyword">ON</span> <span class="token keyword">user</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span>
-<span class="token comment">-- –修改表结构的方式添加索引</span>
-<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> table_name <span class="token keyword">ADD</span> <span class="token keyword">INDEX</span> index_name <span class="token keyword">ON</span> <span class="token punctuation">(</span><span class="token keyword">column</span><span class="token punctuation">(</span>length<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token comment">-- 给 user 表中的 name字段 添加普通索引(INDEX)</span>
-<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span><span class="token keyword">table</span><span class="token punctuation">`</span> <span class="token keyword">ADD</span> <span class="token keyword">INDEX</span> index_name <span class="token punctuation">(</span>name<span class="token punctuation">)</span>
-<span class="token comment">-- –创建表的时候同时创建索引</span>
-<span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span><span class="token keyword">table</span><span class="token punctuation">`</span> <span class="token punctuation">(</span>    
-    <span class="token punctuation">`</span>id<span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">AUTO_INCREMENT</span> <span class="token punctuation">,</span>    
-    <span class="token punctuation">`</span>title<span class="token punctuation">`</span> <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> <span class="token keyword">CHARACTER</span> <span class="token keyword">SET</span> utf8 <span class="token keyword">COLLATE</span> utf8_general_ci <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token punctuation">,</span>    
-    <span class="token punctuation">`</span>content<span class="token punctuation">`</span> <span class="token keyword">text</span> <span class="token keyword">CHARACTER</span> <span class="token keyword">SET</span> utf8 <span class="token keyword">COLLATE</span> utf8_general_ci <span class="token boolean">NULL</span> <span class="token punctuation">,</span>    
-    <span class="token punctuation">`</span><span class="token keyword">time</span><span class="token punctuation">`</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span> <span class="token boolean">NULL</span> <span class="token keyword">DEFAULT</span> <span class="token boolean">NULL</span> <span class="token punctuation">,</span>    
-    <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>id<span class="token punctuation">`</span><span class="token punctuation">)</span><span class="token punctuation">,</span>    
-    <span class="token keyword">INDEX</span> index_name <span class="token punctuation">(</span>title<span class="token punctuation">(</span>length<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
- <span class="token comment">-- –删除索引</span>
- <span class="token keyword">DROP</span> <span class="token keyword">INDEX</span> index_name <span class="token keyword">ON</span> <span class="token keyword">table</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- –直接创建索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> index_user <span class="keyword">ON</span> <span class="keyword">user</span>(title)</span><br><span class="line"><span class="comment">-- –修改表结构的方式添加索引</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">ADD</span> <span class="keyword">INDEX</span> index_name <span class="keyword">ON</span> (<span class="keyword">column</span>(<span class="keyword">length</span>))</span><br><span class="line"><span class="comment">-- 给 user 表中的 name字段 添加普通索引(INDEX)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="string">`table`</span> <span class="keyword">ADD</span> <span class="keyword">INDEX</span> index_name (<span class="keyword">name</span>)</span><br><span class="line"><span class="comment">-- –创建表的时候同时创建索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`table`</span> (    </span><br><span class="line">    <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT ,    </span><br><span class="line">    <span class="string">`title`</span> <span class="built_in">char</span>(<span class="number">255</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">NOT</span> <span class="literal">NULL</span> ,    </span><br><span class="line">    <span class="string">`content`</span> <span class="built_in">text</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="literal">NULL</span> ,    </span><br><span class="line">    <span class="string">`time`</span> <span class="built_in">int</span>(<span class="number">10</span>) <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span> ,    </span><br><span class="line">    PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),    </span><br><span class="line">    <span class="keyword">INDEX</span> index_name (title(<span class="keyword">length</span>)))</span><br><span class="line"> <span class="comment">-- –删除索引</span></span><br><span class="line"> <span class="keyword">DROP</span> <span class="keyword">INDEX</span> index_name <span class="keyword">ON</span> <span class="keyword">table</span></span><br></pre></td></tr></table></figure>
 <h3 id="主键索引-PRIMARY-key"><a href="#主键索引-PRIMARY-key" class="headerlink" title="主键索引(PRIMARY key)"></a>主键索引(PRIMARY key)</h3><p>语法：ALTER TABLE 表名字 ADD PRIMARY KEY (字段名字)</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 给 user 表中的 id字段 添加主键索引(PRIMARY key)</span>
-<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span><span class="token keyword">user</span><span class="token punctuation">`</span> <span class="token keyword">ADD</span> <span class="token keyword">PRIMARY</span> <span class="token keyword">key</span> <span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 给 user 表中的 id字段 添加主键索引(PRIMARY key)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="string">`user`</span> <span class="keyword">ADD</span> PRIMARY <span class="keyword">key</span> (<span class="keyword">id</span>);</span><br></pre></td></tr></table></figure>
 <h3 id="唯一索引-UNIQUE"><a href="#唯一索引-UNIQUE" class="headerlink" title="唯一索引(UNIQUE)"></a>唯一索引(UNIQUE)</h3><p>语法：ALTER TABLE 表名字 ADD UNIQUE (字段名字)</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 给 user 表中的 creattime 字段添加唯一索引(UNIQUE)</span>
-<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span><span class="token keyword">user</span><span class="token punctuation">`</span> <span class="token keyword">ADD</span> <span class="token keyword">UNIQUE</span> <span class="token punctuation">(</span>creattime<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 给 user 表中的 creattime 字段添加唯一索引(UNIQUE)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="string">`user`</span> <span class="keyword">ADD</span> <span class="keyword">UNIQUE</span> (creattime);</span><br></pre></td></tr></table></figure>
 <h3 id="全文索引-FULLTEXT"><a href="#全文索引-FULLTEXT" class="headerlink" title="全文索引(FULLTEXT)"></a>全文索引(FULLTEXT)</h3><p>语法：ALTER TABLE 表名字 ADD FULLTEXT (字段名字)</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 给 user 表中的 description 字段添加全文索引(FULLTEXT)</span>
-<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token punctuation">`</span><span class="token keyword">user</span><span class="token punctuation">`</span> <span class="token keyword">ADD</span> FULLTEXT <span class="token punctuation">(</span>description<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 给 user 表中的 description 字段添加全文索引(FULLTEXT)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="string">`user`</span> <span class="keyword">ADD</span> FULLTEXT (description);</span><br></pre></td></tr></table></figure>
 <h3 id="添加多列索引"><a href="#添加多列索引" class="headerlink" title="添加多列索引"></a>添加多列索引</h3><p>语法：ALTER TABLE table_name ADD INDEX index_name ( column1, column2, column3)</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 给 user 表中的 name、city、age 字段添加名字为name_city_age的普通索引(INDEX)</span>
-<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token keyword">user</span> <span class="token keyword">ADD</span> <span class="token keyword">INDEX</span> name_city_age <span class="token punctuation">(</span>name<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">,</span>city<span class="token punctuation">,</span>age<span class="token punctuation">)</span><span class="token punctuation">;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 给 user 表中的 name、city、age 字段添加名字为name_city_age的普通索引(INDEX)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="keyword">user</span> <span class="keyword">ADD</span> <span class="keyword">INDEX</span> name_city_age (<span class="keyword">name</span>(<span class="number">10</span>),city,age); </span><br></pre></td></tr></table></figure>
 <h3 id="建立索引的时机"><a href="#建立索引的时机" class="headerlink" title="建立索引的时机"></a>建立索引的时机</h3><p>在WHERE和JOIN中出现的列需要建立索引：<br>MySQL只对&lt;，&lt;=，=，&gt;，&gt;=，BETWEEN，IN使用索引<br>某些时候的LIKE也会使用索引。<br>在LIKE以通配符%和_开头作查询时，MySQL不会使用索引</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 此时就需要对city和age建立索引，</span>
-<span class="token comment">-- 由于mytable表的userame也出现在了JOIN子句中，也有对它建立索引的必要。</span>
-<span class="token keyword">SELECT</span> t<span class="token punctuation">.</span>Name  <span class="token keyword">FROM</span> mytable t <span class="token keyword">LEFT</span> <span class="token keyword">JOIN</span> mytable m <span class="token keyword">ON</span> t<span class="token punctuation">.</span>Name<span class="token operator">=</span>m<span class="token punctuation">.</span>username <span class="token keyword">WHERE</span> m<span class="token punctuation">.</span>age<span class="token operator">=</span><span class="token number">20</span> <span class="token operator">AND</span> m<span class="token punctuation">.</span>city<span class="token operator">=</span><span class="token string">'上海'</span><span class="token punctuation">;</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> mytable <span class="token keyword">WHERE</span> username <span class="token operator">like</span><span class="token string">'admin%'</span><span class="token punctuation">;</span> 
-<span class="token comment">-- 而下句就不会使用：</span>
-<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> mytable WHEREt Name <span class="token operator">like</span><span class="token string">'%admin'</span><span class="token punctuation">;</span> <span class="token comment">-- 因此，在使用LIKE时应注意以上的区别。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 此时就需要对city和age建立索引，</span></span><br><span class="line"><span class="comment">-- 由于mytable表的userame也出现在了JOIN子句中，也有对它建立索引的必要。</span></span><br><span class="line"><span class="keyword">SELECT</span> t.Name  <span class="keyword">FROM</span> mytable t <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> mytable m <span class="keyword">ON</span> t.Name=m.username <span class="keyword">WHERE</span> m.age=<span class="number">20</span> <span class="keyword">AND</span> m.city=<span class="string">&#x27;上海&#x27;</span>; <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> mytable <span class="keyword">WHERE</span> username <span class="keyword">like</span><span class="string">&#x27;admin%&#x27;</span>; </span><br><span class="line"><span class="comment">-- 而下句就不会使用：</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> mytable WHEREt <span class="keyword">Name</span> <span class="keyword">like</span><span class="string">&#x27;%admin&#x27;</span>; <span class="comment">-- 因此，在使用LIKE时应注意以上的区别。</span></span><br></pre></td></tr></table></figure>
 <h2 id="使用注意"><a href="#使用注意" class="headerlink" title="使用注意"></a>使用注意</h2><ul>
 <li>索引不会包含有NULL值的列</li>
 <li>使用短索引</li>
 <li>不要在列上进行运算 索引会失效</li>
 </ul>
 <h2 id="表结构修改"><a href="#表结构修改" class="headerlink" title="表结构修改"></a>表结构修改</h2><h3 id="添加列"><a href="#添加列" class="headerlink" title="添加列"></a>添加列</h3><p>语法：alter table 表名 add 列名 列数据类型 [after 插入位置];<br>示例：</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 在表students的最后追加列 address: </span>
-<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> students <span class="token keyword">ADD</span> address <span class="token keyword">CHAR</span><span class="token punctuation">(</span><span class="token number">60</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">-- 在名为 age 的列后插入列 birthday: </span>
-<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> students <span class="token keyword">ADD</span> birthday <span class="token keyword">DATE</span> <span class="token keyword">after</span> age<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 在表students的最后追加列 address: </span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> students <span class="keyword">ADD</span> address <span class="built_in">CHAR</span>(<span class="number">60</span>);</span><br><span class="line"><span class="comment">-- 在名为 age 的列后插入列 birthday: </span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> students <span class="keyword">ADD</span> birthday <span class="built_in">DATE</span> <span class="keyword">after</span> age;</span><br></pre></td></tr></table></figure>
 <h3 id="修改列"><a href="#修改列" class="headerlink" title="修改列"></a>修改列</h3><p>语法：alter table 表名 change 列名称 列新名称 新数据类型;</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 将表 tel 列改名为 telphone: </span>
-<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> students CHANGE tel telphone <span class="token keyword">CHAR</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">"-"</span><span class="token punctuation">;</span>
-<span class="token comment">-- 将 name 列的数据类型改为 char(16): </span>
-<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> students CHANGE name name <span class="token keyword">CHAR</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 将表 tel 列改名为 telphone: </span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> students <span class="keyword">CHANGE</span> tel telphone <span class="built_in">CHAR</span>(<span class="number">13</span>) <span class="keyword">default</span> <span class="string">&quot;-&quot;</span>;</span><br><span class="line"><span class="comment">-- 将 name 列的数据类型改为 char(16): </span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> students <span class="keyword">CHANGE</span> <span class="keyword">name</span> <span class="keyword">name</span> <span class="built_in">CHAR</span>(<span class="number">16</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
 <h3 id="删除列"><a href="#删除列" class="headerlink" title="删除列"></a>删除列</h3><p>语法：alter table 表名 drop 列名称;</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 删除表students中的 birthday 列: </span>
-<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> students <span class="token keyword">DROP</span> birthday<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 删除表students中的 birthday 列: </span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> students <span class="keyword">DROP</span> birthday;</span><br></pre></td></tr></table></figure>
 <h3 id="重命名表"><a href="#重命名表" class="headerlink" title="重命名表"></a>重命名表</h3><p>语法：alter table 表名 rename 新表名;</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 重命名 students 表为 workmates: </span>
-<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> students <span class="token keyword">RENAME</span> workmates<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 重命名 students 表为 workmates: </span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> students <span class="keyword">RENAME</span> workmates;</span><br></pre></td></tr></table></figure>
 <h3 id="清空表数据"><a href="#清空表数据" class="headerlink" title="清空表数据"></a>清空表数据</h3><p>语法：delete from 表名;</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 清空表为 workmates 里面的数据，不删除表。 </span>
-<span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> workmates<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 清空表为 workmates 里面的数据，不删除表。 </span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> workmates;</span><br></pre></td></tr></table></figure>
 <h3 id="删除整张表"><a href="#删除整张表" class="headerlink" title="删除整张表"></a>删除整张表</h3><p>语法：drop table 表名;</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 删除 workmates 表: </span>
-<span class="token keyword">DROP</span> <span class="token keyword">TABLE</span> workmates<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 删除 workmates 表: </span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> workmates;</span><br></pre></td></tr></table></figure>
 <h2 id="删除整个数据库"><a href="#删除整个数据库" class="headerlink" title="删除整个数据库"></a>删除整个数据库</h2><p>语法：drop database 数据库名;</p>
-<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 删除 samp_db 数据库: </span>
-<span class="token keyword">DROP</span> DATEBASE samp_db<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-            </div>
-            <!-- Post Comments -->
-            
-            
-    <!-- 使用 valine -->
-<div id="comment">
-    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
-<script>
-    new Valine({
-        el: '#comment' ,
-        notify: false,
-        verify: false,
-        app_id: '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
-        app_key: 'UrBohelQ00fEUxu5npX46rtL',
-        placeholder: 'Just go go',
-        pageSize: '10',
-        avatar: 'mm',
-        avatar_cdn: 'https://gravatar.loli.net/avatar/'
-    });
-</script>
-</div>
-<style>
-   #comment{
-        padding: 2pc;
-    }
-</style>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 删除 samp_db 数据库: </span></span><br><span class="line"><span class="keyword">DROP</span> DATEBASE samp_db;</span><br></pre></td></tr></table></figure>
+    </div>
 
-            
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/maywzh">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
         </div>
-        <!-- Copyright 版权 start -->
-        <div id="copyright">
-    <ul>
-        <li>&copy;Powered By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-        <li>Theme: <a target="_blank" rel="noopener" href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
-        <!-- <li><a href="">鄂ICP备2020015912号-1</a></li> -->
-    </ul>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://t.me/unlockedcultoy">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">Telegram</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="http://weibo.com/JupiterMay">
+            <span class="icon">
+              <i class="fab fa-weibo"></i>
+            </span>
+
+            <span class="label">Weibo</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/mysql/" rel="tag"><i class="fa fa-tag"></i> mysql</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/01/17/Linux/Linux%E9%9D%99%E6%80%81%E5%BA%93%E7%BC%96%E8%AF%91%E6%8C%87%E5%8D%97/" rel="prev" title="Linux静态库编译指南">
+      <i class="fa fa-chevron-left"></i> Linux静态库编译指南
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2015/04/09/Linux/Linux%E6%9D%83%E9%99%90%E7%B3%BB%E7%BB%9F/" rel="next" title="如何理解Linux权限系统">
+      如何理解Linux权限系统 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
     
-    <span id="busuanzi_container_site_pv"> 2020 </span>
-    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">MySQL介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95MySQL"><span class="nav-number">2.</span> <span class="nav-text">登录MySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text">创建数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8"><span class="nav-number">4.</span> <span class="nav-text">创建数据库表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CRUD-%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9"><span class="nav-number">5.</span> <span class="nav-text">CRUD - 增删查改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SELECT-%E6%9F%A5"><span class="nav-number">5.1.</span> <span class="nav-text">SELECT 查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UPDATE-%E6%94%B9"><span class="nav-number">5.2.</span> <span class="nav-text">UPDATE 改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INSERT-%E5%A2%9E"><span class="nav-number">5.3.</span> <span class="nav-text">INSERT 增</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DELETE-%E5%88%A0"><span class="nav-number">5.4.</span> <span class="nav-text">DELETE 删</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%97%E5%A4%84%E7%90%86"><span class="nav-number">6.</span> <span class="nav-text">列处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#COUNT"><span class="nav-number">6.1.</span> <span class="nav-text">COUNT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MAX"><span class="nav-number">6.2.</span> <span class="nav-text">MAX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SUM"><span class="nav-number">6.3.</span> <span class="nav-text">SUM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WHERE-%E6%9D%A1%E4%BB%B6%E9%99%90%E5%AE%9A"><span class="nav-number">7.</span> <span class="nav-text">WHERE - 条件限定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AND-%E5%92%8C-OR"><span class="nav-number">7.1.</span> <span class="nav-text">AND 和 OR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NOT"><span class="nav-number">7.2.</span> <span class="nav-text">NOT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IN"><span class="nav-number">7.3.</span> <span class="nav-text">IN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AS-%E5%88%AB%E5%90%8D"><span class="nav-number">8.</span> <span class="nav-text">AS - 别名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ORDER-BY-%E7%BB%93%E6%9E%9C%E6%8E%92%E5%BA%8F"><span class="nav-number">9.</span> <span class="nav-text">ORDER BY - 结果排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GROUP-BY-%E7%BB%93%E6%9E%9C%E5%88%86%E7%BB%84"><span class="nav-number">10.</span> <span class="nav-text">GROUP BY - 结果分组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JOIN-%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2"><span class="nav-number">11.</span> <span class="nav-text">JOIN - 联合查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#INDEX-%E7%B4%A2%E5%BC%95"><span class="nav-number">12.</span> <span class="nav-text">INDEX - 索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E7%B4%A2%E5%BC%95-INDEX"><span class="nav-number">12.1.</span> <span class="nav-text">普通索引(INDEX)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95-PRIMARY-key"><span class="nav-number">12.2.</span> <span class="nav-text">主键索引(PRIMARY key)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95-UNIQUE"><span class="nav-number">12.3.</span> <span class="nav-text">唯一索引(UNIQUE)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E6%96%87%E7%B4%A2%E5%BC%95-FULLTEXT"><span class="nav-number">12.4.</span> <span class="nav-text">全文索引(FULLTEXT)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%A4%9A%E5%88%97%E7%B4%A2%E5%BC%95"><span class="nav-number">12.5.</span> <span class="nav-text">添加多列索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E7%B4%A2%E5%BC%95%E7%9A%84%E6%97%B6%E6%9C%BA"><span class="nav-number">12.6.</span> <span class="nav-text">建立索引的时机</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F"><span class="nav-number">13.</span> <span class="nav-text">使用注意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A8%E7%BB%93%E6%9E%84%E4%BF%AE%E6%94%B9"><span class="nav-number">14.</span> <span class="nav-text">表结构修改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%88%97"><span class="nav-number">14.1.</span> <span class="nav-text">添加列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%88%97"><span class="nav-number">14.2.</span> <span class="nav-text">修改列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%88%97"><span class="nav-number">14.3.</span> <span class="nav-text">删除列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%91%BD%E5%90%8D%E8%A1%A8"><span class="nav-number">14.4.</span> <span class="nav-text">重命名表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%85%E7%A9%BA%E8%A1%A8%E6%95%B0%E6%8D%AE"><span class="nav-number">14.5.</span> <span class="nav-text">清空表数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%95%B4%E5%BC%A0%E8%A1%A8"><span class="nav-number">14.6.</span> <span class="nav-text">删除整张表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%95%B4%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">15.</span> <span class="nav-text">删除整个数据库</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="maywzh"
+      src="/uploads/myavatar.jpg">
+  <p class="site-author-name" itemprop="name">maywzh</p>
+  <div class="site-description" itemprop="description">Namasday.</div>
 </div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">112</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/maywzh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3/" title="LinkedIn → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;%E7%8E%8B%E6%99%BA%E6%B1%87-%E6%A2%85-7274a8a3&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/JupiterMay" title="Weibo → http:&#x2F;&#x2F;weibo.com&#x2F;JupiterMay" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/6616616/maywzh" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;6616616&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.com/maywzh" title="500px → https:&#x2F;&#x2F;500px.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/maywzh" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;maywzh" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:maywzh@gmail.com" title="E-Mail → mailto:maywzh@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maywzh, all rights reserved.</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey     : 'UrBohelQ00fEUxu5npX46rtL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
     </div>
 </body>
-
-
-
-
-
 </html>

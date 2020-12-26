@@ -1,164 +1,335 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cult Minds - Namasday.</title><meta name="description" content="Art of tech."><meta name="keywords" content="Tech Blogs"><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/bitbug_favicon_128s.ico"><link rel="canonical" href="https://tech.maywzh.com/page/10/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin="crossorigin"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//pingjs.qq.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="content"/><meta property="og:type" content="website"><meta property="og:title" content="Cult Minds"><meta property="og:url" content="https://tech.maywzh.com/page/10/"><meta property="og:site_name" content="Cult Minds"><meta property="og:description" content="Art of tech."><meta property="og:image" content="https://tech.maywzh.com/uploads/myavatar.jpg"><meta property="article:published_time" content="2020-12-26T09:01:59.125Z"><meta property="article:modified_time" content="2020-12-26T09:01:59.125Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e5597df0e0a089595ae6b3fce53f24e8";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-5"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-119246999-5');
+</script><script>var _mtac = {};
+(function() {
+    var mta = document.createElement("script");
+    mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+    mta.setAttribute("name", "MTAH5");
+    mta.setAttribute("sid", "500728859");
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(mta, s);
+})();
+</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.1.1',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime: '',
+  date_suffix: {"one_hour":"Just","hours":"hours ago","day":"days ago"},
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false
+};
 
-<meta name="author" content="maywzh">
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+      const now = new Date()
+      const expiryDay = ttl * 86400000
+      const item = {
+        value: value,
+        expiry: now.getTime() + expiryDay,
+      }
+      localStorage.setItem(key, JSON.stringify(item))
+    },
+  
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
 
-
-<meta name="subtitle" content="0x01 MAYSTORY">
-
-
-<meta name="description" content="Namasday.">
-
-
-<meta name="keywords" content="Tech Blogs">
-
-
-<title>梅故事壹 - 0x01 MAYSTORY</title>
-
-
-    
-    <link rel="icon" href="/bitbug_favicon_128s.ico">
-    
-
-    
-    
-    <!-- stylesheets list from _config.yml -->
-    
-    <link rel="stylesheet" href="/css/style.css">
-    
-    
-    
-    
-    <!-- scripts list from _config.yml -->
-    
-    <script src="/js/script.js"></script>
-    
-    <script src="/js/tocbot.min.js"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<meta name="generator" content="Hexo 5.1.1"></head>
-<body>
-    <div class="wrapper">
-        <header>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
-                    href="/">0x01 MAYSTORY</a></div>
-            <div class="menu navbar-right">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-                <input id="switch_default" type="checkbox" class="switch_default">
-                <label for="switch_default" class="toggleBtn"></label>
-            </div>
-        </div>
-    </nav>
-
-    
-    <nav class="navbar-mobile" id="nav-mobile">
-        <div class="container">
-            <div class="navbar-header">
-                <div>
-                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
-                </div>
-                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-            </div>
-            <div class="menu" id="mobile-menu">
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
-                
-                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
-                
-                <a class="menu-item" href="/about">About</a>
-                
-            </div>
-        </div>
-    </nav>
-
-</header>
-<script>
-    var mobileBtn = function f() {
-        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
-        var mobileMenu = document.getElementById("mobile-menu");
-        if (toggleMenu.classList.contains("active")) {
-            toggleMenu.classList.remove("active")
-            mobileMenu.classList.remove("active")
-        } else {
-            toggleMenu.classList.add("active")
-            mobileMenu.classList.add("active")
-        }
+    if (!itemStr) {
+      return undefined
     }
-</script>
-        <div class="main">
-            
-    <div class="container">
-    <div class="intro">
-        <div class="avatar">
-            <!-- <a href="/"><img src="/uploads/myavatar.jpg"></a> -->
-            <a href="/archives"><img src="/uploads/myavatar.jpg"></a>
-        </div>
-        <div class="nickname">maywzh</div>
-        <div class="description"><p>Art of Tech.</p>
-</div>
-        <div class="links">
-            
-            
-            <a class="link-item" title="Category" href="/category">
-                
-                        
-                <i class="iconfont icon-category"></i>
-                
-                    </a>
-                
-            <a class="link-item" title="Tags" href="/tag">
-                
-                        
-                <i class="iconfont icon-tags"></i>
-                
-                    </a>
-                
-            <a class="link-item" title="Github" target="_blank" rel="noopener" href="https://github.com/maywzh">
-                
-                        
-                <i class="iconfont icon-github"></i>
-                
-                    </a>
-                
-                
-        </div>
-    </div>
-</div>
+    const item = JSON.parse(itemStr)
+    const now = new Date()
 
-        </div>
-        <footer id="footer" class="footer">
-    <div class="copyright">
-        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
-            
-        </span>
-        
-        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
-        
-        
-        <span> | <img src="https://pic3.zhimg.com/80/v2-d0289dc0a46fc5b15b3363ffa78cf6c7.png" style="width:16px;"><a
-                href="http://www.beian.gov.cn/" target="_blank">赣公网安备36040302000263号</a></span>
-        
-    </div>
-</footer>
-    </div>
-</body>
-</html>
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isSidebar: false,
+  postUpdate: '2020.12.26 17:01:59'
+}</script><noscript><style type="text/css">
+#nav {
+  opacity: 1
+}
+.justified-gallery img {
+  opacity: 1
+}
+</style></noscript><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+  }
+}
+
+var autoChangeMode = '1'
+var t = saveToLocal.get('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (saveToLocal.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" data-lazy-src="/uploads/myavatar.jpg" onerror="onerror=null;src='/img/ripple.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">112</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">47</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Cult Minds</a></span><span class="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="site-info"><h1 id="site_title">Cult Minds</h1><div id="site_subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://blog.maywzh.com" target="_blank" title="Blog"><i class="fas fa-blog"></i></a><a class="social-icon" href="https://t.me/unlockedcultoy" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a><a class="social-icon" href="https://twitter.com/maywzh" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a><a class="social-icon" href="http://weibo.com/JupiterMay" target="_blank" title="Weibo"><i class="fab fa-weibo"></i></a><a class="social-icon" href="https://instagram.com/maywzh" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a><a class="social-icon" href="https://500px.com/maywzh" target="_blank" title="500px"><i class="fab fa-500px"></i></a><a class="social-icon" href="mailto:maywzh@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div id="scroll_down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout_page" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2015/10/16/C&amp;C++/c%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%8C%87%E9%92%88/" title="理解 C 语言中的指针">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/12/26/EF75JsTN1iBZKSf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="理解 C 语言中的指针"></a></div><div class="recent-post-info"><a class="article-title" href="/2015/10/16/C&amp;C++/c%E8%AF%AD%E8%A8%80%E4%B9%8B%E6%8C%87%E9%92%88/" title="理解 C 语言中的指针">理解 C 语言中的指针</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2015-10-16T13:28:11.000Z" title="Created 2015.10.16 21:28:11">2015.10.16</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="content">在考虑指针的问题之前，首先我们来回顾一下如何定义一个变量。
+1int x;
+int 类型需要四个字节来存储，这四个字节是从内存中分配而来的，内存在逻辑上是一个线性的存储器，它以字节为单位被划分为许多小的单元。为了区分这些单元，计算机给每一个单元都分配了一个唯一的十六进制整数作为编号，叫做内存地址 (简称地址)。由于这些单元啊数量众多，所以这个内存地址本身就需要四个字节 (32 位 bit 位) 来表示。我们所说的 32 位系统就是这个意思。它最大的可寻址范围为 2^32 字节，即 4GB。目前正在占据主流的 64 位系统的最大可寻址范围是 2^64 字节。
+理论上说，我们只需要这些内存地址就可以定位到我们所要读写的内存单元，但这些地址不方便理解和记忆，c 语言允许程序员给这些地址起名字，就是我们所说的变量名。
+回到 int x 这个声明，它实际上做了两件事：
+
+从内存中划分出 4 个字节；
+将这个内存单元约定一个名字为 x；
+
+一个固定的内存单元的地址是固定的，但存储的值确是可变的。
+
+指针概念获取变量的地址由于有变量名的存在，我们不需要一个具体地址就可以操作它来进行各种运算，但有的时 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2015/10/16/Linux/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8Bipcs/" title="Linux 进程管理之 ipcs">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/08/23/HTsIf7oalGchv8J.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux 进程管理之 ipcs"></a></div><div class="recent-post-info"><a class="article-title" href="/2015/10/16/Linux/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8Bipcs/" title="Linux 进程管理之 ipcs">Linux 进程管理之 ipcs</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2015-10-16T10:45:56.000Z" title="Created 2015.10.16 18:45:56">2015.10.16</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/DevOps/">DevOps</a></span></div><div class="content">ipcs - 查询进程间通信状态ipcs 是 Linux 下显示进程间通信设施状态的工具。可以显示消息队列、共享内存和信号量的信息。可以为程序员提供大量信息来分析程序运行状态。
+
+IPC 资源查询查看系统使用的 IPC 资源1234567891011$ipcs------ Shared Memory Segments --------key        shmid      owner      perms      bytes      nattch     status------ Semaphore Arrays --------key        semid      owner      perms      nsems0x00000000 229376     weber      600        1------ Message Queues --------key        msqid      owner      perms      used-bytes   messages
+分别查询 IPC 资源:
+123$ipcs -m # 查看系统使用的 IPC ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2015/10/14/Linux/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8Bps/" title="Linux 进程管理之 ps">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/08/23/vFzuXG6ESdpcTAq.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux 进程管理之 ps"></a></div><div class="recent-post-info"><a class="article-title" href="/2015/10/14/Linux/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8Bps/" title="Linux 进程管理之 ps">Linux 进程管理之 ps</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2015-10-14T11:00:56.000Z" title="Created 2015.10.14 19:00:56">2015.10.14</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/DevOps/">DevOps</a></span></div><div class="content">ps - 进程查看器Linux 中的 ps 命令是 Process Status 的缩写。ps 命令用来列出系统中当前运行的那些进程。ps 命令列出的是当前那些进程的快照，就是执行 ps 命令的那个时刻的那些进程，如果想要动态的显示进程信息，就可以使用 top 命令。
+
+要对进程进行监测和控制，首先必须要了解当前进程的情况，也就是需要查看当前进程，而 ps 命令就是最基本同时也是非常强大的进程查看命令。使用该命令可以确定有哪些进程正在运行和运行的状态、进程是否结束、进程有没有僵死、哪些进程占用了过多的资源等等。总之大部分信息都是可以通过执行该命令得到的。
+ps 为我们提供了进程的一次性的查看，它所提供的查看结果并不动态连续的；如果想对进程时间监控，应该用 top linux 下的任务管理器 工具。
+注：kill 命令用于杀死进程。
+进程状态linux 上进程有 5 种状态:
+
+运行 (正在运行或在运行队列中等待)
+中断 (休眠中，受阻，在等待某个条件的形成或接受到信号)
+不可中断 (收到信号不唤醒和不可运行，进程必须等待直到有中断发生)
+僵死 (进程已终止，但进程描述符存在，直到父进程 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2015/09/25/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%88%86%E8%BE%A8CLI%E3%80%81Terminal%E3%80%81Console%E5%92%8CShell/" title="如何分辨 CLI、Terminal、Console 和 Shell">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/08/23/PnZkHxGlfM8Ajpw.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="如何分辨 CLI、Terminal、Console 和 Shell"></a></div><div class="recent-post-info"><a class="article-title" href="/2015/09/25/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%88%86%E8%BE%A8CLI%E3%80%81Terminal%E3%80%81Console%E5%92%8CShell/" title="如何分辨 CLI、Terminal、Console 和 Shell">如何分辨 CLI、Terminal、Console 和 Shell</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2015-09-25T11:41:53.000Z" title="Created 2015.09.25 19:41:53">2015.09.25</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/DevOps/">DevOps</a></span></div><div class="content">CLI 命令行界面、Terminal 终端 、Console 控制台和 Shell，是几个比较容易混淆的概念。
+虽然经常在工作中遇到这些概念，但常常处于半知半解的状态，下文通过聊聊计算机发展史的方式初步探讨一下这些术语。
+
+一句话概括
+ 命令行界面  (CLI) = 使用文本命令进行交互的用户界面
+ 终端  (Terminal) = TTY = 文本输入 / 输出环境
+ 控制台  (Console) = 一种特殊的终端
+Shell = 命令行解释器，执行用户输入的命令并返回结果
+
+
+
+命令行界面 (CLI)
+命令行界面（英语：Command-line Interface，缩写：CLI）是在图形用户界面得到普及之前使用最为广泛的用户界面，它通常不支持鼠标，用户通过键盘输入指令，计算机接收到指令后，予以执行。
+
+命令行界面相对于我们日常使用的图形用户界面 (GUI) 而言，是一种操作效率极高的操作系统管理和控制方式。
+▲ 命令行界面
+▲ 图形界面 
+尽管图形界面人机交互更加友好和现代化，但相对于直观的命令行界面来说，其操作效率远远不如，所以现代所有的操作系统都提供了命令行的操作方式。例如  ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2015/09/16/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%B8%B8%E8%A7%8132%E4%B8%AA%E7%AE%97%E6%B3%95/" title="计算机科学中最重要的 32 个算法">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/08/23/PnZkHxGlfM8Ajpw.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="计算机科学中最重要的 32 个算法"></a></div><div class="recent-post-info"><a class="article-title" href="/2015/09/16/%E7%A7%91%E6%99%AE/%E7%A7%91%E6%99%AE%E4%B9%8B%E5%B8%B8%E8%A7%8132%E4%B8%AA%E7%AE%97%E6%B3%95/" title="计算机科学中最重要的 32 个算法">计算机科学中最重要的 32 个算法</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2015-09-15T18:01:29.000Z" title="Created 2015.09.16 02:01:29">2015.09.16</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></span></div><div class="content"> 奥地利符号计算研究所（Research Institute for Symbolic Computation，简称 RISC）的 Christoph Koutschan 博士在自己的页面上发布了 一篇文章，提到他做了一个调查，参与者大多数是计算机科学家，他请这些科学家投票选出最重要的算法，以下是这次调查的结果，按照英文名称字母顺序排序。
+
+
+A 搜索算法 —— 图形搜索算法，从给定起点到给定终点计算出路径。其中使用了一种启发式的估算，为每个节点估算通过该节点的最佳路径，并以之为各个地点排定次序。算法以得到的次序访问这些节点。因此，A  搜索算法是最佳优先搜索的范例。
+
+集束搜索（又名定向搜索，Beam Search）—— 最佳优先搜索算法的优化。使用启发式函数评估它检查的每个节点的能力。不过，集束搜索只能在每个深度中发现最前面的 m 个最符合条件的节点，m 是固定数字 —— 集束的宽度。
+
+二分查找（Binary Search）—— 在线性数组中找特定值的算法，每个步骤去掉一半不符合要求的数据。
+
+分支界定算法（Branch and Bound）—— 在多种最优化问题中寻找特定最优化 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2015/09/10/%E5%88%B7%E9%A2%98/%E7%89%9B%E5%AE%A2%E4%B8%AD%E5%87%A0%E7%A7%8D%E8%AF%AD%E8%A8%80%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%A7%BF%E5%8A%BFmd/" title="刷题几种语言的输入输出姿势">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/12/26/yVnfD9bgNOcrWPL.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="刷题几种语言的输入输出姿势"></a></div><div class="recent-post-info"><a class="article-title" href="/2015/09/10/%E5%88%B7%E9%A2%98/%E7%89%9B%E5%AE%A2%E4%B8%AD%E5%87%A0%E7%A7%8D%E8%AF%AD%E8%A8%80%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%A7%BF%E5%8A%BFmd/" title="刷题几种语言的输入输出姿势">刷题几种语言的输入输出姿势</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2015-09-10T08:24:42.000Z" title="Created 2015.09.10 16:24:42">2015.09.10</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a></span></div><div class="content">总结一波自己常用的 Python、Java、Golang 的输入输出技巧。
+
+输入70% Common 输入输出输入两个整数，输入一个矩阵类型
+Go123456789101112131415161718package mainimport &quot;fmt&quot;func main() &#123;	var m, n int	fmt.Scanln (&amp;m, &amp;n)	var hash [][]int = make([][]int, m)	for i := 0; i &lt; m; i++ &#123;		hash [i] = make([]int, n)		for j := 0; j &lt; n; j++ &#123;			fmt.Scan (&amp;hash [i][j])		&#125;	&#125;	fmt.Println (hash)&#125;
+Java12345678910111213141516171819202122232425262728293031import java.util.*;public class IODemo &#123;    ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2015/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/IP%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB/" title="IP 地址分类">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/08/30/dPi5N3M6WpC4xF9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="IP 地址分类"></a></div><div class="recent-post-info"><a class="article-title" href="/2015/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/IP%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB/" title="IP 地址分类">IP 地址分类</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2015-09-04T08:23:16.000Z" title="Created 2015.09.04 16:23:16">2015.09.04</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span></div><div class="content">在计算机网络中有著名的 OSI 七层协议体系结构，概念清楚，理论完整，但是它既复杂又不实用。TCP/IP 体系结构则不同，得到的广泛的应用。最终结合 OSI 和 TCP/IP 的优点，采用了一种只有五层协议的体系结构，本文的讲述的 IP 都是基于五层协议模型中的  网络层 \。
+
+网络模型介绍
+
+
+
+OSI 体系结构
+TCP/IP 体系结构
+五层体系结构
+
+
+
+
+
+
+
+
+
+7 应用层
+应用层
+5 应用层
+
+
+6 表示层
+
+
+
+
+5 会话层
+
+
+
+
+4 传输层
+传输层
+4 传输层
+
+
+3 网络层
+网络层
+3 网络层
+
+
+2 数据链路层
+网络接口层
+2 数据链路层
+
+
+1 物理层
+1 物理层
+
+
+
+
+分类的 IP 地址IP 地址的表示方法IP 地址就是给英特网上的每个主机（路由器）的每个接口分配一个在全世界范围内是唯一的 32 位的标识符。其组成第一个字段是网络号，第二个字段是主机号。一个主机号在前面的网络号所指明的网络范围内必须是唯一的，所以一个 IP 地址在整个网络中都是唯一的。目前分为 A、B、C、D、E 五类 IP 地址。
+
+在 A、B、C 三类地址中灰色的部分即为网络号，网络号的 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2015/09/02/C&amp;C++/%E4%B8%80%E4%BA%9BC-C-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%9A%84%E9%97%AE%E9%A2%98/" title="一些 C/C++ 输入输出的问题">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/12/26/EF75JsTN1iBZKSf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一些 C/C++ 输入输出的问题"></a></div><div class="recent-post-info"><a class="article-title" href="/2015/09/02/C&amp;C++/%E4%B8%80%E4%BA%9BC-C-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%9A%84%E9%97%AE%E9%A2%98/" title="一些 C/C++ 输入输出的问题">一些 C/C++ 输入输出的问题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2015-09-02T12:52:00.000Z" title="Created 2015.09.02 20:52:00">2015.09.02</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="content">总结 C/C++ 的 IO 的一些问题。
+
+cin 的 “&gt;&gt;” 函数返回值是什么？
+为什么用 while (cin&gt;&gt;a) 一直跳不出循环？
+
+1234int a;while (cin &gt;&gt; a)&#123;  &#125;
+&gt;&gt; 是一个被重载过的运算符，它本质上是调用函数 operator&gt;&gt;(cin)，这个重载函数的返回值类型为 istream&amp;，返回值通常就是输入流 cin 本身，cin 是定义在 std 空间中的标准输入流变量。如果没有遇到错误输入或者文件末尾（EOF），cin 就一直有效，当然就跳不出 while 循环。当你在键盘上输入 Ctrl+Z，再按 Enter 键，就等同于输入遇到了文件末尾 EOF，遇到 EOF 后，&gt;&gt; 函数的返回值是 0，就能结束 while 循环了。
+scanf 的返回值是什么？
+ while (scanf (&quot;% d % d&quot;,&amp;a,&amp;b))&#123; &#125; 为何是死循环？遇到文件结束符 EOF 也跳不出循环？
+
+s ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2015/08/29/git/git%E7%AC%94%E8%AE%B0%E4%B9%8Bignore/" title="git 笔记之 ignore">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/08/23/OY9GyMIB1S5uk7f.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="git 笔记之 ignore"></a></div><div class="recent-post-info"><a class="article-title" href="/2015/08/29/git/git%E7%AC%94%E8%AE%B0%E4%B9%8Bignore/" title="git 笔记之 ignore">git 笔记之 ignore</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2015-08-29T05:34:15.000Z" title="Created 2015.08.29 13:34:15">2015.08.29</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></span></div><div class="content">在 push 到远程仓库中，往往要忽略中间文件和开发环境配置文件等文件的提交，这时就要设置相应的忽略规则，来自动忽略这些文件。
+原则Git 忽略文件的原则 
+
+忽略操作系统自动生成的文件，例如 macOS 中的 .DS_Store
+忽略编译生成的中间文件、可执行文件等，如果一个文件是通过另一个文件自动生成的，那么就没必要放进版本库，比如 Java 编译产生的 .class 文件
+忽略带有敏感信息的配置文件，比如存放口令的配置文件
+
+方式 有三种方法可以实现忽略 Git 中不想提交的文件 ：
+
+在项目中定义.gitignore 文件在项目根目录下定义.gitignore 文件，它往往要提交到公有仓库中，为该项目下的所有开发者都预设定义好的忽略规则。.gitingore 文件每一行指定一个忽略规则。如：
+
+123*.log*.temp&#x2F;vendor
+
+在项目的设置中临时指定排除文件这种方式只是临时指定该项目的行为，需要编辑当前项目下的 .git/info/exclude 文件，然后将需要忽略提交的文件写入其中。这种方式指定的忽略文件的根目录是项目根目录。
+
+定义全局的 .giti ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2015/08/26/Linux/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%20-%20sar/" title="Linux 性能分析工具 - sar">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/08/23/83MVATdal4hJLNU.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux 性能分析工具 - sar"></a></div><div class="recent-post-info"><a class="article-title" href="/2015/08/26/Linux/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%20-%20sar/" title="Linux 性能分析工具 - sar">Linux 性能分析工具 - sar</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2015-08-26T12:30:36.000Z" title="Created 2015.08.26 20:30:36">2015.08.26</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/DevOps/">DevOps</a></span></div><div class="content">sar 是 System Activity Reporter（系统活动情况报告）的缩写。sar 工具将对系统当前的状态进行取样，然后通过计算数据和比例来表达系统的当前运行状态。它的特点是可以连续对系统取样，获得大量的取样数据；取样数据和分析的结果都可以存入文件，所需的负载很小。sar 是目前 Linux 上最为全面的系统性能分析工具之一，可以从 14 个大方面对系统的活动进行报告，包括文件的读写情况、系统调用的使用情况、串口、CPU 效率、内存使用状况、进程活动及 IPC 有关的活动等，使用也是较为复杂。
+sar 是查看操作系统报告指标的各种工具中，最为普遍和方便的；它有两种用法；
+
+追溯过去的统计数据（默认）
+周期性的查看当前数据
+
+
+安装有的 linux 系统下，默认可能没有安装这个包，使用 apt-get 来安装；
+1$ apt-get install sysstat
+安装完毕，将性能收集工具的开关打开：
+12$ vim /etc/default/sysstatENABLED=&quot;true&quot;
+启动这个工具来收集系统性能数据：
+1$ /etc/init.d/sys ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/9/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/11/"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" data-lazy-src="/uploads/myavatar.jpg" onerror="this.onerror=null;this.src='/img/ripple.gif'" alt="avatar"/><div class="author-info__name">maywzh</div><div class="author-info__description">Art of tech.</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">112</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">47</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/maywzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://blog.maywzh.com" target="_blank" title="Blog"><i class="fas fa-blog"></i></a><a class="social-icon" href="https://t.me/unlockedcultoy" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a><a class="social-icon" href="https://twitter.com/maywzh" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a><a class="social-icon" href="http://weibo.com/JupiterMay" target="_blank" title="Weibo"><i class="fab fa-weibo"></i></a><a class="social-icon" href="https://instagram.com/maywzh" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a><a class="social-icon" href="https://500px.com/maywzh" target="_blank" title="500px"><i class="fab fa-500px"></i></a><a class="social-icon" href="mailto:maywzh@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div></div><div class="sticky_layout"><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">一期一会。</div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/07/01/java/2020%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%87%86%E5%A4%87/" title="Java 后端面试题总结"><img data-lazy-src="https://i.loli.net/2020/12/26/5ZCbq2VJFgy4EU8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java 后端面试题总结"/></a><div class="content"><a class="title" href="/2020/07/01/java/2020%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%87%86%E5%A4%87/" title="Java 后端面试题总结">Java 后端面试题总结</a><time datetime="2020-06-30T16:26:28.000Z" title="Created 2020.07.01 00:26:28">2020.07.01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/" title="Go 语言的上下文与 Context"><img data-lazy-src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的上下文与 Context"/></a><div class="content"><a class="title" href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/" title="Go 语言的上下文与 Context">Go 语言的上下文与 Context</a><time datetime="2020-01-18T16:09:39.000Z" title="Created 2020.01.19 00:09:39">2020.01.19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" title="Go 语言的反射"><img data-lazy-src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的反射"/></a><div class="content"><a class="title" href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" title="Go 语言的反射">Go 语言的反射</a><time datetime="2020-01-17T16:03:35.000Z" title="Created 2020.01.18 00:03:35">2020.01.18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" title="Go 语言的 select"><img data-lazy-src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的 select"/></a><div class="content"><a class="title" href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" title="Go 语言的 select">Go 语言的 select</a><time datetime="2020-01-16T16:07:40.000Z" title="Created 2020.01.17 00:07:40">2020.01.17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" title="Go 语言的并发原理"><img data-lazy-src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的并发原理"/></a><div class="content"><a class="title" href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" title="Go 语言的并发原理">Go 语言的并发原理</a><time datetime="2020-01-15T23:55:17.000Z" title="Created 2020.01.16 07:55:17">2020.01.16</time></div></div></div></div></div><div class="card-widget card-categories"><div class="card-content"><div class="item-headline"><i class="fas fa-folder-open"></i><span>Categories</span></div><ul class="card-category-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/DevOps/"><span class="card-category-list-name">DevOps</span><span class="card-category-list-count">28</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/"><span class="card-category-list-name">分布式</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%88%B7%E9%A2%98/"><span class="card-category-list-name">刷题</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%9D%91/"><span class="card-category-list-name">坑</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/"><span class="card-category-list-name">密码学</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/"><span class="card-category-list-name">工具</span><span class="card-category-list-count">6</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="card-category-list-name">操作系统</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"><span class="card-category-list-name">数据库</span><span class="card-category-list-count">8</span></a></li>
+            <li class="card-category-list-item more is-center"><a class="card-category-list-link-more" href="/categories">
+                <span>More</span><i class="fas fa-angle-right"></i></a></li>
+            </ul></div></div><div class="card-widget card-tags"><div class="card-content"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href='/tags/C-C/' style='font-size:1.20em; color:rgb(7, 19, 100)'>C/C++</a><a href='/tags/CDN/' style='font-size:1.48em; color:rgb(180, 177, 192)'>CDN</a><a href='/tags/DevOps/' style='font-size:1.45em; color:rgb(103, 153, 127)'>DevOps</a><a href='/tags/Docker/' style='font-size:1.31em; color:rgb(168, 75, 179)'>Docker</a><a href='/tags/Go/' style='font-size:1.12em; color:rgb(5, 170, 147)'>Go</a><a href='/tags/HTTP-HTTPS/' style='font-size:1.28em; color:rgb(3, 58, 66)'>HTTP/HTTPS</a><a href='/tags/I-O/' style='font-size:1.30em; color:rgb(56, 158, 118)'>I/O</a><a href='/tags/Java/' style='font-size:1.15em; color:rgb(189, 79, 90)'>Java</a><a href='/tags/JavaScript/' style='font-size:1.37em; color:rgb(103, 153, 31)'>JavaScript</a><a href='/tags/Linux/' style='font-size:1.31em; color:rgb(129, 48, 2)'>Linux</a><a href='/tags/Nginx/' style='font-size:1.49em; color:rgb(164, 123, 199)'>Nginx</a><a href='/tags/Python/' style='font-size:1.10em; color:rgb(193, 180, 90)'>Python</a><a href='/tags/Redis/' style='font-size:1.17em; color:rgb(144, 0, 190)'>Redis</a><a href='/tags/TCP-IP/' style='font-size:1.13em; color:rgb(66, 191, 101)'>TCP/IP</a><a href='/tags/Terminal/' style='font-size:1.38em; color:rgb(184, 95, 148)'>Terminal</a><a href='/tags/Web/' style='font-size:1.45em; color:rgb(66, 157, 171)'>Web</a><a href='/tags/ZooKeeper/' style='font-size:1.16em; color:rgb(130, 9, 192)'>ZooKeeper</a><a href='/tags/bugfix/' style='font-size:1.44em; color:rgb(167, 196, 165)'>bugfix</a><a href='/tags/git/' style='font-size:1.38em; color:rgb(1, 44, 122)'>git</a><a href='/tags/mysql/' style='font-size:1.21em; color:rgb(160, 82, 15)'>mysql</a><a href='/tags/zsh/' style='font-size:1.23em; color:rgb(166, 104, 71)'>zsh</a><a href='/tags/%E5%88%86%E5%B8%83%E5%BC%8F/' style='font-size:1.12em; color:rgb(3, 2, 167)'>分布式</a><a href='/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/' style='font-size:1.46em; color:rgb(123, 113, 82)'>动态规划</a><a href='/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/' style='font-size:1.46em; color:rgb(24, 116, 154)'>哈希表</a><a href='/tags/%E5%A0%86/' style='font-size:1.22em; color:rgb(64, 194, 132)'>堆</a><a href='/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/' style='font-size:1.49em; color:rgb(65, 130, 10)'>多线程</a><a href='/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/' style='font-size:1.38em; color:rgb(107, 102, 44)'>密码学</a><a href='/tags/%E5%B7%A5%E5%85%B7/' style='font-size:1.38em; color:rgb(164, 6, 124)'>工具</a><a href='/tags/%E5%B9%B6%E5%8F%91/' style='font-size:1.40em; color:rgb(157, 153, 150)'>并发</a><a href='/tags/%E5%BC%82%E6%AD%A5/' style='font-size:1.33em; color:rgb(65, 23, 128)'>异步</a><a href='/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/' style='font-size:1.19em; color:rgb(165, 23, 133)'>操作系统</a><a href='/tags/%E6%95%B0%E5%AD%A6/' style='font-size:1.13em; color:rgb(138, 94, 174)'>数学</a><a href='/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/' style='font-size:1.26em; color:rgb(72, 189, 20)'>数据库</a><a href='/tags/%E6%96%B9%E6%B3%95%E8%AE%BA/' style='font-size:1.17em; color:rgb(115, 89, 21)'>方法论</a><a href='/tags/%E6%97%B6%E9%97%B4%E7%AE%A1%E7%90%86/' style='font-size:1.18em; color:rgb(149, 14, 154)'>时间管理</a><a href='/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/' style='font-size:1.37em; color:rgb(66, 132, 61)'>机器学习</a><a href='/tags/%E7%90%86%E8%AE%BA/' style='font-size:1.16em; color:rgb(65, 136, 81)'>理论</a><a href='/tags/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/' style='font-size:1.30em; color:rgb(151, 127, 75)'>知识管理</a><a href='/tags/%E7%AE%97%E6%B3%95/' style='font-size:1.35em; color:rgb(131, 9, 21)'>算法</a><a href='/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/' style='font-size:1.32em; color:rgb(95, 169, 99)'>系统设计</a></div></div></div><div class="card-widget card-archives"><div class="card-content"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/07/"><span class="card-archive-list-date">July 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/01/"><span class="card-archive-list-date">January 2020</span><span class="card-archive-list-count">11</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2019/11/"><span class="card-archive-list-date">November 2019</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2019/10/"><span class="card-archive-list-date">October 2019</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/09/"><span class="card-archive-list-date">September 2018</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/03/"><span class="card-archive-list-date">March 2018</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/02/"><span class="card-archive-list-date">February 2018</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/01/"><span class="card-archive-list-date">January 2018</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item more is-center"><a class="card-archive-list-link-more" href="/archives">
+              <span>More</span><i class="fas fa-angle-right"  ></i></a></li></ul></div></div><div class="card-widget card-webinfo"><div class="card-content"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">112</div></div><div class="webinfo-item"><div class="item-name">Total Count :</div><div class="item-count">344.5k</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">Last Push :</div><div class="item-count" id="last-push-date" data-lastPushDate="2020-12-26T09:01:58.284Z"></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://i.loli.net/2020/03/02/mYeD6WLp3kOy1qw.png)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2015 - 2020 By maywzh</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.spacingElementById('content-inner')
+  else {
+    $.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js', () => {
+      pangu.spacingElementById('content-inner')
+    })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguFn)</script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
+  document.body.style.overflow = 'auto';
+  document.getElementById('loading-box').classList.add("loaded")
+}
+window.addEventListener('load',endLoading)</script><div class="js-pjax"><script>function subtitleType () {
+  if (true) { 
+    var typed = new Typed("#subtitle", {
+      strings: "Talk is cheap, show me the code.,The fastest IO is no IO.,The First Rule of Program Optimization, Don't do it.,The Second Rule of Program Optimization - For experts only. Don't do it yet.".split(","),
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50
+    })
+  } else {
+    document.getElementById("subtitle").innerHTML = 'Talk is cheap, show me the code.'
+  }
+}
+
+if (true) {
+  if (typeof Typed === 'function') subtitleType()
+  else $.getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js', subtitleType)
+} else {
+  subtitleType()
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

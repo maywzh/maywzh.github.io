@@ -1,146 +1,206 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>排序之堆排序与 JavaScript 实现 | Cult Minds</title><meta name="description" content="成堆 Heapify对于一个给定的数组，我们不一定实现堆这个类，而是通过  成堆 (Heapify) 这样的操作来使得数组具有堆的性质。  如图所示，要使得这个数组所对应的完全二叉树形成一个最大堆，只需要使得每一棵子树都形成最大堆即可。那么不难看出，所有的叶子结点都可以看作是一个仅有一个元素的最大堆，所以我们只需要从最后一个非叶子结点开始，通过前一节的 shiftDown 操作，就可以很容易的构建"><meta name="keywords" content="JavaScript,算法"><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/bitbug_favicon_128s.ico"><link rel="canonical" href="https://tech.maywzh.com/2016/04/01/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E4%B9%8B%E5%A0%86%E6%8E%92%E5%BA%8F/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin="crossorigin"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//pingjs.qq.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="content"/><meta property="og:type" content="article"><meta property="og:title" content="排序之堆排序与 JavaScript 实现"><meta property="og:url" content="https://tech.maywzh.com/2016/04/01/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E4%B9%8B%E5%A0%86%E6%8E%92%E5%BA%8F/"><meta property="og:site_name" content="Cult Minds"><meta property="og:description" content="成堆 Heapify对于一个给定的数组，我们不一定实现堆这个类，而是通过  成堆 (Heapify) 这样的操作来使得数组具有堆的性质。  如图所示，要使得这个数组所对应的完全二叉树形成一个最大堆，只需要使得每一棵子树都形成最大堆即可。那么不难看出，所有的叶子结点都可以看作是一个仅有一个元素的最大堆，所以我们只需要从最后一个非叶子结点开始，通过前一节的 shiftDown 操作，就可以很容易的构建"><meta property="og:image" content="https://i.loli.net/2020/08/23/lAvyqsoD4U35Ork.png"><meta property="article:published_time" content="2016-04-01T13:07:39.000Z"><meta property="article:modified_time" content="2020-09-30T11:49:35.820Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?e5597df0e0a089595ae6b3fce53f24e8";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-119246999-5"></script><script>window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'UA-119246999-5');
-</script><script>var _mtac = {};
-(function() {
-    var mta = document.createElement("script");
-    mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
-    mta.setAttribute("name", "MTAH5");
-    mta.setAttribute("sid", "500728859");
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(mta, s);
-})();
-</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
-  root: '/',
-  hexoversion: '5.1.1',
-  algolia: undefined,
-  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
-  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
-  copy: {
-    success: 'Copy successfully',
-    error: 'Copy error',
-    noSupport: 'The browser does not support'
-  },
-  bookmark: {
-    message_prev: 'Press',
-    message_next: 'to bookmark this page'
-  },
-  runtime: '',
-  date_suffix: {"one_hour":"Just","hours":"hours ago","day":"days ago"},
-  copyright: undefined,
-  ClickShowText: undefined,
-  medium_zoom: false,
-  fancybox: true,
-  Snackbar: undefined,
-  justifiedGallery: {
-    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
-  },
-  baiduPush: false,
-  isPhotoFigcaption: false,
-  islazyload: true,
-  isanchor: false
-};
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-var saveToLocal = {
-  set: function setWithExpiry(key, value, ttl) {
-      const now = new Date()
-      const expiryDay = ttl * 86400000
-      const item = {
-        value: value,
-        expiry: now.getTime() + expiryDay,
-      }
-      localStorage.setItem(key, JSON.stringify(item))
-    },
-  
-  get: function getWithExpiry(key) {
-    const itemStr = localStorage.getItem(key)
+<meta name="author" content="maywzh">
 
-    if (!itemStr) {
-      return undefined
+
+<meta name="subtitle" content="0x01 MAYSTORY">
+
+
+<meta name="description" content="Namasday.">
+
+
+<meta name="keywords" content="Tech Blogs">
+
+
+<title>排序之堆排序与 JavaScript 实现 | 0x01 MAYSTORY </title>
+
+
+    
+    <link rel="icon" href="/bitbug_favicon_128s.ico">
+    
+
+    
+    
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+    
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">梅故事壹</a> | <a
+                    href="/">0x01 MAYSTORY</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">梅故事壹</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://blog.maywzh.com">Blog</a>
+                
+                <a class="menu-item" target="_blank" rel="noopener" href="https://tech.maywzh.com">Tech</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
     }
-    const item = JSON.parse(itemStr)
-    const now = new Date()
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
 
-    if (now.getTime() > item.expiry) {
-      localStorage.removeItem(key)
-      return undefined
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
     }
-    return item.value
-  }
-}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
-  isPost: true,
-  isHome: false,
-  isHighlightShrink: false,
-  isSidebar: true,
-  postUpdate: '2020.09.30 19:49:35'
-}</script><noscript><style type="text/css">
-#nav {
-  opacity: 1
-}
-.justified-gallery img {
-  opacity: 1
-}
-</style></noscript><script>var activateDarkMode = function () {
-  document.documentElement.setAttribute('data-theme', 'dark')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-  }
-}
-var activateLightMode = function () {
-  document.documentElement.setAttribute('data-theme', 'light')
-  if (document.querySelector('meta[name="theme-color"]') !== null) {
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-  }
-}
 
-var autoChangeMode = '1'
-var t = saveToLocal.get('theme')
-if (autoChangeMode === '1') {
-  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
-  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
-  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
-
-  if (t === undefined) {
-    if (isLightMode) activateLightMode()
-    else if (isDarkMode) activateDarkMode()
-    else if (isNotSpecified || hasNoSupport) {
-      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
-      var now = new Date()
-      var hour = now.getHours()
-      var isNight = hour <= 6 || hour >= 18
-      isNight ? activateDarkMode() : activateLightMode()
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
     }
-    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
-      if (saveToLocal.get('theme') === undefined) {
-        e.matches ? activateDarkMode() : activateLightMode()
-      }
-    })
-  } else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else if (autoChangeMode === '2') {
-  now = new Date()
-  hour = now.getHours()
-  isNight = hour <= 6 || hour >= 18
-  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
-  else if (t === 'light') activateLightMode()
-  else activateDarkMode()
-} else {
-  if (t === 'dark') activateDarkMode()
-  else if (t === 'light') activateLightMode()
-}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" data-lazy-src="/uploads/myavatar.jpg" onerror="onerror=null;src='/img/ripple.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">112</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">47</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%A0%86-Heapify"><span class="toc-number">1.</span> <span class="toc-text">成堆 Heapify</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E5%A0%86%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F"><span class="toc-number">1.1.</span> <span class="toc-text">通过堆进行排序</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E5%8E%9F%E5%9C%B0%E5%A0%86%E6%8E%92%E5%BA%8F"><span class="toc-number">2.</span> <span class="toc-text">数组的原地堆排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E5%A0%86"><span class="toc-number">3.</span> <span class="toc-text">索引堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">排序总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7"><span class="toc-number">4.1.</span> <span class="toc-text">排序算法的稳定性</span></a></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/08/23/lAvyqsoD4U35Ork.png)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Cult Minds</a></span><span class="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">排序之堆排序与 JavaScript 实现</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">Created</span><time datetime="2016-04-01T13:07:39.000Z" title="undefined 2016.04.01 21:07:39">2016.04.01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">3.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>14min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h3 id="成堆-Heapify"><a href="#成堆-Heapify" class="headerlink" title="成堆 Heapify"></a>成堆 <code>Heapify</code></h3><p>对于一个给定的数组，我们不一定实现堆这个类，而是通过 <strong> 成堆 (Heapify)</strong> 这样的操作来使得数组具有堆的性质。</p>
-<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/Heapify.png"><img src= "/img/loading2.gif" data-lazy-src="http://mitscherlich.me/assets/imooc-algorithms/Heapify.png" alt="img"></a></p>
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">排序之堆排序与 JavaScript 实现</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">maywzh</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 1, 2016&nbsp;&nbsp;21:07:39</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="成堆-Heapify"><a href="#成堆-Heapify" class="headerlink" title="成堆 Heapify"></a>成堆 <code>Heapify</code></h3><p>对于一个给定的数组，我们不一定实现堆这个类，而是通过 <strong> 成堆 (Heapify)</strong> 这样的操作来使得数组具有堆的性质。</p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/Heapify.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/Heapify.png" alt="img"></a></p>
 <p>如图所示，要使得这个数组所对应的完全二叉树形成一个最大堆，只需要使得每一棵子树都形成最大堆即可。那么不难看出，所有的叶子结点都可以看作是一个仅有一个元素的最大堆，所以我们只需要从最后一个非叶子结点开始，通过前一节的 <code>shiftDown</code> 操作，就可以很容易的构建出最大堆来。</p>
 <blockquote>
 <p>一个显而易见的数学关系是：完全二叉树最后一个非叶子节点的索引是 $n\div {2}$，例如这里有 <code>10</code> 个元素，那么最后一个非叶子结点的索引就是 <code>5</code>；类似的，如果有 <code>11</code> 个元素，那么同样 <code>5</code> 是最后一个非叶子结点的索引；不过要注意的是，这里的索引是从 <code>1</code> 开始的，如果是从 <code>0</code> 开始的索引只需使 <code>i-1</code> ($n\div {2}-1$) 即可。这很容易就能用数学归纳法证明。</p>
@@ -152,7 +212,7 @@ if (autoChangeMode === '1') {
 <li>重复直到根节点完成 <code>shiftDown</code>。</li>
 </ol>
 <p>动画演示:</p>
-<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/Heapify.gif"><img src= "/img/loading2.gif" data-lazy-src="http://mitscherlich.me/assets/imooc-algorithms/Heapify.gif" alt="img"></a></p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/Heapify.gif"><img src="http://mitscherlich.me/assets/imooc-algorithms/Heapify.gif" alt="img"></a></p>
 <p>示例代码</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; PrintableMaxHeap &#125; = <span class="built_in">require</span>(<span class="string">&#x27;./02-Max-Heap-Class-Basic&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//heapSort1, 将所有的元素依次添加到堆中，在将所有元素从堆中依次取出来，即完成了排序 </span></span><br><span class="line"><span class="comment">// 无论是创建堆的过程，还是从堆中依次取出元素的过程，时间复杂度均为 O (nlogn)</span></span><br><span class="line"><span class="comment">// 整个堆排序的整体时间复杂度为 O (nlogn)</span></span><br><span class="line"><span class="built_in">exports</span>.heapSort1 = <span class="function"><span class="params">array</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> n = array.length</span><br><span class="line">  <span class="keyword">const</span> maxHeap = <span class="keyword">new</span> PrintableMaxHeap (n)</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> i <span class="keyword">of</span> array) &#123;</span><br><span class="line">    maxHeap.insert (i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    array [i] = maxHeap.extractMax ()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//heapSort2, 借助我们的 heapify 过程创建堆 </span></span><br><span class="line"><span class="comment">// 此时，创建堆的过程时间复杂度为 O (n), 将所有元素依次从堆中取出来，时间复杂度为 O (nlogn)</span></span><br><span class="line"><span class="comment">// 堆排序的总体时间复杂度依然是 O (nlogn), 但是比上述 heapSort1 性能更优，因为创建堆的性能更优 </span></span><br><span class="line"><span class="built_in">exports</span>.heapSort2 = <span class="function"><span class="params">array</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> n = array.length</span><br><span class="line">  <span class="keyword">const</span> maxHeap = <span class="keyword">new</span> PrintableMaxHeap (array, n)</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    array [i] = maxHeap.extractMax ()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaxHeap</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 新的构造函数，传入一个数组使其成最大堆 </span></span><br><span class="line">  <span class="keyword">constructor</span> (array) &#123;</span><br><span class="line">    <span class="keyword">const</span> n = array.length</span><br><span class="line">    this.#data = new Array (n + 1)</span><br><span class="line">    this.#capacity = n</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">      this.#data [i + 1] = array [i]</span><br><span class="line">    &#125;</span><br><span class="line">    this.#count = n</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="built_in">Math</span>.floor (n / <span class="number">2</span>); i &gt;= <span class="number">1</span>; i--) &#123;</span><br><span class="line">      shiftDownEnhance (this.#data, i, n)  // 见【慕课】重学算法 - part.3 堆排序 (1)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -165,28 +225,28 @@ if (autoChangeMode === '1') {
 </ul>
 <p>由于堆算法复杂度的证明不是本系列的重点并且有点难，感兴趣的同学可以自己来进行详细地推导证明，这里并不展开。</p>
 <h3 id="数组的原地堆排序"><a href="#数组的原地堆排序" class="headerlink" title="数组的原地堆排序"></a>数组的原地堆排序</h3><p>无论是将元素逐一插入空堆还是通过 <code>Heapify</code> 来使数组成堆，我们实际上都开辟了一个堆的空间 (也就是使用了额外的 $O (n)$ 的空间复杂度)。但结合上面 <code>Heapify</code> 的思想，我们也可以很容易的改造堆排序的过程，使数组原地完成堆排序的操作。</p>
-<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/HeapSort0.png"><img src= "/img/loading2.gif" data-lazy-src="http://mitscherlich.me/assets/imooc-algorithms/HeapSort0.png" alt="img"></a></p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/HeapSort0.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/HeapSort0.png" alt="img"></a></p>
 <blockquote>
 <p>一个已经形成最大堆的数组</p>
 </blockquote>
 <p>我们假定通过 <code>Heapify</code> 已经使一个数组形成最大堆，这时数组中第一个元素也就是最大的元素，要是数组从小到大排序，只需使现在数组第一个位置的元素与最后一个元素交换位置：</p>
-<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/HeapSort1.png"><img src= "/img/loading2.gif" data-lazy-src="http://mitscherlich.me/assets/imooc-algorithms/HeapSort1.png" alt="img"></a></p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/HeapSort1.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/HeapSort1.png" alt="img"></a></p>
 <p>而此时由于 <code>w</code> 并不一定是最大元素，也就使得原有最大堆的性质遭到了破坏。这时只需通过对 <code>w</code> 元素进行一次 <code>shiftDown</code> 操作，就能使数组的前部重新形成最大堆：</p>
-<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/HeapSort2.png"><img src= "/img/loading2.gif" data-lazy-src="http://mitscherlich.me/assets/imooc-algorithms/HeapSort2.png" alt="img"></a></p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/HeapSort2.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/HeapSort2.png" alt="img"></a></p>
 <p>那么重复上述操作就可以使整个数组完成排序。</p>
 <p>示例代码 </p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> shiftDown = <span class="function">(<span class="params">array, n, k</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">2</span> * k + <span class="number">1</span> &lt; n) &#123;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">2</span> * k + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> (j + <span class="number">1</span> &lt; n &amp;&amp; array [j + <span class="number">1</span>] &gt; array [j]) &#123;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (array [k] &gt;= array [j]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//swap (arr [k] , arr [j])</span></span><br><span class="line">    [array [k], array [j]] = [array [j], array [k]]</span><br><span class="line">    k = j</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不使用一个额外的最大堆，直接在原数组上进行原地的堆排序 </span></span><br><span class="line"><span class="built_in">Array</span>.prototype.heapSort = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> array = <span class="built_in">this</span>.slice ()</span><br><span class="line">  <span class="keyword">const</span> n = array.length</span><br><span class="line">  <span class="comment">//heapify</span></span><br><span class="line">  <span class="comment">// 注意，此时我们的堆是从 0 开始索引的 </span></span><br><span class="line">  <span class="comment">// 从 (最后一个元素的索引 - 1)/2 开始 </span></span><br><span class="line">  <span class="comment">// 最后一个元素的索引 = n-1</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="built_in">Math</span>.floor ((n - <span class="number">1</span>) / <span class="number">2</span>); i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    shiftDown (array, n, i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">    <span class="comment">//swap (arr [0], arr [i])</span></span><br><span class="line">    [array [<span class="number">0</span>], array [i]] = [array [i], array [<span class="number">0</span>]]</span><br><span class="line">    shiftDown (array, i, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>类似的，最后使用一步交换进行优化:</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 优化的 shiftDown 过程，使用赋值的方式取代不断的 swap,</span></span><br><span class="line"><span class="comment">// 该优化思想和我们之前对插入排序进行优化的思路是一致的 </span></span><br><span class="line"><span class="keyword">const</span> shiftDownEnhance = <span class="function">(<span class="params">array, n, k</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> e = array [k]</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">2</span> * k + <span class="number">1</span> &lt; n) &#123;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">2</span> * k + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> (j + <span class="number">1</span> &lt; n &amp;&amp; array [j + <span class="number">1</span>] &gt; array [j]) &#123;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (e &gt;= array [j]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    array [k] = array [j]</span><br><span class="line">    k = j</span><br><span class="line">  &#125;</span><br><span class="line">  array [k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优化的堆排序 </span></span><br><span class="line"><span class="built_in">Array</span>.prototype.heapSortEnhance = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> array = <span class="built_in">this</span>.slice ()</span><br><span class="line">  <span class="keyword">const</span> n = array.length</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="built_in">Math</span>.floor ((n - <span class="number">1</span>) / <span class="number">2</span>); i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    shiftDownEnhance (array, n, i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">    <span class="comment">//swap (arr [0], arr [i])</span></span><br><span class="line">    [array [<span class="number">0</span>], array [i]] = [array [i], array [<span class="number">0</span>]]</span><br><span class="line">    shiftDownEnhance (array, i, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> array</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="索引堆"><a href="#索引堆" class="headerlink" title="索引堆"></a>索引堆</h3><p>在上面的实现的堆中，我们总是直接操作原右数组元素。这在处理基本数据或者简单类型时没有问题，但往往我们面对的数据类型并非如此。例如，我们在处理 <code>CMS</code> 内容时如果使用对这种结构，一旦要交换的数据量非常大，交换操作本身变得非常慢；而这种问题还可以通过技术手段解决；又例如在操作系统的进程调度时，我们可能根据进程的 <code>pid</code> 数组构建了最大堆来表示进程的优先级，一旦我们直接交换了堆中元素的位置，我们就无法根据新的索引找到原来的进程，也就使得 <code>pid</code> 和进程脱离了关系；像这种情况使用 <strong> 索引堆 </strong> 就更为方便。</p>
-<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/IndexMaxHeap.png"><img src= "/img/loading2.gif" data-lazy-src="http://mitscherlich.me/assets/imooc-algorithms/IndexMaxHeap.png" alt="img"></a></p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/IndexMaxHeap.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/IndexMaxHeap.png" alt="img"></a></p>
 <blockquote>
 <p>索引最大堆示意图</p>
 </blockquote>
 <p>示例代码</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shiftUp</span> (<span class="params">data, indexes, k</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> e = indexes [k]</span><br><span class="line">  <span class="keyword">while</span> (k &gt; <span class="number">1</span> &amp;&amp; data [indexes [<span class="built_in">Math</span>.floor (k / <span class="number">2</span>)]] &lt; data [e]) &#123;</span><br><span class="line">    <span class="comment">//swap (indexes [k/2], indexes [k])</span></span><br><span class="line">    indexes [k] = indexes [<span class="built_in">Math</span>.floor (k / <span class="number">2</span>)]</span><br><span class="line">    k = <span class="built_in">Math</span>.floor (k /= <span class="number">2</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  indexes [k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shiftDown</span> (<span class="params">data, indexes, k, count </span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> e = indexes [k]</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">2</span> * k &lt;= count) &#123;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">2</span> * k <span class="comment">// 此轮循环中，swap (indexes [k], indexes [j])</span></span><br><span class="line">    <span class="keyword">if</span> (j + <span class="number">1</span> &lt;= count &amp;&amp; data [indexes [j + <span class="number">1</span>]] &gt; data [indexes [j]]) &#123;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (data [e] &gt;= data [indexes [j]]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//swap (indexes [k], indexes [j])</span></span><br><span class="line">    indexes [k] = indexes [j]</span><br><span class="line">    k = j</span><br><span class="line">  &#125;</span><br><span class="line">  indexes [k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IndexMaxHeap</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 构造函数，构造一个空堆，可容纳 capacity 个元素 </span></span><br><span class="line">  <span class="keyword">constructor</span> (capacity) &#123;</span><br><span class="line">    this.#data = new Array (capacity + 1)</span><br><span class="line">    this.#indexes = new Array (capacity + 1)</span><br><span class="line">    this.#count = 0</span><br><span class="line">    this.#capacity = capacity</span><br><span class="line">  &#125;</span><br><span class="line">  size () &#123; return this.#count &#125;</span><br><span class="line">  isEmpty () &#123; return this.#count === 0 &#125;</span><br><span class="line">  <span class="comment">// 获取最大索引堆中的堆顶元素 </span></span><br><span class="line">  getItem (i) &#123; return this.#data [i + 1] &#125;</span><br><span class="line">  <span class="comment">// 传入的 i 是从 0 开始索引的 </span></span><br><span class="line">  insert (i, item) &#123;</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    this.#data [this.#count + 1] = item</span><br><span class="line">    this.#indexes [this.#count + 1] = i</span><br><span class="line">    this.#count++</span><br><span class="line">    shiftUp (this.#data, this.#indexes, this.#count)</span><br><span class="line">  &#125;</span><br><span class="line">  extractMax () &#123;</span><br><span class="line">    const ret = this.#data [this.#indexes [1]]</span><br><span class="line">    <span class="comment">//swap (data [indexes [1]], data [indexes [count]])</span></span><br><span class="line">    ;[this.#indexes [1], this.#indexes [this.#count]] = [this.#indexes [this.#count], this.#indexes [1]]</span><br><span class="line">    this.#count -= 1</span><br><span class="line">    shiftDown (this.#data, this.#indexes, 1, this.#count)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">  &#125;</span><br><span class="line">  extractMaxIndex () &#123;</span><br><span class="line">    const ret = this.#indexes [1] - 1</span><br><span class="line">    <span class="comment">//swap (data [indexes [1]], data [indexes [count]])</span></span><br><span class="line">    ;[this.#indexes [1], this.#indexes [this.#count]] = [this.#indexes [this.#count], this.#indexes [1]]</span><br><span class="line">    this.#count -= 1</span><br><span class="line">    shiftDown (this.#data, this.#indexes, 1, this.#count)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 将最大索引堆中索引为 i 的元素修改为 newItem</span></span><br><span class="line">  change (i, item) &#123;</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    this.#data [i] = item</span><br><span class="line">    <span class="comment">// 找到 indexes [j] = i, j 表示 data [i] 在堆中的位置 </span></span><br><span class="line">    <span class="comment">// 之后 shiftUp (j), 再 shiftDown (j)</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = i; j &lt;= <span class="built_in">this</span>.size (); j++) &#123;</span><br><span class="line">      if (this.#indexes [j] === i) &#123;</span><br><span class="line">        shiftUp (this.#data, this.#indexes, j)</span><br><span class="line">        shiftDown (this.#data, this.#indexes, j, this.#count)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面这个索引堆的类不仅实现了最基本的堆的操作，还实现了一些索引堆可以完成的特殊操作；而最重要的就是 <code>change</code> 操作，用户可以通过给定一个索引来方便的修改堆中某个元素的值。但可以注意到，修改完这个元素后，要使得堆继续形成最大堆，我们仍需要对新插入的元素进行 <code>shiftUp</code> 和 <code>shiftDown</code> 来维持堆的性质，而这使得修改元素的复杂度变成了 $O (n+log {n}) ~ O (n)$，这与堆的插入删除元素 $O (nlog {n})$ 的复杂度并不相符，我们可以尝试建立对 <strong> 索引的索引 </strong> 来优化这个过程：</p>
-<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/RevIndexMaxHeap.png"><img src= "/img/loading2.gif" data-lazy-src="http://mitscherlich.me/assets/imooc-algorithms/RevIndexMaxHeap.png" alt="img"></a></p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/RevIndexMaxHeap.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/RevIndexMaxHeap.png" alt="img"></a></p>
 <blockquote>
 <p>优化索引最大堆示意图</p>
 </blockquote>
@@ -194,37 +254,69 @@ if (autoChangeMode === '1') {
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">if </span><br><span class="line">	indexes [i] &#x3D; j</span><br><span class="line">	reverse [j] &#x3D; i</span><br><span class="line">then </span><br><span class="line">	indexes [reverse [i]] &#x3D; i</span><br><span class="line">	reverse [indexes [i]] &#x3D; i</span><br></pre></td></tr></table></figure>
 <p>这样，我们就可以在 $O (1)$ 内找到一个索引对应的元素：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shiftUpEnhance</span> (<span class="params">data, indexes, reverse, k</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> e = indexes [k]</span><br><span class="line">  <span class="keyword">while</span> (k &gt; <span class="number">1</span> &amp;&amp; data [indexes [<span class="built_in">Math</span>.floor (k / <span class="number">2</span>)]] &lt; data [e]) &#123;</span><br><span class="line">    <span class="comment">//swap (indexes [k/2], indexes [k])</span></span><br><span class="line">    indexes [k] = indexes [<span class="built_in">Math</span>.floor (k / <span class="number">2</span>)]</span><br><span class="line">    reverse [indexes [<span class="built_in">Math</span>.floor (k / <span class="number">2</span>)]] = <span class="built_in">Math</span>.floor (k / <span class="number">2</span>)</span><br><span class="line">    reverse [indexes [k]] = k</span><br><span class="line">    k = <span class="built_in">Math</span>.floor (k /= <span class="number">2</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  indexes [k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shiftDownEnhance</span> (<span class="params">data, indexes, reverse, k, count</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> e = indexes [k]</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">2</span> * k &lt;= count) &#123;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">2</span> * k <span class="comment">// 此轮循环中，swap (indexes [k], indexes [j])</span></span><br><span class="line">    <span class="keyword">if</span> (j + <span class="number">1</span> &lt;= count &amp;&amp; data [indexes [j + <span class="number">1</span>]] &gt; data [indexes [j]]) &#123;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (data [e] &gt;= data [indexes [j]]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//swap (indexes [k], indexes [j])</span></span><br><span class="line">    indexes [k] = indexes [j]</span><br><span class="line">    reverse [indexes [k]] = k</span><br><span class="line">    reverse [indexes [j]] = j</span><br><span class="line">    k = j</span><br><span class="line">  &#125;</span><br><span class="line">  indexes [k] = e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IndexMaxHeap</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 构造函数，构造一个空堆，可容纳 capacity 个元素 </span></span><br><span class="line">  <span class="keyword">constructor</span> (capacity) &#123;</span><br><span class="line">    this.#data = new Array (capacity + 1)</span><br><span class="line">    this.#indexes = new Array (capacity + 1)</span><br><span class="line">    this.#reverse = new Array (capacity + 1).fill (0) // 填入 0 使得默认的索引索引位置为 0 (总是无效的元素)</span><br><span class="line">    this.#count = 0</span><br><span class="line">    this.#capacity = capacity</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">  <span class="comment">// 传入的 i 是从 0 开始索引的 </span></span><br><span class="line">  insert (i, item) &#123;</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    this.#data [this.#count + 1] = item</span><br><span class="line">    this.#indexes [this.#count + 1] = i</span><br><span class="line">    this.#reverse [i] = this.#count + 1</span><br><span class="line">    this.#count++</span><br><span class="line">    shiftUpEnhance (this.#data, this.#indexes, this.#reverse, this.#count)</span><br><span class="line">  &#125;</span><br><span class="line">  extractMax () &#123;</span><br><span class="line">    const ret = this.#data [this.#indexes [1]]</span><br><span class="line">    <span class="comment">//swap (data [indexes [1]], data [indexes [count]])</span></span><br><span class="line">    ;[this.#indexes [1], this.#indexes [this.#count]] = [this.#indexes [this.#count], this.#indexes [1]]</span><br><span class="line">    this.#reverse [this.#indexes [1]] = 1</span><br><span class="line">    this.#reverse [this.#indexes [this.#count]] = 0</span><br><span class="line">    this.#count -= 1</span><br><span class="line">    shiftDownEnhance (this.#data, this.#indexes, this.#reverse, 1, this.#count)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">  &#125;</span><br><span class="line">  extractMaxIndex () &#123;</span><br><span class="line">    const ret = this.#indexes [1] - 1</span><br><span class="line">    <span class="comment">//swap (data [indexes [1]], data [indexes [count]])</span></span><br><span class="line">    ;[this.#indexes [1], this.#indexes [this.#count]] = [this.#indexes [this.#count], this.#indexes [1]]</span><br><span class="line">    this.#reverse [this.#indexes [1]] = 1</span><br><span class="line">    this.#reverse [this.#indexes [this.#count]] = 0</span><br><span class="line">    this.#count -= 1</span><br><span class="line">    shiftDownEnhance (this.#data, this.#indexes, this.#reverse, 1, this.#count)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 将最大索引堆中索引为 i 的元素修改为 newItem</span></span><br><span class="line">  change (i, item) &#123;</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    this.#data [i] = item</span><br><span class="line">    <span class="comment">// 找到 indexes [j] = i, j 表示 data [i] 在堆中的位置 </span></span><br><span class="line">    <span class="comment">// 之后 shiftUp (j), 再 shiftDown (j)</span></span><br><span class="line">    <span class="comment">//for (let j = i; j &lt;= this.size (); j++) &#123;</span></span><br><span class="line">    <span class="comment">//   if (this.#indexes [j] === i) &#123;</span></span><br><span class="line">    <span class="comment">//     shiftUpEnhance (this.#data, this.#indexes, j)</span></span><br><span class="line">    <span class="comment">//     shiftDownEnhance (this.#data, this.#indexes, j, this.#count)</span></span><br><span class="line">    <span class="comment">//     return</span></span><br><span class="line">    <span class="comment">//   &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 有了 reverse 之后，</span></span><br><span class="line">    <span class="comment">// 我们可以非常简单的通过 reverse 直接定位索引 i 在 indexes 中的位置 </span></span><br><span class="line">    const j = this.#reverse [i]</span><br><span class="line">    shiftUpEnhance (this.#data, this.#indexes, this.#reverse, j)</span><br><span class="line">    shiftDownEnhance (this.#data, this.#indexes, this.#reverse, j, this.#count)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="排序总结"><a href="#排序总结" class="headerlink" title="排序总结"></a>排序总结</h3><p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/SortSummary.png"><img src= "/img/loading2.gif" data-lazy-src="http://mitscherlich.me/assets/imooc-algorithms/SortSummary.png" alt="img"></a></p>
+<h3 id="排序总结"><a href="#排序总结" class="headerlink" title="排序总结"></a>排序总结</h3><p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/SortSummary.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/SortSummary.png" alt="img"></a></p>
 <blockquote>
 <p>四大重要排序算法比较</p>
 </blockquote>
 <p>本系列的排序算法到这里就完结了。我们一共只为大家介绍了 <strong> 两 </strong> 类 <strong> 七 </strong> 种排序算法，大家也许还知道或者学习过其他更多的排序算法，这里限于篇幅就不一一为大家介绍了。</p>
 <p>我们主要学习的就是上图四种 <strong> 基于比较的排序算法 </strong>。除了插入排序复杂度为 $O (n^2)$ 以外，其余几种排序算法复杂度均为 $O (nlog {n})$，但这也并不是说明插入排序不好，事实上我们在测试中可以发现在完全有序的数组上插入排序的复杂度退化为 $O (n)$，甚至优于同等的高级排序算法。这说明我们在编程开发时应学会结合实际情况，选择最优的排序算法，而不是只会做一个 <code>API caller</code>。</p>
 <h4 id="排序算法的稳定性"><a href="#排序算法的稳定性" class="headerlink" title="排序算法的稳定性"></a>排序算法的稳定性</h4><p>再看图中，我们看到了一个概念：<strong> 稳定排序 </strong>。这是指对于 <strong> 相等的 </strong> 元素，在排序前后，想等元素的 <strong> 相对位置 </strong> 没有发生改变。例如对一组学生成绩排序时，不仅要对成绩进行排序，还在在学生成绩想等时按姓名的字典序排序，很可能大部分时候原始数据都已经按姓名的字典序排好序了，但是快速排序和堆排序就有可能打乱原来的顺序。</p>
-<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/SortStable.png"><img src= "/img/loading2.gif" data-lazy-src="http://mitscherlich.me/assets/imooc-algorithms/SortStable.png" alt="img"></a></p>
+<p><a target="_blank" rel="noopener" href="http://mitscherlich.me/assets/imooc-algorithms/SortStable.png"><img src="http://mitscherlich.me/assets/imooc-algorithms/SortStable.png" alt="img"></a></p>
 <blockquote>
 <p>排序算法遇到相等的元素时行为有所不同</p>
 </blockquote>
 <p>但这并不是评价算法优劣的关键，因为我们可以通过修改排序比较的逻辑，或者干脆把比较的过程形成一个回调接口传递给用户，让用户自己完成比较的逻辑，从而使不稳定的排序变得稳定。</p>
-</div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/JavaScript/">JavaScript</a><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95/">算法</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/08/23/lAvyqsoD4U35Ork.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2016/04/16/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BB%8E%E5%90%8C%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%88%B0%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/"><img class="prev-cover" data-lazy-src="https://i.loli.net/2020/08/23/qhEIfp6rvdGkj7B.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">从同步编程到异步编程</div></div></a></div><div class="next-post pull-right"><a href="/2016/03/30/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8BUbuntu%E6%90%AD%E5%BB%BAAFP%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ETimeMachine%E6%9C%8D%E5%8A%A1/"><img class="next-cover" data-lazy-src="https://i.loli.net/2020/08/23/vFzuXG6ESdpcTAq.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">如何在 Ubuntu 上搭建 TimeCapsule 服务</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2016/10/30/javascript/JavaScript中的this/" title="JavaScript 中的 this"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/D2xwPBzyR7hqcUQ.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2016.10.30</div><div class="relatedPosts_title">JavaScript 中的 this</div></div></a></div><div class="relatedPosts_item"><a href="/2016/12/03/javascript/JavaScript之事件模型/" title="JavaScript 的事件模型"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/IEMQdD9Rl16SyCf.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2016.12.03</div><div class="relatedPosts_title">JavaScript 的事件模型</div></div></a></div><div class="relatedPosts_item"><a href="/2017/07/12/javascript/JavaScript之原型继承/" title="JavaScript 的原型继承"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/dCF178eOG6mQDEy.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2017.07.12</div><div class="relatedPosts_title">JavaScript 的原型继承</div></div></a></div><div class="relatedPosts_item"><a href="/2017/07/20/javascript/JavaScript之变量提升/" title="JavaScript 的变量提升"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/IBfNdaH3pCxYoFc.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2017.07.20</div><div class="relatedPosts_title">JavaScript 的变量提升</div></div></a></div><div class="relatedPosts_item"><a href="/2017/01/23/javascript/JavaScript之词法分析/" title="JavaScript 词法分析"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/rqQgfcX3GpVvxaz.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2017.01.23</div><div class="relatedPosts_title">JavaScript 词法分析</div></div></a></div><div class="relatedPosts_item"><a href="/2017/01/04/javascript/JavaScript之异步编程/" title="理解 JavaScript 异步编程"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/08/23/teEURbBawNzWTq4.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2017.01.04</div><div class="relatedPosts_title">理解 JavaScript 异步编程</div></div></a></div></div></div></article></main><footer id="footer" style="background-image: url(https://i.loli.net/2020/08/23/lAvyqsoD4U35Ork.png)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2015 - 2020 By maywzh</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script>function panguFn () {
-  if (typeof pangu === 'object') pangu.spacingElementById('content-inner')
-  else {
-    $.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js', () => {
-      pangu.spacingElementById('content-inner')
-    })
-  }
-}
 
-function panguInit () {
-  if (false){
-    GLOBAL_CONFIG_SITE.isPost && panguFn()
-  } else {
-    panguFn()
-  }
-}
+        </div>
 
-document.addEventListener('DOMContentLoaded', panguFn)</script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
-  document.body.style.overflow = 'auto';
-  document.getElementById('loading-box').classList.add("loaded")
-}
-window.addEventListener('load',endLoading)</script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/JavaScript/"># JavaScript</a>
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2016/04/16/%E7%BC%96%E7%A8%8B/%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%BB%8E%E5%90%8C%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%88%B0%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">从同步编程到异步编程</a>
+            
+            
+            <a class="next" rel="next" href="/2016/03/30/Linux/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B9%8BUbuntu%E6%90%AD%E5%BB%BAAFP%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ETimeMachine%E6%9C%8D%E5%8A%A1/">如何在 Ubuntu 上搭建 TimeCapsule 服务</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span><a href="https://blog.maywzh.com" target="_blank">© maywzh</a>
+            
+        </span>
+        
+        <span> | <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2020015912号-1</a></span>
+        
+        
+        <span> | <img src="https://pic3.zhimg.com/80/v2-d0289dc0a46fc5b15b3363ffa78cf6c7.png" style="width:16px;"><a
+                href="http://www.beian.gov.cn/" target="_blank">赣公网安备36040302000263号</a></span>
+        
+    </div>
+</footer>
+    </div>
+</body>
+</html>

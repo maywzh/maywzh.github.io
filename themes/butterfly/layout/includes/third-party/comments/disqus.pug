@@ -1,9 +1,11 @@
+- let disqusPageTitle = page.title.replace(/'/ig,"\\'")
+
 script.
   function loadDisqus () {
     var disqus_config = function () {
       this.page.url = '!{ page.permalink }'
       this.page.identifier = '!{ page.path }'
-      this.page.title = '!{ page.title }'
+      this.page.title = '!{ disqusPageTitle }'
     };
 
     window.disqusReset = () => {
@@ -25,7 +27,7 @@ script.
   }
 
   if ('!{theme.comments.use[0]}' === 'Disqus' || !!{theme.comments.lazyload}) {
-    if (!{theme.comments.lazyload}) loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    if (!{theme.comments.lazyload}) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
     else loadDisqus()
   } else {
     function loadOtherComment () {

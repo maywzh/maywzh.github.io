@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-(function () {
+document.addEventListener('DOMContentLoaded', function () {
   const translate = GLOBAL_CONFIG.translate
   const snackbarData = GLOBAL_CONFIG.Snackbar
   const defaultEncoding = translate.defaultEncoding // 網站默認語言，1: 繁體中文, 2: 簡體中文
@@ -50,14 +50,14 @@
       translateButtonObject.innerHTML = msgToTraditionalChinese
       saveToLocal.set(targetEncodingCookie, targetEncoding, 2)
       translateBody()
-      if (isSnackbar) snackbarShow(snackbarData.cht_to_chs)
+      if (isSnackbar) btf.snackbarShow(snackbarData.cht_to_chs)
     } else if (targetEncoding === 2) {
       currentEncoding = 2
       targetEncoding = 1
       translateButtonObject.innerHTML = msgToSimplifiedChinese
       saveToLocal.set(targetEncodingCookie, targetEncoding, 2)
       translateBody()
-      if (isSnackbar) snackbarShow(snackbarData.chs_to_cht)
+      if (isSnackbar) btf.snackbarShow(snackbarData.chs_to_cht)
     }
   }
   function JTPYStr () {
@@ -88,12 +88,13 @@
     translateButtonObject = document.getElementById('translateLink')
     if (translateButtonObject) {
       if (currentEncoding !== targetEncoding) {
-        setTimeout(function () { translateBody() }, translateDelay)
-        if (targetEncoding === 1) { translateButtonObject.innerHTML = msgToSimplifiedChinese } else translateButtonObject.innerHTML = msgToTraditionalChinese
+        setTimeout(translateBody, translateDelay)
+        if (targetEncoding === 1) translateButtonObject.innerHTML = msgToSimplifiedChinese
+        else translateButtonObject.innerHTML = msgToTraditionalChinese
       }
       translateButtonObject.addEventListener('click', translatePage, false)
     }
   }
   translateInitialization()
   document.addEventListener('pjax:complete', translateInitialization)
-})()
+})

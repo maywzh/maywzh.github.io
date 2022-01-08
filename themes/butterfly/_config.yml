@@ -429,8 +429,8 @@ footer:
     url: https://beian.miit.gov.cn/#/Integrated/recordQuery
     text: 鄂ICP备2020015912号-1
     icon: /img/icp.png
-    gongan:
-    gonganurl:
+    gongan: 赣公网安备36040302000263号
+    gonganurl: http://www.beian.gov.cn/
 
 # Analysis
 # --------------------------------------

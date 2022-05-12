@@ -4,9 +4,9 @@
 
 # Site
 title: Cult Minds
-subtitle: Namasday.
-description: Art of tech.
-keywords: Tech Blogs
+subtitle: 邪思
+description:
+keywords: Blog
 author: maywzh
 language: en
 timezone: Asia/Shanghai
@@ -15,7 +15,7 @@ timezone: Asia/Shanghai
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://tech.maywzh.com
 root: /
-permalink: :year/:month/:day/:title/
+permalink: /:year/:month/:day/:title
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -39,7 +39,7 @@ titlecase: false # Transform title into titlecase
 external_link:
   enable: true # Open external links in new tab
   field: site # Apply to the whole site
-  exclude: ''
+  exclude: ""
 filename_case: 0
 render_drafts: false
 post_asset_folder: false
@@ -49,21 +49,21 @@ highlight:
   enable: true
   line_number: true
   auto_detect: true
-  tab_replace: ''
+  tab_replace: ""
   wrap: true
   hljs: false
 prismjs:
   enable: false
   preprocess: true
   line_number: true
-  tab_replace: ''
+  tab_replace: ""
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
 # per_page: Posts displayed per page. (0 = disable pagination)
 # order_by: Posts order. (Order by date descending by default)
 index_generator:
-  path: ''
+  path: ""
   per_page: 10
   order_by: -date
 
@@ -83,7 +83,7 @@ meta_generator: true
 date_format: YYYY.MM.DD
 time_format: HH:mm:ss
 ## updated_option supports 'mtime', 'date', 'empty'
-updated_option: 'mtime'
+updated_option: "mtime"
 
 # Pagination
 ## Set per_page to 0 to disable pagination
@@ -104,15 +104,15 @@ theme: butterfly
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-- type: git
-  repo: 
-    #github: git@github.com:maywzh/maywzh.github.io.git
-    #mubuntu: git@mubuntu:/home/git/repo/hexoblog.git
-    #gitlab: ssh://git@test.gitlab.maywzh.com:2222/maywzh/hexoblog.git
-    coding: git@e.coding.net:farmull/maywzh.com/tech.maywzh.com.git
-    #gitea: ssh://git@gitrepo.maywzh.com:1122/maywzh/blog.maywzh.com.git
-    #gitee: git@gitee.com:maywzh/maywzh.git
-  branch: master
+  - type: git
+    repo:
+      github: git@github.com:maywzh/maywzh.github.io.git
+      #mubuntu: git@mubuntu:/home/git/repo/hexoblog.git
+      #gitlab: ssh://git@test.gitlab.maywzh.com:2222/maywzh/hexoblog.git
+      #coding: git@e.coding.net:farmull/maywzh.com/tech.maywzh.com.git
+      #gitea: ssh://git@gitrepo.maywzh.com:1122/maywzh/blog.maywzh.com.git
+      #gitee: git@gitee.com:maywzh/maywzh.git
+    branch: master
 
 #Search Engine
 #Local Search: http://theme-next.iissnan.com/third-party-services.html#search-system
@@ -121,7 +121,6 @@ search:
   field: post
   format: html
   limit: 10000
-
 
 #Admin
 admin:
@@ -133,7 +132,6 @@ admin:
 metadata:
   #author_id: defaultAuthorId
   #language:
-
 
 # Specify the date when the site was setup
 since: 2015

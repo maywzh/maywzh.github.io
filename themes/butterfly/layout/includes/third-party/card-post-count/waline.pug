@@ -3,9 +3,10 @@ script.
     function loadWaline () {
       function initWaline () {
         let initData = {
-          el: null,
+          el: '#waline-wrap',
           serverURL: '!{theme.waline.serverURL}',
         }
+        
         const waline = new Waline(initData)
       }
 

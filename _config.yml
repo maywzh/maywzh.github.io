@@ -105,7 +105,7 @@ deploy:
     message: "Site updated: {{ now('YYYY-MM-DD HH:mm') }}"
     repo:
       github: https://github.com/maywzh/maywzh.github.io.git
-    branch: master
+    branch: gh-pages
 
 markdown:
     plugins:

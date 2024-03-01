@@ -234,7 +234,7 @@ keywords提供的网页关键词通常是为搜索引擎分类网页使用的；
       enable: true  #  是否开启
       all_site_uv: true # 全局启用
       post_pv: true # 单独文章启用
-      busuanzi_pure_mini_js: "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
+      busuanzi_pure_mini_js: "https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"
     ```
 
 1. 开始创作你的文章：文章目录在`blog/source/_post`目录下新建一个`.md`文件：

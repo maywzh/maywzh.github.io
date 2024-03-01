@@ -101,11 +101,10 @@ theme: butterfly
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  - type: git
-    message: "Site updated: {{ now('YYYY-MM-DD HH:mm') }}"
-    repo:
-      github: https://github.com/maywzh/maywzh.github.io.git
-    branch: gh-pages
+  type: git
+  repo: https://github.com/maywzh/maywzh.github.io.git
+  branch: gh-pages
+  message: "Site updated: {{ now('YYYY-MM-DD HH:mm') }}"
 
 markdown:
     plugins:

@@ -5,15 +5,15 @@
 nav:
   logo: # image
   display_title: true
-  fixed: false # fixed navigation bar
+  fixed: true # fixed navigation bar
 
 # Menu 目錄
 menu:
   主页: / || fas fa-home
   归档: /archives/ || fas fa-archive
   标签: /tags/ || fas fa-tags
-  分类: /categories/ || fas fa-folder-open
-  其他||fas fa-list:
+  分类: /categories/ || fas fa-list
+  其他||fas fa-icons:
     音乐: /music/ || fas fa-music
     电影: /movies/ || fas fa-video
     链接: /link/ || fas fa-link

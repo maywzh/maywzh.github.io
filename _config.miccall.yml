@@ -4,107 +4,118 @@
 
 # Head info
 head:
-    favicon: "/bitbug_favicon_64s.ico"
-    keywords: maywzh
-    backgroundpic : "https://ws4.sinaimg.cn/large/006tNbRwgy1fwtyqr8wuhj31kw0zkwfd.jpg"
+  favicon: "/bitbug_favicon_64s.ico"
+  keywords: maywzh
+  backgroundpic: "https://ws4.sinaimg.cn/large/006tNbRwgy1fwtyqr8wuhj31kw0zkwfd.jpg"
 
 Intro:
-    name: MAYWZH
-    slogan: "A mind needs books like a sword needs a whetstone     -Tyrion Lannister"
-    HeadButton: MAYWZH
+  name: MAYWZH
+  slogan: "A mind needs books like a sword needs a whetstone     -Tyrion Lannister"
+  HeadButton: MAYWZH
 
 Nav:
-    Home_name: 主页
-    is_use_categories : true  
-    categories_name: 分类
-    is_use_archives : false
-    archives_name: Archive
-    
-    #Social
-    # for more icons, please see http://fontawesome.io/icons/#brand
-    icon:
-        github: https://github.com/maywzh
-    pages: 
-        # 团队 :
-        #     link: "/group/"
-        作品集:
-            link: "/gallery/"
-        标签:
-            link: "/tags/"
-        关于: 
-            link: "/about/"
-        #自定义标签名
-        #   link：“路径”
+  Home_name: 主页
+  is_use_categories: true
+  categories_name: 分类
+  is_use_archives: false
+  archives_name: Archive
+
+  #Social
+  # for more icons, please see http://fontawesome.io/icons/#brand
+  icon:
+    github: https://github.com/maywzh
+    # 500px: http://500px.com/maywzh
+  pages:
+    # 团队 :
+    #     link: "/group/"
+    作品集:
+      link: "/gallery/"
+    标签:
+      link: "/tags/"
+    关于:
+      link: "/about/"
+    #自定义标签名
+    #   link：“路径”
 
 MainFirst:
-    name: maywzh
-    description: 日行一步
-    pic_url: https://ws2.sinaimg.cn/large/006tNbRwgy1fwet2xrnkfj30ku0ku75a.jpg
-    goto_ulr: ""
+  name: maywzh
+  description: 日行一步
+  pic_url: https://ws2.sinaimg.cn/large/006tNbRwgy1fwet2xrnkfj30ku0ku75a.jpg
+  goto_ulr: ""
 
-Gallery :
-    title: Mr.metro 
-    description: Just another fine responsive 
+Gallery:
+  title: Maywzh' Gallery
+  description: Just another fine responsive
+
+CopyRight:
+  enable: true
+  designer: maywzh
+
+SiteMetadata:
+  enable: true
+  start: 2013
+  end: 2024
+
+PostSearch:
+  enable: true
 
 # ---------------------------------------------------------------
 # Style Settings
 # ---------------------------------------------------------------
 
-# Custom code Render System 自定义代码渲染 
-# default dark funky okaidia twilight coy solarized  可选项  
+# Custom code Render System 自定义代码渲染
+# default dark funky okaidia twilight coy solarized  可选项
 # link to review : http://prismjs.com/index.html   官网预览
 prism: okaidia
 
 # Custom Fonts
-fonts:  "PingFang SC"
+fonts: "PingFang SC"
 
 # Comment Systems
 # Available value of "use":
 #     duoshuo | disqus | disqus_click | changyan
 comment:
-    use: disqus_click
-    shortname: http-miccall-tech 
-    duoshuo_thread_key_type: path
-    duoshuo_embed_js_url: "https://static.duoshuo.com/embed.js"
-    changyan_appid:
-    changyan_conf:
-    changyan_thread_key_type: path
-    # 使用 valine 请先执行 npm install valine --save
-    valine: # Valine Comment System https://github.com/xCss/Valine
-       on: true
-       appId: 'your appId'
-       appKey: 'your appkey'
-       notify: true
-       verify: false
-       placeholder: Please leave your footprints
-       avatar: ''
-       avatar_cdn: https://gravatar.loli.net/avatar/ # avatar CDN address, default gravatar.loli.net
-       pageSize: 10 # comments of one page
+  use: disqus_click
+  shortname: http-miccall-tech
+  duoshuo_thread_key_type: path
+  duoshuo_embed_js_url: "https://static.duoshuo.com/embed.js"
+  changyan_appid:
+  changyan_conf:
+  changyan_thread_key_type: path
+  # 使用 valine 请先执行 npm install valine --save
+  valine: # Valine Comment System https://github.com/xCss/Valine
+    on: true
+    appId: "your appId"
+    appKey: "your appkey"
+    notify: true
+    verify: false
+    placeholder: Please leave your footprints
+    avatar: ""
+    avatar_cdn: https://gravatar.loli.net/avatar/ # avatar CDN address, default gravatar.loli.net
+    pageSize: 10 # comments of one page
 
 # Search Systems
 # Available value:
 #     swiftype | google | local
 search:
-    use: swiftype
-    swiftype_key: Just another fine responsive  
-    
+  use: swiftype
+  swiftype_key: Just another fine responsive
 
 # Leancloud Views
 leancloud:
-    enable: false
-    app_id: #你的 app_id
-    app_key: #你的 app_key
-    av_core_mini: "https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"
+  enable: false
+  app_id: #你的 app_id
+  app_key: #你的 app_key
+  av_core_mini: "https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"
 
 # Busuanzi 不蒜子 Views
 busuanzi:
-    enable: false
-    all_site_uv: true
-    post_pv: true
-    busuanzi_pure_mini_js: "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
+  enable: false
+  all_site_uv: true
+  post_pv: true
+  busuanzi_pure_mini_js: "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
 
-
-# Mathjax 支持库 
+# Mathjax 支持库
 mathjax:
   enable: true
   per_page: false

@@ -48,6 +48,9 @@
             </ul>
             <!-- icons 图标   -->
 			<ul class="icons">
+					<% if (theme.PostSearch.enable) { %>
+						<li><a title="search" href="javascript:void(0);"><i class="icon fa fa-search"></i></a></li>
+					<% } %>
                     <% for (var i in theme.Nav.icon) { %>
                     <li>
                         <a title="<%= i %>" href="<%- url_for(theme.Nav.icon[i]) %>" target="_blank" rel="noopener">

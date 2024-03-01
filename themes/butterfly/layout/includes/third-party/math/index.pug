@@ -15,4 +15,10 @@ if theme.katex && theme.katex.enable
       include ./katex.pug
 
 if theme.mermaid.enable
-  include ./mermaid.pug
+  script(type='text/javascript', id='maid-script' mermaidoptions=theme.mermaid.options src='https://cdn.jsdelivr.net/npm/mermaid@'+ theme.mermaid.version + '/dist/mermaid.min.js')
+  script.
+    if (window.mermaid) {
+      var options = JSON.parse(document.getElementById('maid-script').getAttribute('mermaidoptions'));
+      mermaid.initialize(options);
+    }
+  //- include ./mermaid.pug

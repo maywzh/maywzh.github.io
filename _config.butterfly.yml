@@ -825,11 +825,12 @@ abcjs:
 # mermaid
 # see https://github.com/mermaid-js/mermaid
 mermaid:
-  enable: false
+  enable: true
   # built-in themes: default/forest/dark/neutral
   theme:
     light: default
     dark: dark
+  version: "10.8.0" # default v7.1.2
 
 # Note (Bootstrap Callout)
 note:

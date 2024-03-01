@@ -16,9 +16,14 @@ tags:
 
 C 语言中的 `select` 关键字可以同时监听多个文件描述符的可读或者可写的状态，Go 语言中的 `select` 关键字也能够让 Goroutine 同时等待多个 Channel 的可读或者可写，在多个文件或者 Channel 发生状态改变之前，`select` 会一直阻塞当前线程或者 Goroutine。
 
-![Golang-Select-Channels](https://img.draveness.me/2020-01-19-15794018429532-Golang-Select-Channels.png)
+```mermaid
+graph LR
+Goroutine-->Select
+Select-->Channel1\(Channel)
+Select-->Channel2\(Channel)
+Select-->Channel3\(Channel)
+```
 
-**图 5-5 Select 和 Channels**
 
 `select` 是一种与 `switch` 相似的控制结构，与 `switch` 不同的是，`select` 中虽然也有多个 `case`，但是这些 `case` 中的表达式必须都是 [Channel](https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-channel/) 的收发操作。下面的代码就展示了一个包含 Channel 收发操作的 `select` 结构：
 

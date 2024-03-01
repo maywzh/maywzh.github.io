@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>实践 Linux 编程之叁 - 优化 | Serendipity</title><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="根据木桶效应，一个程序瓶颈决定它的性能，所以性能优化的核心是找出系统的瓶颈点。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实践 Linux 编程之叁 - 优化">
+<meta property="og:url" content="http://io.maywzh.com/2015/08/01/Linux/Linux%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%8F%81%20-%20%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="Serendipity">
+<meta property="og:description" content="根据木桶效应，一个程序瓶颈决定它的性能，所以性能优化的核心是找出系统的瓶颈点。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/08/23/DaNnkXpQMLl9YUG.png">
+<meta property="article:published_time" content="2015-08-01T11:15:01.000Z">
+<meta property="article:modified_time" content="2024-03-01T01:30:08.137Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/08/23/DaNnkXpQMLl9YUG.png"><link rel="shortcut icon" href="/img/bitbug_favicon_128s.ico"><link rel="canonical" href="http://io.maywzh.com/2015/08/01/Linux/Linux%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%8F%81%20-%20%E4%BC%98%E5%8C%96/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '实践 Linux 编程之叁 - 优化',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-01 09:30:08'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/myavatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">112</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2020/08/23/DaNnkXpQMLl9YUG.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Serendipity"><span class="site-name">Serendipity</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">实践 Linux 编程之叁 - 优化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2015-08-01T11:15:01.000Z" title="发表于 2015-08-01 19:15:01">2015-08-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/DevOps/">DevOps</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="实践 Linux 编程之叁 - 优化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>根据木桶效应，一个程序瓶颈决定它的性能，所以性能优化的核心是找出系统的瓶颈点。</p>
+<span id="more"></span>
+<h2 id="分析系统瓶颈">分析系统瓶颈</h2>
+<p>系统响应变慢，首先得定位大致的问题出在哪里，是 IO 瓶颈、CPU 瓶颈、内存瓶颈还是程序导致的系统问题；</p>
+<p>使用 top 工具能够比较全面的查看我们关注的点:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$top</span></span><br><span class="line">    top - 09:14:56 up 264 days, 20:56,  1 user,  load average: 0.02, 0.04, 0.00</span><br><span class="line">    Tasks:  87 total,   1 running,  86 sleeping,   0 stopped,   0 zombie</span><br><span class="line">    Cpu (s):  0.0% us,  0.2% sy,  0.0% ni, 99.7%<span class="built_in">id</span>,  0.0% wa,  0.0% hi,  0.0% si,  0.2% st</span><br><span class="line">    Mem:    377672k total,   322332k used,    55340k free,    32592k buffers</span><br><span class="line">    Swap:   397308k total,    67192k used,   330116k free,    71900k cached</span><br><span class="line">    PID USER      PR  NI  VIRT  RES  SHR S % CPU % MEM    TIME+  COMMAND</span><br><span class="line">    1 root      20   0  2856  656  388 S  0.0  0.2   0:49.40 init</span><br><span class="line">    2 root      20   0     0    0    0 S  0.0  0.0   0:00.00 kthreadd</span><br><span class="line">    3 root      20   0     0    0    0 S  0.0  0.0   7:15.20 ksoftirqd/0</span><br><span class="line">    4 root      RT   0     0    0    0 S  0.0  0.0   0:00.00 migration/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>进入交互模式后:</p>
+<p>输入 <code>M</code>，进程列表按内存使用大小降序排序，便于我们观察最大内存使用者使用有问题（检测内存泄漏问题）; 输入 <code>P</code>，进程列表按 CPU 使用大小降序排序，便于我们观察最耗 CPU 资源的使用者是否有问题；</p>
+</li>
+<li>
+<p><code>top</code> 第三行显示当前系统的，其中有两个值很关键:</p>
+<p><code>% id</code>：空闲 CPU 时间百分比，如果这个值过低，表明系统 CPU 存在瓶颈；</p>
+<p><code>% wa</code>：等待 I/O 的 CPU 时间百分比，如果这个值过高，表明 IO 存在瓶颈；</p>
+</li>
+</ul>
+<h2 id="分析内存瓶颈">分析内存瓶颈</h2>
+<p>查看内存是否存在瓶颈，使用 <code>top</code> 指令看比较麻烦，而 <code>free</code> 命令更为直观:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ free</span><br><span class="line">             total       used       free     shared    buffers     cached</span><br><span class="line">Mem:        501820     452028      49792      37064       5056     136732</span><br><span class="line">-/+ buffers/cache:     310240     191580</span><br><span class="line">Swap:            0          0          0</span><br><span class="line">$ top</span><br><span class="line">top - 17:52:17 up 42 days,  7:10,  1 user,  load average: 0.02, 0.02, 0.05</span><br><span class="line">Tasks:  80 total,   1 running,  79 sleeping,   0 stopped,   0 zombie</span><br><span class="line">% Cpu (s):  0.0 us,  0.0 sy,  0.0 ni,100.0 <span class="built_in">id</span>,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span><br><span class="line">KiB Mem:    501820 total,   452548 used,    49272 free,     5144 buffers</span><br><span class="line">KiB Swap:        0 total,        0 used,        0 free.   136988 cached Mem</span><br></pre></td></tr></table></figure>
+<p><code>top</code> 工具显示了 <code>free</code> 工具的第一行所有信息，但真实可用的内存，还需要自己计算才知道；系统实际可用的内存为 <code>free</code> 工具输出第二行的 <code>free+buffer+cached</code>；也就是第三行的 <code>free</code> 值 191580；关于 <code>free</code> 命令各个值的详情解读，请参考这篇文章 <a target="_blank" rel="noopener" href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/free.html#free">free 查询可用内存</a> ;</p>
+<p>如果是因为缺少内存，系统响应变慢很明显，因为这使得系统不停的做换入换出的工作；</p>
+<p>进一步的监视内存使用情况，可使用 <code>vmstat</code> 工具，实时动态监视操作系统的内存和虚拟内存的动态变化。 参考： <a target="_blank" rel="noopener" href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/vmstat.html#vmstat">vmstat 监视内存使用情况</a> ;</p>
+<h2 id="分析-IO-瓶颈">分析 IO 瓶颈</h2>
+<p>如果 IO 存在性能瓶颈，<code>top</code> 工具中的 <code>% wa</code> 会偏高；</p>
+<p>进一步分析使用 <code>iostat</code> 工具:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ iostat -d -x -k 1 1</span><br><span class="line">Linux 2.6.32-279.el6.x86_64 (colin)   07/16/2014      _x86_64_        (4 CPU)</span><br><span class="line"></span><br><span class="line">Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await  svctm  % util</span><br><span class="line">sda               0.02     7.25    0.04    1.90     0.74    35.47    37.15     0.04   19.13   5.58   1.09</span><br><span class="line">dm-0              0.00     0.00    0.04    3.05     0.28    12.18     8.07     0.65  209.01   1.11   0.34</span><br><span class="line">dm-1              0.00     0.00    0.02    5.82     0.46    23.26     8.13     0.43   74.33   1.30   0.76</span><br><span class="line">dm-2              0.00     0.00    0.00    0.01     0.00     0.02     8.00     0.00    5.41   3.28   0.00</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果 <code>% iowait</code> 的值过高，表示硬盘存在 I/O 瓶颈。</li>
+<li>如果 <code>% util</code> 接近 100%，说明产生的 I/O 请求太多，I/O 系统已经满负荷，该磁盘可能存在瓶颈。</li>
+<li>如果 <code>svctm</code> 比较接近 <code>await</code>，说明 I/O 几乎没有等待时间；</li>
+<li>如果 <code>await</code> 远大于 <code>svctm</code>，说明 I/O 队列太长，io 响应太慢，则需要进行必要优化。</li>
+<li>如果 <code>avgqu-sz</code> 比较大，也表示有大量 io 在等待。</li>
+</ul>
+<p>更多参数说明请参考 <a target="_blank" rel="noopener" href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/iostat.html#iostat">iostat 监视 I/O 子系统</a> ;</p>
+<h2 id="分析进程调用">分析进程调用</h2>
+<p>通过 <code>top</code> 等工具发现系统性能问题是由某个进程导致的之后，接下来我们就需要分析这个进程；继续 查询问题在哪；</p>
+<p>这里我们有两个好用的工具： <code>pstack</code> 和 <code>pstrace</code></p>
+<p>pstack 用来跟踪进程栈，这个命令在排查进程问题时非常有用，比如我们发现一个服务一直处于 work 状态（如假死状态，好似死循环），使用这个命令就能轻松定位问题所在；可以在一段时间内，多执行几次 pstack，若发现代码栈总是停在同一个位置，那个位置就需要重点关注，很可能就是出问题的地方；</p>
+<p>示例：查看 bash 程序进程栈:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/opt/app/tdev1<span class="variable">$ps</span> -fe| grep bash</span><br><span class="line">tdev1   7013  7012  0 19:42 pts/1    00:00:00 -bash</span><br><span class="line">tdev1  11402 11401  0 20:31 pts/2    00:00:00 -bash</span><br><span class="line">tdev1  11474 11402  0 20:32 pts/2    00:00:00 grep bash</span><br><span class="line">/opt/app/tdev1<span class="variable">$pstack</span> 7013</span><br><span class="line"><span class="comment">#0  0x00000039958c5620 in __read_nocancel () from /lib64/libc.so.6</span></span><br><span class="line"><span class="comment">#1  0x000000000047dafe in rl_getc ()</span></span><br><span class="line"><span class="comment">#2  0x000000000047def6 in rl_read_key ()</span></span><br><span class="line"><span class="comment">#3  0x000000000046d0f5 in readline_internal_char ()</span></span><br><span class="line"><span class="comment">#4  0x000000000046d4e5 in readline ()</span></span><br><span class="line"><span class="comment">#5  0x00000000004213cf in ?? ()</span></span><br><span class="line"><span class="comment">#6  0x000000000041d685 in ?? ()</span></span><br><span class="line"><span class="comment">#7  0x000000000041e89e in ?? ()</span></span><br><span class="line"><span class="comment">#8  0x00000000004218dc in yyparse ()</span></span><br><span class="line"><span class="comment">#9  0x000000000041b507 in parse_command ()</span></span><br><span class="line"><span class="comment">#10 0x000000000041b5c6 in read_command ()</span></span><br><span class="line"><span class="comment">#11 0x000000000041b74e in reader_loop ()</span></span><br><span class="line"><span class="comment">#12 0x000000000041b2aa in main ()</span></span><br></pre></td></tr></table></figure>
+<p>而 <code>strace</code> 用来跟踪进程中的系统调用；这个工具能够动态的跟踪进程执行时的系统调用和所接收的信号。是一个非常有效的检测、指导和调试工具。系统管理员可以通过该命令容易地解决程序问题。</p>
+<p>参考： <a target="_blank" rel="noopener" href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/strace.html#strace">strace 跟踪进程中的系统调用</a> ;</p>
+<h2 id="优化程序代码">优化程序代码</h2>
+<p>优化自己开发的程序，建议采用以下准则:</p>
+<ol>
+<li>二八法则：在任何一组东西中，最重要的只占其中一小部分，约 20%，其余 80% 的尽管是多数，却是次要的；在优化实践中，我们将精力集中在优化那 20% 最耗时的代码上，整体性能将有显著的提升；这个很好理解。函数 A 虽然代码量大，但在一次正常执行流程中，只调用了一次。而另一个函数 B 代码量比 A 小很多，但被调用了 1000 次。显然，我们更应关注 B 的优化。</li>
+<li>先编码后优化；编码的时候总是考虑最佳性能未必总是好的；在强调最佳性能的编码方式的同时，可能就损失了代码的可读性和开发效率；</li>
+</ol>
+<h3 id="gprof-使用步骤"><a target="_blank" rel="noopener" href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/advance/03_optimization.html#id16">gprof 使用步骤</a></h3>
+<ol>
+<li>用 gcc、g++、xlC 编译程序时，使用 <code>-pg</code> 参数，如：<code>g++ -pg -o test.exe test.cpp</code> 编译器会自动在目标代码中插入用于性能测试的代码片断，这些代码在程序运行时采集并记录函数的调用关系和调用次数，并记录函数自身执行时间和被调用函数的执行时间。</li>
+<li>执行编译后的可执行程序，如：<code>./test.exe</code>。该步骤运行程序的时间会稍慢于正常编译的可执行程序的运行时间。程序运行结束后，会在程序所在路径下生成一个缺省文件名为 <code>gmon.out</code> 的文件，这个文件就是记录程序运行的性能、调用关系、调用次数等信息的数据文件。</li>
+<li>使用 <code>gprof</code> 命令来分析记录程序运行信息的 gmon.out 文件，如：<code>gprof test.exe gmon.out</code> 则可以在显示器上看到函数调用相关的统计、分析信息。上述信息也可以采用 <code>gprof test.exe gmon.out&gt; gprofresult.txt</code> 重定向到文本文件以便于后续分析。</li>
+</ol>
+<p>关于 <code>gprof</code> 的使用案例，请参考 [<a target="_blank" rel="noopener" href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/advance/03_optimization.html#f1">f1]</a> ;</p>
+<h2 id="其它工具">其它工具</h2>
+<p>可以使用 <a target="_blank" rel="noopener" href="https://www.ibm.com/developerworks/cn/linux/l-cn-valgrind/index.html">valgrind</a> 来分析内存泄漏问题。</p>
+<p>使用 <a target="_blank" rel="noopener" href="http://www.ibm.com/developerworks/cn/linux/l-oprof/">OProfile</a> 或 sar 来分析程序性能。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://io.maywzh.com">maywzh</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://io.maywzh.com/2015/08/01/Linux/Linux%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%8F%81%20-%20%E4%BC%98%E5%8C%96/">http://io.maywzh.com/2015/08/01/Linux/Linux%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%8F%81%20-%20%E4%BC%98%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://io.maywzh.com" target="_blank">Serendipity</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/08/23/DaNnkXpQMLl9YUG.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2015/08/15/git/git%E7%AC%94%E8%AE%B0%E4%B9%8Brm/" title="git 笔记之 rm"><img class="cover" src="https://i.loli.net/2020/08/23/OY9GyMIB1S5uk7f.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">git 笔记之 rm</div></div></a></div><div class="next-post pull-right"><a href="/2015/07/20/Linux/Linux%E7%BC%96%E7%A8%8B%E4%B9%8B%E8%B4%B0%20-%20%E8%B0%83%E8%AF%95/" title="实践 Linux 编程之贰 - 调试"><img class="cover" src="https://i.loli.net/2020/08/23/DaNnkXpQMLl9YUG.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">实践 Linux 编程之贰 - 调试</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2015/10/18/Linux/Linux-gcc%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/" title="Linux GNU-gcc 简明教程"><img class="cover" src="https://i.loli.net/2020/08/23/Gexg6rV8BuyiTPv.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2015-10-18</div><div class="title">Linux GNU-gcc 简明教程</div></div></a></div><div><a href="/2015/10/22/Linux/Linux%E4%B8%AD%E7%9A%84env/" title="Linux 中的 env 是什么"><img class="cover" src="https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2015-10-22</div><div class="title">Linux 中的 env 是什么</div></div></a></div><div><a href="/2015/08/21/Linux/Linux%E4%B8%AD%E7%9A%84free/" title="Linux 内存分析工具 - free"><img class="cover" src="https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2015-08-21</div><div class="title">Linux 内存分析工具 - free</div></div></a></div><div><a href="/2015/12/16/Linux/Linux%E4%B8%AD%E7%9A%84lsof/" title="Linux 中的 lsof"><img class="cover" src="https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2015-12-16</div><div class="title">Linux 中的 lsof</div></div></a></div><div><a href="/2015/06/21/Linux/Linux%E4%B8%AD%E7%9A%84wget/" title="Linux 中的 wget"><img class="cover" src="https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2015-06-21</div><div class="title">Linux 中的 wget</div></div></a></div><div><a href="/2015/01/04/Linux/Linux%E4%B8%AD%E7%9A%84%E9%87%8D%E5%AE%9A%E5%90%91/" title="Linux 中的重定向"><img class="cover" src="https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2015-01-04</div><div class="title">Linux 中的重定向</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/myavatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">maywzh</div><div class="author-info__description">日行一步</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">112</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/maywzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://blog.maywzh.com" target="_blank" title="Blog"><i class="fas fa-blog"></i></a><a class="social-icon" href="https://github.com/maywzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://t.me/unlockedcultoy" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a><a class="social-icon" href="https://twitter.com/maywzh" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a><a class="social-icon" href="http://weibo.com/JupiterMay" target="_blank" title="Weibo"><i class="fab fa-weibo"></i></a><a class="social-icon" href="https://instagram.com/maywzh" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a><a class="social-icon" href="https://500px.com/maywzh" target="_blank" title="500px"><i class="fab fa-500px"></i></a><a class="social-icon" href="mailto:maywzh@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F%E7%93%B6%E9%A2%88"><span class="toc-number">1.</span> <span class="toc-text">分析系统瓶颈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E5%86%85%E5%AD%98%E7%93%B6%E9%A2%88"><span class="toc-number">2.</span> <span class="toc-text">分析内存瓶颈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90-IO-%E7%93%B6%E9%A2%88"><span class="toc-number">3.</span> <span class="toc-text">分析 IO 瓶颈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E8%BF%9B%E7%A8%8B%E8%B0%83%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">分析进程调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%A8%8B%E5%BA%8F%E4%BB%A3%E7%A0%81"><span class="toc-number">5.</span> <span class="toc-text">优化程序代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#gprof-%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-number">5.1.</span> <span class="toc-text">gprof 使用步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E5%AE%83%E5%B7%A5%E5%85%B7"><span class="toc-number">6.</span> <span class="toc-text">其它工具</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/07/01/java/2020%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%87%86%E5%A4%87/" title="Java 后端面试题总结"><img src="https://i.loli.net/2020/12/26/5ZCbq2VJFgy4EU8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java 后端面试题总结"/></a><div class="content"><a class="title" href="/2020/07/01/java/2020%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%87%86%E5%A4%87/" title="Java 后端面试题总结">Java 后端面试题总结</a><time datetime="2020-06-30T16:26:28.000Z" title="发表于 2020-07-01 00:26:28">2020-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/" title="Go 语言的上下文与 Context"><img src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的上下文与 Context"/></a><div class="content"><a class="title" href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/" title="Go 语言的上下文与 Context">Go 语言的上下文与 Context</a><time datetime="2020-01-18T16:09:39.000Z" title="发表于 2020-01-19 00:09:39">2020-01-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" title="Go 语言的反射"><img src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的反射"/></a><div class="content"><a class="title" href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" title="Go 语言的反射">Go 语言的反射</a><time datetime="2020-01-17T16:03:35.000Z" title="发表于 2020-01-18 00:03:35">2020-01-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" title="Go 语言的 select"><img src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的 select"/></a><div class="content"><a class="title" href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" title="Go 语言的 select">Go 语言的 select</a><time datetime="2020-01-16T16:07:40.000Z" title="发表于 2020-01-17 00:07:40">2020-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" title="Go 语言的并发原理"><img src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的并发原理"/></a><div class="content"><a class="title" href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" title="Go 语言的并发原理">Go 语言的并发原理</a><time datetime="2020-01-15T23:55:17.000Z" title="发表于 2020-01-16 07:55:17">2020-01-16</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2013 - 2024 By maywzh</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="/js/tw_cn.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

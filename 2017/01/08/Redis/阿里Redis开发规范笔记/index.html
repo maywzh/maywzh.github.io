@@ -1,0 +1,295 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>(转载) 阿里 Redis 开发规范笔记 | Serendipity</title><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文主要介绍在使用阿里云 Redis 的开发规范，从下面几个方面进行说明。  键值设计 命令使用 客户端使用 相关工具  通过本文的介绍可以减少使用 Redis 过程带来的问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(转载) 阿里 Redis 开发规范笔记">
+<meta property="og:url" content="http://io.maywzh.com/2017/01/08/Redis/%E9%98%BF%E9%87%8CRedis%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Serendipity">
+<meta property="og:description" content="本文主要介绍在使用阿里云 Redis 的开发规范，从下面几个方面进行说明。  键值设计 命令使用 客户端使用 相关工具  通过本文的介绍可以减少使用 Redis 过程带来的问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png">
+<meta property="article:published_time" content="2017-01-08T06:18:48.000Z">
+<meta property="article:modified_time" content="2024-03-01T01:30:08.233Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png"><link rel="shortcut icon" href="/img/bitbug_favicon_128s.ico"><link rel="canonical" href="http://io.maywzh.com/2017/01/08/Redis/%E9%98%BF%E9%87%8CRedis%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '(转载) 阿里 Redis 开发规范笔记',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-01 09:30:08'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/myavatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">112</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Serendipity"><span class="site-name">Serendipity</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">(转载) 阿里 Redis 开发规范笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2017-01-08T06:18:48.000Z" title="发表于 2017-01-08 14:18:48">2017-01-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="(转载) 阿里 Redis 开发规范笔记"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>本文主要介绍在使用阿里云 Redis 的开发规范，从下面几个方面进行说明。</p>
+<ul>
+<li>键值设计</li>
+<li>命令使用</li>
+<li>客户端使用</li>
+<li>相关工具</li>
+</ul>
+<p>通过本文的介绍可以减少使用 Redis 过程带来的问题。</p>
+<span id="more"></span>
+<h2 id="键值设计">键值设计</h2>
+<h3 id="key-名设计">key 名设计</h3>
+<h4 id="可读性和可管理性">可读性和可管理性</h4>
+<p>以业务名 (或数据库名) 为前缀 (防止 key 冲突)，用冒号分隔，比如业务名：表名:id</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ugc:video:<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h4 id="简洁性">简洁性</h4>
+<p>保证语义的前提下，控制 key 的长度，当 key 较多时，内存占用也不容忽视，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user:&#123;uid&#125;:friends:messages:&#123;mid&#125; 简化为 u:&#123;uid&#125;:fr:m:&#123;mid&#125;。</span><br></pre></td></tr></table></figure>
+<h4 id="不要包含特殊字符">不要包含特殊字符</h4>
+<p>反例：包含空格、换行、单双引号以及其他转义字符</p>
+<h3 id="value-设计">value 设计</h3>
+<h4 id="拒绝-bigkey">拒绝 bigkey</h4>
+<p>防止网卡流量、慢查询，string 类型控制在 10KB 以内，hash、list、set、zset 元素个数不要超过 5000。反例：一个包含 200 万个元素的 list。非字符串的 bigkey，不要使用 del 删除，使用 hscan、sscan、zscan 方式渐进式删除，同时要注意防止 bigkey 过期时间自动删除问题 (例如一个 200 万的 zset 设置 1 小时过期，会触发 del 操作，造成阻塞，而且该操作不会不出现在慢查询中 (latency 可查))，查找方法和删除方法</p>
+<h4 id="选择适合的数据类型">选择适合的数据类型</h4>
+<p>例如：实体类型 (要合理控制和使用数据结构内存编码优化配置，例如 ziplist，但也要注意节省内存和性能之间的平衡)</p>
+<p>反例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set user:<span class="number">1</span>:name tom</span><br><span class="line">set user:<span class="number">1</span>:age <span class="number">19</span></span><br><span class="line">set user:<span class="number">1</span>:favor football</span><br></pre></td></tr></table></figure>
+<p>正例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hmset user:<span class="number">1</span> name tom age <span class="number">19</span> favor football</span><br></pre></td></tr></table></figure>
+<h4 id="控制-key-的生命周期">控制 key 的生命周期</h4>
+<p>redis 不是垃圾桶，建议使用 expire 设置过期时间 (条件允许可以打散过期时间，防止集中过期)，不过期的数据重点关注 idletime。</p>
+<h2 id="命令使用">命令使用</h2>
+<h3 id="O-N-命令关注-N-的数量">O (N) 命令关注 N 的数量</h3>
+<p>例如 hgetall、lrange、smembers、zrange、sinter 等并非不能使用，但是需要明确 N 的值。有遍历的需求可以使用 hscan、sscan、zscan 代替。</p>
+<h3 id="禁用命令">禁用命令</h3>
+<p>禁止线上使用 keys、flushall、flushdb 等，通过 redis 的 rename 机制禁掉命令，或者使用 scan 的方式渐进式处理。</p>
+<h3 id="合理使用-select">合理使用 select*</h3>
+<p>redis 的多数据库较弱，使用数字进行区分，很多客户端支持较差，同时多业务用多数据库实际还是单线程处理，会有干扰。</p>
+<h3 id="使用批量操作提高效率">使用批量操作提高效率</h3>
+<ul>
+<li>原生命令：例如 mget、mset。</li>
+<li>非原生命令：可以使用 pipeline 提高效率。</li>
+</ul>
+<p>但要注意控制一次批量操作的元素个数 (例如 500 以内，实际也和元素字节数有关)。</p>
+<p>注意两者不同：</p>
+<ul>
+<li>原生是原子操作，pipeline 是非原子操作。</li>
+<li>pipeline 可以打包不同的命令，原生做不到</li>
+<li>pipeline 需要客户端和服务端同时支持。</li>
+</ul>
+<h3 id="不建议过多使用-Redis-事务功能">不建议过多使用 Redis 事务功能</h3>
+<p>Redis 的事务功能较弱 (不支持回滚)，而且集群版本 (自研和官方) 要求一次事务操作的 key 必须在一个 slot 上 (可以使用 hashtag 功能解决)</p>
+<h3 id="Redis-集群版本在使用-Lua-上有特殊要求">Redis 集群版本在使用 Lua 上有特殊要求</h3>
+<p>1、所有 key 都应该由 KEYS 数组来传递，redis.call/pcall 里面调用的 redis 命令，key 的位置，必须是 KEYS array, 否则直接返回 error，&quot;-ERR bad lua script for redis cluster, all the keys that the script uses should be passed using the KEYS arrayrn&quot;2、所有 key，必须在 1 个 slot 上，否则直接返回 error, “-ERR eval/evalsha command keys must in same slotrn”</p>
+<h3 id="monitor-命令">monitor 命令</h3>
+<p>必要情况下使用 monitor 命令时，要注意不要长时间使用。</p>
+<h2 id="客户端使用">客户端使用</h2>
+<h3 id="避免多个应用使用一个-Redis-实例">避免多个应用使用一个 Redis 实例</h3>
+<p>不相干的业务拆分，公共数据做服务化。</p>
+<h3 id="使用连接池">使用连接池</h3>
+<p>可以有效控制连接，同时提高效率，标准使用方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> 执行命令如下：</span><br><span class="line"><span class="type">Jedis</span> <span class="variable">jedis</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    jedis = jedisPool.getResource ();</span><br><span class="line"> <span class="comment">// 具体的命令 </span></span><br><span class="line">    jedis.executeCommand ()</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    logger.error (<span class="string">&quot;op key &#123;&#125; error: &quot;</span> + e.getMessage (), key, e);</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> <span class="comment">// 注意这里不是关闭连接，在 JedisPool 模式下，Jedis 会被归还给资源池。</span></span><br><span class="line"> <span class="keyword">if</span> (jedis != <span class="literal">null</span>)</span><br><span class="line">        jedis.close ();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="熔断功能">熔断功能</h3>
+<p>高并发下建议客户端添加熔断功能 (例如 netflix hystrix)</p>
+<h3 id="合理的加密">合理的加密</h3>
+<p>设置合理的密码，如有必要可以使用 SSL 加密访问（阿里云 Redis 支持）</p>
+<h3 id="淘汰策略">淘汰策略</h3>
+<p>根据自身业务类型，选好 maxmemory-policy (最大内存淘汰策略)，设置好过期时间。默认策略是 volatile-lru，即超过最大内存后，在过期键中使用 lru 算法进行 key 的剔除，保证不过期数据不被删除，但是可能会出现 OOM 问题。</p>
+<p>其他策略如下：</p>
+<ul>
+<li>allkeys-lru：根据 LRU 算法删除键，不管数据有没有设置超时属性，直到腾出足够空间为止。</li>
+<li>allkeys-random：随机删除所有键，直到腾出足够空间为止。</li>
+<li>volatile-random: 随机删除过期键，直到腾出足够空间为止。</li>
+<li>volatile-ttl：根据键值对象的 ttl 属性，删除最近将要过期数据。如果没有，回退到 noeviction 策略。</li>
+<li>noeviction：不会剔除任何数据，拒绝所有写入操作并返回客户端错误信息 “(error) OOM command not allowed when used memory”，此时 Redis 只响应读操作。</li>
+</ul>
+<h2 id="相关工具">相关工具</h2>
+<h3 id="数据同步">数据同步</h3>
+<p>redis 间数据同步可以使用：redis-port</p>
+<h3 id="big-key-搜索">big key 搜索</h3>
+<p>redis 大 key 搜索工具</p>
+<h3 id="热点-key-寻找">热点 key 寻找</h3>
+<p>内部实现使用 monitor，所以建议短时间使用 facebook 的 redis-faina 阿里云 Redis 已经在内核层面解决热点 key 问题</p>
+<h2 id="删除-bigkey">删除 bigkey</h2>
+<ul>
+<li>下面操作可以使用 pipeline 加速。</li>
+<li>redis 4.0 已经支持 key 的异步删除，欢迎使用。</li>
+</ul>
+<h3 id="Hash-删除-hscan-hdel">Hash 删除: hscan + hdel</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">delBigHash</span><span class="params">(String host, <span class="type">int</span> port, String password, String bigHashKey)</span> &#123;</span><br><span class="line"> <span class="type">Jedis</span> <span class="variable">jedis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jedis</span>(host, port);</span><br><span class="line"> <span class="keyword">if</span> (password != <span class="literal">null</span> &amp;&amp; !<span class="string">&quot;&quot;</span>.equals (password)) &#123;</span><br><span class="line">        jedis.auth (password);</span><br><span class="line">    &#125;</span><br><span class="line"> <span class="type">ScanParams</span> <span class="variable">scanParams</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ScanParams</span>().count (<span class="number">100</span>);</span><br><span class="line"> <span class="type">String</span> <span class="variable">cursor</span> <span class="operator">=</span> <span class="string">&quot;0&quot;</span>;</span><br><span class="line"> <span class="keyword">do</span> &#123;</span><br><span class="line"> ScanResult&lt;Entry&lt;String, String&gt;&gt; scanResult = jedis.hscan (bigHashKey, cursor, scanParams);</span><br><span class="line"> List&lt;Entry&lt;String, String&gt;&gt; entryList = scanResult.getResult ();</span><br><span class="line"> <span class="keyword">if</span> (entryList != <span class="literal">null</span> &amp;&amp; !entryList.isEmpty ()) &#123;</span><br><span class="line"> <span class="keyword">for</span> (Entry&lt;String, String&gt; entry : entryList) &#123;</span><br><span class="line">                jedis.hdel (bigHashKey, entry.getKey ());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        cursor = scanResult.getStringCursor ();</span><br><span class="line">    &#125; <span class="keyword">while</span> (!<span class="string">&quot;0&quot;</span>.equals (cursor));</span><br><span class="line"></span><br><span class="line"> <span class="comment">// 删除 bigkey</span></span><br><span class="line">    jedis.del (bigHashKey);</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<h3 id="List-删除-ltrim">List 删除: ltrim</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">delBigList</span><span class="params">(String host, <span class="type">int</span> port, String password, String bigListKey)</span> &#123;</span><br><span class="line"> <span class="type">Jedis</span> <span class="variable">jedis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jedis</span>(host, port);</span><br><span class="line"> <span class="keyword">if</span> (password != <span class="literal">null</span> &amp;&amp; !<span class="string">&quot;&quot;</span>.equals (password)) &#123;</span><br><span class="line">        jedis.auth (password);</span><br><span class="line">    &#125;</span><br><span class="line"> <span class="type">long</span> <span class="variable">llen</span> <span class="operator">=</span> jedis.llen (bigListKey);</span><br><span class="line"> <span class="type">int</span> <span class="variable">counter</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"> <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">100</span>;</span><br><span class="line"> <span class="keyword">while</span> (counter &lt; llen) &#123;</span><br><span class="line"> <span class="comment">// 每次从左侧截掉 100 个 </span></span><br><span class="line">        jedis.ltrim (bigListKey, left, llen);</span><br><span class="line">        counter += left;</span><br><span class="line">    &#125;</span><br><span class="line"> <span class="comment">// 最终删除 key</span></span><br><span class="line">    jedis.del (bigListKey);</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<h3 id="Set-删除-sscan-srem">Set 删除: sscan + srem</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">delBigSet</span><span class="params">(String host, <span class="type">int</span> port, String password, String bigSetKey)</span> &#123;</span><br><span class="line"> <span class="type">Jedis</span> <span class="variable">jedis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jedis</span>(host, port);</span><br><span class="line"> <span class="keyword">if</span> (password != <span class="literal">null</span> &amp;&amp; !<span class="string">&quot;&quot;</span>.equals (password)) &#123;</span><br><span class="line">        jedis.auth (password);</span><br><span class="line">    &#125;</span><br><span class="line"> <span class="type">ScanParams</span> <span class="variable">scanParams</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ScanParams</span>().count (<span class="number">100</span>);</span><br><span class="line"> <span class="type">String</span> <span class="variable">cursor</span> <span class="operator">=</span> <span class="string">&quot;0&quot;</span>;</span><br><span class="line"> <span class="keyword">do</span> &#123;</span><br><span class="line"> ScanResult&lt;String&gt; scanResult = jedis.sscan (bigSetKey, cursor, scanParams);</span><br><span class="line"> List&lt;String&gt; memberList = scanResult.getResult ();</span><br><span class="line"> <span class="keyword">if</span> (memberList != <span class="literal">null</span> &amp;&amp; !memberList.isEmpty ()) &#123;</span><br><span class="line"> <span class="keyword">for</span> (String member : memberList) &#123;</span><br><span class="line">                jedis.srem (bigSetKey, member);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        cursor = scanResult.getStringCursor ();</span><br><span class="line">    &#125; <span class="keyword">while</span> (!<span class="string">&quot;0&quot;</span>.equals (cursor));</span><br><span class="line"></span><br><span class="line"> <span class="comment">// 删除 bigkey</span></span><br><span class="line">    jedis.del (bigSetKey);</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<h3 id="SortedSet-删除-zscan-zrem">SortedSet 删除: zscan + zrem</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">delBigZset</span><span class="params">(String host, <span class="type">int</span> port, String password, String bigZsetKey)</span> &#123;</span><br><span class="line"> <span class="type">Jedis</span> <span class="variable">jedis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jedis</span>(host, port);</span><br><span class="line"> <span class="keyword">if</span> (password != <span class="literal">null</span> &amp;&amp; !<span class="string">&quot;&quot;</span>.equals (password)) &#123;</span><br><span class="line">        jedis.auth (password);</span><br><span class="line">    &#125;</span><br><span class="line"> <span class="type">ScanParams</span> <span class="variable">scanParams</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ScanParams</span>().count (<span class="number">100</span>);</span><br><span class="line"> <span class="type">String</span> <span class="variable">cursor</span> <span class="operator">=</span> <span class="string">&quot;0&quot;</span>;</span><br><span class="line"> <span class="keyword">do</span> &#123;</span><br><span class="line"> ScanResult&lt;Tuple&gt; scanResult = jedis.zscan (bigZsetKey, cursor, scanParams);</span><br><span class="line"> List&lt;Tuple&gt; tupleList = scanResult.getResult ();</span><br><span class="line"> <span class="keyword">if</span> (tupleList != <span class="literal">null</span> &amp;&amp; !tupleList.isEmpty ()) &#123;</span><br><span class="line"> <span class="keyword">for</span> (Tuple tuple : tupleList) &#123;</span><br><span class="line">                jedis.zrem (bigZsetKey, tuple.getElement ());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        cursor = scanResult.getStringCursor ();</span><br><span class="line">    &#125; <span class="keyword">while</span> (!<span class="string">&quot;0&quot;</span>.equals (cursor));</span><br><span class="line"></span><br><span class="line"> <span class="comment">// 删除 bigkey</span></span><br><span class="line">    jedis.del (bigZsetKey);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>原作者：付磊 - 起扬<br>
+原文链接：<a href="https://link.zhihu.com/?target=https%3A//yq.aliyun.com/articles/531067">阿里云 Redis 开发规范 - 云栖社区 - 阿里云</a><br>
+原出处：阿里云</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://io.maywzh.com">maywzh</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://io.maywzh.com/2017/01/08/Redis/%E9%98%BF%E9%87%8CRedis%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/">http://io.maywzh.com/2017/01/08/Redis/%E9%98%BF%E9%87%8CRedis%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://io.maywzh.com" target="_blank">Serendipity</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Redis/">Redis</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2017/01/09/Linux/%E5%B7%A5%E5%85%B7%E4%B9%8B%E7%AE%80%E6%98%8Etmux%E7%8E%A9%E6%B3%95%E6%95%99%E7%A8%8B/" title="简明 tmux 玩法教程"><img class="cover" src="https://i.loli.net/2020/12/26/e6FHQ19v2LhdRzj.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">简明 tmux 玩法教程</div></div></a></div><div class="next-post pull-right"><a href="/2017/01/05/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E4%B9%8B%E5%BE%AE%E6%9C%8D%E5%8A%A1/" title="什么是微服务"><img class="cover" src="https://i.loli.net/2020/08/23/CGoXrmvycxQTDuh.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">什么是微服务</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2018/03/01/Redis/Redis%E8%AF%A6%E8%A7%A3%E4%B9%8B%E2%80%94%E2%80%94%E5%8D%95%E7%BA%BF%E7%A8%8B%E9%AB%98%E5%B9%B6%E5%8F%91/" title="Redis 详解之 —— 单线程高并发"><img class="cover" src="https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-03-01</div><div class="title">Redis 详解之 —— 单线程高并发</div></div></a></div><div><a href="/2018/03/04/Redis/Redis%E8%AF%A6%E8%A7%A3%E4%B9%8B%E2%80%94%E2%80%94%E7%89%B9%E6%80%A7%E4%B8%8E%E7%94%A8%E9%80%94/" title="Redis 详解之 —— 特性与用途"><img class="cover" src="https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-03-04</div><div class="title">Redis 详解之 —— 特性与用途</div></div></a></div><div><a href="/2017/04/03/Redis/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E8%A7%A3%E7%AD%94/" title="Redis 面试题解答"><img class="cover" src="https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2017-04-03</div><div class="title">Redis 面试题解答</div></div></a></div><div><a href="/2017/06/08/Redis/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-Redis-vs-Zookeeper/" title="分布式锁：Redis vs. Zookeeper"><img class="cover" src="https://i.loli.net/2020/12/26/VnDYPXRI9mKNBA7.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2017-06-08</div><div class="title">分布式锁：Redis vs. Zookeeper</div></div></a></div><div><a href="/2020/07/01/java/2020%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%87%86%E5%A4%87/" title="Java 后端面试题总结"><img class="cover" src="https://i.loli.net/2020/12/26/5ZCbq2VJFgy4EU8.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-01</div><div class="title">Java 后端面试题总结</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/myavatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">maywzh</div><div class="author-info__description">日行一步</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">112</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/maywzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://blog.maywzh.com" target="_blank" title="Blog"><i class="fas fa-blog"></i></a><a class="social-icon" href="https://github.com/maywzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://t.me/unlockedcultoy" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a><a class="social-icon" href="https://twitter.com/maywzh" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a><a class="social-icon" href="http://weibo.com/JupiterMay" target="_blank" title="Weibo"><i class="fab fa-weibo"></i></a><a class="social-icon" href="https://instagram.com/maywzh" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a><a class="social-icon" href="https://500px.com/maywzh" target="_blank" title="500px"><i class="fab fa-500px"></i></a><a class="social-icon" href="mailto:maywzh@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%AE%E5%80%BC%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">键值设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#key-%E5%90%8D%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.1.</span> <span class="toc-text">key 名设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AF%E8%AF%BB%E6%80%A7%E5%92%8C%E5%8F%AF%E7%AE%A1%E7%90%86%E6%80%A7"><span class="toc-number">1.1.1.</span> <span class="toc-text">可读性和可管理性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E6%B4%81%E6%80%A7"><span class="toc-number">1.1.2.</span> <span class="toc-text">简洁性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E8%A6%81%E5%8C%85%E5%90%AB%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6"><span class="toc-number">1.1.3.</span> <span class="toc-text">不要包含特殊字符</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#value-%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.2.</span> <span class="toc-text">value 设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8B%92%E7%BB%9D-bigkey"><span class="toc-number">1.2.1.</span> <span class="toc-text">拒绝 bigkey</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E9%80%82%E5%90%88%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">选择适合的数据类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6-key-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.2.3.</span> <span class="toc-text">控制 key 的生命周期</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">命令使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#O-N-%E5%91%BD%E4%BB%A4%E5%85%B3%E6%B3%A8-N-%E7%9A%84%E6%95%B0%E9%87%8F"><span class="toc-number">2.1.</span> <span class="toc-text">O (N) 命令关注 N 的数量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A6%81%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">2.2.</span> <span class="toc-text">禁用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E7%90%86%E4%BD%BF%E7%94%A8-select"><span class="toc-number">2.3.</span> <span class="toc-text">合理使用 select*</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E6%8F%90%E9%AB%98%E6%95%88%E7%8E%87"><span class="toc-number">2.4.</span> <span class="toc-text">使用批量操作提高效率</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%BB%BA%E8%AE%AE%E8%BF%87%E5%A4%9A%E4%BD%BF%E7%94%A8-Redis-%E4%BA%8B%E5%8A%A1%E5%8A%9F%E8%83%BD"><span class="toc-number">2.5.</span> <span class="toc-text">不建议过多使用 Redis 事务功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-%E9%9B%86%E7%BE%A4%E7%89%88%E6%9C%AC%E5%9C%A8%E4%BD%BF%E7%94%A8-Lua-%E4%B8%8A%E6%9C%89%E7%89%B9%E6%AE%8A%E8%A6%81%E6%B1%82"><span class="toc-number">2.6.</span> <span class="toc-text">Redis 集群版本在使用 Lua 上有特殊要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#monitor-%E5%91%BD%E4%BB%A4"><span class="toc-number">2.7.</span> <span class="toc-text">monitor 命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">客户端使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%BF%E5%85%8D%E5%A4%9A%E4%B8%AA%E5%BA%94%E7%94%A8%E4%BD%BF%E7%94%A8%E4%B8%80%E4%B8%AA-Redis-%E5%AE%9E%E4%BE%8B"><span class="toc-number">3.1.</span> <span class="toc-text">避免多个应用使用一个 Redis 实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="toc-number">3.2.</span> <span class="toc-text">使用连接池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%86%94%E6%96%AD%E5%8A%9F%E8%83%BD"><span class="toc-number">3.3.</span> <span class="toc-text">熔断功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E7%90%86%E7%9A%84%E5%8A%A0%E5%AF%86"><span class="toc-number">3.4.</span> <span class="toc-text">合理的加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5"><span class="toc-number">3.5.</span> <span class="toc-text">淘汰策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E5%85%B7"><span class="toc-number">4.</span> <span class="toc-text">相关工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5"><span class="toc-number">4.1.</span> <span class="toc-text">数据同步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#big-key-%E6%90%9C%E7%B4%A2"><span class="toc-number">4.2.</span> <span class="toc-text">big key 搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%83%AD%E7%82%B9-key-%E5%AF%BB%E6%89%BE"><span class="toc-number">4.3.</span> <span class="toc-text">热点 key 寻找</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4-bigkey"><span class="toc-number">5.</span> <span class="toc-text">删除 bigkey</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hash-%E5%88%A0%E9%99%A4-hscan-hdel"><span class="toc-number">5.1.</span> <span class="toc-text">Hash 删除: hscan + hdel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#List-%E5%88%A0%E9%99%A4-ltrim"><span class="toc-number">5.2.</span> <span class="toc-text">List 删除: ltrim</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Set-%E5%88%A0%E9%99%A4-sscan-srem"><span class="toc-number">5.3.</span> <span class="toc-text">Set 删除: sscan + srem</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SortedSet-%E5%88%A0%E9%99%A4-zscan-zrem"><span class="toc-number">5.4.</span> <span class="toc-text">SortedSet 删除: zscan + zrem</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/07/01/java/2020%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%87%86%E5%A4%87/" title="Java 后端面试题总结"><img src="https://i.loli.net/2020/12/26/5ZCbq2VJFgy4EU8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java 后端面试题总结"/></a><div class="content"><a class="title" href="/2020/07/01/java/2020%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%87%86%E5%A4%87/" title="Java 后端面试题总结">Java 后端面试题总结</a><time datetime="2020-06-30T16:26:28.000Z" title="发表于 2020-07-01 00:26:28">2020-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/" title="Go 语言的上下文与 Context"><img src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的上下文与 Context"/></a><div class="content"><a class="title" href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/" title="Go 语言的上下文与 Context">Go 语言的上下文与 Context</a><time datetime="2020-01-18T16:09:39.000Z" title="发表于 2020-01-19 00:09:39">2020-01-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" title="Go 语言的反射"><img src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的反射"/></a><div class="content"><a class="title" href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" title="Go 语言的反射">Go 语言的反射</a><time datetime="2020-01-17T16:03:35.000Z" title="发表于 2020-01-18 00:03:35">2020-01-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" title="Go 语言的 select"><img src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的 select"/></a><div class="content"><a class="title" href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" title="Go 语言的 select">Go 语言的 select</a><time datetime="2020-01-16T16:07:40.000Z" title="发表于 2020-01-17 00:07:40">2020-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" title="Go 语言的并发原理"><img src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的并发原理"/></a><div class="content"><a class="title" href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" title="Go 语言的并发原理">Go 语言的并发原理</a><time datetime="2020-01-15T23:55:17.000Z" title="发表于 2020-01-16 07:55:17">2020-01-16</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2013 - 2024 By maywzh</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="/js/tw_cn.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

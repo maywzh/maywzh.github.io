@@ -7,7 +7,4 @@ public/
 .deploy*/
 .vscode
 *.swp
-Blog.code-workspace
-package.json.bak
-themes/next-o
-themes/butterfly-1
+*.code-workspace

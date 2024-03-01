@@ -3,19 +3,18 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Cult Minds
-subtitle: 邪思
-description:
+title: Serendipity
+subtitle: '日行一步'
+description: '日行一步'
 keywords: Blog
 author: maywzh
-language: en
-timezone: Asia/Shanghai
+language: zh-CN
+timezone: 'Asia/Shanghai'
 
 # URL
-## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://tech.maywzh.com
-root: /
-permalink: /:year/:month/:day/:title
+## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
+url: http://io.maywzh.com
+permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -27,7 +26,6 @@ public_dir: public
 tag_dir: tags
 archive_dir: archives
 category_dir: categories
-about_dir: about
 code_dir: uploads/code
 i18n_dir: :lang
 skip_render:
@@ -39,31 +37,30 @@ titlecase: false # Transform title into titlecase
 external_link:
   enable: true # Open external links in new tab
   field: site # Apply to the whole site
-  exclude: ""
+  exclude: ''
 filename_case: 0
 render_drafts: false
 post_asset_folder: false
 relative_link: false
 future: true
+syntax_highlighter: highlight.js
 highlight:
-  enable: true
   line_number: true
-  auto_detect: true
-  tab_replace: ""
+  auto_detect: false
+  tab_replace: ''
   wrap: true
   hljs: false
 prismjs:
-  enable: false
   preprocess: true
   line_number: true
-  tab_replace: ""
+  tab_replace: ''
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
 # per_page: Posts displayed per page. (0 = disable pagination)
 # order_by: Posts order. (Order by date descending by default)
 index_generator:
-  path: ""
+  path: ''
   per_page: 10
   order_by: -date
 
@@ -80,10 +77,10 @@ meta_generator: true
 ## Hexo uses Moment.js to parse and display date
 ## You can customize the date format as defined in
 ## http://momentjs.com/docs/#/displaying/format/
-date_format: YYYY.MM.DD
+date_format: YYYY-MM-DD
 time_format: HH:mm:ss
 ## updated_option supports 'mtime', 'date', 'empty'
-updated_option: "mtime"
+updated_option: 'mtime'
 
 # Pagination
 ## Set per_page to 0 to disable pagination
@@ -105,53 +102,11 @@ theme: butterfly
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   - type: git
+    message: "Site updated: {{ now('YYYY-MM-DD HH:mm') }}"
     repo:
-      github: git@github.com:maywzh/maywzh.github.io.git
-      #mubuntu: git@mubuntu:/home/git/repo/hexoblog.git
-      #gitlab: ssh://git@test.gitlab.maywzh.com:2222/maywzh/hexoblog.git
-      #coding: git@e.coding.net:farmull/maywzh.com/tech.maywzh.com.git
-      #gitea: ssh://git@gitrepo.maywzh.com:1122/maywzh/blog.maywzh.com.git
-      #gitee: git@gitee.com:maywzh/maywzh.git
+      github: https://github.com/maywzh/maywzh.github.io.git
     branch: master
 
-#Search Engine
-#Local Search: http://theme-next.iissnan.com/third-party-services.html#search-system
-search:
-  path: search.xml
-  field: post
-  format: html
-  limit: 10000
-
-#Admin
-admin:
-  username: maywzh
-  password_hash: $2a$10$7PZl9jgdjWcdvaxHAOnaHOYU7AtVL7mp6yvEMzKJTZeUSqWtfezfO
-  secret: maywzhsudo
-  deployCommand: node_modules/.bin/hexo
-
-metadata:
-  #author_id: defaultAuthorId
-  #language:
-
-# Specify the date when the site was setup
-since: 2015
-
-# Creative Commons 4.0 International License.
-# http://creativecommons.org/
-# Available: by | by-nc | by-nc-nd | by-nc-sa | by-nd | by-sa | zero
-# creative_commons: by-nc-sa
-
-#Google Webmaster tools verification setting
-#See: https://www.google.com/webmasters/
-google_site_verification: VvyjvVXcJQa0QklHipu6pwm2PJGnnchIqX7s5JbbT_0
-
-# Extensions
-## Plugins: http://hexo.io/plugins/
-#RSS订阅
-plugin:
-  - hexo-generator-feed
-#Feed Atom
-feed:
-type: atom
-path: atom.xml
-limit: 20
+markdown:
+    plugins:
+      - '@renbaoshuo/markdown-it-katex'

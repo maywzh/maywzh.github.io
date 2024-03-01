@@ -1,0 +1,348 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Web - 从 url 到页面发生了什么 | Serendipity</title><meta name="author" content="maywzh"><meta name="copyright" content="maywzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="访问过程 我们在浏览器地址栏中输入 google.com 这个地址，然后浏览器经过短暂加载后给我们呈现了 Google 的搜索页面。 这中间的步骤有哪些呢？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web - 从 url 到页面发生了什么">
+<meta property="og:url" content="http://io.maywzh.com/2016/12/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8B%E4%BB%8Eurl%E5%88%B0%E9%A1%B5%E9%9D%A2%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:site_name" content="Serendipity">
+<meta property="og:description" content="访问过程 我们在浏览器地址栏中输入 google.com 这个地址，然后浏览器经过短暂加载后给我们呈现了 Google 的搜索页面。 这中间的步骤有哪些呢？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/08/23/HrjO4xTSKdvymc3.jpg">
+<meta property="article:published_time" content="2016-12-14T09:46:51.000Z">
+<meta property="article:modified_time" content="2024-03-01T10:53:42.014Z">
+<meta property="article:author" content="maywzh">
+<meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/08/23/HrjO4xTSKdvymc3.jpg"><link rel="shortcut icon" href="/img/bitbug_favicon_128s.ico"><link rel="canonical" href="http://io.maywzh.com/2016/12/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8B%E4%BB%8Eurl%E5%88%B0%E9%A1%B5%E9%9D%A2%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Web - 从 url 到页面发生了什么',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-01 18:53:42'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/myavatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">112</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-list"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-icons"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://i.loli.net/2020/08/23/HrjO4xTSKdvymc3.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Serendipity"><span class="site-name">Serendipity</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-list"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-icons"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Web - 从 url 到页面发生了什么</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2016-12-14T09:46:51.000Z" title="发表于 2016-12-14 17:46:51">2016-12-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Web - 从 url 到页面发生了什么"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="访问过程">访问过程</h2>
+<p>我们在浏览器地址栏中输入 <a target="_blank" rel="noopener" href="http://google.com">google.com</a> 这个地址，然后浏览器经过短暂加载后给我们呈现了 Google 的搜索页面。</p>
+<p>这中间的步骤有哪些呢？</p>
+<span id="more"></span>
+<ol>
+<li>
+<p>首先是域名解析 <a target="_blank" rel="noopener" href="http://google.com">google.com</a> 转换为这个网站服务器的 IP，这其中或许还包含有 CDN 加速、负载均衡，分布式服务等技术。</p>
+</li>
+<li>
+<p>获取到服务器 IP 之后，我们的浏览器会通过 TCP 三次握手与服务器建立 TCP 连接。</p>
+<ul>
+<li>如果网站是 HTTPS，还会经过 TLS/SSL 的握手步骤与服务器建立 TLS/SSL 连接。</li>
+</ul>
+</li>
+<li>
+<p>建立 TCP 连接之后，浏览器作为客户端发送 HTTP 请求 (request) 报文到目的 IP 地址即 Web 服务器 IP。</p>
+</li>
+<li>
+<p>有的时候获取的 IP 是反向代理的服务器 IP，这些服务器接受客户端请求，并把请求转发给真实服务器 IP。</p>
+</li>
+<li>
+<p>接下来是服务器的工作过程：</p>
+<ul>
+<li>服务器上 <a target="_blank" rel="noopener" href="http://Google.com">Google.com</a> 服务进程监听服务端口，收到客户端的 HTTP 请求报文，这个报文被服务器上安装的 Web 服务器 (Web Server) 如 apache、nginx、LigHTTPd、IIS 所监听到。</li>
+<li>Web Server 解析 HTTP 请求报文，根据路由配置去访问特定位置的资源或委托给服务器上的处理请求的程序进行处理，如 CGI 脚本、JSP、ASP、servlets、node.js 等。</li>
+<li>Web App 把响应数据交给 Web Server，Web Server 按照 HTTP 响应报文格式封装数据为 HTTP 响应 (response) 报文，并把报文通过 TCP 连接链路回送给客户端。</li>
+</ul>
+</li>
+<li>
+<p>客户端浏览器接受到 HTTP 响应报文，从数据部分提取出 html 代码，通过加载、解析、渲染的过程，来在屏幕上绘制出页面。</p>
+</li>
+</ol>
+<h2 id="URL-格式探秘">URL 格式探秘</h2>
+<p>URL (Uniform Resource Locator, 统一资源定位符)，互联网设计为一个大的文件系统，就像是我们电脑中每个文件都有对应的文件地址，互联网上的资源地址就是 URL。其格式为</p>
+<blockquote>
+<p>protocol://<hostname>:<port>/<route>/<filename></p>
+</blockquote>
+<ul>
+<li>
+<p>协议 (protocol) 常见的有 HTTP，HTTPS，ftp，telnet，file 等几种。这些协议都属于应用协议，位于协议层的应用层，它们基于传输层的协议而工作，例如 HTTP 基于 TCP，HTTPS 基于 TLS/SSL，TLS/SSL 也是基于 TCP 传输协议。</p>
+</li>
+<li>
+<p>主机名 (hostname) 代表一个提供服务的服务器 IP，它可以是 IP 或者可以解析为 IP 的网址。</p>
+</li>
+<li>
+<p>端口号 (port) 代表服务器的一个服务进程，这个进程监听这个端口上的 TCP 或 UDP 数据报。一台主机往往提供多个服务，例如既提供 Web 服务也提供 FTP 服务，那么端口就可以告诉 web 服务器所在主机把请求交给哪一个服务。各个协议都有默认（缺省）的端口。</p>
+</li>
+<li>
+<p>路径 (route) 代表一个服务下的资源的路径，例如 <code>https://myblog.com/blog/2017/index.html</code> 中的 /<code>blog/2017</code> 代表 2017 年的所有博客，返回的资源取决于后端服务器的实现。</p>
+</li>
+<li>
+<p>文件名 (filename) 代表某个特定的资源，例如 <code>https://myblog.com/blog/2017/index.html</code> 的 <code>index.html</code> 代表这个特定的页面。</p>
+</li>
+</ul>
+<h2 id="IP-地址">IP 地址</h2>
+<p>就像每栋房子都有地址，IP 代表一个计算机或者局域网在互联网上的地址。IP 协议如今已有 IPv4 和 IPv6，目前依旧是 IPv4 占据主流，但 IPv6 是未来的趋势。IPv4 协议中，存在公网地址不足的问题，所以人们发明了 NAT 技术把一个局域网地址映射为一个公网地址 (局域网网关地址)。局域网内的主机要提供互联网服务必须利用端口映射把该主机上的服务端口映射到局域网网关的端口。</p>
+<p>但 IP 地址不易辨识，所以人们用网站域名来作为 IP 地址的别名，从 IP 地址到域名或从域名到 IP 地址的映射过程称为 DNS 解析。</p>
+<h2 id="DNS-解析">DNS 解析</h2>
+<h3 id="DNS-解析过程">DNS 解析过程</h3>
+<p>在浏览器地址栏输入 url 之后，电脑会发出一个 DNS 解析请求到本地 DNS 服务器。然后按照以下步骤依次查找：</p>
+<ol>
+<li>
+<p>查找浏览器缓存</p>
+<p>浏览器检查缓存是否有未过期的该域名解析过的 IP 地址，如果有，那么解析过程成功结束。</p>
+</li>
+</ol>
+<center>▲ chrome 的浏览器缓存示例 </center>
+<ol start="2">
+<li>
+<p>查找操作系统缓存</p>
+<p>如果浏览器 dns 缓存不存在或已过期，那么浏览器会从 hosts 文件中查找，查找是否有对应的域名 dns 配置项。</p>
+</li>
+<li>
+<p>查找路由器缓存</p>
+<p>如果系统缓存也没有，那么去路由器的 dns 缓存中查找。</p>
+</li>
+<li>
+<p>网络接入服务商 (ISP) DNS 缓存</p>
+<p>ISP 都会提供 DNS 缓存服务器。我们也可以在网络配置中配置特定的 DNS 服务器。</p>
+<p>如果是局域网内的主机，这个本地 DNS 服务器一般是局域网的网关。网关会把 DNS 解析请求转发给 ISP DNS 服务器。</p>
+</li>
+<li>
+<p>递归查询</p>
+<p>经历了如上步骤都找不到 DNS 服务器的话，那么就会直接访问互联网的 DNS 服务器进行递归查询。</p>
+<p>假设解析 <code>www.google.com</code> 这个域名，本地 dns 服务器把 dns 解析请求转发给互联网的根域名服务器，如果根域名服务器不存在该域名记录，则根据顶级域 com 向 com 顶级域 dns 服务器发送 dns 请求，如果还没有则根据二级域 <a target="_blank" rel="noopener" href="http://google.com">google.com</a> 服务器查询，知道最终得到该域名的 IP 地址，并把它缓存到本地。</p>
+<p>所以网址的 dns 解析过程是一个由右向左的解析过程：</p>
+<p><code>. --&gt; .com --&gt; google.com --&gt; www.google.com</code></p>
+</li>
+</ol>
+<h3 id="DNS-负载均衡">DNS 负载均衡</h3>
+<p>我们也可以在命令行通过 nslookup 命令来对某个域名进行 dns 解析获得它的 IP 地址：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ nslookup google.com</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">Name:	baidu.com</span><br><span class="line">Address: 220.181.57.216</span><br><span class="line">Name:	baidu.com</span><br><span class="line">Address: 123.125.115.110</span><br></pre></td></tr></table></figure>
+<p>可以发现 <a target="_blank" rel="noopener" href="http://baidu.com">baidu.com</a> 这个域名有两个 IP 地址。这是采用了 DNS 负载均衡技术。</p>
+<p>由于单台服务器的性能有限，现代的大型网络服务往往都是集群服务器提供服务，而这些服务器集群往往有多个 IP 地址，而 DNS 可以根据根据每台服务器的负载量，该机器离用户地理位置的距离等来返回一个合适的服务器的 IP 给用户，这就是 DNS 的负载均衡也称为 DNS 重定向。CDN 正是采用了这种技术。</p>
+<h2 id="TCP-连接">TCP 连接</h2>
+<p>Web 服务都是基于 HTTP/HTTPS 协议提供的，而 HTTP/HTTPS 协议又是基于传输层的 TCP 协议的。所以进行 HTTP 通信前，必须先建立 TCP 连接，TCP 连接是通过三次握手来建立的，通过四次挥手来断开。这里不详细赘述。</p>
+<h3 id="HTTP-协议">HTTP 协议</h3>
+<h4 id="HTTP-的无连接">HTTP 的无连接</h4>
+<p>**HTTP 协议是无连接的协议 **，无连接的意思就是指每次连接只处理一个请求。服务器处理完客户请求，收到应答之后，即断开 TCP 连接。这种设计是因为客户端与服务端的交换数据时间间隔较大，而且两次传送的数据关联性较低，为了节省 TCP 连接信道所占据的资源，HTTP 协议被设计为 ** 请求时建连接、请求完释放连接，以尽快将资源释放出来服务其他客户端 **。但是对于某些情景，例如网页中含有大量引用资源，每次访问引用资源都需要建立一次 TCP 连接就显得十分低效（TCP 的三次握手和四次挥手性能消耗十分严重）。</p>
+<p>为了实现持续 TCP 连接，HTTP 协议引入了 Keep-Alive 字段。**Keep-Alive 功能使客户端到服务器端的连接持续有效，当出现对服务器的后继请求时，Keep-Alive 可以保持客户端与服务端的持续 TCP 连接 **。对于静态网站，这个功能十分有用，但对于动态网站来说，过多的连接会耗尽服务器的连接池，持续占用资源影响性能。所以要谨慎使用 Keep-Alive 功能。</p>
+<h4 id="HTTP-的无状态">HTTP 的无状态</h4>
+<p>**HTTP 协议是无状态的协议 **，这是指协议对于事务处理没有记忆能力，服务器不知道客户端中的状态，即我们与服务器的每一次请求响应过程，服务器都不会记录任何信息。每个请求都是独立的。</p>
+<p>例如：电商网站中，我们向购物车放一个商品。如果我们没有登陆，那么服务器无法记录购物车里的商品清单，因为它无法分辨究竟是哪个用户的购物车。</p>
+<p>为了解决这个问题，HTTP 使用了 Cookie 和 Session 两种保持 HTTP 连接状态的技术，我们常见的登陆操作常见的做法就是在本地生成一个状态 cookie，然后 cookie 中保存 sessionid，我们每次发送 http 请求时，服务器读取 cookie 中的 sessionid，在服务端查找持久化的 session 信息，判断用户的登陆状态，并读取对应的业务信息。</p>
+<h3 id="HTTPS-协议">HTTPS 协议</h3>
+<p>HTTP 协议完全是明文传输，直接把明文的 HTTP 报文通过 TCP 连接传送到对方，这其中有相当的信息泄漏的风险。为了解决这个问题，网景公司提出了一种新协议 HTTPS，即基于 SSL 协议的 HTTP，这是把 HTTP 报文放在加密的 SSL 信道中进行通信。SSL 后来被标准化为 TLS 协议，一般称之为 TLS/SSL。</p>
+<p>HTTPS 与 HTTP 协议不同之处在于，建立 TCP 连接之后，HTTPS 协议还需要再经过 <a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2014/09/illustration-ssl.html">TLS/SSL 握手过程</a>，来建立 TLS/SSL 通道，然后才进行 HTTP 通信。这也带来了一定的性能损耗。</p>
+<h2 id="客户端构造-HTTP-请求报文">客户端构造 HTTP 请求报文</h2>
+<p>获取了目的 IP，建立了 TCP 连接之后，客户端构建 HTTP 请求报文，通过 TCP 协议发送到服务器指定端口 (HTTP 协议默认端口 80/8080, HTTPS 协议默认端口 443)。</p>
+<h2 id="服务端接受-HTTP-请求">服务端接受 HTTP 请求</h2>
+<p>从这里开始就是服务端的工作了。Web Server 监听 TCP 端口，当端口接收到 <code>HTTPRequest</code> 报文，就对报文进行解析，并封装称为 <code>HTTPRequest</code> 对象，供上层使用。</p>
+<p>根据访问的资源，大致可分为静态资源和动态资源，静态资源就是指目录中某个位置中预先生成好的文件，例如 myblog/index.html，动态资源则是指会根据请求数据动态生成的页面，例如根据用户权限不同展示的数据统计表。</p>
+<p>Web Server 从 HTTP 请求中获取参数后，如果是静态资源，则读取该资源文件，根据 HTTP 响应报文格式产生 HTTP 响应，回送给客户端。如果是动态资源，则进行一系列的处理，产生 HTTP 响应报文。</p>
+<p>例如目前主流的后端 Web 框架是 MVC 模式。</p>
+<p>MVC 框架首先根据 <code>HTTPRequest</code> 对象的参数、内容，先根据路由配置去选择对应的 Controller，Controller 根据参数进行业务处理，中间可能会进行读写数据库等操作，然后渲染一个数据模型 Model，数据模型用来渲染模版页，这里的工作由模版引擎来完成，最终生成 HTTP 响应。</p>
+<p>假设 <code>myblog.com/blogs/1/edit</code> 是修改 <code>myblog.com</code> 的第一篇博客的接口，那么 Router 首先对 <code>blogs/1/edit</code> 进行路由匹配，匹配到的 <code>controller</code> 是 <code>edit</code>，那么调用 <code>edit</code> 这个方法，该方法从 <code>HTTP Request</code> 对象的正文获得了修改后的博文，于是调用数据库引擎，对数据库内的对应博文进行修改。然后返回一个新的博文的 json 数据，该数据即是数据模型 <code>Model</code>，然后调用模版引擎，把 <code>Model</code> 渲染到模版页，生成 html 页面，然后根据 html 页面产生 <code>HTTPResponse</code> 对象。</p>
+<h2 id="服务端发出-HTTP-响应">服务端发出 HTTP 响应</h2>
+<p>Web 服务器根据 <code>HTTPResponse</code> 对象来产生 HTTP 响应报文，通过 TCP 连接回送该报文。然后根据 HTTP 中的 Keep-Alive 字段的值确定是否要在响应发送完成后关闭 TCP 连接。</p>
+<h2 id="客户端接受-HTTP-响应报文">客户端接受 HTTP 响应报文</h2>
+<p>浏览器从 HTTP 响应报文中的数据段提取出 html、css、js 文件，然后浏览器对这些资源进行渲染，把渲染出来的网页绘制在屏幕上。</p>
+<p>浏览器从上而下解析 HTML 文件，如果解析过程中遇到外部资源，如图像、JS、CSS 文件等，则会重复以上 HTTP 通信过程。这个对外部资源的请求是异步的，所以不会影响资源解析。当解析到 JS 文件时，HTML 文档则会挂起渲染过程，等待 JS 文件加载完毕和执行完毕。因此 JS 会阻塞后续资源的下载。JS 代码执行前必须保证所有的 CSS 文件加载完毕。</p>
+<p>浏览器解析 HTML 文件构造 DOM 树，解析 CSS 文件构造渲染树，渲染树构建完成后，则开始根据渲染树绘制页面到屏幕上。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://io.maywzh.com">maywzh</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://io.maywzh.com/2016/12/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8B%E4%BB%8Eurl%E5%88%B0%E9%A1%B5%E9%9D%A2%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/">http://io.maywzh.com/2016/12/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8B%E4%BB%8Eurl%E5%88%B0%E9%A1%B5%E9%9D%A2%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://io.maywzh.com" target="_blank">Serendipity</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Web/">Web</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/08/23/HrjO4xTSKdvymc3.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2017/01/04/javascript/JavaScript%E4%B9%8B%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" title="理解 JavaScript 异步编程"><img class="cover" src="https://i.loli.net/2020/08/23/teEURbBawNzWTq4.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">理解 JavaScript 异步编程</div></div></a></div><div class="next-post pull-right"><a href="/2016/12/09/MySQL/MySQL%E5%91%BD%E4%BB%A4%E4%B9%8BExplain%E7%AC%94%E8%AE%B0/" title="MySQL 命令之 Explain 笔记"><img class="cover" src="https://i.loli.net/2020/09/09/twrYh4p3CXOWVAM.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">MySQL 命令之 Explain 笔记</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2017/05/04/Redis/Redis%E8%AF%A6%E8%A7%A3%E4%B9%8B%E2%80%94%E2%80%94%E4%B8%8EMemcached%E5%AF%B9%E6%AF%94/" title="如何比较 Redis 与 Memcached"><img class="cover" src="https://i.loli.net/2020/09/09/rS9BaJ7xjWc83kC.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2017-05-04</div><div class="title">如何比较 Redis 与 Memcached</div></div></a></div><div><a href="/2015/11/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8B%E6%8E%A2%E7%A7%98http%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87%E7%BB%93%E6%9E%84/" title="探秘 http 响应报文结构"><img class="cover" src="https://i.loli.net/2020/08/23/YPXROK6VeAGDfdI.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2015-11-16</div><div class="title">探秘 http 响应报文结构</div></div></a></div><div><a href="/2015/11/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8B%E6%8E%A2%E7%A7%98http%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87%E7%BB%93%E6%9E%84/" title="探秘 http 请求报文结构"><img class="cover" src="https://i.loli.net/2020/08/23/e3RwjsFMKWNa4fH.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2015-11-16</div><div class="title">探秘 http 请求报文结构</div></div></a></div><div><a href="/2016/01/13/%E8%BF%90%E7%BB%B4/%E8%BF%90%E7%BB%B4%E4%B9%8BjsDelivr%E4%BD%BF%E7%94%A8/" title="用 jsDelivr 来改善网站响应速度"><img class="cover" src="https://i.loli.net/2020/08/29/cu2LtW3lp5joKHq.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2016-01-13</div><div class="title">用 jsDelivr 来改善网站响应速度</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/myavatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">maywzh</div><div class="author-info__description">日行一步</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">112</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/maywzh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://blog.maywzh.com" target="_blank" title="Blog"><i class="fas fa-blog"></i></a><a class="social-icon" href="https://github.com/maywzh" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://t.me/unlockedcultoy" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a><a class="social-icon" href="https://twitter.com/maywzh" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a><a class="social-icon" href="http://weibo.com/JupiterMay" target="_blank" title="Weibo"><i class="fab fa-weibo"></i></a><a class="social-icon" href="https://instagram.com/maywzh" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a><a class="social-icon" href="https://500px.com/maywzh" target="_blank" title="500px"><i class="fab fa-500px"></i></a><a class="social-icon" href="mailto:maywzh@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E8%BF%87%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">访问过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#URL-%E6%A0%BC%E5%BC%8F%E6%8E%A2%E7%A7%98"><span class="toc-number">2.</span> <span class="toc-text">URL 格式探秘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IP-%E5%9C%B0%E5%9D%80"><span class="toc-number">3.</span> <span class="toc-text">IP 地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS-%E8%A7%A3%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">DNS 解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS-%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="toc-number">4.1.</span> <span class="toc-text">DNS 解析过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">4.2.</span> <span class="toc-text">DNS 负载均衡</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP-%E8%BF%9E%E6%8E%A5"><span class="toc-number">5.</span> <span class="toc-text">TCP 连接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP-%E5%8D%8F%E8%AE%AE"><span class="toc-number">5.1.</span> <span class="toc-text">HTTP 协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-%E7%9A%84%E6%97%A0%E8%BF%9E%E6%8E%A5"><span class="toc-number">5.1.1.</span> <span class="toc-text">HTTP 的无连接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-%E7%9A%84%E6%97%A0%E7%8A%B6%E6%80%81"><span class="toc-number">5.1.2.</span> <span class="toc-text">HTTP 的无状态</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTPS-%E5%8D%8F%E8%AE%AE"><span class="toc-number">5.2.</span> <span class="toc-text">HTTPS 协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9E%84%E9%80%A0-HTTP-%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87"><span class="toc-number">6.</span> <span class="toc-text">客户端构造 HTTP 请求报文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%8E%A5%E5%8F%97-HTTP-%E8%AF%B7%E6%B1%82"><span class="toc-number">7.</span> <span class="toc-text">服务端接受 HTTP 请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8F%91%E5%87%BA-HTTP-%E5%93%8D%E5%BA%94"><span class="toc-number">8.</span> <span class="toc-text">服务端发出 HTTP 响应</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%8E%A5%E5%8F%97-HTTP-%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87"><span class="toc-number">9.</span> <span class="toc-text">客户端接受 HTTP 响应报文</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/07/01/java/2020%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%87%86%E5%A4%87/" title="Java 后端面试题总结"><img src="https://i.loli.net/2020/12/26/5ZCbq2VJFgy4EU8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java 后端面试题总结"/></a><div class="content"><a class="title" href="/2020/07/01/java/2020%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%87%86%E5%A4%87/" title="Java 后端面试题总结">Java 后端面试题总结</a><time datetime="2020-06-30T16:26:28.000Z" title="发表于 2020-07-01 00:26:28">2020-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/" title="Go 语言的上下文与 Context"><img src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的上下文与 Context"/></a><div class="content"><a class="title" href="/2020/01/19/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8EContext/" title="Go 语言的上下文与 Context">Go 语言的上下文与 Context</a><time datetime="2020-01-18T16:09:39.000Z" title="发表于 2020-01-19 00:09:39">2020-01-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" title="Go 语言的反射"><img src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的反射"/></a><div class="content"><a class="title" href="/2020/01/18/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%8D%E5%B0%84/" title="Go 语言的反射">Go 语言的反射</a><time datetime="2020-01-17T16:03:35.000Z" title="发表于 2020-01-18 00:03:35">2020-01-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" title="Go 语言的 select"><img src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的 select"/></a><div class="content"><a class="title" href="/2020/01/17/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84select/" title="Go 语言的 select">Go 语言的 select</a><time datetime="2020-01-16T16:07:40.000Z" title="发表于 2020-01-17 00:07:40">2020-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" title="Go 语言的并发原理"><img src="https://i.loli.net/2020/12/26/acjRWpdMxSnIBUq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 语言的并发原理"/></a><div class="content"><a class="title" href="/2020/01/16/go/Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B9%B6%E5%8F%91%E5%8E%9F%E7%90%86/" title="Go 语言的并发原理">Go 语言的并发原理</a><time datetime="2020-01-15T23:55:17.000Z" title="发表于 2020-01-16 07:55:17">2020-01-16</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2013 - 2024 By maywzh</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="/js/tw_cn.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script type="text/javascript" id="maid-script" src="https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js"></script><script>if (window.mermaid) {
+  var options = JSON.parse(document.getElementById('maid-script').getAttribute('mermaidoptions'));
+  mermaid.initialize(options);
+}</script><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '0gkmTvRakhR8M2UnEvf1POkG-gzGzoHsz',
+      appKey: 'UrBohelQ00fEUxu5npX46rtL',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !true) {
+    if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

@@ -1,6 +1,6 @@
 footer:
-  framework: 框架
-  theme: 主题
+  framework: Powered by
+  theme: Theme
 
 copy:
   success: 复制成功

@@ -2,7 +2,7 @@
 title: 理解C语言中的指针
 categories: 编程
 comments: false
-date: 2015-10-16 21:28:11
+date: 2013-10-16 21:28:11
 tags:
   - C/C++
 thumbnail: https://i.loli.net/2020/12/26/EF75JsTN1iBZKSf.png
